@@ -32,6 +32,15 @@ Seismic waves travel at speeds set by the elastic moduli and density of the mate
 
 </div>
 
+## Research Code: PyHydroGeophysX
+
+!!! tip "Seismic refraction and joint inversion"
+    The travel-time picking and interpretation you practice here scale up to full seismic refraction tomography (SRT). [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX) provides SRT forward modeling and inversion, rock-physics velocity models (Hertz-Mindlin, differential effective medium), and joint ERT plus seismic inversion so the two methods constrain one shared subsurface model.
+
+    - [SRT forward modeling](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/EX_SRT_forward.ipynb): build travel times from a velocity model.
+    - [SRT inversion](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_SRT_inv.ipynb): recover velocity structure from picks.
+    - [Joint ERT + seismic inversion](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_joint_inversion.ipynb): couple resistivity and velocity.
+
 ## Data and Notebooks
 
 - 📊 Datasets live in the [Data area](../../data/index.md).

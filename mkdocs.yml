@@ -73,3 +73,4 @@ nav:
       - Borehole Geophysics: lecture/borehole/index.md
   - Data: data/index.md
   - Notebooks: notebooks/index.md
+  - References: references.md

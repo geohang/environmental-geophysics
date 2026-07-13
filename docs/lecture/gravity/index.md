@@ -50,6 +50,11 @@ Lateral density contrasts in the subsurface produce tiny variations in gravitati
 
 </div>
 
+## Research Code: PyHydroGeophysX
+
+!!! tip "Potential-field inversion"
+    Gravity and magnetic data can be inverted together for subsurface density and susceptibility structure. [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX), developed in Dr. Chen's group, includes a [gravity and magnetics inversion example (source)](https://github.com/geohang/PyHydroGeophysX/blob/main/examples/Ex_gravity_magnetics_inversion.py) alongside its electrical, seismic, and EM tools.
+
 ## Data and Notebooks
 
 - 📊 Activity datasets live in the [Data area](../../data/index.md).

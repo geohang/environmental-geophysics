@@ -17,9 +17,23 @@ These Python notebooks run in [Google Colab](https://colab.research.google.com/)
 !!! note "More notebooks are on the way"
     Additional exercises for magnetics, EM, GPR, MT, and borehole logs are being added. The badges above will go live as each notebook lands in the repository.
 
-## Related Software
+## Research Code: PyHydroGeophysX
 
-The notebooks build on open-source tools developed and used in the [SHIP Lab](https://github.com/geohang):
+The course tools are teaching versions of a real research package. [**PyHydroGeophysX**](https://github.com/geohang/PyHydroGeophysX), developed in Dr. Chen's group, integrates hydrological model outputs (MODFLOW, ParFlow) with geophysical forward modeling and inversion across ERT, seismic, and EM methods. Its example notebooks run in Colab, and its documentation is at [geohang.github.io/PyHydroGeophysX](https://geohang.github.io/PyHydroGeophysX/).
 
-- **[PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX)** integrates hydrological model outputs with geophysical forward modeling.
-- **[pyGIMLi](https://www.pygimli.org/)** provides forward modeling and inversion for ERT, seismics, and more.
+!!! warning "These examples need the geophysics dependencies"
+    Unlike the teaching notebooks above, the PyHydroGeophysX examples install heavier libraries (pyGIMLi, SimPEG). In the first Colab cell run:
+    ```bash
+    !pip install "pyhydrogeophysx[geophysics]"
+    ```
+
+| Example | Method | Launch |
+|---|---|---|
+| `Ex_hydro_to_multigeophys` | Hydrology → ERT/seismic/EM | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_hydro_to_multigeophys.ipynb) |
+| `Ex_ERT_workflow` | ERT forward + inversion | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_ERT_workflow.ipynb) |
+| `Ex_TL_inversion` | Time-lapse ERT | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_TL_inversion.ipynb) |
+| `Ex_SRT_inv` | Seismic refraction tomography | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_SRT_inv.ipynb) |
+| `Ex_joint_inversion` | Joint ERT + seismic | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_joint_inversion.ipynb) |
+| `Ex_TDEM_workflow` | Time-domain EM | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_TDEM_workflow.ipynb) |
+
+To cite the package, see the [References](../references.md) page. It also builds on [pyGIMLi](https://www.pygimli.org/) (Rücker et al., 2017) for mesh generation, forward modeling, and inversion.

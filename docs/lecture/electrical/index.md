@@ -68,6 +68,17 @@ Electrical resistivity spans more orders of magnitude than any other rock proper
 
 </div>
 
+## Research Code: PyHydroGeophysX
+
+!!! tip "From resistivity to water content"
+    The petrophysics in this module (Archie's law, and its clay-corrected cousin the Waxman-Smits model) is exactly how field ERT becomes hydrology. [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX), developed in Dr. Chen's group, implements these transforms together with full 2D and 3D ERT forward modeling and inversion, including time-lapse and structure-constrained inversion for watershed monitoring.
+
+    - [Full ERT workflow](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_ERT_workflow.ipynb): mesh, forward model, invert.
+    - [Time-lapse ERT inversion](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_TL_inversion.ipynb): track moisture change over time.
+    - [Structure-constrained inversion](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_Structure_resinv.ipynb): sharpen boundaries using seismic structure.
+
+    Background reading: Archie (1942), Loke et al. (2013), and Binley & Slater (2020) on the [References](../../references.md) page.
+
 ## Data and Notebooks
 
 - 📊 Datasets live in the [Data area](../../data/index.md).

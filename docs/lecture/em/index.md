@@ -44,6 +44,14 @@ Electromagnetic induction lets us sense subsurface conductivity without ground c
 
 </div>
 
+## Research Code: PyHydroGeophysX
+
+!!! tip "FDEM and TEM forward modeling and inversion"
+    The induction principles here carry directly into quantitative EM modeling. [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX) wraps SimPEG to run frequency-domain (FDEM) and time-domain (TDEM) forward modeling and inversion over layered and 2D conductivity structures.
+
+    - [TDEM workflow](https://colab.research.google.com/github/geohang/PyHydroGeophysX/blob/main/examples/Ex_TDEM_workflow.ipynb): transient decay and inversion (runs in Colab).
+    - [FDEM workflow (source)](https://github.com/geohang/PyHydroGeophysX/blob/main/examples/Ex_FDEM_workflow.py): frequency-domain response and inversion.
+
 ## Data and Notebooks
 
 - 📊 Datasets live in the [Data area](../../data/index.md).

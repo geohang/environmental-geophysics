@@ -72,6 +72,11 @@ Environmental geophysics investigates the subsurface by measuring physical field
 
 - Reference text: Reynolds, J. M. (2011). *An Introduction to Applied and Environmental Geophysics* (2nd ed.). Wiley-Blackwell.
 - Prerequisites: introductory geology or physics.
+- Full reading list, including method references and hydrogeophysics papers, is on the [References](references.md) page.
+
+## From Classroom to Research
+
+The methods in this course are the same ones used to monitor groundwater and image the critical zone in current research. Several modules link to [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX), an open-source Python package developed in Dr. Chen's group that connects hydrological models to ERT, seismic, and electromagnetic measurements. You can run its examples in Google Colab straight from the [Notebooks](notebooks/index.md) page.
 
 ## How This Site Works
 
