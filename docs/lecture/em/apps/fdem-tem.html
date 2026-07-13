@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive 1D EM Forward Modeling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .slider-label { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 1.1rem; font-weight: 500; color: #cbd5e1; }
+        
+        /* Custom Larger Sliders */
+        input[type=range] { 
+            -webkit-appearance: none;
+            width: 100%; 
+            height: 12px;
+            background: #334155;
+            border-radius: 6px;
+            outline: none;
+            margin-bottom: 0.5rem;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        input[type=range]::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-moz-range-thumb:hover { transform: scale(1.1); }
+
+        /* Thumb Colors */
+        .slider-blue::-webkit-slider-thumb { background: #3b82f6; }
+        .slider-blue::-moz-range-thumb { background: #3b82f6; }
+        .slider-green::-webkit-slider-thumb { background: #22c55e; }
+        .slider-green::-moz-range-thumb { background: #22c55e; }
+
+        canvas { display: block; width: 100%; }
+        .panel { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; padding: 1.25rem; }
+        .control-card { background-color: rgba(15, 23, 42, 0.4); border: 1px solid #475569; padding: 1.25rem; border-radius: 0.5rem; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body class="p-4 md:p-6 h-screen flex flex-col gap-4">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-2">
+        <div>
+            <h1 class="text-2xl font-bold text-blue-400">1D Electromagnetic (EM) Forward Modeler</h1>
+            <p class="text-sm text-slate-400">Educational simulator for Time Domain (TEM) & Frequency Domain (FDEM) over a 2-Layer Earth</p>
+        </div>
+        <div class="flex gap-2">
+            <div class="flex items-center gap-2 text-xs">
+                <span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Conductive (Low ρ)
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+                <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Resistive (High ρ)
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex-grow grid grid-cols-1 lg:grid-cols-4 gap-4 overflow-hidden">
+        
+        <!-- Controls Panel -->
+        <div class="panel col-span-1 flex flex-col overflow-y-auto">
+            <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-600 pb-3">Earth Model Controls</h2>
+            
+            <div class="control-card">
+                <div class="slider-label">
+                    <span>Layer 1 Resistivity (ρ₁)</span>
+                    <span id="rho1-val" class="font-mono text-blue-300 font-bold">10 Ω·m</span>
+                </div>
+                <input type="range" id="rho1" min="0" max="3" step="0.01" value="1" class="slider-blue">
+                <p class="text-sm text-slate-400 mt-2">Log scale: 1 to 1000 Ω·m</p>
+            </div>
+
+            <div class="control-card">
+                <div class="slider-label">
+                    <span>Layer 1 Thickness (h₁)</span>
+                    <span id="h1-val" class="font-mono text-blue-300 font-bold">50 m</span>
+                </div>
+                <input type="range" id="h1" min="10" max="150" step="1" value="50" class="slider-blue">
+            </div>
+
+            <div class="control-card">
+                <div class="slider-label">
+                    <span>Layer 2 Resistivity (ρ₂)</span>
+                    <span id="rho2-val" class="font-mono text-blue-300 font-bold">100 Ω·m</span>
+                </div>
+                <input type="range" id="rho2" min="0" max="3" step="0.01" value="2" class="slider-blue">
+                <p class="text-sm text-slate-400 mt-2">Log scale: 1 to 1000 Ω·m</p>
+            </div>
+
+            <h2 class="text-xl font-bold text-white mb-6 mt-4 border-b border-slate-600 pb-3">Simulation Controls</h2>
+
+            <!-- FDEM Controls -->
+            <div class="control-card bg-slate-800/80 border-green-700/50">
+                <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div> FDEM Settings</h3>
+                <div class="slider-label">
+                    <span>Survey Frequency (f)</span>
+                    <span id="freq-val" class="font-mono text-green-300 font-bold">1000 Hz</span>
+                </div>
+                <input type="range" id="freq" min="1" max="5" step="0.01" value="3" class="slider-green" style="background: #14532d;">
+                <p class="text-sm text-slate-400 mt-2">Adjust frequency to see <b>Skin Depth</b> change.</p>
+            </div>
+
+            <!-- TEM Controls -->
+            <div class="control-card bg-slate-800/80 border-orange-700/50">
+                <h3 class="text-lg font-semibold text-orange-400 mb-4 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-orange-500"></div> TEM Settings</h3>
+                <button id="play-tem" class="w-full bg-orange-600 hover:bg-orange-500 text-white text-lg font-bold py-4 px-4 rounded-xl shadow-lg transition-all transform active:scale-95 mb-3">
+                    ▶ Play "Smoke Ring"
+                </button>
+                <p class="text-sm text-slate-400">Watch the diffusion of the EM field over time.</p>
+            </div>
+        </div>
+
+        <!-- Right Side: Vis and Charts -->
+        <div class="col-span-1 lg:col-span-3 grid grid-rows-2 gap-4">
+            
+            <!-- Visualization Canvas -->
+            <div class="panel flex flex-col relative h-full min-h-[300px]">
+                <h2 class="text-sm font-semibold absolute top-4 left-4 z-10 bg-slate-900/80 px-2 py-1 rounded">Subsurface Cross-Section</h2>
+                <div id="canvas-container" class="w-full flex-grow relative overflow-hidden rounded bg-black">
+                    <canvas id="earthCanvas" class="absolute inset-0"></canvas>
+                </div>
+                <!-- Legend for Canvas -->
+                <div class="absolute bottom-4 right-4 bg-slate-900/80 p-2 rounded text-xs flex gap-4 border border-slate-700">
+                    <div class="flex items-center gap-1"><div class="w-4 h-1 border-t-2 border-dashed border-green-400"></div> FDEM Skin Depth</div>
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full border border-orange-400"></div> TEM Smoke Ring</div>
+                </div>
+            </div>
+
+            <!-- Charts Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- FDEM Chart -->
+                <div class="panel flex flex-col h-[250px] lg:h-full relative">
+                    <h2 class="text-sm font-semibold mb-2 text-green-400">FDEM: Apparent Resistivity vs Frequency</h2>
+                    <div class="flex-grow relative">
+                        <canvas id="fdemChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- TEM Chart -->
+                <div class="panel flex flex-col h-[250px] lg:h-full relative">
+                    <h2 class="text-sm font-semibold mb-2 text-orange-400">TEM: Voltage Decay vs Time</h2>
+                    <div class="flex-grow relative">
+                        <canvas id="temChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<script>
+    // --- Physics & Math Approximations (for educational visualization) ---
+    // Note: These are analytical approximations designed to show correct qualitative behavior
+    // (asymptotes and transitions) without requiring heavy Hankel transforms in the browser.
+
+    const mu0 = 4 * Math.PI * 1e-7;
+
+    // Convert log sliders to real values
+    const getVal = (id) => {
+        const val = parseFloat(document.getElementById(id).value);
+        if (id === 'rho1' || id === 'rho2') return Math.pow(10, val);
+        if (id === 'freq') return Math.pow(10, val);
+        return val;
+    };
+
+    // Calculate Skin Depth (FDEM)
+    const calcSkinDepth = (rho, f) => 503 * Math.sqrt(rho / f);
+
+    // FDEM Apparent Resistivity (using cumulative response approximation over 1D layer)
+    const calculateFDEM = (rho1, h1, rho2) => {
+        const freqs = [];
+        const rho_apps = [];
+        const f_start = 10, f_end = 100000;
+        const steps = 50;
+        
+        for (let i = 0; i <= steps; i++) {
+            const f = f_start * Math.pow(f_end / f_start, i / steps);
+            freqs.push(f);
+            
+            const delta1 = calcSkinDepth(rho1, f);
+            // Weighting function based on how much of the skin depth is in layer 1
+            const W = 1 - Math.exp(-2 * h1 / delta1); 
+            
+            const sig1 = 1 / rho1;
+            const sig2 = 1 / rho2;
+            const sig_app = W * sig1 + (1 - W) * sig2;
+            rho_apps.push(1 / sig_app);
+        }
+        return { freqs, rho_apps };
+    };
+
+    // TEM Diffusion Depth
+    const calcDiffusionDepth = (rho, t) => Math.sqrt((2 * t * rho) / mu0);
+
+    // TEM Decay Curve (dB/dt)
+    const calculateTEM = (rho1, h1, rho2) => {
+        const times = [];
+        const voltages = [];
+        const t_start = 1e-5, t_end = 1e-2;
+        const steps = 50;
+
+        for (let i = 0; i <= steps; i++) {
+            const t = t_start * Math.pow(t_end / t_start, i / steps);
+            times.push(t);
+
+            // Half-space late-time approximation: V(t) ~ rho^-1.5 * t^-2.5
+            // Added a small constant to time to round off the very early time asymptote visually
+            const v_half = (rho, time) => 1e-5 * Math.pow(rho, -1.5) * Math.pow(time + 1e-6, -2.5);
+
+            const d1 = calcDiffusionDepth(rho1, t);
+            
+            // Smooth transition between layer 1 response and layer 2 response
+            // based on diffusion depth crossing the boundary h1
+            let W = Math.exp(-Math.pow(d1 / h1, 4)); // Sharpish transition
+            
+            const v1 = v_half(rho1, t);
+            const v2 = v_half(rho2, t);
+            
+            // Ensure late time purely reflects rho2's curve shape
+            const v_app = W * v1 + (1 - W) * v2; 
+            voltages.push(v_app);
+        }
+        return { times, voltages };
+    };
+
+    // --- State and UI Updates ---
+    
+    let state = {
+        rho1: 10, h1: 50, rho2: 100,
+        freq: 1000,
+        temAnimActive: false,
+        temAnimProgress: 0, // 0 to 1
+    };
+
+    // Colormap (Log Resistivity to Color)
+    // Blue (conductive, ~1 ohm-m) to Red (resistive, ~1000 ohm-m)
+    const getColor = (rho) => {
+        const logRho = Math.max(0, Math.min(3, Math.log10(rho)));
+        const hue = 240 - (logRho / 3) * 240; // 240 is blue, 0 is red
+        return `hsl(${hue}, 70%, 40%)`;
+    };
+
+    // Update DOM texts
+    const updateLabels = () => {
+        document.getElementById('rho1-val').innerText = `${state.rho1.toFixed(1)} Ω·m`;
+        document.getElementById('h1-val').innerText = `${state.h1.toFixed(0)} m`;
+        document.getElementById('rho2-val').innerText = `${state.rho2.toFixed(1)} Ω·m`;
+        
+        let fStr = state.freq >= 1000 ? `${(state.freq/1000).toFixed(1)} kHz` : `${state.freq.toFixed(0)} Hz`;
+        document.getElementById('freq-val').innerText = fStr;
+    };
+
+    // --- Charts Setup ---
+    Chart.defaults.color = '#cbd5e1';
+    Chart.defaults.borderColor = '#334155';
+
+    const ctxFDEM = document.getElementById('fdemChart').getContext('2d');
+    const fdemChart = new Chart(ctxFDEM, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Apparent Resistivity',
+                data: [],
+                borderColor: '#4ade80',
+                backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                pointRadius: 0,
+                tension: 0.1
+            },
+            {
+                label: 'Current Frequency',
+                data: [],
+                borderColor: '#fff',
+                backgroundColor: '#fff',
+                pointRadius: 6,
+                pointStyle: 'circle',
+                showLine: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { type: 'logarithmic', title: { display: true, text: 'Frequency (Hz)' }, reverse: true }, // Reverse so depth goes left-to-right visually
+                y: { type: 'logarithmic', title: { display: true, text: 'ρ_app (Ω·m)' }, min: 1, max: 1000 }
+            },
+            plugins: { legend: { display: false } },
+            animation: false
+        }
+    });
+
+    const ctxTEM = document.getElementById('temChart').getContext('2d');
+    const temChart = new Chart(ctxTEM, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Voltage Decay',
+                data: [],
+                borderColor: '#fb923c',
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.1
+            },
+            {
+                label: 'Current Time',
+                data: [],
+                borderColor: '#fff',
+                backgroundColor: '#fff',
+                pointRadius: 6,
+                pointStyle: 'circle',
+                showLine: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { type: 'logarithmic', title: { display: true, text: 'Time (s)' }, min: 1e-5, max: 1e-2 },
+                y: { type: 'logarithmic', title: { display: true, text: 'dB/dt (V/A)' } }
+            },
+            plugins: { legend: { display: false } },
+            animation: false
+        }
+    });
+
+    // --- Canvas Setup ---
+    const canvas = document.getElementById('earthCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const resizeCanvas = () => {
+        const container = document.getElementById('canvas-container');
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+        drawCanvas();
+    };
+    window.addEventListener('resize', resizeCanvas);
+
+    // Draw the subsurface
+    const drawCanvas = () => {
+        const w = canvas.width;
+        const h = canvas.height;
+        
+        ctx.clearRect(0, 0, w, h);
+
+        const surfaceY = 40; // Pixels from top
+        const depthScale = (h - surfaceY) / 200; // 200m total visible depth
+        
+        // Draw Sky
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, w, surfaceY);
+        
+        // Draw Transmitter / Receiver Coils (abstract representation)
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(w/2 - 20, surfaceY - 10, 10, 10); // TX
+        ctx.fillRect(w/2 + 10, surfaceY - 10, 10, 10); // RX
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '10px sans-serif';
+        ctx.fillText('TX', w/2 - 22, surfaceY - 15);
+        ctx.fillText('RX', w/2 + 8, surfaceY - 15);
+
+        // Draw Layer 1
+        const h1_px = state.h1 * depthScale;
+        ctx.fillStyle = getColor(state.rho1);
+        ctx.fillRect(0, surfaceY, w, h1_px);
+        
+        // Draw Layer 2
+        ctx.fillStyle = getColor(state.rho2);
+        ctx.fillRect(0, surfaceY + h1_px, w, h - (surfaceY + h1_px));
+
+        // Draw Boundary Line
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(0, surfaceY + h1_px);
+        ctx.lineTo(w, surfaceY + h1_px);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Labels
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.font = '12px sans-serif';
+        ctx.fillText(`Layer 1: ${state.rho1.toFixed(1)} Ω·m`, 10, surfaceY + 20);
+        ctx.fillText(`Depth: ${state.h1.toFixed(0)} m`, 10, surfaceY + h1_px - 10);
+        ctx.fillText(`Layer 2: ${state.rho2.toFixed(1)} Ω·m`, 10, surfaceY + h1_px + 20);
+
+        // --- Overlays ---
+
+        // FDEM Skin Depth Overlay
+        const fdemDelta = calcSkinDepth(state.rho1, state.freq); 
+        // Note: strictly speaking skin depth gets complex in 2 layers, but visualizing Layer 1's penetration is educational
+        const delta_px = Math.min(fdemDelta * depthScale, h - surfaceY);
+        
+        ctx.strokeStyle = '#4ade80';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([8, 4]);
+        ctx.beginPath();
+        ctx.moveTo(0, surfaceY + delta_px);
+        ctx.lineTo(w, surfaceY + delta_px);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        ctx.fillStyle = '#4ade80';
+        ctx.fillText(`Skin Depth (δ) at ${(state.freq/1000).toFixed(1)} kHz ≈ ${fdemDelta.toFixed(0)}m`, w - 200, surfaceY + delta_px - 5);
+
+        // TEM Smoke Ring Overlay
+        if (state.temAnimActive) {
+            // Time ranges from 1e-6 to 1e-2 log space
+            const t = 1e-6 * Math.pow(10000, state.temAnimProgress); 
+            
+            // Calculate effective diffusion depth
+            // If d < h1, diffuses in rho1. If deeper, speed changes.
+            let d;
+            const d1_at_h1 = calcDiffusionDepth(state.rho1, t);
+            if (d1_at_h1 < state.h1) {
+                d = d1_at_h1;
+            } else {
+                // Approximate time it took to reach h1
+                const t1 = (state.h1 * state.h1 * mu0) / (2 * state.rho1);
+                // Remaining time travels at rho2 speed
+                const d2 = calcDiffusionDepth(state.rho2, Math.max(0, t - t1));
+                d = state.h1 + d2;
+            }
+
+            const d_px = d * depthScale;
+            
+            // Draw expanding smoke ring (ellipse)
+            const cx = w/2;
+            const cy = surfaceY;
+            
+            ctx.strokeStyle = `rgba(251, 146, 60, ${1 - state.temAnimProgress})`; // Fade out
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            // Draw semi-ellipse. Width relates to depth.
+            ctx.ellipse(cx, cy, d_px * 1.5, d_px, 0, 0, Math.PI);
+            ctx.stroke();
+
+            // Draw current time on canvas
+            ctx.fillStyle = '#fb923c';
+            ctx.fillText(`t = ${(t*1000).toFixed(2)} ms`, cx + 20, cy + d_px - 10);
+        }
+    };
+
+    // --- Main Update Loop ---
+    const updateAll = () => {
+        // 1. Read Inputs
+        state.rho1 = getVal('rho1');
+        state.h1 = getVal('h1');
+        state.rho2 = getVal('rho2');
+        state.freq = getVal('freq');
+
+        updateLabels();
+
+        // 2. Calculate Curves
+        const fdemData = calculateFDEM(state.rho1, state.h1, state.rho2);
+        const temData = calculateTEM(state.rho1, state.h1, state.rho2);
+
+        // 3. Update Charts
+        fdemChart.data.labels = fdemData.freqs;
+        fdemChart.data.datasets[0].data = fdemData.rho_apps;
+        
+        // Add point for current frequency
+        const currentRhoApp = fdemData.rho_apps[fdemData.freqs.findIndex(f => f >= state.freq)] || fdemData.rho_apps[0];
+        fdemChart.data.datasets[1].data = [{x: state.freq, y: currentRhoApp}];
+        fdemChart.update();
+
+        temChart.data.labels = temData.times;
+        temChart.data.datasets[0].data = temData.voltages;
+        
+        // Add point for TEM animation time
+        if (state.temAnimActive) {
+            const t_current = 1e-6 * Math.pow(10000, state.temAnimProgress);
+            // interpolate Y value
+            let y_val = temData.voltages[0];
+            for(let i=0; i<temData.times.length-1; i++){
+                if(t_current >= temData.times[i] && t_current <= temData.times[i+1]) {
+                    y_val = temData.voltages[i];
+                    break;
+                }
+            }
+            temChart.data.datasets[1].data = [{x: Math.max(1e-5, t_current), y: y_val}];
+        } else {
+            temChart.data.datasets[1].data = [];
+        }
+        temChart.update();
+
+        // 4. Render Canvas
+        drawCanvas();
+    };
+
+    // --- Event Listeners ---
+    ['rho1', 'h1', 'rho2', 'freq'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateAll);
+    });
+
+    // TEM Animation Logic
+    let animId;
+    document.getElementById('play-tem').addEventListener('click', () => {
+        if (state.temAnimActive) return;
+        
+        state.temAnimActive = true;
+        state.temAnimProgress = 0;
+        const duration = 2500; // ms
+        const start = performance.now();
+
+        const animate = (time) => {
+            const elapsed = time - start;
+            state.temAnimProgress = Math.min(1, elapsed / duration);
+            
+            updateAll(); // Re-render charts and canvas
+
+            if (state.temAnimProgress < 1) {
+                animId = requestAnimationFrame(animate);
+            } else {
+                state.temAnimActive = false;
+                setTimeout(updateAll, 500); // Clear point after finish
+            }
+        };
+        requestAnimationFrame(animate);
+    });
+
+    // Initial Setup
+    setTimeout(() => {
+        resizeCanvas();
+        updateAll();
+    }, 100);
+
+</script>
+</body>
+</html>

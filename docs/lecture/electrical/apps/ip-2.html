@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cole-Cole Model Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .param-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            transition: all 0.2s ease;
+        }
+        .param-card:hover {
+            border-color: #38bdf8;
+        }
+        canvas {
+            background-color: #0f172a;
+            border-radius: 0.5rem;
+        }
+        
+        /* Custom Range Sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #475569;
+            border-radius: 2px;
+        }
+        .slider-val-badge {
+            background: #0f172a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="max-w-6xl w-full">
+        <!-- Header Section -->
+        <header class="mb-6">
+            <h1 class="text-3xl md:text-5xl font-bold text-sky-400 mb-3">Cole-Cole Model: 4 Numbers Tell the Whole Story</h1>
+            <p class="text-slate-300 text-lg">Instead of measuring at 100 frequencies, we fit 4 key parameters:</p>
+        </header>
+
+        <!-- Main Content Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Column: The 4 Parameters -->
+            <div class="lg:col-span-5 flex flex-col space-y-4">
+                
+                <!-- Math Formula Box -->
+                <div class="bg-slate-50 rounded-lg p-6 mb-2 flex justify-center items-center shadow-lg border-2 border-slate-200">
+                    <div class="text-slate-900 text-xl md:text-2xl overflow-x-auto">
+                        $$ \rho^*(\omega) = \rho_0 \left[ 1 - m \left( 1 - \frac{1}{1 + (i\omega\tau)^c} \right) \right] $$
+                    </div>
+                </div>
+
+                <!-- Parameter 1: rho0 -->
+                <div class="param-card p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h2 class="text-lg font-bold text-sky-400">ρ₀ (resistivity)</h2>
+                            <p class="text-sm text-slate-300">How conductive the rock is (DC limit)</p>
+                        </div>
+                        <span class="slider-val-badge" id="val-rho0">100 Ω·m</span>
+                    </div>
+                    <input type="range" id="slider-rho0" min="10" max="1000" step="10" value="100">
+                </div>
+
+                <!-- Parameter 2: m -->
+                <div class="param-card p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h2 class="text-lg font-bold text-sky-400">m (chargeability)</h2>
+                            <p class="text-sm text-slate-300">How much charge can be stored (0-1 scale)</p>
+                        </div>
+                        <span class="slider-val-badge" id="val-m">0.50</span>
+                    </div>
+                    <input type="range" id="slider-m" min="0.1" max="0.9" step="0.05" value="0.5">
+                </div>
+
+                <!-- Parameter 3: tau -->
+                <div class="param-card p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h2 class="text-lg font-bold text-sky-400">τ (time constant)</h2>
+                            <p class="text-sm text-slate-300">How fast charge releases (related to grain size)</p>
+                        </div>
+                        <span class="slider-val-badge" id="val-tau">0.10 s</span>
+                    </div>
+                    <input type="range" id="slider-tau" min="-3" max="2" step="0.1" value="-1">
+                </div>
+
+                <!-- Parameter 4: c -->
+                <div class="param-card p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h2 class="text-lg font-bold text-sky-400">c (shape factor)</h2>
+                            <p class="text-sm text-slate-300">Describes variety of grain sizes (0-1)</p>
+                        </div>
+                        <span class="slider-val-badge" id="val-c">0.50</span>
+                    </div>
+                    <input type="range" id="slider-c" min="0.1" max="1.0" step="0.05" value="0.5">
+                </div>
+
+            </div>
+
+            <!-- Right Column: Visualizations -->
+            <div class="lg:col-span-7 flex flex-col space-y-4">
+                
+                <!-- Spectral Graph -->
+                <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg flex-grow relative shadow-inner h-[350px] flex flex-col">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Complex Resistivity Spectrum</h3>
+                        <!-- Data Views Toggle -->
+                        <div class="flex space-x-1 bg-slate-900 rounded-lg p-1 border border-slate-700">
+                            <button id="btn-phase" class="px-3 py-1 rounded text-xs font-semibold bg-sky-500 text-white shadow transition-colors">Phase</button>
+                            <button id="btn-real" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors">Real</button>
+                            <button id="btn-imag" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors">Imaginary</button>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex-grow">
+                        <canvas id="graph-canvas" class="w-full h-full absolute inset-0"></canvas>
+                        
+                        <!-- Dynamic annotations -->
+                        <div id="annotation-box" class="absolute hidden flex-col items-center pointer-events-none transition-all duration-100 ease-out">
+                            <div class="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></div>
+                            <div id="annotation-text" class="text-sky-300 text-xs font-mono mt-1 bg-slate-900/80 px-2 py-1 rounded border border-sky-500/30 whitespace-nowrap"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Animated Microscope View -->
+                <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg relative h-[200px] overflow-hidden">
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                        Simulated Rock Fabric
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-2">Grains dynamically respond: <strong class="text-sky-400">τ</strong> controls average size. <strong class="text-sky-400">c</strong> controls uniformity.</p>
+                    <canvas id="rock-canvas" class="absolute bottom-0 right-0 w-full h-[140px] opacity-80"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const sliders = {
+            rho0: document.getElementById('slider-rho0'),
+            m: document.getElementById('slider-m'),
+            tau: document.getElementById('slider-tau'),
+            c: document.getElementById('slider-c')
+        };
+        const badges = {
+            rho0: document.getElementById('val-rho0'),
+            m: document.getElementById('val-m'),
+            tau: document.getElementById('val-tau'),
+            c: document.getElementById('val-c')
+        };
+        const graphCanvas = document.getElementById('graph-canvas');
+        const gCtx = graphCanvas.getContext('2d');
+        const rockCanvas = document.getElementById('rock-canvas');
+        const rCtx = rockCanvas.getContext('2d');
+        const annotationBox = document.getElementById('annotation-box');
+        const annotationText = document.getElementById('annotation-text');
+
+        // State
+        let currentParams = { rho0: 100, m: 0.5, tau: 0.1, c: 0.5 };
+        let currentView = 'phase'; // 'phase', 'real', 'imag'
+        let rockGrains = [];
+        let isAnimating = false;
+
+        // View Toggles
+        const views = ['phase', 'real', 'imag'];
+        function setView(view) {
+            currentView = view;
+            views.forEach(v => {
+                const btn = document.getElementById(`btn-${v}`);
+                if (v === view) {
+                    btn.className = "px-3 py-1 rounded text-xs font-semibold bg-sky-500 text-white shadow transition-colors";
+                } else {
+                    btn.className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors";
+                }
+            });
+            drawGraph();
+        }
+        document.getElementById('btn-phase').onclick = () => setView('phase');
+        document.getElementById('btn-real').onclick = () => setView('real');
+        document.getElementById('btn-imag').onclick = () => setView('imag');
+
+        // Setup Canvases
+        function resizeCanvases() {
+            const gRect = graphCanvas.parentElement.getBoundingClientRect();
+            graphCanvas.width = gRect.width;
+            graphCanvas.height = gRect.height;
+            
+            const rRect = rockCanvas.parentElement.getBoundingClientRect();
+            rockCanvas.width = rRect.width;
+            rockCanvas.height = 140;
+            
+            drawGraph();
+        }
+        window.addEventListener('resize', resizeCanvases);
+
+        // Math: Cole-Cole Complex Resistivity
+        function getColeCole(f, rho0, m, tau, c) {
+            let w = 2 * Math.PI * f;
+            let wt = w * tau;
+            
+            // z = (i*w*tau)^c
+            let wtc = Math.pow(wt, c);
+            let phase_c = Math.PI * c / 2;
+            let z_re = wtc * Math.cos(phase_c);
+            let z_im = wtc * Math.sin(phase_c);
+
+            // Denominator D = 1 + z
+            let d_re = 1 + z_re;
+            let d_im = z_im;
+            let d_mag2 = d_re * d_re + d_im * d_im;
+
+            // Fraction F = 1 / D
+            let f_re = d_re / d_mag2;
+            let f_im = -d_im / d_mag2;
+
+            // Bracket Inner = 1 - F
+            let inner_re = 1 - f_re;
+            let inner_im = -f_im; 
+
+            // rho* = rho0 * [1 - m * Inner]
+            let rho_re = rho0 * (1 - m * inner_re);
+            let rho_im = rho0 * (-m * inner_im);
+
+            let phase_rad = Math.atan2(rho_im, rho_re);
+            let phase_mrad = phase_rad * 1000;
+
+            return {
+                real: rho_re,
+                imag: rho_im, // naturally negative in convention
+                phase: phase_mrad // naturally negative in convention
+            };
+        }
+
+        // Draw the Spectral Graph
+        function drawGraph() {
+            gCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+            const margin = { top: 20, right: 20, bottom: 40, left: 60 };
+            
+            const plotW = w - margin.left - margin.right;
+            const plotH = h - margin.top - margin.bottom;
+
+            const minLogF = -3;
+            const maxLogF = 4;
+            const decades = maxLogF - minLogF;
+            const steps = 200;
+
+            // 1. Generate Data & Find Bounds
+            let dataPoints = [];
+            let maxY = -Infinity, minY = Infinity;
+            let maxIndex = 0;
+
+            for (let i = 0; i <= steps; i++) {
+                let logF = minLogF + (i / steps) * decades;
+                let f = Math.pow(10, logF);
+                let cc = getColeCole(f, currentParams.rho0, currentParams.m, currentParams.tau, currentParams.c);
+                
+                let val;
+                if (currentView === 'phase') val = Math.abs(cc.phase);
+                else if (currentView === 'real') val = cc.real;
+                else if (currentView === 'imag') val = Math.abs(cc.imag);
+                
+                dataPoints.push({ logF, f, val, x: margin.left + (i / steps) * plotW });
+                
+                if (val > maxY) { maxY = val; maxIndex = i; }
+                if (val < minY) minY = val;
+            }
+
+            // Determine Y-Axis Scales
+            let plotMinY, plotMaxY;
+            if (currentView === 'phase') {
+                plotMinY = 0;
+                plotMaxY = Math.ceil(maxY / 50) * 50;
+                if (plotMaxY < 50) plotMaxY = 50;
+            } else if (currentView === 'real') {
+                plotMaxY = currentParams.rho0 * 1.05;
+                plotMinY = currentParams.rho0 * (1 - currentParams.m) * 0.95;
+            } else if (currentView === 'imag') {
+                plotMinY = 0;
+                plotMaxY = maxY * 1.2;
+                if (plotMaxY < 1) plotMaxY = 1;
+            }
+
+            // 2. Draw Grid and Axes
+            gCtx.strokeStyle = '#334155';
+            gCtx.lineWidth = 1;
+            gCtx.fillStyle = '#94a3b8';
+            gCtx.font = '11px Inter';
+            
+            // X-axis (Frequencies)
+            gCtx.textAlign = 'center';
+            gCtx.textBaseline = 'top';
+            for (let logF = minLogF; logF <= maxLogF; logF++) {
+                let x = margin.left + ((logF - minLogF) / decades) * plotW;
+                gCtx.beginPath(); gCtx.moveTo(x, margin.top); gCtx.lineTo(x, h - margin.bottom + 5); gCtx.stroke();
+                let label = logF === 0 ? "1 Hz" : (logF === 3 ? "1 kHz" : `10^${logF}`);
+                gCtx.fillText(label, x, h - margin.bottom + 10);
+            }
+
+            // Y-axis (Dynamic)
+            gCtx.textAlign = 'right';
+            gCtx.textBaseline = 'middle';
+            const yTicks = 5;
+            for (let i = 0; i <= yTicks; i++) {
+                let py = plotMinY + (i / yTicks) * (plotMaxY - plotMinY);
+                let y = h - margin.bottom - ((py - plotMinY) / (plotMaxY - plotMinY)) * plotH;
+                
+                gCtx.beginPath(); gCtx.moveTo(margin.left - 5, y); gCtx.lineTo(w - margin.right, y); gCtx.stroke();
+                let labelText = py >= 10 ? Math.round(py) : py.toFixed(1);
+                gCtx.fillText(labelText, margin.left - 10, y);
+            }
+            
+            // Axis Label
+            gCtx.save();
+            gCtx.translate(15, h/2);
+            gCtx.rotate(-Math.PI/2);
+            gCtx.fillStyle = '#cbd5e1';
+            gCtx.textAlign = 'center';
+            gCtx.font = 'bold 12px Inter';
+            
+            let yLabel = "-Phase (mrad)";
+            if (currentView === 'real') yLabel = "Real ρ' (Ω·m)";
+            if (currentView === 'imag') yLabel = "-Imag ρ'' (Ω·m)";
+            gCtx.fillText(yLabel, 0, 0);
+            gCtx.restore();
+
+            // 3. Draw Data Curve
+            gCtx.strokeStyle = currentView === 'real' ? '#34d399' : (currentView === 'imag' ? '#f472b6' : '#38bdf8');
+            gCtx.lineWidth = 3;
+            gCtx.shadowColor = gCtx.strokeStyle;
+            gCtx.shadowBlur = 8;
+            gCtx.beginPath();
+
+            dataPoints.forEach((pt, i) => {
+                let y = h - margin.bottom - ((pt.val - plotMinY) / (plotMaxY - plotMinY)) * plotH;
+                y = Math.max(margin.top, Math.min(y, h - margin.bottom)); // Clamp
+                pt.y = y; // save for annotation
+
+                if (i === 0) gCtx.moveTo(pt.x, y);
+                else gCtx.lineTo(pt.x, y);
+            });
+            gCtx.stroke();
+            gCtx.shadowBlur = 0;
+
+            // 4. Update Annotation
+            let peakPt = dataPoints[maxIndex];
+            
+            if (currentView !== 'real' && maxY > 1) { // Phase & Imag show distinct peaks
+                annotationBox.classList.remove('hidden');
+                annotationBox.classList.add('flex');
+                annotationBox.style.left = `${peakPt.x - 4}px`; // center dot
+                annotationBox.style.top = `${peakPt.y - 30}px`;
+                annotationText.innerText = `Peak frequency ≈ 1/τ`;
+                annotationBox.firstElementChild.style.backgroundColor = gCtx.strokeStyle;
+            } 
+            else if (currentView === 'real') { // Real drops across tau
+                let dropIndex = Math.floor(steps/2); // approximate midpoint
+                annotationBox.classList.remove('hidden');
+                annotationBox.classList.add('flex');
+                annotationBox.style.left = `${dataPoints[dropIndex].x - 4}px`;
+                annotationBox.style.top = `${dataPoints[dropIndex].y - 30}px`;
+                annotationText.innerText = `Drops from ρ₀ to ρ₀(1-m)`;
+                annotationBox.firstElementChild.style.backgroundColor = gCtx.strokeStyle;
+            } else {
+                annotationBox.classList.add('hidden');
+            }
+        }
+
+        // --- DYNAMIC ROCK PHYSICS SIMULATION ---
+        function initRockGrains() {
+            rockGrains = [];
+            const shades = ['#334155', '#475569', '#64748b', '#1e293b'];
+            
+            for(let i=0; i<100; i++) {
+                rockGrains.push({
+                    x: Math.random() * 800,
+                    y: Math.random() * 200,
+                    vx: 0, vy: 0,
+                    r: 5, targetR: 5,
+                    baseScale: Math.random() * 2 - 1, // Variance seed (-1 to 1)
+                    color: shades[Math.floor(Math.random() * shades.length)]
+                });
+            }
+        }
+
+        function updateRockTargets() {
+            let logTau = Math.log10(currentParams.tau); 
+            // Map logTau (-3 to 2) to average radius (approx 4px to 20px)
+            let meanR = 12 + (logTau * 3.2); 
+            let variance = 1.0 - currentParams.c; // higher c = less variance
+            
+            rockGrains.forEach(g => {
+                g.targetR = meanR * (1 + g.baseScale * variance);
+                g.targetR = Math.max(3, g.targetR); // absolute min size
+            });
+        }
+
+        function animateRocks() {
+            const w = rockCanvas.width;
+            const h = rockCanvas.height;
+            
+            rCtx.clearRect(0, 0, w, h);
+            rCtx.fillStyle = '#0f172a';
+            rCtx.fillRect(0, 0, w, h);
+
+            // Physics Step
+            for(let i=0; i<rockGrains.length; i++) {
+                let g = rockGrains[i];
+                
+                // 1. Smoothly morph to target size
+                g.r += (g.targetR - g.r) * 0.08;
+                
+                // 2. Apply friction & ambient drift
+                g.vx *= 0.85;
+                g.vy *= 0.85;
+                g.vx += (Math.random() - 0.5) * 0.1;
+                g.vy += (Math.random() - 0.5) * 0.1;
+
+                // 3. Resolve Collisions (push grains apart)
+                for(let j=i+1; j<rockGrains.length; j++) {
+                    let g2 = rockGrains[j];
+                    let dx = g2.x - g.x;
+                    let dy = g2.y - g.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    let minDist = g.r + g2.r - 0.5; // slight overlap allowed
+                    
+                    if(dist < minDist && dist > 0.01) {
+                        let force = (minDist - dist) * 0.08;
+                        let nx = (dx / dist) * force;
+                        let ny = (dy / dist) * force;
+                        g.vx -= nx; g.vy -= ny;
+                        g2.vx += nx; g2.vy += ny;
+                    }
+                }
+
+                // 4. Update Position & Soft Boundaries
+                g.x += g.vx;
+                g.y += g.vy;
+                
+                let margin = g.r * 0.5;
+                if (g.x < -margin) g.vx += 1;
+                if (g.x > w + margin) g.vx -= 1;
+                if (g.y < -margin) g.vy += 1;
+                if (g.y > h + margin) g.vy -= 1;
+            }
+
+            // Draw Step
+            rockGrains.forEach(g => {
+                rCtx.beginPath();
+                rCtx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+                rCtx.fillStyle = g.color;
+                rCtx.fill();
+                
+                // 3D lighting highlight
+                rCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+                rCtx.lineWidth = g.r > 10 ? 2 : 1;
+                rCtx.beginPath();
+                rCtx.arc(g.x - g.r*0.2, g.y - g.r*0.2, g.r*0.5, 0, Math.PI * 1.5);
+                rCtx.stroke();
+            });
+
+            requestAnimationFrame(animateRocks);
+        }
+
+        // Input Listeners
+        function handleInput() {
+            currentParams.rho0 = parseFloat(sliders.rho0.value);
+            currentParams.m = parseFloat(sliders.m.value);
+            
+            let logTau = parseFloat(sliders.tau.value);
+            currentParams.tau = Math.pow(10, logTau);
+            currentParams.c = parseFloat(sliders.c.value);
+
+            // Update Badges
+            badges.rho0.innerText = `${currentParams.rho0} Ω·m`;
+            badges.m.innerText = currentParams.m.toFixed(2);
+            
+            if (currentParams.tau < 0.01) badges.tau.innerText = `${currentParams.tau.toFixed(4)} s`;
+            else if (currentParams.tau < 1) badges.tau.innerText = `${currentParams.tau.toFixed(2)} s`;
+            else badges.tau.innerText = `${currentParams.tau.toFixed(1)} s`;
+            
+            badges.c.innerText = currentParams.c.toFixed(2);
+
+            updateRockTargets();
+            drawGraph();
+        }
+
+        sliders.tau.addEventListener('input', handleInput);
+        sliders.c.addEventListener('input', handleInput);
+        sliders.m.addEventListener('input', handleInput);
+        sliders.rho0.addEventListener('input', handleInput);
+
+        // Initialization
+        setTimeout(() => {
+            initRockGrains();
+            resizeCanvases();
+            handleInput();
+            
+            if(!isAnimating) {
+                isAnimating = true;
+                animateRocks();
+            }
+        }, 100);
+
+    </script>
+</body>
+</html>

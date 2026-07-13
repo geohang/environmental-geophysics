@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnetic Anomaly Interpretation Methods</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .slider-container { display: flex; align-items: center; gap: 10px; }
+        input[type=range] { flex-grow: 1; cursor: pointer; }
+        canvas { display: block; width: 100%; height: 100%; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-teal-700 text-white p-6 shadow-lg">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold"><i class="fas fa-magnet mr-3"></i>Magnetic Interpretation Methods</h1>
+            <p class="mt-2 text-teal-100 text-lg">Interactive demonstrations for Geomagnetic Geophysics</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6 space-y-12">
+
+        <!-- Method 1: Simple Depth Rules -->
+        <section id="method1" class="bg-white p-8 rounded-xl shadow-md card border-l-8 border-teal-500">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-teal-800">1. Simple Depth Rules (Half-Width)</h2>
+                    <p class="text-gray-600 mt-2">The shape of an anomaly relates directly to the depth of the source.</p>
+                </div>
+                <div class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg font-mono text-sm">
+                    Depth (Z) ≈ Width at Half-Max Amplitude
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-1 space-y-4">
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        <h3 class="font-bold mb-2 text-lg">Concept</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-sm">
+                            <li><span class="font-bold text-red-500">Sharp</span> anomaly = <span class="font-bold text-red-500">Shallow</span> source.</li>
+                            <li><span class="font-bold text-blue-500">Broad</span> anomaly = <span class="font-bold text-blue-500">Deep</span> source.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="p-4 border rounded-lg bg-teal-50">
+                        <label class="block font-bold mb-2">Adjust Source Depth (z):</label>
+                        <div class="slider-container">
+                            <span class="text-xs font-bold">Shallow</span>
+                            <input type="range" id="depthSlider" min="2" max="20" value="5" step="0.5">
+                            <span class="text-xs font-bold">Deep</span>
+                        </div>
+                        <p class="text-center mt-2 font-mono text-teal-700">Current Depth: <span id="depthValue">5.0</span> m</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 bg-white border rounded-lg p-2 h-80">
+                    <canvas id="depthChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Method 2: Peters' Half-Slope -->
+        <section id="method2" class="bg-white p-8 rounded-xl shadow-md card border-l-8 border-indigo-500">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-indigo-800">2. Peters' Half-Slope Method</h2>
+                    <p class="text-gray-600 mt-2">A graphical method specifically for dykes using the anomaly slope.</p>
+                </div>
+                <div class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg font-mono text-sm">
+                    Depth ≈ d / 1.6
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Steps to Calculate:</h3>
+                    <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                        <li>Draw a <strong>tangent</strong> at the point of maximum slope (inflection point).</li>
+                        <li>Construct a line with exactly <strong>half the slope</strong> of the tangent.</li>
+                        <li>Find where this "half-slope" line is tangent to the anomaly curve at two points (one high, one low).</li>
+                        <li>Measure the horizontal distance <strong>'d'</strong> between these two points.</li>
+                        <li>Apply the formula: <span class="bg-indigo-100 px-2 py-1 rounded font-mono">Z = d / 1.6</span></li>
+                    </ol>
+                    <button id="toggleLinesBtn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition shadow">
+                        Toggle Construction Lines
+                    </button>
+                </div>
+
+                <!-- Canvas for Precise Drawing -->
+                <div class="border rounded-lg bg-gray-50 p-0 flex justify-center relative h-80 overflow-hidden" id="petersContainer">
+                    <canvas id="petersCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Method 3: Reduction to the Pole (RTP) -->
+        <section id="method3" class="bg-white p-8 rounded-xl shadow-md card border-l-8 border-green-500">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-green-800">3. Reduction to the Pole (RTP)</h2>
+                    <p class="text-gray-600 mt-2">Correcting the latitude effect to center anomalies over their sources.</p>
+                </div>
+                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-mono text-sm">
+                    Filter: Lat → 90° (Pole)
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-1 space-y-4">
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        <h3 class="font-bold mb-2 text-lg">Problem & Solution</h3>
+                        <p class="text-sm mb-2"><strong>Problem:</strong> At mid-latitudes, induction causes dipoles. The peak is <span class="italic text-red-600">shifted</span> away from the actual source.</p>
+                        <p class="text-sm"><strong>Solution (RTP):</strong> A mathematical filter simulates measuring the data at the magnetic pole.</p>
+                        <p class="text-sm mt-2 font-bold text-green-700">Result: Anomalies become symmetric and centered.</p>
+                    </div>
+                    
+                    <div class="p-4 border rounded-lg bg-green-50">
+                        <label class="block font-bold mb-2">Apply RTP Filter:</label>
+                        <div class="slider-container">
+                            <span class="text-xs font-bold">Raw (Asymmetric)</span>
+                            <input type="range" id="rtpSlider" min="0" max="100" value="0" step="1">
+                            <span class="text-xs font-bold">RTP (Symmetric)</span>
+                        </div>
+                        <p class="text-center mt-2 font-mono text-green-700">Status: <span id="rtpStatus">Raw Data</span></p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 bg-white border rounded-lg p-2 h-80 relative">
+                    <canvas id="rtpChart"></canvas>
+                    <!-- Source Box -->
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-gray-800 text-white text-xs flex items-center justify-center rounded-t">
+                        Source
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center p-6 mt-12">
+        <p>Interactive Teaching Aid for Geophysics</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // === CHART 1: Simple Depth Rules ===
+        const ctxDepth = document.getElementById('depthChart').getContext('2d');
+        
+        function generateDepthData(z) {
+            const data = [];
+            const labels = [];
+            for (let x = -50; x <= 50; x += 1) {
+                labels.push(x);
+                let val = (1 / (Math.pow(x, 2) + Math.pow(z, 2)));
+                data.push(val);
+            }
+            const max = Math.max(...data);
+            return {
+                labels: labels,
+                data: data.map(v => (v / max) * 100)
+            };
+        }
+
+        const initialDepth = 5;
+        const initialDepthData = generateDepthData(initialDepth);
+
+        const depthChart = new Chart(ctxDepth, {
+            type: 'line',
+            data: {
+                labels: initialDepthData.labels,
+                datasets: [{
+                    label: 'Magnetic Anomaly (nT)',
+                    data: initialDepthData.data,
+                    borderColor: 'rgb(20, 184, 166)', // Teal-500
+                    backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }, {
+                    label: 'Half-Max Width',
+                    data: [], 
+                    borderColor: 'rgb(239, 68, 68)', 
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 110, display: false },
+                    x: { display: true, title: {display: true, text: 'Distance (x)'} }
+                },
+                plugins: {
+                    annotation: { annotations: {} }
+                }
+            }
+        });
+
+        function updateHalfWidthLine(chart, dataArr) {
+            const halfMax = 50;
+            let idx1 = dataArr.findIndex(y => y >= 50);
+            let idx2 = dataArr.length - 1 - [...dataArr].reverse().findIndex(y => y >= 50);
+            const lineData = new Array(dataArr.length).fill(null);
+            for(let i=idx1; i<=idx2; i++) {
+                lineData[i] = 50;
+            }
+            chart.data.datasets[1].data = lineData;
+        }
+
+        updateHalfWidthLine(depthChart, initialDepthData.data);
+        depthChart.update();
+
+        document.getElementById('depthSlider').addEventListener('input', function(e) {
+            const z = parseFloat(e.target.value);
+            document.getElementById('depthValue').innerText = z.toFixed(1);
+            const newData = generateDepthData(z);
+            depthChart.data.datasets[0].data = newData.data;
+            updateHalfWidthLine(depthChart, newData.data);
+            depthChart.update();
+        });
+
+
+        // === SECTION 2: Peters' Half-Slope (CANVAS DRAWING) ===
+        const pCanvas = document.getElementById('petersCanvas');
+        const pCtx = pCanvas.getContext('2d');
+        let showPetersLines = false;
+
+        // Resize handling
+        function resizePetersCanvas() {
+            const container = document.getElementById('petersContainer');
+            pCanvas.width = container.clientWidth;
+            pCanvas.height = container.clientHeight;
+            drawPeters();
+        }
+        window.addEventListener('resize', resizePetersCanvas);
+
+        // Parameters for Peters Model (Vertical Dyke approximation)
+        const petersParams = {
+            z: 60,  // Depth proxy (spread)
+            H: 220, // Height amplitude
+            offsetY: 280 // Baseline Y
+        };
+
+        // Function: y = H * (z^2 / (x^2 + z^2)) (Lorentzian / Bell shape)
+        function getPetersY(x_rel) {
+            return petersParams.offsetY - (petersParams.H * Math.pow(petersParams.z, 2) / (Math.pow(x_rel, 2) + Math.pow(petersParams.z, 2)));
+        }
+
+        // Derivative (Slope) Calculation
+        // Note: Canvas Y is inverted (0 is top), so a "rising" curve visually has negative dy/dx in screen coords.
+        function getPetersSlope(x_rel) {
+            const num = petersParams.H * 2 * x_rel;
+            const den = Math.pow(petersParams.z, 2) * Math.pow(1 + Math.pow(x_rel/petersParams.z, 2), 2);
+            return num / den;
+        }
+
+        function drawPeters() {
+            const w = pCanvas.width;
+            const h = pCanvas.height;
+            const cx = w * 0.45; // Shift curve slightly left
+            
+            pCtx.clearRect(0, 0, w, h);
+
+            // Draw Grid
+            pCtx.strokeStyle = '#e5e7eb';
+            pCtx.lineWidth = 1;
+            pCtx.beginPath();
+            for(let i=0; i<w; i+=40) { pCtx.moveTo(i,0); pCtx.lineTo(i,h); }
+            for(let i=0; i<h; i+=40) { pCtx.moveTo(0,i); pCtx.lineTo(w,i); }
+            pCtx.stroke();
+
+            // Draw Main Curve
+            pCtx.beginPath();
+            pCtx.strokeStyle = '#4B5563';
+            pCtx.lineWidth = 4;
+            for(let x=0; x<=w; x++) {
+                const y = getPetersY(x - cx);
+                if(x===0) pCtx.moveTo(x,y);
+                else pCtx.lineTo(x,y);
+            }
+            pCtx.stroke();
+
+            if (!showPetersLines) return;
+
+            // --- 1. Find Max Slope (Inflection Point) ---
+            // For this function, max slope is at x = +/- z / sqrt(3)
+            // Visual slope is negative on left side (y decreases as x increases)
+            // So Max Slope (most negative) is at x = -z/sqrt(3)
+            const x_inflect_rel = -petersParams.z / Math.sqrt(3);
+            const x_inflect = cx + x_inflect_rel;
+            const y_inflect = getPetersY(x_inflect_rel);
+            const maxSlope = getPetersSlope(x_inflect_rel); // This will be negative
+
+            // Draw Tangent at Max Slope
+            drawTangent(x_inflect, y_inflect, maxSlope, '#EF4444', 'Max Slope', w, 140);
+            drawPoint(x_inflect, y_inflect, '#EF4444');
+
+            // --- 2. Find Points with Half Slope ---
+            const targetSlope = maxSlope / 2;
+            
+            // We need to find x where slope(x) = targetSlope.
+            // Since the slope function is continuous, we scan from left edge to center.
+            // Slope starts at 0, goes to maxSlope (negative), then back to 0.
+            // There will be two points crossing targetSlope.
+            
+            let x1_rel = null, x2_rel = null;
+            
+            // Scan 1: Far left to Inflection point (Slope decreasing 0 -> maxSlope)
+            // We look for crossing of targetSlope.
+            let prevS = 0;
+            for(let x = -300; x <= x_inflect_rel; x+=0.5) {
+                let s = getPetersSlope(x);
+                // Check if we crossed the targetSlope value
+                if ( (prevS > targetSlope && s <= targetSlope) || (prevS < targetSlope && s >= targetSlope) ) {
+                    x1_rel = x;
+                    break;
+                }
+                prevS = s;
+            }
+
+            // Scan 2: Inflection point to Center (Slope increasing maxSlope -> 0)
+            prevS = maxSlope;
+            for(let x = x_inflect_rel; x <= 0; x+=0.5) {
+                let s = getPetersSlope(x);
+                if ( (prevS < targetSlope && s >= targetSlope) || (prevS > targetSlope && s <= targetSlope) ) {
+                    x2_rel = x;
+                    break;
+                }
+                prevS = s;
+            }
+
+            // Fallback if numerical search fails (shouldn't happen with correct math)
+            if (x1_rel === null) x1_rel = x_inflect_rel - 20;
+            if (x2_rel === null) x2_rel = x_inflect_rel + 20;
+
+            const x1 = cx + x1_rel;
+            const y1 = getPetersY(x1_rel);
+            const x2 = cx + x2_rel;
+            const y2 = getPetersY(x2_rel);
+
+            // Draw Half Slope Tangents
+            drawTangent(x1, y1, targetSlope, '#3B82F6', '', w, 80);
+            drawTangent(x2, y2, targetSlope, '#3B82F6', 'Half Slope', w, 80);
+            drawPoint(x1, y1, '#3B82F6');
+            drawPoint(x2, y2, '#3B82F6');
+
+            // Draw Distance d
+            pCtx.beginPath();
+            pCtx.strokeStyle = 'black';
+            pCtx.lineWidth = 2;
+            const dY = (y1 + y2) / 2 + 50; // Shift marker down
+            
+            // Vertical dashed drop lines
+            pCtx.setLineDash([4, 4]);
+            pCtx.moveTo(x1, y1); pCtx.lineTo(x1, dY);
+            pCtx.moveTo(x2, y2); pCtx.lineTo(x2, dY);
+            pCtx.stroke();
+            
+            // Horizontal dimension line
+            pCtx.setLineDash([]);
+            pCtx.beginPath();
+            pCtx.moveTo(x1, dY - 10); pCtx.lineTo(x2, dY - 10);
+            pCtx.stroke();
+            
+            // Arrowheads
+            drawArrowhead(pCtx, x1, dY - 10, 'left');
+            drawArrowhead(pCtx, x2, dY - 10, 'right');
+
+            // Text d
+            pCtx.fillStyle = 'black';
+            pCtx.font = 'bold 18px sans-serif';
+            pCtx.textAlign = 'center';
+            pCtx.fillText('d', (x1+x2)/2, dY - 20);
+        }
+
+        function drawTangent(px, py, slope, color, text, width, length=100) {
+            pCtx.beginPath();
+            pCtx.strokeStyle = color;
+            pCtx.lineWidth = 2;
+            // Draw a segment centered at px
+            const lx = px - length;
+            const rx = px + length;
+            const ly = slope * (lx - px) + py;
+            const ry = slope * (rx - px) + py;
+
+            pCtx.moveTo(lx, ly);
+            pCtx.lineTo(rx, ry);
+            pCtx.stroke();
+
+            if(text) {
+                pCtx.fillStyle = color;
+                pCtx.font = 'bold 14px sans-serif';
+                pCtx.textAlign = 'left';
+                pCtx.fillText(text, lx, ly - 10);
+            }
+        }
+
+        function drawPoint(x, y, color) {
+            pCtx.beginPath();
+            pCtx.arc(x, y, 4, 0, 2 * Math.PI);
+            pCtx.fillStyle = color;
+            pCtx.fill();
+        }
+
+        function drawArrowhead(ctx, x, y, dir) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            if(dir === 'left') {
+                ctx.lineTo(x + 8, y - 4);
+                ctx.lineTo(x + 8, y + 4);
+            } else {
+                ctx.lineTo(x - 8, y - 4);
+                ctx.lineTo(x - 8, y + 4);
+            }
+            ctx.fillStyle = 'black';
+            ctx.fill();
+        }
+
+        // Initialize Peters
+        setTimeout(resizePetersCanvas, 100); 
+        document.getElementById('toggleLinesBtn').addEventListener('click', function() {
+            showPetersLines = !showPetersLines;
+            drawPeters();
+        });
+
+
+        // === CHART 3: RTP Animation ===
+        const ctxRtp = document.getElementById('rtpChart').getContext('2d');
+
+        function generateRTPData(factor) { 
+            const data = [];
+            const labels = [];
+            for (let x = -50; x <= 50; x += 1) {
+                labels.push(x);
+                const sym = 100 / (1 + 0.05 * x * x);
+                const asym = -1 * (x * 100) / Math.pow(1 + 0.05 * x * x, 1.5);
+                const dipole = sym + 0.8 * asym; 
+                const val = (1 - factor) * dipole + factor * sym;
+                data.push(val);
+            }
+            return { labels, data };
+        }
+
+        const initialRTP = generateRTPData(0);
+
+        const rtpChart = new Chart(ctxRtp, {
+            type: 'line',
+            data: {
+                labels: initialRTP.labels,
+                datasets: [{
+                    label: 'Magnetic Anomaly',
+                    data: initialRTP.data,
+                    borderColor: 'rgb(34, 197, 94)', // Green-500
+                    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { display: false },
+                    x: { display: true, grid: {display:false} }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        document.getElementById('rtpSlider').addEventListener('input', function(e) {
+            const val = parseInt(e.target.value);
+            const factor = val / 100;
+            const statusLabel = document.getElementById('rtpStatus');
+            if(val < 20) statusLabel.innerText = "Raw Data (Asymmetric)";
+            else if(val > 80) statusLabel.innerText = "Reduced to Pole (Symmetric)";
+            else statusLabel.innerText = "Processing...";
+
+            const newData = generateRTPData(factor);
+            rtpChart.data.datasets[0].data = newData.data;
+            rtpChart.update('none'); 
+        });
+
+    </script>
+</body>
+</html>

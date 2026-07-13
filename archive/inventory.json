@@ -1,0 +1,342 @@
+[
+  {
+    "page": "/home",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/home",
+    "h1": "Enviromental Geophysics",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Environmental Geophysics: An Interactive Guide",
+        "chars": 34173,
+        "raw": "archive\\raw\\home__0.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture",
+    "h1": "Lecture Lecture Structure",
+    "embeds": []
+  },
+  {
+    "page": "/lecture/introduction-to-environmental-geophysics",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/introduction-to-environmental-geophysics",
+    "h1": "Introduction to Environmental Geophysics",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Geophysical Method & Spacing Simulator",
+        "chars": 8570,
+        "raw": "archive\\raw\\lecture__introduction-to-environmental-geophysics__0.html",
+        "app": "docs\\lecture\\intro\\apps\\introduction.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/gravity-methods",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/gravity-methods",
+    "h1": "Gravity Methods",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Complete Gravity Exploration & Data Reduction",
+        "chars": 24152,
+        "raw": "archive\\raw\\lecture__gravity-methods__0.html",
+        "app": "docs\\lecture\\gravity\\apps\\gravity-methods.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/gravity-methods/activity-1",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/gravity-methods/activity-1",
+    "h1": "Activity-1",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Advanced Gravity Drift Correction",
+        "chars": 11108,
+        "raw": "archive\\raw\\lecture__gravity-methods__activity-1__0.html",
+        "app": "docs\\lecture\\gravity\\apps\\activity-1.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/gravity-methods/activity-2",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/gravity-methods/activity-2",
+    "h1": "Activity-2",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Gravity Lab: The Cross-Section Challenge",
+        "chars": 9827,
+        "raw": "archive\\raw\\lecture__gravity-methods__activity-2__0.html",
+        "app": "docs\\lecture\\gravity\\apps\\activity-2.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/gravity-methods/activity-3",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/gravity-methods/activity-3",
+    "h1": "Activity-3",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Gravity Geometry: Subsurface Depth Detective",
+        "chars": 16523,
+        "raw": "archive\\raw\\lecture__gravity-methods__activity-3__0.html",
+        "app": "docs\\lecture\\gravity\\apps\\activity-3.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/magnetic-methods",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/magnetic-methods",
+    "h1": "Magnetic Methods",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Virtual Rock Magnetism Lab & Activity",
+        "chars": 31486,
+        "raw": "archive\\raw\\lecture__magnetic-methods__0.html",
+        "app": "docs\\lecture\\magnetic\\apps\\magnetic-methods.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/magnetic-methods/magnetic-signal",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/magnetic-methods/magnetic-signal",
+    "h1": "Magnetic Signal",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Interactive Geomagnetic Anomaly Simulator",
+        "chars": 17244,
+        "raw": "archive\\raw\\lecture__magnetic-methods__magnetic-signal__0.html",
+        "app": "docs\\lecture\\magnetic\\apps\\magnetic-signal.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/magnetic-methods/continuation",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/magnetic-methods/continuation",
+    "h1": "Continuation",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Geomagnetic Exploration: Continuation Simulator",
+        "chars": 19114,
+        "raw": "archive\\raw\\lecture__magnetic-methods__continuation__0.html",
+        "app": "docs\\lecture\\magnetic\\apps\\continuation.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/magnetic-methods/depth-estimation",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/magnetic-methods/depth-estimation",
+    "h1": "Depth Estimation",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Magnetic Anomaly Interpretation Methods",
+        "chars": 21738,
+        "raw": "archive\\raw\\lecture__magnetic-methods__depth-estimation__0.html",
+        "app": "docs\\lecture\\magnetic\\apps\\depth-estimation.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/seismic-methods",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/seismic-methods",
+    "h1": "Seismic Methods",
+    "embeds": []
+  },
+  {
+    "page": "/lecture/seismic-methods/stress-and-strain",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/seismic-methods/stress-and-strain",
+    "h1": "Stress and strain",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Elasticity: The Basis of Seismic Waves",
+        "chars": 25114,
+        "raw": "archive\\raw\\lecture__seismic-methods__stress-and-strain__0.html",
+        "app": "docs\\lecture\\seismic\\apps\\stress-and-strain.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/seismic-methods/seismic-refraction-method",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/seismic-methods/seismic-refraction-method",
+    "h1": "Seismic Refraction Method",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Seismic Refraction Lab",
+        "chars": 37742,
+        "raw": "archive\\raw\\lecture__seismic-methods__seismic-refraction-method__0.html",
+        "app": "docs\\lecture\\seismic\\apps\\seismic-refraction.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/electrical-methods",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/electrical-methods",
+    "h1": "Electrical Methods",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "How Do Rocks Conduct Electricity?",
+        "chars": 18734,
+        "raw": "archive\\raw\\lecture__electrical-methods__0.html",
+        "app": "docs\\lecture\\electrical\\apps\\electrical-methods.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/electrical-methods/ert",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/electrical-methods/ert",
+    "h1": "ERT",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Geometric Factor K for Common Arrays",
+        "chars": 16910,
+        "raw": "archive\\raw\\lecture__electrical-methods__ert__0.html",
+        "app": "docs\\lecture\\electrical\\apps\\ert.html"
+      },
+      {
+        "kind": "code",
+        "title": "3-Layer VES Forward Modeling",
+        "chars": 19934,
+        "raw": "archive\\raw\\lecture__electrical-methods__ert__1.html",
+        "app": "docs\\lecture\\electrical\\apps\\ert-2.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/electrical-methods/sp",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/electrical-methods/sp",
+    "h1": "SP",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "SP Signal Mechanisms",
+        "chars": 25143,
+        "raw": "archive\\raw\\lecture__electrical-methods__sp__0.html",
+        "app": "docs\\lecture\\electrical\\apps\\sp.html"
+      },
+      {
+        "kind": "code",
+        "title": "SP Method Applications",
+        "chars": 21908,
+        "raw": "archive\\raw\\lecture__electrical-methods__sp__1.html",
+        "app": "docs\\lecture\\electrical\\apps\\sp-2.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/electrical-methods/ip",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/electrical-methods/ip",
+    "h1": "IP",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "IP Signal Mechanisms",
+        "chars": 24405,
+        "raw": "archive\\raw\\lecture__electrical-methods__ip__0.html",
+        "app": "docs\\lecture\\electrical\\apps\\ip.html"
+      },
+      {
+        "kind": "code",
+        "title": "Cole-Cole Model Interactive",
+        "chars": 23741,
+        "raw": "archive\\raw\\lecture__electrical-methods__ip__1.html",
+        "app": "docs\\lecture\\electrical\\apps\\ip-2.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/electromagnetic-methods",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/electromagnetic-methods",
+    "h1": "Electromagnetic Methods",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "EM System Animation Activity",
+        "chars": 22764,
+        "raw": "archive\\raw\\lecture__electromagnetic-methods__0.html",
+        "app": "docs\\lecture\\em\\apps\\electromagnetic-methods.html"
+      },
+      {
+        "kind": "code",
+        "title": "EM Waveforms Animation Activity",
+        "chars": 26647,
+        "raw": "archive\\raw\\lecture__electromagnetic-methods__1.html",
+        "app": "docs\\lecture\\em\\apps\\electromagnetic-methods-2.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/electromagnetic-methods/fdem-tem",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/electromagnetic-methods/fdem-tem",
+    "h1": "FDEM & TEM",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Interactive 1D EM Forward Modeling",
+        "chars": 22108,
+        "raw": "archive\\raw\\lecture__electromagnetic-methods__fdem-tem__0.html",
+        "app": "docs\\lecture\\em\\apps\\fdem-tem.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/gpr",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/gpr",
+    "h1": "GPR",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Electromagnetic Physics: Conduction vs Displacement",
+        "chars": 19823,
+        "raw": "archive\\raw\\lecture__gpr__0.html",
+        "app": "docs\\lecture\\gpr\\apps\\gpr.html"
+      },
+      {
+        "kind": "code",
+        "title": "GPR Interactive Simulator",
+        "chars": 22490,
+        "raw": "archive\\raw\\lecture__gpr__1.html",
+        "app": "docs\\lecture\\gpr\\apps\\gpr-2.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/mt",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/mt",
+    "h1": "MT",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Deep EM Methods - Interactive Visualizer",
+        "chars": 43566,
+        "raw": "archive\\raw\\lecture__mt__0.html",
+        "app": "docs\\lecture\\mt\\apps\\mt.html"
+      }
+    ]
+  },
+  {
+    "page": "/lecture/borehole-geophysics",
+    "url": "https://sites.google.com/view/enviromentalgeophysics/lecture/borehole-geophysics",
+    "h1": "Borehole Geophysics",
+    "embeds": [
+      {
+        "kind": "code",
+        "title": "Borehole Geophysics: Principle & Data Dashboard",
+        "chars": 47914,
+        "raw": "archive\\raw\\lecture__borehole-geophysics__0.html",
+        "app": "docs\\lecture\\borehole\\apps\\borehole-geophysics.html"
+      }
+    ]
+  }
+]

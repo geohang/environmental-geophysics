@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gravity Lab: The Cross-Section Challenge</title>
+    <script>
+        window.MathJax = { 
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } 
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --primary: #38bdf8;
+            --accent: #fbbf24;
+            --success: #4ade80;
+            --error: #f87171;
+            --border: #334155;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; max-width: 1100px; margin: 0 auto; line-height: 1.6; }
+        h1, h2 { color: var(--primary); margin-top: 0; }
+        
+        .card { 
+            background: var(--card); padding: 25px; margin-bottom: 25px; 
+            border-radius: 12px; border: 1px solid var(--border); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .formula-box {
+            background: #020617; padding: 15px; border-left: 4px solid var(--accent);
+            margin: 15px 0; font-family: 'Courier New', monospace;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.95rem; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--primary); color: var(--accent); background: rgba(255,255,255,0.05); }
+        td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        
+        input { 
+            background: #0f172a; border: 1px solid #64748b; color: white; 
+            padding: 6px; width: 100px; border-radius: 4px; text-align: center;
+        }
+        input.correct { border-color: var(--success); background: rgba(74, 222, 128, 0.1); }
+        input.incorrect { border-color: var(--error); background: rgba(248, 113, 113, 0.1); }
+
+        .btn {
+            background: var(--primary); color: #0f172a; border: none; padding: 12px 24px; 
+            font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px;
+        }
+        .btn:hover { background: #7dd3fc; }
+
+        .hidden-feedback { display: none; margin-top: 15px; padding: 15px; border-radius: 8px; font-weight: bold; }
+        .geology-select { background: #0f172a; color: white; border: 1px solid var(--primary); padding: 8px; border-radius: 4px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<h1>Gravity Lab: The Cross-Section Challenge</h1>
+<p><strong>Mission:</strong> Process the gravity data for 4 stations to reveal the hidden geological structure.</p>
+
+<div class="card">
+    <h2>Phase 1: Latitude Correction ($g_\phi$)</h2>
+    <div class="formula-box">
+        $$ g_\phi = 9.780318 \left( 1 + 0.0052789 \sin^2 \phi + 0.0000235 \sin^4 \phi \right) \text{ m/s}^2 $$
+        <p style="color: #94a3b8; font-size: 0.9em; margin-top:5px;">⚠️ <strong>Note:</strong> Multiply result by <strong>100,000</strong> to get mGal.</p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Station</th>
+                <th>Latitude ($\phi$)</th>
+                <th>Calculated $g_\phi$ (mGal)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>1</strong></td><td>45.00°</td><td><input type="number" id="lat1"></td><td id="s1"></td></tr>
+            <tr><td><strong>2</strong></td><td>45.15°</td><td><input type="number" id="lat2"></td><td id="s2"></td></tr>
+            <tr><td><strong>3</strong></td><td>45.30°</td><td><input type="number" id="lat3"></td><td id="s3"></td></tr>
+            <tr><td><strong>4</strong></td><td>45.45°</td><td><input type="number" id="lat4"></td><td id="s4"></td></tr>
+        </tbody>
+    </table>
+    <button class="btn" onclick="checkPhase1()">Verify Phase 1</button>
+</div>
+
+<div class="card">
+    <h2>Phase 2: Elevation Corrections (FAC & BC)</h2>
+    <div class="formula-box">
+        $$ FAC = 0.3086 \times h \text{ (mGal)} $$
+        $$ BC = 0.0419 \times 2.67 \times h \text{ (mGal)} $$
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Station</th>
+                <th>Elev ($h$)</th>
+                <th>FAC (+)</th>
+                <th>BC (-)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>1</strong></td><td>100 m</td><td><input type="number" id="fac1"></td><td><input type="number" id="bc1"></td><td id="es1"></td></tr>
+            <tr><td><strong>2</strong></td><td>150 m</td><td><input type="number" id="fac2"></td><td><input type="number" id="bc2"></td><td id="es2"></td></tr>
+            <tr><td><strong>3</strong></td><td>400 m</td><td><input type="number" id="fac3"></td><td><input type="number" id="bc3"></td><td id="es3"></td></tr>
+            <tr><td><strong>4</strong></td><td>800 m</td><td><input type="number" id="fac4"></td><td><input type="number" id="bc4"></td><td id="es4"></td></tr>
+        </tbody>
+    </table>
+    <button class="btn" onclick="checkPhase2()">Verify Phase 2</button>
+</div>
+
+<div class="card">
+    <h2>Phase 3: Geological Interpretation</h2>
+    <div class="formula-box">$$ BA = g_{obs} - g_\phi + FAC - BC $$</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Station</th>
+                <th>$g_{obs}$ (Raw)</th>
+                <th>Final BA (mGal)</th>
+                <th>Interpretation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1</strong></td>
+                <td>980,599.7</td> <td><input type="number" id="ba1"></td>
+                <td><span style="color:#94a3b8">Background</span></td>
+            </tr>
+            <tr>
+                <td><strong>2</strong></td>
+                <td>980,573.2</td> <td><input type="number" id="ba2"></td>
+                <td>
+                    <select id="geo2" class="geology-select">
+                        <option value="">-- Select --</option>
+                        <option value="salt">Salt Dome (Low Density)</option>
+                        <option value="ore">Ore Body (High Density)</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>3</strong></td>
+                <td>980,567.2</td> <td><input type="number" id="ba3"></td>
+                <td><span style="color:#94a3b8">Transition</span></td>
+            </tr>
+            <tr>
+                <td><strong>4</strong></td>
+                <td>980,601.7</td> <td><input type="number" id="ba4"></td>
+                <td>
+                    <select id="geo4" class="geology-select">
+                        <option value="">-- Select --</option>
+                        <option value="salt">Salt Dome (Low Density)</option>
+                        <option value="ore">Ore Body (High Density)</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn" onclick="checkPhase3()">Reveal Geology</button>
+    <div id="final-result" class="hidden-feedback" style="border: 1px solid var(--primary); color: var(--text);"></div>
+</div>
+
+<script>
+    function validate(inputId, correctVal, tolerance, statusId) {
+        const input = document.getElementById(inputId);
+        const status = document.getElementById(statusId);
+        const userVal = parseFloat(input.value);
+        if (isNaN(userVal)) {
+            if(status) status.innerHTML = "";
+            return false;
+        }
+        if (Math.abs(userVal - correctVal) <= tolerance) {
+            input.className = "correct";
+            if(status) status.innerHTML = "✅";
+            return true;
+        } else {
+            input.className = "incorrect";
+            if(status) status.innerHTML = "❌";
+            return false;
+        }
+    }
+
+    // --- MATH ENGINE ---
+    // 1. LATITUDE
+    function getG(lat) {
+        const r = lat * (Math.PI/180);
+        const s2 = Math.sin(r)**2;
+        const s4 = Math.sin(r)**4;
+        return (9.780318 * (1 + 0.0052789*s2 + 0.0000235*s4)) * 100000;
+    }
+    const latVals = [45.0, 45.15, 45.30, 45.45];
+    const gLatCorrect = latVals.map(getG);
+
+    // 2. ELEVATION
+    const hVals = [100, 150, 400, 800];
+    const facCorrect = hVals.map(h => 0.3086 * h);
+    const bcCorrect = hVals.map(h => 0.0419 * 2.67 * h);
+
+    // 3. EXPECTED BA
+    const baCorrect = [0.0, -30.0, 0.0, 100.0];
+
+    // --- CHECK FUNCTIONS ---
+    function checkPhase1() {
+        for(let i=0; i<4; i++) validate('lat'+(i+1), gLatCorrect[i], 5.0, 's'+(i+1));
+    }
+
+    function checkPhase2() {
+        for(let i=0; i<4; i++) {
+            let fOk = validate('fac'+(i+1), facCorrect[i], 0.5, '');
+            let bOk = validate('bc'+(i+1), bcCorrect[i], 0.5, '');
+            document.getElementById('es'+(i+1)).innerHTML = (fOk && bOk) ? "✅" : "❌";
+        }
+    }
+
+    function checkPhase3() {
+        let allCorrect = true;
+        for(let i=0; i<4; i++) {
+            if(!validate('ba'+(i+1), baCorrect[i], 2.0, '')) allCorrect = false;
+        }
+        
+        const fb = document.getElementById('final-result');
+        const g2 = document.getElementById('geo2').value;
+        const g4 = document.getElementById('geo4').value;
+        
+        fb.style.display = 'block';
+        if(allCorrect && g2 === 'salt' && g4 === 'ore') {
+            fb.style.background = 'rgba(74, 222, 128, 0.1)';
+            fb.innerHTML = "🎉 SUCCESS! You found the SALT DOME (-30 mGal) and the ORE BODY (+100 mGal).";
+        } else {
+            fb.style.background = 'rgba(248, 113, 113, 0.1)';
+            fb.innerHTML = "❌ Keep trying. Check your BA math and geological choices.";
+        }
+    }
+</script>
+
+</body>
+</html>

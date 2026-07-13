@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Gravity Drift Correction</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #38bdf8; /* Light Blue */
+            --accent: #fbbf24; /* Amber */
+            --bg-dark: #0f172a; /* Deep Navy */
+            --card-bg: #1e293b; /* Slate */
+            --text-main: #f1f5f9;
+            --success: #4ade80;
+            --error: #f87171;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 { color: var(--primary); margin: 0; }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+
+        th { 
+            text-align: left; 
+            color: var(--accent); 
+            padding: 12px; 
+            border-bottom: 2px solid #475569; 
+            background: rgba(15, 23, 42, 0.5);
+        }
+        
+        td { padding: 12px; border-bottom: 1px solid #334155; }
+        
+        /* Highlight Base Rows */
+        .base-row { background-color: rgba(56, 189, 248, 0.15); font-weight: bold; color: var(--primary); }
+
+        /* Inputs */
+        input[type="number"] {
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            width: 100px;
+            font-family: 'Courier New', monospace;
+        }
+
+        input.correct { border: 2px solid var(--success); background-color: rgba(74, 222, 128, 0.1); }
+        input.incorrect { border: 2px solid var(--error); background-color: rgba(248, 113, 113, 0.1); }
+
+        .btn {
+            background-color: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+        .btn:hover { background-color: #7dd3fc; }
+
+        .formula-box {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+<div class="container">
+    <header>
+        <h1>Gravity Survey Lab: Multi-Station Loop</h1>
+        <p>Correcting for linear instrument drift over a full morning survey.</p>
+    </header>
+
+    <div class="card">
+        <h2>1. Survey Parameters</h2>
+        <p>You performed a gravity survey lasting 5 hours. The gravimeter reading at the Base Station <strong>decreased</strong> by the end of the survey due to spring relaxation.</p>
+        
+        <div class="formula-box">
+            $$ \text{Drift Correction} = -(\text{Drift Rate} \times \Delta t) $$
+            <br>
+            $$ g_{corrected} = g_{obs} + \text{Drift Correction} $$
+            <p style="color:var(--text-muted); font-size:0.9em; margin-top:10px;">
+                <em>(Hint: If the drift is negative, the correction must be positive to compensate!)</em>
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>2. Data Reduction Table</h2>
+        <p>Calculate the <strong>Time Elapsed ($\Delta t$)</strong>, the specific <strong>Drift Amount</strong>, and the final <strong>Corrected Gravity</strong> for all 5 stations.</p>
+        
+        <div style="margin-bottom: 20px; padding: 15px; background: rgba(251, 191, 36, 0.1); border-radius: 8px;">
+            <label><strong>Step 1: Calculate Global Drift Rate (mGal/min):</strong></label>
+            <input type="number" id="driftRate" step="0.0001" placeholder="e.g. -0.0050">
+            <span id="rateFeedback" style="margin-left: 10px; font-weight: bold;"></span>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Station</th>
+                    <th>Raw ($g_{obs}$)</th>
+                    <th>$\Delta t$ (min)</th>
+                    <th>Drift (mGal)</th>
+                    <th>Corrected $g$ (mGal)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="base-row">
+                    <td>08:00</td>
+                    <td>BASE (Start)</td>
+                    <td>980.00</td>
+                    <td>0</td>
+                    <td>0.00</td>
+                    <td>980.00</td>
+                </tr>
+                
+                <tr>
+                    <td>08:30</td>
+                    <td>Station 1</td>
+                    <td>982.00</td>
+                    <td><input type="number" id="t1" style="width:60px"></td>
+                    <td><input type="number" id="d1"></td>
+                    <td><input type="number" id="c1"></td>
+                </tr>
+
+                <tr>
+                    <td>09:15</td>
+                    <td>Station 2</td>
+                    <td>985.50</td>
+                    <td><input type="number" id="t2" style="width:60px"></td>
+                    <td><input type="number" id="d2"></td>
+                    <td><input type="number" id="c2"></td>
+                </tr>
+
+                <tr>
+                    <td>10:00</td>
+                    <td>Station 3</td>
+                    <td>979.20</td>
+                    <td><input type="number" id="t3" style="width:60px"></td>
+                    <td><input type="number" id="d3"></td>
+                    <td><input type="number" id="c3"></td>
+                </tr>
+
+                <tr>
+                    <td>11:00</td>
+                    <td>Station 4</td>
+                    <td>988.10</td>
+                    <td><input type="number" id="t4" style="width:60px"></td>
+                    <td><input type="number" id="d4"></td>
+                    <td><input type="number" id="c4"></td>
+                </tr>
+
+                 <tr>
+                    <td>12:00</td>
+                    <td>Station 5</td>
+                    <td>981.40</td>
+                    <td><input type="number" id="t5" style="width:60px"></td>
+                    <td><input type="number" id="d5"></td>
+                    <td><input type="number" id="c5"></td>
+                </tr>
+
+                <tr class="base-row">
+                    <td>13:00</td>
+                    <td>BASE (End)</td>
+                    <td>978.50</td>
+                    <td>300</td>
+                    <td>-1.50</td>
+                    <td>980.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button class="btn" onclick="checkAll()">Verify Calculations</button>
+        <p id="finalMsg" style="margin-top: 15px; font-weight: bold;"></p>
+    </div>
+</div>
+
+<script>
+    function checkAll() {
+        // --- 1. SETUP CORRECT VALUES ---
+        // Base Start: 980.00, Base End: 978.50. Diff = -1.50 mGal.
+        // Time Start: 08:00, Time End: 13:00. Diff = 300 mins.
+        // Rate = -1.50 / 300 = -0.005 mGal/min
+        const CORRECT_RATE = -0.005;
+
+        // Verify Rate Input first
+        const userRate = parseFloat(document.getElementById('driftRate').value);
+        const rateFb = document.getElementById('rateFeedback');
+        
+        if (Math.abs(userRate - CORRECT_RATE) < 0.0001) {
+            document.getElementById('driftRate').className = 'correct';
+            rateFb.style.color = 'var(--success)';
+            rateFb.innerText = "✓ Correct Rate";
+        } else {
+            document.getElementById('driftRate').className = 'incorrect';
+            rateFb.style.color = 'var(--error)';
+            rateFb.innerText = "✗ Check Rate Calculation";
+        }
+
+        // --- 2. STATION DATA ---
+        // Format: [id_suffix, minutes, raw_val]
+        // Times: 08:30 (30m), 09:15 (75m), 10:00 (120m), 11:00 (180m), 12:00 (240m)
+        const stations = [
+            {id: '1', min: 30,  raw: 982.00},
+            {id: '2', min: 75,  raw: 985.50},
+            {id: '3', min: 120, raw: 979.20},
+            {id: '4', min: 180, raw: 988.10},
+            {id: '5', min: 240, raw: 981.40}
+        ];
+
+        let allRowsCorrect = true;
+
+        stations.forEach(st => {
+            // A. Check Time Elapsed (Delta t)
+            const tInput = document.getElementById('t' + st.id);
+            if(parseInt(tInput.value) === st.min) {
+                tInput.className = 'correct';
+            } else {
+                tInput.className = 'incorrect';
+                allRowsCorrect = false;
+            }
+
+            // B. Check Drift (Rate * min)
+            // Example: -0.005 * 30 = -0.15
+            const trueDrift = CORRECT_RATE * st.min;
+            const dInput = document.getElementById('d' + st.id);
+            const userDrift = parseFloat(dInput.value);
+
+            // Allow small float tolerance
+            if(Math.abs(userDrift - trueDrift) < 0.01) {
+                dInput.className = 'correct';
+            } else {
+                dInput.className = 'incorrect';
+                allRowsCorrect = false;
+            }
+
+            // C. Check Corrected Gravity (Raw - Drift)
+            // Example: 982.00 - (-0.15) = 982.15
+            const trueCorr = st.raw - trueDrift;
+            const cInput = document.getElementById('c' + st.id);
+            const userCorr = parseFloat(cInput.value);
+
+            if(Math.abs(userCorr - trueCorr) < 0.01) {
+                cInput.className = 'correct';
+            } else {
+                cInput.className = 'incorrect';
+                allRowsCorrect = false;
+            }
+        });
+
+        // Final Feedback
+        const msg = document.getElementById('finalMsg');
+        if(allRowsCorrect && Math.abs(userRate - CORRECT_RATE) < 0.0001) {
+            msg.style.color = "var(--success)";
+            msg.innerHTML = "Success! All calculations are correct. You handled the negative drift perfectly.";
+        } else {
+            msg.style.color = "var(--error)";
+            msg.innerHTML = "Some values are incorrect. Remember: Corrected = Raw - Drift. (Subtracting a negative number adds to the total).";
+        }
+    }
+</script>
+
+</body>
+</html>

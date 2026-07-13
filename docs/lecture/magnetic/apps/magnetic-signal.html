@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Geomagnetic Anomaly Simulator</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --ground: #f4f4f4;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ecf0f1;
+            color: var(--text);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 4px;
+            overflow: hidden;
+            background: white;
+        }
+
+        canvas {
+            display: block;
+            cursor: crosshair;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .value-display {
+            font-size: 0.85em;
+            color: var(--accent);
+            text-align: right;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .instructions {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e8f4fc;
+            border-left: 4px solid var(--accent);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <h1>Geomagnetic Anomaly Simulator</h1>
+
+    <div class="container">
+        
+        <!-- Viewport for Physical Model & Graph -->
+        <div class="canvas-wrapper">
+            <!-- Increased height to 750 to accommodate larger graph -->
+            <canvas id="simCanvas" width="800" height="750"></canvas>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="control-group">
+                <label for="inclination">Earth Field Inclination (I)</label>
+                <input type="range" id="inclination" min="-90" max="90" value="60">
+                <div class="value-display">Value: <span id="val-inc">60</span>°</div>
+            </div>
+            <div class="control-group">
+                <label for="bodyDip">Magnetization Angle (α)</label>
+                <input type="range" id="bodyDip" min="0" max="360" value="60">
+                <div class="value-display">Value: <span id="val-dip">60</span>°</div>
+            </div>
+            <div class="control-group">
+                <label for="magStrength">Magnetic Moment (M)</label>
+                <input type="range" id="magStrength" min="1000" max="10000" value="5000">
+                <div class="value-display">Value: <span id="val-str">5000</span></div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="dot" style="background:black;"></div>Anomaly Profile (ΔT)</div>
+            <div class="legend-item"><div class="dot" style="background:#3498db;"></div>Field Lines</div>
+            <div class="legend-item"><div class="dot" style="background:#e74c3c;"></div>Magnetized Body</div>
+        </div>
+
+        <div class="instructions">
+            <strong>How to use:</strong> Click and drag the red rectangle (the magnetic body) inside the view area to move it underground. Observe how the magnetic field lines distort and how the anomaly curve graph (top/middle) changes shape and amplitude.
+        </div>
+    </div>
+
+<script>
+    // --- Configuration ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Physics & UI State
+    const state = {
+        width: 800,
+        height: 750, // Increased height
+        groundLevel: 350, // Lowered ground level to give more sky/graph space
+        body: {
+            x: 400,
+            y: 550, // Initial Depth adjusted
+            width: 40,
+            height: 25,
+            dragging: false
+        },
+        params: {
+            I: 60, // Earth Inclination (degrees)
+            alpha: 60, // Magnetization direction
+            M: 5000 // Magnetic Moment
+        },
+        graph: {
+            padding: 40,
+            height: 300 // Increased logical height area for graph
+        }
+    };
+
+    // DOM Elements for controls
+    const inputInc = document.getElementById('inclination');
+    const inputDip = document.getElementById('bodyDip');
+    const inputStr = document.getElementById('magStrength');
+    const valInc = document.getElementById('val-inc');
+    const valDip = document.getElementById('val-dip');
+    const valStr = document.getElementById('val-str');
+
+    // --- Interaction Handlers ---
+    function getMousePos(evt) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        const pos = getMousePos(e);
+        // Hit test for body (simple box)
+        const b = state.body;
+        if (pos.x >= b.x - b.width && pos.x <= b.x + b.width &&
+            pos.y >= b.y - b.height && pos.y <= b.y + b.height) {
+            b.dragging = true;
+            canvas.style.cursor = 'grabbing';
+        }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        const pos = getMousePos(e);
+        if (state.body.dragging) {
+            state.body.x = Math.max(20, Math.min(state.width - 20, pos.x));
+            // Constrain Y to be below ground + padding
+            state.body.y = Math.max(state.groundLevel + 30, Math.min(state.height - 30, pos.y));
+            draw();
+        } else {
+            // Hover cursor effect
+            const b = state.body;
+            if (pos.x >= b.x - b.width && pos.x <= b.x + b.width &&
+                pos.y >= b.y - b.height && pos.y <= b.y + b.height) {
+                canvas.style.cursor = 'grab';
+            } else {
+                canvas.style.cursor = 'default';
+            }
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        state.body.dragging = false;
+        canvas.style.cursor = 'default';
+    });
+
+    [inputInc, inputDip, inputStr].forEach(el => {
+        el.addEventListener('input', updateParams);
+    });
+
+    function updateParams() {
+        state.params.I = parseFloat(inputInc.value);
+        state.params.alpha = parseFloat(inputDip.value);
+        state.params.M = parseFloat(inputStr.value);
+        
+        valInc.textContent = state.params.I;
+        valDip.textContent = state.params.alpha;
+        valStr.textContent = state.params.M;
+        draw();
+    }
+
+    // --- Physics Core ---
+
+    // Convert degrees to radians
+    const rad = (deg) => deg * Math.PI / 180;
+
+    function calculateAnomaly(x, x0, z0, M, I, A) {
+        const dx = x - x0;
+        const r2 = dx*dx + z0*z0;
+        const r = Math.sqrt(r2);
+        
+        const r5 = Math.pow(r, 5);
+        
+        // Magnetization vector (m)
+        const mx = M * Math.cos(rad(A));
+        const my = M * Math.sin(rad(A)); // y is vertical down (depth)
+        
+        // Vector R (from dipole to point)
+        const rx = dx;
+        const ry = -z0; // pointing UP to surface
+        
+        const r_dot_m = rx*mx + ry*my;
+        
+        // Field vector B_anom at surface
+        // B = (3(m.r)r - m*r^2) / r^5
+        const bx = (3 * r_dot_m * rx - mx * r2) / r5;
+        const by = (3 * r_dot_m * ry - my * r2) / r5;
+        
+        // Project onto Earth's Field Direction (F)
+        const fx = Math.cos(rad(I));
+        const fy = Math.sin(rad(I));
+        
+        // dT is projection: B . F
+        const dT = bx * fx + by * fy;
+        
+        return dT * 10000; // Scale factor for visualization
+    }
+
+    // --- Drawing Functions ---
+
+    function draw() {
+        // Clear background
+        ctx.clearRect(0, 0, state.width, state.height);
+        
+        // 1. Draw Sky & Ground
+        ctx.fillStyle = "#e0f7fa"; // Sky
+        ctx.fillRect(0, 0, state.width, state.groundLevel);
+        ctx.fillStyle = "#ecf0f1"; // Ground
+        ctx.fillRect(0, state.groundLevel, state.width, state.height - state.groundLevel);
+        
+        // Surface Line
+        ctx.beginPath();
+        ctx.moveTo(0, state.groundLevel);
+        ctx.lineTo(state.width, state.groundLevel);
+        ctx.strokeStyle = "#7f8c8d";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 2. Draw Magnetic Body
+        const b = state.body;
+        const depth = b.y - state.groundLevel;
+        
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate(rad(state.params.alpha)); // Rotate visuals to match mag angle
+        
+        // Body shape
+        ctx.fillStyle = "#e74c3c";
+        ctx.fillRect(-b.width/2, -b.height/2, b.width, b.height);
+        
+        // Magnet Arrow
+        ctx.beginPath();
+        ctx.moveTo(-15, 0);
+        ctx.lineTo(15, 0);
+        ctx.lineTo(5, -5);
+        ctx.moveTo(15, 0);
+        ctx.lineTo(5, 5);
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        ctx.restore();
+
+        // 3. Draw Field Lines
+        drawFieldLines(b.x, b.y, state.params.alpha);
+
+        // 4. Draw Earth Field Arrow (Legend area)
+        drawEarthFieldIndicator();
+
+        // 5. Calculate and Draw Anomaly Graph
+        drawGraph(depth);
+    }
+
+    function drawEarthFieldIndicator() {
+        const x = 60;
+        const y = 60;
+        const len = 40;
+        const I = state.params.I;
+        
+        ctx.save();
+        ctx.translate(x, y);
+        
+        // Label
+        ctx.fillStyle = "#2c3e50";
+        ctx.font = "12px sans-serif";
+        ctx.fillText("Earth's Field", -30, -25);
+        
+        // Ground line ref
+        ctx.beginPath();
+        ctx.moveTo(-20, 0);
+        ctx.lineTo(20, 0);
+        ctx.strokeStyle = "#95a5a6";
+        ctx.setLineDash([2, 2]);
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Vector
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        // I is dip from horizontal. Positive I is Down.
+        const dx = len * Math.cos(rad(I));
+        const dy = len * Math.sin(rad(I)); 
+        ctx.lineTo(dx, dy);
+        ctx.strokeStyle = "#2980b9";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        // Arrowhead
+        ctx.beginPath();
+        const angle = Math.atan2(dy, dx);
+        ctx.moveTo(dx, dy);
+        ctx.lineTo(dx - 10 * Math.cos(angle - Math.PI/6), dy - 10 * Math.sin(angle - Math.PI/6));
+        ctx.lineTo(dx - 10 * Math.cos(angle + Math.PI/6), dy - 10 * Math.sin(angle + Math.PI/6));
+        ctx.fillStyle = "#2980b9";
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    function drawFieldLines(cx, cy, alpha) {
+        ctx.save();
+        ctx.lineWidth = 1.5;
+        // Make field lines solid (continuous) and slightly transparent
+        ctx.strokeStyle = "rgba(52, 152, 219, 0.6)"; 
+        
+        const mVec = { x: Math.cos(rad(alpha)), y: Math.sin(rad(alpha)) };
+
+        // Trace multiple lines starting around the body
+        // Increased density: step by 15 degrees
+        for (let angle = 0; angle < 360; angle += 15) {
+            let px = cx + 25 * Math.cos(rad(angle));
+            let py = cy + 25 * Math.sin(rad(angle));
+            
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+
+            // Integrate field line forward
+            // Increased iterations (400) and smaller step size (5) for smoother curves
+            for (let step = 0; step < 400; step++) {
+                const dx = px - cx;
+                const dy = py - cy;
+                const r2 = dx*dx + dy*dy;
+                const r = Math.sqrt(r2);
+                
+                // Stop if returned to source or went way out of bounds
+                if (r < 10) break;
+                if (px < -100 || px > state.width + 100 || py < -100 || py > state.height + 100) break;
+
+                // Dipole field B = (3(m.r)r - m*r^2) / r^5
+                const rDotM = dx*mVec.x + dy*mVec.y;
+                const r5 = Math.pow(r, 5);
+                
+                // Field vector
+                let bx = (3 * rDotM * dx - mVec.x * r2) / r5;
+                let by = (3 * rDotM * dy - mVec.y * r2) / r5;
+
+                // Normalize for drawing step
+                const bMag = Math.sqrt(bx*bx + by*by);
+                const stepSize = 5; // Smaller step size for continuity
+                
+                px += (bx / bMag) * stepSize;
+                py += (by / bMag) * stepSize;
+
+                ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    function drawGraph(depth) {
+        // Define graph area
+        const gTop = 20;
+        const gBottom = state.groundLevel - 40; // Leave some padding above ground
+        const gAvailableHeight = gBottom - gTop;
+        const gCenterY = gTop + gAvailableHeight / 2;
+
+        // 1. Calculate all points first to determine Auto-Scale range
+        const points = [];
+        let maxVal = 0;
+        
+        for (let screenX = 0; screenX <= state.width; screenX += 2) {
+            const val = calculateAnomaly(
+                screenX, 
+                state.body.x, 
+                depth, 
+                state.params.M, 
+                state.params.I, 
+                state.params.alpha
+            );
+            points.push({x: screenX, val: val});
+            if (Math.abs(val) > maxVal) maxVal = Math.abs(val);
+        }
+
+        // Auto-scaling logic
+        // If signal is weak, use a minimum range to avoid noise looking like huge spikes
+        // If signal is strong, scale down to fit
+        const minDisplayRange = 200; // nT equivalent minimum
+        const displayRange = Math.max(maxVal * 1.2, minDisplayRange); // Add 20% headroom
+        
+        const scaleFactor = (gAvailableHeight / 2) / displayRange;
+
+        // Draw Axis (Zero Line)
+        ctx.beginPath();
+        ctx.moveTo(0, gCenterY);
+        ctx.lineTo(state.width, gCenterY);
+        ctx.strokeStyle = "#95a5a6";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Draw Grid lines (Approximate)
+        ctx.save();
+        ctx.strokeStyle = "#ecf0f1";
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        // Positive Limit Line
+        const pLine = gCenterY - (displayRange * scaleFactor);
+        ctx.moveTo(0, pLine); ctx.lineTo(state.width, pLine);
+        // Negative Limit Line
+        const nLine = gCenterY + (displayRange * scaleFactor);
+        ctx.moveTo(0, nLine); ctx.lineTo(state.width, nLine);
+        ctx.stroke();
+        ctx.restore();
+
+        // Text Labels
+        ctx.fillStyle = "#7f8c8d";
+        ctx.font = "12px Arial";
+        ctx.fillText("0 nT", 10, gCenterY - 5);
+        ctx.fillText(`+${Math.round(displayRange)} nT`, 10, gTop + 12);
+        ctx.fillText(`-${Math.round(displayRange)} nT`, 10, gBottom - 5);
+        ctx.fillText("Magnetic Anomaly Profile (ΔT)", state.width - 180, gTop + 20);
+
+        // Draw Curve
+        ctx.beginPath();
+        ctx.strokeStyle = "#2c3e50";
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+
+        for (let i = 0; i < points.length; i++) {
+            const p = points[i];
+            const plotY = gCenterY - (p.val * scaleFactor);
+            // Clamp to avoid drawing over other UI elements if extreme physics occur
+            const clampedY = Math.max(gTop, Math.min(gBottom, plotY));
+            
+            if (i === 0) ctx.moveTo(p.x, clampedY);
+            else ctx.lineTo(p.x, clampedY);
+        }
+        ctx.stroke();
+
+        // Draw Dashed line from body center to graph
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = "#e74c3c";
+        ctx.moveTo(state.body.x, state.body.y - state.body.height/2);
+        ctx.lineTo(state.body.x, gBottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Initial draw
+    draw();
+
+</script>
+</body>
+</html>

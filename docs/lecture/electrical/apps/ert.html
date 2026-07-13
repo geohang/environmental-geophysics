@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometric Factor K for Common Arrays</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Dark slate */
+            color: #e2e8f0;
+        }
+
+        /* Smooth transitions for all moving parts */
+        .anim-position {
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1), width 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        /* Electrode styling */
+        .electrode {
+            position: absolute;
+            bottom: 0;
+            width: 12px;
+            height: 40px;
+            margin-left: -6px; /* Center horizontally */
+            border-radius: 4px 4px 0 0;
+            z-index: 10;
+        }
+        .electrode-label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .electrode.current { background: linear-gradient(to bottom, #ef4444, #991b1b); }
+        .electrode.potential { background: linear-gradient(to bottom, #10b981, #047857); }
+
+        /* Ground styling */
+        .ground-surface {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(
+                45deg,
+                #1e293b,
+                #1e293b 10px,
+                #334155 10px,
+                #334155 20px
+            );
+            border-top: 3px solid #475569;
+        }
+
+        /* Dimension line styling */
+        .dimension {
+            position: absolute;
+            border-top: 2px solid #94a3b8;
+            height: 10px;
+            /* tick marks */
+            border-left: 2px solid #94a3b8;
+            border-right: 2px solid #94a3b8;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            pointer-events: none;
+        }
+        .dimension span {
+            background-color: #1e293b; /* Match stage bg to overlap line cleanly */
+            padding: 0 8px;
+            transform: translateY(-50%);
+            font-family: monospace;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        /* Custom range slider styling */
+        input[type=range] {
+            accent-color: #38bdf8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="max-w-5xl w-full">
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-sky-400 mb-2">Geometric Factor K for Common Arrays</h1>
+            <p class="text-gray-400 text-lg">K derived from potential of point source on half-space: 
+                <span class="font-mono bg-slate-800 px-2 py-1 rounded">K = 2&pi; / (1/r<sub class="text-xs">AM</sub> - 1/r<sub class="text-xs">BM</sub> - 1/r<sub class="text-xs">AN</sub> + 1/r<sub class="text-xs">BN</sub>)</span>
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Main Interactive Area -->
+            <div class="lg:col-span-2 flex flex-col gap-4">
+                
+                <!-- Visualization Stage -->
+                <div class="bg-slate-800 rounded-xl p-6 h-80 relative overflow-hidden border border-slate-700 shadow-xl flex flex-col justify-end">
+                    <!-- Instruction Overlay -->
+                    <div class="absolute top-4 left-4 text-sm text-slate-400 opacity-70">
+                        Top-down cross-section. <br>
+                        <span class="text-red-400 font-bold">A, B</span> = Current Electrodes<br>
+                        <span class="text-emerald-400 font-bold">M, N</span> = Potential Electrodes
+                    </div>
+
+                    <!-- The Stage -->
+                    <div id="stage" class="relative w-full h-48 mb-6">
+                        
+                        <!-- Dimension Lines Container -->
+                        <div id="dimensions-container" class="absolute w-full h-full bottom-10"></div>
+
+                        <!-- Electrodes -->
+                        <div id="elec-A" class="electrode current anim-position"><div class="electrode-label text-red-400">A</div></div>
+                        <div id="elec-M" class="electrode potential anim-position"><div class="electrode-label text-emerald-400">M</div></div>
+                        <div id="elec-N" class="electrode potential anim-position"><div class="electrode-label text-emerald-400">N</div></div>
+                        <div id="elec-B" class="electrode current anim-position"><div class="electrode-label text-red-400">B</div></div>
+
+                        <!-- Ground -->
+                        <div class="ground-surface"></div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-lg">
+                    <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-700 pb-4">
+                        <button onclick="setArray('wenner')" id="btn-wenner" class="px-4 py-2 rounded-md bg-sky-600 text-white font-medium transition-colors hover:bg-sky-500">Wenner (a)</button>
+                        <button onclick="setArray('schlumberger')" id="btn-schlumberger" class="px-4 py-2 rounded-md bg-slate-700 text-slate-300 font-medium transition-colors hover:bg-slate-600">Schlumberger</button>
+                        <button onclick="setArray('dipole')" id="btn-dipole" class="px-4 py-2 rounded-md bg-slate-700 text-slate-300 font-medium transition-colors hover:bg-slate-600">Dipole-Dipole</button>
+                    </div>
+
+                    <!-- Dynamic Sliders Container -->
+                    <div id="sliders-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[80px]">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Panel -->
+            <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-lg flex flex-col h-full">
+                <h2 id="info-title" class="text-2xl font-bold text-sky-400 mb-4">Array Name</h2>
+                
+                <div class="flex-grow">
+                    <p id="info-desc" class="text-slate-300 mb-6 leading-relaxed">
+                        Description goes here.
+                    </p>
+                    
+                    <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
+                        <p class="text-sm text-slate-400 mb-1">Geometric Factor Formula:</p>
+                        <p id="info-formula" class="text-xl font-bold text-sky-400 font-mono tracking-wide">
+                            K = ...
+                        </p>
+                        <p id="info-subtext" class="text-sm text-slate-400 mt-2 font-mono hidden"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Note -->
+        <div class="mt-8 text-center text-slate-400 text-sm border-t border-slate-800 pt-6">
+            <p>Larger K &rarr; smaller &Delta;V signal &rarr; more sensitive to noise. Array choice = trade-off between depth, resolution, and signal strength.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            activeArray: 'wenner',
+            viewportRange: 100, // Total units visible (-50 to +50)
+            params: {
+                wenner: { a: 15 },
+                schlumberger: { L: 30, l: 5 },
+                dipole: { a: 10, n: 3 }
+            }
+        };
+
+        const arrayData = {
+            wenner: {
+                title: 'Wenner (a)',
+                desc: 'Equal spacing: A–M–N–B each <span class="font-mono italic text-sky-300">a</span> apart.',
+                formula: 'K = 2&pi;a',
+                subtext: ''
+            },
+            schlumberger: {
+                title: 'Schlumberger',
+                desc: 'The potential electrodes (M,N) are closely spaced compared to the current electrodes (A,B). <span class="font-mono">MN &Lt; AB</span>.',
+                formula: 'K &approx; &pi;(L&sup2; - l&sup2;) / 2l',
+                subtext: 'half-spacing L = AB/2<br>l = MN/2'
+            },
+            dipole: {
+                title: 'Dipole-Dipole',
+                desc: 'Current dipole (A,B) and potential dipole (M,N) are separated by a multiple of the dipole length.',
+                formula: 'K = &pi;n(n+1)(n+2)a',
+                subtext: 'Dipole length a<br>separation n&middot;a'
+            }
+        };
+
+        // --- DOM Elements ---
+        const els = {
+            A: document.getElementById('elec-A'),
+            B: document.getElementById('elec-B'),
+            M: document.getElementById('elec-M'),
+            N: document.getElementById('elec-N'),
+            dims: document.getElementById('dimensions-container'),
+            sliders: document.getElementById('sliders-container'),
+            btns: {
+                wenner: document.getElementById('btn-wenner'),
+                schlumberger: document.getElementById('btn-schlumberger'),
+                dipole: document.getElementById('btn-dipole')
+            },
+            info: {
+                title: document.getElementById('info-title'),
+                desc: document.getElementById('info-desc'),
+                formula: document.getElementById('info-formula'),
+                subtext: document.getElementById('info-subtext')
+            }
+        };
+
+        // --- Core Functions ---
+
+        // Convert physical coordinate (centered at 0) to percentage left position
+        function toPct(coord) {
+            // Viewport is e.g. -50 to +50
+            const range = state.viewportRange;
+            const min = -range / 2;
+            return ((coord - min) / range) * 100;
+        }
+
+        function createSliderHTML(id, label, min, max, val, onInputLogic) {
+            return `
+                <div class="flex flex-col gap-1">
+                    <div class="flex justify-between">
+                        <label for="${id}" class="text-sm font-medium text-slate-300">${label}</label>
+                        <span id="${id}-val" class="text-sm font-mono text-sky-400">${val}</span>
+                    </div>
+                    <input type="range" id="${id}" min="${min}" max="${max}" value="${val}" class="w-full"
+                        oninput="document.getElementById('${id}-val').innerText = this.value; ${onInputLogic}">
+                </div>
+            `;
+        }
+
+        function buildSliders() {
+            let html = '';
+            if (state.activeArray === 'wenner') {
+                html = createSliderHTML('slider-a', 'Spacing (a)', 5, 25, state.params.wenner.a, "updateParam('wenner', 'a', this.value)");
+            } else if (state.activeArray === 'schlumberger') {
+                html += createSliderHTML('slider-L', 'Half AB Spacing (L)', 15, 45, state.params.schlumberger.L, "updateParam('schlumberger', 'L', this.value)");
+                html += createSliderHTML('slider-l', 'Half MN Spacing (l)', 2, 12, state.params.schlumberger.l, "updateParam('schlumberger', 'l', this.value)");
+            } else if (state.activeArray === 'dipole') {
+                html += createSliderHTML('slider-a', 'Dipole Length (a)', 5, 15, state.params.dipole.a, "updateParam('dipole', 'a', this.value)");
+                html += createSliderHTML('slider-n', 'Separation Multiplier (n)', 1, 6, state.params.dipole.n, "updateParam('dipole', 'n', this.value)");
+            }
+            els.sliders.innerHTML = html;
+        }
+
+        // Expose to global scope for slider inline events
+        window.updateParam = function(arrayType, param, value) {
+            let val = parseFloat(value);
+            
+            // Logic to prevent impossible states
+            if (arrayType === 'schlumberger') {
+                if (param === 'L' && val <= state.params.schlumberger.l) val = state.params.schlumberger.l + 1;
+                if (param === 'l' && val >= state.params.schlumberger.L) val = state.params.schlumberger.L - 1;
+                // Update slider visual if forced
+                document.getElementById(`slider-${param}`).value = val;
+                document.getElementById(`slider-${param}-val`).innerText = val;
+            }
+
+            state.params[arrayType][param] = val;
+            updateVisualization();
+        }
+
+        window.setArray = function(type) {
+            state.activeArray = type;
+            
+            // Update Buttons
+            Object.keys(els.btns).forEach(k => {
+                const btn = els.btns[k];
+                if (k === type) {
+                    btn.className = "px-4 py-2 rounded-md bg-sky-600 text-white font-medium transition-colors hover:bg-sky-500 shadow-[0_0_10px_rgba(56,189,248,0.3)]";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md bg-slate-700 text-slate-300 font-medium transition-colors hover:bg-slate-600";
+                }
+            });
+
+            // Update Info Panel
+            const data = arrayData[type];
+            els.info.title.innerHTML = data.title;
+            els.info.desc.innerHTML = data.desc;
+            els.info.formula.innerHTML = data.formula;
+            if (data.subtext) {
+                els.info.subtext.innerHTML = data.subtext;
+                els.info.subtext.classList.remove('hidden');
+            } else {
+                els.info.subtext.classList.add('hidden');
+            }
+
+            buildSliders();
+            updateVisualization();
+        }
+
+        // Draw a physical dimension bracket
+        function getDimensionHTML(id, startX, endX, yOffset, label) {
+            const startPct = toPct(startX);
+            const endPct = toPct(endX);
+            const widthPct = endPct - startPct;
+            
+            return `
+                <div id="dim-${id}" class="dimension anim-position" style="left: ${startPct}%; width: ${widthPct}%; bottom: ${yOffset}px;">
+                    <span>${label}</span>
+                </div>
+            `;
+        }
+
+        function updateVisualization() {
+            let pos = { A:0, B:0, M:0, N:0 };
+            let dimsHTML = '';
+
+            if (state.activeArray === 'wenner') {
+                const a = state.params.wenner.a;
+                pos.A = -1.5 * a;
+                pos.M = -0.5 * a;
+                pos.N = 0.5 * a;
+                pos.B = 1.5 * a;
+
+                // Dimension lines
+                dimsHTML += getDimensionHTML('am', pos.A, pos.M, 60, 'a');
+                dimsHTML += getDimensionHTML('mn', pos.M, pos.N, 60, 'a');
+                dimsHTML += getDimensionHTML('nb', pos.N, pos.B, 60, 'a');
+
+            } else if (state.activeArray === 'schlumberger') {
+                const L = state.params.schlumberger.L;
+                const l = state.params.schlumberger.l;
+                pos.A = -L;
+                pos.M = -l;
+                pos.N = l;
+                pos.B = L;
+
+                dimsHTML += getDimensionHTML('mn', pos.M, pos.N, 50, '2l');
+                dimsHTML += getDimensionHTML('center-A', pos.A, 0, 90, 'L');
+                dimsHTML += getDimensionHTML('center-B', 0, pos.B, 90, 'L');
+
+            } else if (state.activeArray === 'dipole') {
+                const a = state.params.dipole.a;
+                const n = state.params.dipole.n;
+                
+                // Calculate total length to center it
+                // Layout: A --a-- B ------ n*a ------ M --a-- N
+                // Total width = a + na + a = a(n+2)
+                const centerOffset = (a * (n + 2)) / 2;
+                
+                pos.A = 0 - centerOffset;
+                pos.B = a - centerOffset;
+                pos.M = a + (n * a) - centerOffset;
+                pos.N = a + (n * a) + a - centerOffset;
+
+                dimsHTML += getDimensionHTML('ab', pos.A, pos.B, 60, 'a');
+                dimsHTML += getDimensionHTML('bm', pos.B, pos.M, 90, 'n&middot;a');
+                dimsHTML += getDimensionHTML('mn', pos.M, pos.N, 60, 'a');
+            }
+
+            // Apply positions to elements
+            els.A.style.left = `${toPct(pos.A)}%`;
+            els.M.style.left = `${toPct(pos.M)}%`;
+            els.N.style.left = `${toPct(pos.N)}%`;
+            els.B.style.left = `${toPct(pos.B)}%`;
+
+            // Render dimension brackets
+            els.dims.innerHTML = dimsHTML;
+        }
+
+        // Initialize
+        setArray('wenner');
+
+    </script>
+</body>
+</html>

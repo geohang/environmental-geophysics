@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elasticity: The Basis of Seismic Waves</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .math-font { font-family: 'Times New Roman', serif; font-style: italic; }
+        
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #1e3a8a;
+            cursor: pointer;
+            margin-top: -10px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            background: #2563eb;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+
+        /* Smooth transitions for the rock block */
+        #rock-block {
+            transition: transform 0.1s ease-out, width 0.1s ease-out, background-color 0.2s;
+            will-change: transform, width;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-blue-900">Elasticity & Seismic Waves</h1>
+                <p class="text-slate-500 text-sm mt-1">Interactive Class Demonstration</p>
+            </div>
+            <div class="hidden md:block text-right">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Current Topic</div>
+                <div class="font-semibold text-blue-600" id="topic-display">Normal Stress</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl mx-auto px-6 py-8 w-full flex flex-col justify-center">
+
+        <!-- Interactive Lab Section -->
+        <section class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                    Virtual Rock Lab
+                </h3>
+                
+                <!-- Mode Switcher -->
+                <div class="flex bg-slate-800 rounded-lg p-1">
+                    <button onclick="setMode('normal')" id="btn-normal" class="px-3 py-1 text-xs font-semibold rounded bg-blue-600 text-white shadow-sm transition-all">Normal</button>
+                    <button onclick="setMode('shear')" id="btn-shear" class="px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition-all">Shear</button>
+                </div>
+            </div>
+            
+            <div class="grid lg:grid-cols-12 gap-0">
+                
+                <!-- Left: Simulation Viewport -->
+                <div class="lg:col-span-7 p-8 border-b lg:border-b-0 lg:border-r border-slate-200 bg-slate-50 flex flex-col items-center justify-center min-h-[500px] relative overflow-hidden">
+                    
+                    <!-- --- VISUALIZATION AREA --- -->
+                    <div class="relative w-full h-[300px] flex flex-col items-center justify-center">
+
+                        <!-- Force Arrows: Normal (Compression/Tension) -->
+                        <div id="arrows-normal-top" class="absolute top-0 opacity-0 transition-opacity duration-300">
+                             <div class="flex flex-col items-center">
+                                <span class="text-xs font-bold text-slate-500 uppercase mb-1 arrow-label">Force</span>
+                                <svg class="w-8 h-8 text-slate-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                            </div>
+                        </div>
+                        <div id="arrows-normal-bottom" class="absolute bottom-0 opacity-0 transition-opacity duration-300">
+                             <div class="flex flex-col items-center">
+                                <svg class="w-8 h-8 text-slate-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                <span class="text-xs font-bold text-slate-500 uppercase mt-1 arrow-label">Force</span>
+                            </div>
+                        </div>
+
+                        <!-- Force Arrows: Shear (Left/Right) -->
+                        <!-- Top Shear Arrow -->
+                        <div id="arrow-shear-top" class="absolute top-10 opacity-0 transition-opacity duration-300 w-48 flex justify-center">
+                            <svg class="w-16 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path id="shear-path-top" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </div>
+                        <!-- Bottom Shear Arrow -->
+                        <div id="arrow-shear-bottom" class="absolute bottom-10 opacity-0 transition-opacity duration-300 w-48 flex justify-center">
+                            <svg class="w-16 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path id="shear-path-bottom" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+                            </svg>
+                        </div>
+
+                        <!-- Ruler Lines (Background) -->
+                        <div class="absolute inset-x-20 top-1/2 -translate-y-1/2 h-32 border-l border-r border-slate-200 pointer-events-none"></div>
+
+                        <!-- The Rock Block -->
+                        <div id="rock-container" class="relative flex items-center justify-center">
+                            <div id="rock-block" class="h-32 bg-stone-300 rounded border-2 border-stone-400 shadow-xl flex items-center justify-center relative origin-center" style="width: 200px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZDZkM2QxIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNhOGEyOWUiLz4KPC9zdmc+');">
+                                
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-mono text-stone-700 border border-stone-200 shadow-sm z-10">Rock Sample</span>
+                                </div>
+                                
+                                <!-- Internal Grid (Deforms with block) -->
+                                <div class="absolute inset-0 grid grid-cols-4 grid-rows-2 opacity-40 pointer-events-none">
+                                    <div class="border-r border-stone-500"></div>
+                                    <div class="border-r border-stone-500"></div>
+                                    <div class="border-r border-stone-500"></div>
+                                    <div></div>
+                                    <div class="border-r border-t border-stone-500"></div>
+                                    <div class="border-r border-t border-stone-500"></div>
+                                    <div class="border-r border-t border-stone-500"></div>
+                                    <div class="border-t border-stone-500"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- --- END VISUALIZATION --- -->
+
+
+                    <!-- Control Panel -->
+                    <div class="w-full max-w-md mt-6 bg-white p-6 rounded-xl border border-slate-200 shadow-sm z-10">
+                        <label class="block text-sm font-semibold text-slate-700 mb-4 flex justify-between items-center">
+                            <span id="control-label">Applied Force</span>
+                            <span id="stress-display" class="font-mono text-blue-600 bg-blue-50 px-2 py-1 rounded">0 MPa</span>
+                        </label>
+                        
+                        <div class="relative flex items-center pt-2 pb-6">
+                            <span id="label-left" class="text-xs font-bold text-slate-400 absolute left-0 bottom-0">Compression</span>
+                            <span id="label-right" class="text-xs font-bold text-slate-400 absolute right-0 bottom-0">Tension</span>
+                            
+                            <input type="range" min="-50" max="50" value="0" step="1" id="stress-slider" class="w-full z-20 focus:outline-none">
+                            
+                            <!-- Center mark -->
+                            <div class="absolute left-1/2 top-3 w-px h-3 bg-slate-300 z-10"></div>
+                        </div>
+
+                        <div class="text-xs text-slate-500 text-center mt-2 italic" id="instruction-text">
+                            Move slider to deform the rock
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Data Visualization -->
+                <div class="lg:col-span-5 bg-white p-8 flex flex-col">
+                    <h4 class="text-lg font-bold text-slate-800 mb-6 border-b border-slate-100 pb-2 flex justify-between items-center">
+                        Real-time Analysis
+                        <span class="text-xs font-normal bg-slate-100 text-slate-500 px-2 py-1 rounded-full">Hooke's Law</span>
+                    </h4>
+
+                    <!-- Dynamic Values -->
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-blue-50 p-4 rounded-lg transition-colors duration-300" id="box-stress">
+                            <div class="text-xs text-blue-500 uppercase tracking-wide font-bold mb-1" id="lbl-stress-type">Normal Stress (&sigma;)</div>
+                            <div class="text-2xl font-mono font-bold text-blue-900" id="val-stress">0</div>
+                            <div class="text-xs text-blue-400 mt-1">Force / Area</div>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-lg transition-colors duration-300" id="box-strain">
+                            <div class="text-xs text-indigo-500 uppercase tracking-wide font-bold mb-1" id="lbl-strain-type">Normal Strain (&epsilon;)</div>
+                            <div class="text-2xl font-mono font-bold text-indigo-900" id="val-strain">0.000</div>
+                            <div class="text-xs text-indigo-400 mt-1" id="lbl-strain-formula">&Delta;L / L</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart JS Canvas -->
+                    <div class="flex-grow min-h-[300px] relative">
+                        <canvas id="hookesChart"></canvas>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-600">
+                        <p id="theory-text">
+                            <strong>Normal Stress:</strong> Forces act perpendicular to the surface. Deforms by changing volume/length.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 mt-auto py-6">
+        <div class="max-w-6xl mx-auto px-6 text-center text-slate-400 text-xs">
+            Generated for Classroom Demonstration
+        </div>
+    </footer>
+
+    <script>
+        // --- Configuration ---
+        const originalWidth = 200; 
+        const youngsModulus = 5; // For Normal
+        const shearModulus = 5;  // For Shear
+
+        let currentMode = 'normal'; // 'normal' or 'shear'
+
+        // --- DOM Elements ---
+        const slider = document.getElementById('stress-slider');
+        const rockBlock = document.getElementById('rock-block');
+        const stressDisplay = document.getElementById('stress-display');
+        
+        // Arrows
+        const arrowsNormalTop = document.getElementById('arrows-normal-top');
+        const arrowsNormalBottom = document.getElementById('arrows-normal-bottom');
+        const arrowsShearTop = document.getElementById('arrow-shear-top');
+        const arrowsShearBottom = document.getElementById('arrow-shear-bottom');
+        
+        // Labels & Text
+        const lblLeft = document.getElementById('label-left');
+        const lblRight = document.getElementById('label-right');
+        const lblStressType = document.getElementById('lbl-stress-type');
+        const lblStrainType = document.getElementById('lbl-strain-type');
+        const lblStrainFormula = document.getElementById('lbl-strain-formula');
+        const theoryText = document.getElementById('theory-text');
+        const topicDisplay = document.getElementById('topic-display');
+        
+        const valStress = document.getElementById('val-stress');
+        const valStrain = document.getElementById('val-strain');
+        
+        const btnNormal = document.getElementById('btn-normal');
+        const btnShear = document.getElementById('btn-shear');
+
+        // --- Chart Setup ---
+        const ctx = document.getElementById('hookesChart').getContext('2d');
+        const hookesChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Current State',
+                        data: [{x: 0, y: 0}],
+                        backgroundColor: '#ea580c',
+                        pointRadius: 8,
+                        pointHoverRadius: 10
+                    },
+                    {
+                        label: 'Linear Elasticity',
+                        data: [{x: -10, y: -50}, {x: 10, y: 50}],
+                        borderColor: '#94a3b8',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        showLine: true,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: { display: true, text: 'Strain (ε)' },
+                        min: -0.3,
+                        max: 0.3
+                    },
+                    y: {
+                        title: { display: true, text: 'Stress (σ)' },
+                        min: -60,
+                        max: 60
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // --- Mode Switching Logic ---
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Reset Slider
+            slider.value = 0;
+            updateSimulation();
+
+            // Update UI Buttons
+            if (mode === 'normal') {
+                btnNormal.className = "px-3 py-1 text-xs font-semibold rounded bg-blue-600 text-white shadow-sm transition-all";
+                btnShear.className = "px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition-all";
+                
+                // Labels
+                lblLeft.innerText = "Compression";
+                lblRight.innerText = "Tension";
+                lblStressType.innerText = "Normal Stress (σ)";
+                lblStrainType.innerText = "Normal Strain (ε)";
+                lblStrainFormula.innerText = "ΔL / L";
+                theoryText.innerHTML = "<strong>Normal Stress:</strong> Forces act perpendicular to the surface (push/pull). Deforms by changing volume/length. Governed by Young's Modulus.";
+                topicDisplay.innerText = "Normal Stress";
+                
+                // Chart Axes
+                hookesChart.options.scales.x.title.text = "Normal Strain (ε)";
+                hookesChart.options.scales.y.title.text = "Normal Stress (σ)";
+                
+            } else {
+                btnNormal.className = "px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition-all";
+                btnShear.className = "px-3 py-1 text-xs font-semibold rounded bg-purple-600 text-white shadow-sm transition-all";
+                
+                // Labels
+                lblLeft.innerText = "Sinistral (Left)";
+                lblRight.innerText = "Dextral (Right)";
+                lblStressType.innerText = "Shear Stress (τ)";
+                lblStrainType.innerText = "Shear Strain (γ)";
+                lblStrainFormula.innerText = "tan(θ)";
+                theoryText.innerHTML = "<strong>Shear Stress:</strong> Forces act parallel to the surface (slide). Deforms by changing shape (angles), but not volume. Governed by Shear Modulus.";
+                topicDisplay.innerText = "Shear Stress";
+
+                // Chart Axes
+                hookesChart.options.scales.x.title.text = "Shear Strain (γ)";
+                hookesChart.options.scales.y.title.text = "Shear Stress (τ)";
+            }
+            hookesChart.update();
+        }
+
+        // --- Main Simulation Loop ---
+        function updateSimulation() {
+            const stress = parseInt(slider.value);
+            
+            // Shared Logic
+            valStress.innerText = stress;
+            stressDisplay.innerText = `${stress} MPa`;
+
+            if (currentMode === 'normal') {
+                handleNormalMode(stress);
+            } else {
+                handleShearMode(stress);
+            }
+        }
+
+        function handleNormalMode(stress) {
+            // Physics: Strain = Stress / E
+            const strain = stress / (youngsModulus * 20); 
+            
+            // Visuals: Width change
+            const pixelChange = strain * originalWidth;
+            const newWidth = originalWidth + pixelChange;
+            
+            rockBlock.style.transform = `skewX(0deg)`; // Reset shear
+            rockBlock.style.width = `${newWidth}px`;
+            
+            // Colors & Arrows
+            arrowsShearTop.style.opacity = '0';
+            arrowsShearBottom.style.opacity = '0';
+
+            if (stress > 0) { // Tension
+                rockBlock.style.backgroundColor = '#d6d3d1';
+                rockBlock.style.borderColor = '#a8a29e';
+                
+                arrowsNormalTop.style.opacity = '1';
+                arrowsNormalBottom.style.opacity = '1';
+                
+                // Arrows pointing OUT
+                arrowsNormalTop.innerHTML = `<div class="flex flex-col items-center"><span class="text-xs font-bold text-red-500 uppercase mb-1">Tension</span><svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>`;
+                arrowsNormalTop.style.top = "-60px";
+                
+                arrowsNormalBottom.innerHTML = `<div class="flex flex-col items-center"><svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg><span class="text-xs font-bold text-red-500 uppercase mt-1">Tension</span></div>`;
+                arrowsNormalBottom.style.bottom = "-60px";
+
+            } else if (stress < 0) { // Compression
+                rockBlock.style.backgroundColor = '#a8a29e';
+                rockBlock.style.borderColor = '#78716c';
+                
+                arrowsNormalTop.style.opacity = '1';
+                arrowsNormalBottom.style.opacity = '1';
+
+                // Arrows pointing IN
+                arrowsNormalTop.innerHTML = `<div class="flex flex-col items-center"><svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg><span class="text-xs font-bold text-indigo-500 uppercase mt-1">Compression</span></div>`;
+                arrowsNormalTop.style.top = "10px";
+
+                arrowsNormalBottom.innerHTML = `<div class="flex flex-col items-center"><span class="text-xs font-bold text-indigo-500 uppercase mb-1">Compression</span><svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>`;
+                arrowsNormalBottom.style.bottom = "10px";
+
+            } else {
+                arrowsNormalTop.style.opacity = '0';
+                arrowsNormalBottom.style.opacity = '0';
+                rockBlock.style.backgroundColor = '#d6d3d1';
+            }
+
+            // Update Data
+            valStrain.innerText = strain.toFixed(3);
+            hookesChart.data.datasets[0].data[0] = { x: strain, y: stress };
+            hookesChart.update();
+        }
+
+        function handleShearMode(stress) {
+            // Physics: Shear Strain = Stress / G
+            const strain = stress / (shearModulus * 20); 
+            
+            // Visuals: Skew transform
+            // Map stress (-50 to 50) to degrees (-30 to 30)
+            const angle = stress * 0.6; 
+            
+            rockBlock.style.width = `${originalWidth}px`; // Reset Width
+            rockBlock.style.transform = `skewX(${-angle}deg)`;
+            
+            // Colors
+            rockBlock.style.backgroundColor = '#e9d5ff'; // Purple tint for shear
+            rockBlock.style.borderColor = '#a855f7';
+
+            // Hide Normal Arrows
+            arrowsNormalTop.style.opacity = '0';
+            arrowsNormalBottom.style.opacity = '0';
+
+            if (stress !== 0) {
+                arrowsShearTop.style.opacity = '1';
+                arrowsShearBottom.style.opacity = '1';
+                
+                // SVG Paths for Left/Right arrows
+                const pathRight = "M17 8l4 4m0 0l-4 4m4-4H3";
+                const pathLeft = "M7 16l-4-4m0 0l4-4m-4 4h18";
+                
+                const topPath = document.getElementById('shear-path-top');
+                const bottomPath = document.getElementById('shear-path-bottom');
+
+                // If stress is positive (slider right), top moves right
+                if (stress > 0) {
+                    topPath.setAttribute('d', pathRight);
+                    bottomPath.setAttribute('d', pathLeft);
+                } else {
+                    topPath.setAttribute('d', pathLeft);
+                    bottomPath.setAttribute('d', pathRight);
+                }
+            } else {
+                arrowsShearTop.style.opacity = '0';
+                arrowsShearBottom.style.opacity = '0';
+                rockBlock.style.backgroundColor = '#d6d3d1';
+                rockBlock.style.borderColor = '#a8a29e';
+            }
+
+            // Update Data
+            valStrain.innerText = strain.toFixed(3);
+            hookesChart.data.datasets[0].data[0] = { x: strain, y: stress };
+            hookesChart.update();
+        }
+
+        // --- Event Listeners ---
+        slider.addEventListener('input', updateSimulation);
+        
+        // Initial state
+        updateSimulation();
+
+    </script>
+</body>
+</html>

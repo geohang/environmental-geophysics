@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do Rocks Conduct Electricity?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f131f; /* Matches image background */
+        }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: #1a202c;
+            border: 2px solid #2d3748;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #38bdf8;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #38bdf8;
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+    </style>
+</head>
+<body class="text-slate-300 antialiased min-h-screen p-6 md:p-12">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#38bdf8] mb-4 tracking-tight">How Do Rocks Conduct Electricity?</h1>
+            <p class="text-xl md:text-2xl text-slate-200">Three mechanisms transport electric charge through earth materials:</p>
+        </header>
+
+        <!-- Mechanisms Grid -->
+        <div class="space-y-12">
+
+            <!-- 1. Electrolytic -->
+            <section class="bg-[#1e2536] rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
+                <div class="w-full md:w-1/2 space-y-4">
+                    <h2 class="text-3xl font-bold text-[#38bdf8]">1. Electrolytic</h2>
+                    <p class="text-lg">Ions move through pore water (dominant in most rocks).</p>
+                    
+                    <div class="mt-6 bg-[#0f131f] p-4 rounded-lg border border-slate-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-white">Apply Electric Field</span>
+                            <!-- Toggle -->
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" id="toggle-elec" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                                <label for="toggle-elec" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-400">Notice how the large, slow <span class="text-red-400 font-bold">positive (+)</span> and <span class="text-blue-400 font-bold">negative (-)</span> ions migrate through the fluid-filled pores.</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="canvas-container shadow-inner">
+                        <canvas id="canvas-electrolytic"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Electronic -->
+            <section class="bg-[#1e2536] rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
+                <div class="w-full md:w-1/2 space-y-4 md:order-2">
+                    <h2 class="text-3xl font-bold text-[#38bdf8]">2. Electronic</h2>
+                    <p class="text-lg">Electrons move through conductive minerals (metals, graphite).</p>
+                    
+                    <div class="mt-6 bg-[#0f131f] p-4 rounded-lg border border-slate-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-white">Apply Electric Field</span>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" id="toggle-electronic" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                                <label for="toggle-electronic" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-400">Tiny <span class="text-yellow-400 font-bold">electrons (e⁻)</span> zip rapidly through a continuous solid vein of conductive mineral.</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 md:order-1">
+                    <div class="canvas-container shadow-inner">
+                        <canvas id="canvas-electronic"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Dielectric -->
+            <section class="bg-[#1e2536] rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
+                <div class="w-full md:w-1/2 space-y-4">
+                    <h2 class="text-3xl font-bold text-[#38bdf8]">3. Dielectric</h2>
+                    <p class="text-lg">Polarization effects (important for SIP).</p>
+                    
+                    <div class="mt-6 bg-[#0f131f] p-4 rounded-lg border border-slate-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-white">Apply Electric Field</span>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" id="toggle-dielectric" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                                <label for="toggle-dielectric" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-400">Charges do not flow continuously. Instead, molecules <span class="text-[#38bdf8] font-bold">polarize</span> (stretch and align) in response to the field.</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="canvas-container shadow-inner">
+                        <canvas id="canvas-dielectric"></canvas>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        
+        <footer class="mt-16 text-center text-slate-500 text-sm">
+            <p>Interactive educational demonstration.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Shared configuration for all canvases
+        const CANVAS_WIDTH = 800;
+        const CANVAS_HEIGHT = 450;
+
+        function setupCanvas(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            canvas.width = CANVAS_WIDTH;
+            canvas.height = CANVAS_HEIGHT;
+            return { canvas, ctx };
+        }
+
+        // Draw an Electric Field Indicator Arrow
+        function drawEField(ctx, isActive) {
+            if (!isActive) return;
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            
+            ctx.font = 'bold 32px Inter, sans-serif';
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+            ctx.textAlign = 'center';
+            ctx.fillText('Electric Field (E) ➔', CANVAS_WIDTH / 2, 40);
+            ctx.restore();
+        }
+
+        // --- 1. Electrolytic Simulation ---
+        function initElectrolytic() {
+            const { canvas, ctx } = setupCanvas('canvas-electrolytic');
+            let isActive = false;
+            document.getElementById('toggle-elec').addEventListener('change', (e) => isActive = e.target.checked);
+
+            // Create rock grains (polygons)
+            const grains = [
+                { path: [[0,0], [300,0], [250, 150], [100, 200], [0, 150]] },
+                { path: [[800,0], [400,0], [450, 120], [600, 220], [800, 180]] },
+                { path: [[0, 450], [200, 450], [350, 300], [150, 280], [0, 350]] },
+                { path: [[800, 450], [350, 450], [500, 320], [700, 280], [800, 350]] }
+            ];
+
+            // Create Ions
+            const ions = [];
+            for (let i = 0; i < 40; i++) {
+                // Determine if inside a channel (roughly y between 150 and 300)
+                let y = 180 + Math.random() * 100;
+                let x = Math.random() * CANVAS_WIDTH;
+                ions.push({
+                    x: x,
+                    y: y + Math.sin(x/50)*20, // add some natural variation
+                    charge: Math.random() > 0.5 ? 1 : -1,
+                    speed: 0.5 + Math.random() * 0.5,
+                    baseY: y
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                
+                // Draw background fluid
+                ctx.fillStyle = '#0f172a'; // dark water
+                ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+                drawEField(ctx, isActive);
+
+                // Draw Grains
+                ctx.fillStyle = '#334155'; // rock color
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = 4;
+                grains.forEach(grain => {
+                    ctx.beginPath();
+                    ctx.moveTo(grain.path[0][0], grain.path[0][1]);
+                    for(let i=1; i<grain.path.length; i++) {
+                        ctx.lineTo(grain.path[i][0], grain.path[i][1]);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                });
+
+                // Update and Draw Ions
+                ions.forEach(ion => {
+                    if (isActive) {
+                        // + moves right, - moves left
+                        ion.x += ion.charge * ion.speed * 2;
+                        
+                        // Add some wiggle
+                        ion.y = ion.baseY + Math.sin(Date.now()/500 + ion.x/30) * 10;
+
+                        // Wrap around
+                        if (ion.x > CANVAS_WIDTH + 20) ion.x = -20;
+                        if (ion.x < -20) ion.x = CANVAS_WIDTH + 20;
+                    }
+
+                    // Draw ion
+                    ctx.beginPath();
+                    ctx.arc(ion.x, ion.y, 12, 0, Math.PI * 2);
+                    ctx.fillStyle = ion.charge > 0 ? '#ef4444' : '#3b82f6'; // Red for +, Blue for -
+                    ctx.fill();
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Draw + or -
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 16px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(ion.charge > 0 ? '+' : '-', ion.x, ion.y);
+                });
+
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // --- 2. Electronic Simulation ---
+        function initElectronic() {
+            const { canvas, ctx } = setupCanvas('canvas-electronic');
+            let isActive = false;
+            document.getElementById('toggle-electronic').addEventListener('change', (e) => isActive = e.target.checked);
+
+            // Conductive Vein Path
+            const veinPoints = [];
+            for(let x=0; x<=CANVAS_WIDTH; x+=20) {
+                veinPoints.push({
+                    x: x,
+                    y: CANVAS_HEIGHT/2 + Math.sin(x/100) * 40 + Math.cos(x/40) * 20
+                });
+            }
+
+            // Electrons
+            const electrons = [];
+            for (let i = 0; i < 60; i++) {
+                electrons.push({
+                    progress: Math.random() * CANVAS_WIDTH,
+                    speed: 6 + Math.random() * 4,
+                    offsetY: (Math.random() - 0.5) * 15
+                });
+            }
+
+            function getVeinY(x) {
+                // Find approximate Y on the path
+                let y = CANVAS_HEIGHT/2 + Math.sin(x/100) * 40 + Math.cos(x/40) * 20;
+                return y;
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                
+                // Rock background
+                ctx.fillStyle = '#1e293b'; 
+                ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                
+                drawEField(ctx, isActive);
+
+                // Draw metallic vein
+                ctx.beginPath();
+                ctx.moveTo(veinPoints[0].x, veinPoints[0].y);
+                for(let i=1; i<veinPoints.length; i++) {
+                    ctx.lineTo(veinPoints[i].x, veinPoints[i].y);
+                }
+                ctx.strokeStyle = '#94a3b8'; // Silver/gray
+                ctx.lineWidth = 40;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+
+                // Add inner vein highlight
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 10;
+                ctx.stroke();
+
+                // Draw and update electrons
+                electrons.forEach(el => {
+                    if (isActive) {
+                        el.progress += el.speed;
+                        if (el.progress > CANVAS_WIDTH) el.progress = 0;
+                    }
+                    
+                    let x = el.progress;
+                    let y = getVeinY(x) + el.offsetY;
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = '#fde047'; // Bright yellow
+                    ctx.fill();
+                    ctx.shadowColor = '#fde047';
+                    ctx.shadowBlur = isActive ? 10 : 0;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0; // reset
+                });
+
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // --- 3. Dielectric Simulation ---
+        function initDielectric() {
+            const { canvas, ctx } = setupCanvas('canvas-dielectric');
+            let isActive = false;
+            document.getElementById('toggle-dielectric').addEventListener('change', (e) => isActive = e.target.checked);
+
+            // Molecules array
+            const molecules = [];
+            const cols = 6;
+            const rows = 4;
+            const spacingX = CANVAS_WIDTH / cols;
+            const spacingY = CANVAS_HEIGHT / rows;
+
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    molecules.push({
+                        baseX: (i + 0.5) * spacingX,
+                        baseY: (j + 0.5) * spacingY,
+                        polarization: 0 // 0 to 1
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                
+                // Rock background
+                ctx.fillStyle = '#1e293b'; 
+                ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                
+                drawEField(ctx, isActive);
+
+                const maxSeparation = 15;
+
+                // Update and draw molecules
+                molecules.forEach(mol => {
+                    // Smooth transition for polarization
+                    if (isActive) {
+                        mol.polarization += (1 - mol.polarization) * 0.1;
+                    } else {
+                        mol.polarization += (0 - mol.polarization) * 0.1;
+                    }
+
+                    let currentSep = maxSeparation * mol.polarization;
+
+                    // Draw electron cloud (negative, shifts left against E-field)
+                    ctx.beginPath();
+                    ctx.ellipse(mol.baseX - currentSep*0.5, mol.baseY, 30 + currentSep*0.5, 30 - currentSep*0.2, 0, 0, Math.PI*2);
+                    ctx.fillStyle = `rgba(56, 189, 248, ${0.2 + mol.polarization*0.1})`;
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Draw Center Nucleus (positive, shifts right with E-field)
+                    ctx.beginPath();
+                    ctx.arc(mol.baseX + currentSep, mol.baseY, 8, 0, Math.PI*2);
+                    ctx.fillStyle = '#ef4444'; // Red for positive
+                    ctx.fill();
+
+                    // Draw symbols
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('+', mol.baseX + currentSep, mol.baseY);
+                    
+                    // Draw negative symbol on the cloud
+                    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                    ctx.fillText('-', mol.baseX - currentSep - 10, mol.baseY);
+                });
+
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // Initialize all when window loads
+        window.onload = () => {
+            initElectrolytic();
+            initElectronic();
+            initDielectric();
+        };
+
+    </script>
+</body>
+</html>

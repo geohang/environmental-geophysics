@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Layer VES Forward Modeling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Dark slate */
+            color: #e2e8f0;
+        }
+
+        /* Custom Range Sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #38bdf8;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 2px;
+        }
+        
+        /* Layer Box Styling */
+        .layer-box {
+            border-left: 4px solid;
+            background: #1e293b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .layer-1 { border-color: #94a3b8; }
+        .layer-2 { border-color: #64748b; }
+        .layer-3 { border-color: #475569; }
+
+        /* Curve Type Card Styling */
+        .type-card {
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+        .type-card.active {
+            opacity: 1;
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Colors matching the presentation */
+        .border-h { border-color: #0ea5e9; } /* Blue */
+        .border-k { border-color: #f59e0b; } /* Orange */
+        .border-a { border-color: #22c55e; } /* Green */
+        .border-q { border-color: #ef4444; } /* Red */
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="max-w-6xl w-full">
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-sky-400 mb-2">3-Layer VES Forward Modeling</h1>
+            <p class="text-gray-400 text-lg">Adjust layer parameters to explore how the apparent resistivity curve changes.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Controls -->
+            <div class="lg:col-span-1 flex flex-col">
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-xl mb-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Subsurface Parameters</h2>
+                    
+                    <!-- Array Setup -->
+                    <div class="mb-5 border-b border-slate-700 pb-5">
+                        <h3 class="font-bold text-slate-200 mb-2">Array Setup</h3>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="arrayType" value="schlumberger" checked onchange="updatePlot()" class="accent-sky-400 w-4 h-4">
+                                <span class="text-slate-300 text-sm">Schlumberger (Plot vs AB/2)</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="arrayType" value="wenner" onchange="updatePlot()" class="accent-sky-400 w-4 h-4">
+                                <span class="text-slate-300 text-sm">Wenner (Plot vs a)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Layer 1 -->
+                    <div class="layer-box layer-1">
+                        <h3 class="font-bold text-slate-200 mb-2">Layer 1 (Top)</h3>
+                        <div class="mb-3">
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="text-slate-400">&rho;&#8321; (Resistivity)</label>
+                                <span id="val-rho1" class="font-mono text-sky-400">100 &Omega;&middot;m</span>
+                            </div>
+                            <input type="range" id="rho1" min="1" max="1000" step="1" value="100" oninput="updatePlot()">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="text-slate-400">h&#8321; (Thickness)</label>
+                                <span id="val-h1" class="font-mono text-sky-400">5 m</span>
+                            </div>
+                            <input type="range" id="h1" min="1" max="50" step="0.5" value="5" oninput="updatePlot()">
+                        </div>
+                    </div>
+
+                    <!-- Layer 2 -->
+                    <div class="layer-box layer-2">
+                        <h3 class="font-bold text-slate-200 mb-2">Layer 2 (Middle)</h3>
+                        <div class="mb-3">
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="text-slate-400">&rho;&#8322; (Resistivity)</label>
+                                <span id="val-rho2" class="font-mono text-sky-400">10 &Omega;&middot;m</span>
+                            </div>
+                            <input type="range" id="rho2" min="1" max="1000" step="1" value="10" oninput="updatePlot()">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="text-slate-400">h&#8322; (Thickness)</label>
+                                <span id="val-h2" class="font-mono text-sky-400">15 m</span>
+                            </div>
+                            <input type="range" id="h2" min="1" max="100" step="1" value="15" oninput="updatePlot()">
+                        </div>
+                    </div>
+
+                    <!-- Layer 3 -->
+                    <div class="layer-box layer-3">
+                        <h3 class="font-bold text-slate-200 mb-2">Layer 3 (Bedrock/Base)</h3>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <label class="text-slate-400">&rho;&#8323; (Resistivity)</label>
+                                <span id="val-rho3" class="font-mono text-sky-400">500 &Omega;&middot;m</span>
+                            </div>
+                            <input type="range" id="rho3" min="1" max="1000" step="1" value="500" oninput="updatePlot()">
+                            <p class="text-xs text-slate-500 mt-2 italic">Thickness is considered infinite.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Plot and Types -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                
+                <!-- Chart Container -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-xl relative">
+                    <div class="absolute top-4 right-6 bg-slate-900 border border-slate-600 px-4 py-2 rounded-lg text-center z-10 shadow-lg">
+                        <span class="block text-xs text-slate-400 uppercase tracking-wider">Current Curve</span>
+                        <span id="current-curve-type" class="text-2xl font-bold text-white">H-Type</span>
+                    </div>
+                    <canvas id="vesChart" class="w-full h-[400px]"></canvas>
+                </div>
+
+                <!-- 4 Classic Curve Types (Interactive Legend) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- H Type -->
+                    <div id="card-h" class="bg-slate-800 rounded-lg p-4 type-card border-h active">
+                        <h3 class="text-xl font-bold text-sky-400 mb-1">H-type</h3>
+                        <p class="font-mono text-sm text-slate-300 mb-2">&rho;&#8321; &gt; &rho;&#8322; &lt; &rho;&#8323;</p>
+                        <p class="text-sm text-slate-400">Conductive middle layer (e.g. saturated sand between dry soils). Curve dips then rises.</p>
+                    </div>
+                    <!-- K Type -->
+                    <div id="card-k" class="bg-slate-800 rounded-lg p-4 type-card border-k">
+                        <h3 class="text-xl font-bold text-amber-500 mb-1">K-type</h3>
+                        <p class="font-mono text-sm text-slate-300 mb-2">&rho;&#8321; &lt; &rho;&#8322; &gt; &rho;&#8323;</p>
+                        <p class="text-sm text-slate-400">Resistive middle layer (e.g. dry gravel between clay). Curve rises then falls.</p>
+                    </div>
+                    <!-- A Type -->
+                    <div id="card-a" class="bg-slate-800 rounded-lg p-4 type-card border-a">
+                        <h3 class="text-xl font-bold text-emerald-500 mb-1">A-type</h3>
+                        <p class="font-mono text-sm text-slate-300 mb-2">&rho;&#8321; &lt; &rho;&#8322; &lt; &rho;&#8323;</p>
+                        <p class="text-sm text-slate-400">Monotonically increasing (e.g. clay &rarr; sand &rarr; bedrock). Curve rises continuously.</p>
+                    </div>
+                    <!-- Q Type -->
+                    <div id="card-q" class="bg-slate-800 rounded-lg p-4 type-card border-q">
+                        <h3 class="text-xl font-bold text-red-500 mb-1">Q-type</h3>
+                        <p class="font-mono text-sm text-slate-300 mb-2">&rho;&#8321; &gt; &rho;&#8322; &gt; &rho;&#8323;</p>
+                        <p class="text-sm text-slate-400">Monotonically decreasing (e.g. gravel &rarr; sand &rarr; saline water). Curve falls continuously.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Caveat Note (from Pseudosection Slide) -->
+        <div class="mt-8 bg-slate-900 border border-slate-700 rounded-xl p-6 shadow-md">
+            <h3 class="text-xl font-bold text-sky-400 mb-3">Important Caveat: Apparent vs. True Resistivity</h3>
+            <p class="text-slate-300 mb-4 leading-relaxed">
+                The plotted curve represents <strong>Apparent Resistivity (&rho;<sub>a</sub>)</strong> over electrode spacing, which is essentially what a <strong>Pseudosection</strong> plots spatially. 
+                <br><br>
+                The pseudosection/plot is <strong>NOT</strong> a true depth section. It is a distorted, volumetrically averaged image of the subsurface. Mathematical <strong>Inversion</strong> is required to recover the true resistivities (&rho;&#8321;, &rho;&#8322;, &rho;&#8323;) and thicknesses that you are manipulating in the controls above.
+            </p>
+            <div class="bg-slate-800 rounded-lg p-3 text-center border border-slate-700">
+                <span class="text-sky-300 font-medium">Pseudosection (Apparent Data) &rarr; <span class="text-slate-400 italic">(Inversion Process)</span> &rarr; True Resistivity Section</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Forward Modeling Math (Educational Approximation) ---
+        // Instead of complex Bessel function integrals, we use a smooth logistical 
+        // blending function that perfectly mimics the behavior of the 3-layer curves 
+        // for educational visualization.
+        function calculateApparentResistivity(spacing, rho1, h1, rho2, h2, rho3, arrayType) {
+            let lRho1 = Math.log10(rho1);
+            let lRho2 = Math.log10(rho2);
+            let lRho3 = Math.log10(rho3);
+
+            // Schlumberger needs ~2.5x spacing to "see" a depth. Wenner needs ~2.0x spacing.
+            let depthMultiplier = arrayType === 'schlumberger' ? 2.5 : 2.0;
+
+            // Spacing multiplier to simulate depth of investigation
+            let d1 = h1 * depthMultiplier; 
+            let d2 = (h1 + h2) * depthMultiplier;
+            
+            // Steepness of transition
+            let c = 1.8; 
+
+            let s1 = Math.pow(spacing, c) / (Math.pow(spacing, c) + Math.pow(d1, c));
+            let s2 = Math.pow(spacing, c) / (Math.pow(spacing, c) + Math.pow(d2, c));
+
+            let lRhoA = lRho1 + (lRho2 - lRho1) * s1 + (lRho3 - lRho2) * s2;
+            return Math.pow(10, lRhoA);
+        }
+
+        // --- Chart Initialization ---
+        const ctx = document.getElementById('vesChart').getContext('2d');
+        const vesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // AB/2 values
+                datasets: [{
+                    label: 'Apparent Resistivity (ρa)',
+                    data: [],
+                    borderColor: '#38bdf8', // Tailwind sky-400
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'logarithmic',
+                        title: {
+                            display: true,
+                            text: 'Electrode Spacing AB/2 (m)',
+                            color: '#94a3b8',
+                            font: { size: 14, weight: 'bold' }
+                        },
+                        grid: { color: '#334155' },
+                        ticks: { color: '#cbd5e1' },
+                        min: 1,
+                        max: 1000
+                    },
+                    y: {
+                        type: 'logarithmic',
+                        title: {
+                            display: true,
+                            text: 'Apparent Resistivity ρa (Ω·m)',
+                            color: '#94a3b8',
+                            font: { size: 14, weight: 'bold' }
+                        },
+                        grid: { color: '#334155' },
+                        ticks: { color: '#cbd5e1' },
+                        min: 1,
+                        max: 1000
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#38bdf8',
+                        bodyColor: '#e2e8f0',
+                        borderColor: '#475569',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                return `ρa: ${context.parsed.y.toFixed(1)} Ω·m`;
+                            },
+                            title: function(context) {
+                                const arrayType = document.querySelector('input[name="arrayType"]:checked').value;
+                                const label = arrayType === 'schlumberger' ? 'AB/2: ' : 'a: ';
+                                return label + context[0].parsed.x.toFixed(1) + ' m';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- Logic & UI Updates ---
+        function determineCurveType(r1, r2, r3) {
+            if (r1 > r2 && r2 < r3) return 'H';
+            if (r1 < r2 && r2 > r3) return 'K';
+            if (r1 < r2 && r2 <= r3) return 'A'; // Using <= to catch edge cases
+            if (r1 >= r2 && r2 > r3) return 'Q';
+            return '-'; // Transitional
+        }
+
+        function highlightCard(type) {
+            const cards = ['h', 'k', 'a', 'q'];
+            cards.forEach(c => {
+                const el = document.getElementById(`card-${c}`);
+                if(el) {
+                    if (c.toUpperCase() === type) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+            });
+
+            // Update Badge
+            const badge = document.getElementById('current-curve-type');
+            badge.innerText = `${type}-Type`;
+            
+            // Set badge color based on type
+            badge.className = 'text-2xl font-bold ';
+            if(type === 'H') badge.className += 'text-sky-400';
+            else if(type === 'K') badge.className += 'text-amber-500';
+            else if(type === 'A') badge.className += 'text-emerald-500';
+            else if(type === 'Q') badge.className += 'text-red-500';
+            else badge.className += 'text-slate-400';
+        }
+
+        function updatePlot() {
+            // Get array type
+            const arrayType = document.querySelector('input[name="arrayType"]:checked').value;
+
+            // Get values from sliders
+            const rho1 = parseFloat(document.getElementById('rho1').value);
+            const h1 = parseFloat(document.getElementById('h1').value);
+            const rho2 = parseFloat(document.getElementById('rho2').value);
+            const h2 = parseFloat(document.getElementById('h2').value);
+            const rho3 = parseFloat(document.getElementById('rho3').value);
+
+            // Update text labels
+            document.getElementById('val-rho1').innerText = `${rho1} Ω·m`;
+            document.getElementById('val-h1').innerText = `${h1} m`;
+            document.getElementById('val-rho2').innerText = `${rho2} Ω·m`;
+            document.getElementById('val-h2').innerText = `${h2} m`;
+            document.getElementById('val-rho3').innerText = `${rho3} Ω·m`;
+
+            // Determine Curve Type
+            const curveType = determineCurveType(rho1, rho2, rho3);
+            highlightCard(curveType);
+
+            // Update Chart Axis Label
+            vesChart.options.scales.x.title.text = arrayType === 'schlumberger' ? 'Electrode Spacing AB/2 (m)' : 'Electrode Spacing a (m)';
+
+            // Generate Data points
+            const xData = [];
+            const yData = [];
+            
+            // Generate 100 logarithmically spaced points between 1 and 1000
+            const numPoints = 100;
+            const logMin = Math.log10(1);
+            const logMax = Math.log10(1000);
+            
+            for (let i = 0; i <= numPoints; i++) {
+                const logX = logMin + (logMax - logMin) * (i / numPoints);
+                const spacing = Math.pow(10, logX);
+                const appRes = calculateApparentResistivity(spacing, rho1, h1, rho2, h2, rho3, arrayType);
+                
+                xData.push(spacing);
+                yData.push(appRes);
+            }
+
+            // Update Chart
+            vesChart.data.labels = xData;
+            vesChart.data.datasets[0].data = yData;
+            
+            // Change line color based on type
+            let color = '#94a3b8'; // default
+            if(curveType === 'H') color = '#0ea5e9';
+            if(curveType === 'K') color = '#f59e0b';
+            if(curveType === 'A') color = '#22c55e';
+            if(curveType === 'Q') color = '#ef4444';
+            
+            vesChart.data.datasets[0].borderColor = color;
+            vesChart.data.datasets[0].backgroundColor = color + '20'; // 20 is hex for 12% opacity
+
+            vesChart.update();
+        }
+
+        // Initial Plot
+        updatePlot();
+    </script>
+</body>
+</html>

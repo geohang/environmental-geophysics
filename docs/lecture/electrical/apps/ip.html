@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Signal Mechanisms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .mechanism-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .mechanism-btn.active {
+            background-color: #1e293b;
+            border-left: 4px solid #a855f7; /* Purple for IP */
+        }
+        canvas {
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+        /* Toggle Switch CSS */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #68D391;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #68D391;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="max-w-6xl w-full">
+        <!-- Header -->
+        <header class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl md:text-5xl font-bold text-purple-400 mb-2">Two Physical Mechanisms of IP</h1>
+            <p class="text-slate-400 text-lg">Interactive microscopic models of Induced Polarization.</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Navigation and Descriptions -->
+            <div class="space-y-4 lg:col-span-1 flex flex-col">
+                
+                <div class="space-y-2">
+                    <!-- Mechanism 1 -->
+                    <button onclick="switchTab(1)" id="btn-1" class="w-full mechanism-btn active text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-purple-400">1. Membrane Polarization</h2>
+                        <p class="text-xs text-slate-400 mt-1">Ion accumulation at pore throats with clay.</p>
+                    </button>
+
+                    <!-- Mechanism 2 -->
+                    <button onclick="switchTab(2)" id="btn-2" class="w-full mechanism-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-purple-400">2. Electrode Polarization</h2>
+                        <p class="text-xs text-slate-400 mt-1">Charge transfer at metallic mineral surfaces.</p>
+                    </button>
+                </div>
+
+                <!-- Concept Explanation Card -->
+                <div class="bg-slate-800 p-5 rounded-lg border border-slate-600 shadow-lg mt-2 flex-grow">
+                    <h3 class="text-sm font-bold text-sky-400 mb-2 uppercase tracking-wider flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Concept Breakdown
+                    </h3>
+                    <p id="concept-text" class="text-slate-300 text-sm leading-relaxed mb-4">
+                        <!-- Populated by JS -->
+                    </p>
+                    
+                    <!-- Interactive Power Switch -->
+                    <div class="border-t border-slate-700 pt-4 mt-auto bg-slate-900 -mx-5 -mb-5 p-5 rounded-b-lg flex flex-col items-center">
+                        <label class="block text-sm font-bold text-slate-300 mb-3 text-center uppercase tracking-widest">Transmitter Current</label>
+                        
+                        <div class="relative inline-block w-20 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" name="toggle" id="current-toggle" class="toggle-checkbox absolute block w-10 h-10 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-300 ease-in-out z-10" style="top: -4px; left: 0; transform: translateX(0%); border-color: #cbd5e1;"/>
+                            <label for="current-toggle" class="toggle-label block overflow-hidden h-8 rounded-full bg-slate-600 cursor-pointer transition-colors duration-300 ease-in-out"></label>
+                        </div>
+                        
+                        <div class="flex justify-between w-full px-8 mt-2 text-xs font-bold">
+                            <span id="label-off" class="text-slate-500">OFF (Decay)</span>
+                            <span id="label-on" class="text-slate-600">ON (Charge)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Canvas Animation -->
+            <div class="lg:col-span-2 relative h-[600px] border border-slate-700 rounded-xl overflow-hidden bg-slate-800 flex flex-col">
+                
+                <!-- Educational overlay text -->
+                <div class="absolute top-4 left-4 z-10 pointer-events-none drop-shadow-md">
+                    <h3 id="canvas-title" class="text-2xl font-bold text-white">Membrane Polarization</h3>
+                    <p id="canvas-subtitle" class="text-purple-300 text-sm">Dominant in clayey rocks</p>
+                </div>
+                
+                <!-- Applied Field Indicator (Top Right) -->
+                <div id="field-indicator" class="absolute top-4 right-4 z-10 opacity-0 transition-opacity duration-300 flex items-center space-x-2 bg-purple-900/80 px-4 py-2 rounded-full border border-purple-500">
+                    <span class="text-white font-bold text-sm">Applied E-Field Active</span>
+                    <svg class="w-6 h-6 text-purple-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+
+                <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('sim-canvas');
+        const ctx = canvas.getContext('2d');
+        let currentTab = 1;
+        let animationFrameId;
+        
+        // Physics State
+        let isCurrentOn = false;
+        let polarizationLevel = 0; // 0 (unpolarized) to 1 (fully polarized)
+        let voltageHistory = new Array(100).fill(0); 
+        
+        let particles = [];
+        let electrons = [];
+
+        // UI Event Listeners
+        document.getElementById('current-toggle').addEventListener('change', (e) => {
+            isCurrentOn = e.target.checked;
+            
+            const labelOff = document.getElementById('label-off');
+            const labelOn = document.getElementById('label-on');
+            const toggle = document.getElementById('current-toggle');
+            const fieldInd = document.getElementById('field-indicator');
+            
+            if (isCurrentOn) {
+                labelOn.classList.replace('text-slate-600', 'text-emerald-400');
+                labelOff.classList.replace('text-red-400', 'text-slate-500');
+                toggle.style.transform = 'translateX(100%)';
+                toggle.style.borderColor = '#34d399';
+                fieldInd.classList.remove('opacity-0');
+            } else {
+                labelOn.classList.replace('text-emerald-400', 'text-slate-600');
+                labelOff.classList.replace('text-slate-500', 'text-red-400');
+                toggle.style.transform = 'translateX(0%)';
+                toggle.style.borderColor = '#f87171';
+                fieldInd.classList.add('opacity-0');
+            }
+        });
+
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            initSimulation(currentTab);
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // UI Content Updates
+        const mechanisms = [
+            { 
+                title: "Membrane Polarization", 
+                sub: "Dominant in clayey rocks", 
+                concept: "<strong>How it works:</strong> Clay minerals naturally carry a negative surface charge. When they sit inside narrow 'pore throats', they act like an electrical filter. <br><br><strong>1. Turn ON:</strong> The electric field pushes positive ions (<span class='text-sky-400 font-bold'>+</span>) to the right. But the negative clay trap blocks them, causing a 'traffic jam' (accumulation) on one side.<br><br><strong>2. Turn OFF:</strong> The pile-up of ions acts like a tiny battery. They slowly diffuse back to equilibrium, creating the decaying voltage (IP effect) we measure."
+            },
+            { 
+                title: "Electrode Polarization", 
+                sub: "Dominant in disseminated sulfides, graphite", 
+                concept: "<strong>How it works:</strong> Metallic minerals (like sulfide ores) conduct using <em>electrons</em> (<span class='text-yellow-400 font-bold'>e⁻</span>), but groundwater conducts using <em>ions</em> (<span class='text-sky-400 font-bold'>+</span> and <span class='text-red-400 font-bold'>-</span>). <br><br><strong>1. Turn ON:</strong> The electric field forces charges to move. Electrons rush to one side of the metal grain, while ions in the water rush to meet them. This creates a huge charge pile-up (a capacitor) right at the boundary.<br><br><strong>2. Turn OFF:</strong> The external push is gone. The electrons and ions slowly drift away from the boundary, producing the IP decay signal."
+            }
+        ];
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            isCurrentOn = false;
+            polarizationLevel = 0;
+            voltageHistory.fill(0);
+            
+            document.getElementById('current-toggle').checked = false;
+            document.getElementById('current-toggle').dispatchEvent(new Event('change'));
+            
+            document.querySelectorAll('.mechanism-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${tabId}`).classList.add('active');
+
+            document.getElementById('canvas-title').innerText = mechanisms[tabId-1].title;
+            document.getElementById('canvas-subtitle').innerText = mechanisms[tabId-1].sub;
+            document.getElementById('concept-text').innerHTML = mechanisms[tabId-1].concept;
+
+            initSimulation(tabId);
+        }
+
+        // --- SIMULATION INITIALIZATION ---
+        function initSimulation(tabId) {
+            particles = [];
+            electrons = [];
+            const w = canvas.width;
+            const h = canvas.height;
+
+            if (tabId === 1) { // Membrane
+                // Positive ions only for simpler traffic jam concept
+                for(let i=0; i<70; i++) {
+                    particles.push({
+                        charge: 1,
+                        baseX: Math.random() * w,
+                        baseY: Math.random() * h,
+                        x: 0, y: 0,
+                        noiseX: Math.random() * 1000,
+                        noiseY: Math.random() * 1000
+                    });
+                }
+            } 
+            else if (tabId === 2) { // Electrode
+                // Fluid Ions (+ and -)
+                for(let i=0; i<60; i++) {
+                    let isPositive = Math.random() > 0.5;
+                    particles.push({
+                        charge: isPositive ? 1 : -1,
+                        baseX: Math.random() * w,
+                        baseY: Math.random() * h,
+                        x: 0, y: 0,
+                        noiseX: Math.random() * 1000,
+                        noiseY: Math.random() * 1000
+                    });
+                }
+                // Electrons in metal grain
+                for(let i=0; i<40; i++) {
+                    let r = Math.random() * 60;
+                    let theta = Math.random() * 2 * Math.PI;
+                    electrons.push({
+                        baseX: w/2 + r * Math.cos(theta),
+                        baseY: h/2 + r * Math.sin(theta),
+                        x: 0, y: 0,
+                        noiseX: Math.random() * 1000,
+                        noiseY: Math.random() * 1000
+                    });
+                }
+            }
+        }
+
+        // --- DRAWING LOOPS ---
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            // --- PHYSICS STATE ---
+            if (isCurrentOn) {
+                polarizationLevel += 0.03; 
+                if (polarizationLevel > 1) polarizationLevel = 1;
+            } else {
+                polarizationLevel -= 0.005; 
+                if (polarizationLevel < 0) polarizationLevel = 0;
+            }
+
+            let measuredVoltage = (isCurrentOn ? 0.6 : 0) + (polarizationLevel * 0.4);
+            voltageHistory.push(measuredVoltage);
+            voltageHistory.shift(); 
+
+            // --- BIG E-FIELD WATERMARK ---
+            if (polarizationLevel > 0.01) {
+                ctx.fillStyle = `rgba(168, 85, 247, ${polarizationLevel * 0.15})`;
+                ctx.font = 'bold 80px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                // E-field pushes + right, and - left
+                ctx.fillText('Applied E-Field ➔', w/2, h/2 - 120);
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'alphabetic';
+            }
+
+            // --- DRAW MICROSCOPIC VIEW ---
+            if (currentTab === 1) { // MEMBRANE
+                
+                // Rock Grains
+                ctx.fillStyle = '#475569'; 
+                ctx.beginPath();
+                ctx.moveTo(0, 0); ctx.lineTo(w, 0); ctx.lineTo(w, h/2 - 50);
+                ctx.lineTo(w*0.6, h/2 - 50); ctx.lineTo(w*0.5, h/2 - 20); 
+                ctx.lineTo(w*0.4, h/2 - 50); ctx.lineTo(0, h/2 - 50);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(0, h); ctx.lineTo(w, h); ctx.lineTo(w, h/2 + 50);
+                ctx.lineTo(w*0.6, h/2 + 50); ctx.lineTo(w*0.5, h/2 + 20); 
+                ctx.lineTo(w*0.4, h/2 + 50); ctx.lineTo(0, h/2 + 50);
+                ctx.fill();
+
+                // Clay Minerals
+                ctx.strokeStyle = '#22c55e';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.moveTo(w*0.45, h/2 - 20); ctx.lineTo(w*0.55, h/2 - 20);
+                ctx.moveTo(w*0.45, h/2 + 20); ctx.lineTo(w*0.55, h/2 + 20);
+                ctx.stroke();
+                
+                ctx.fillStyle = '#22c55e';
+                ctx.font = 'bold 16px Inter';
+                ctx.fillText('Clay (-)', w*0.5 - 25, h/2 - 30);
+                ctx.fillText('Clay (-)', w*0.5 - 25, h/2 + 40);
+
+                // Draw and animate ions
+                particles.forEach(p => {
+                    p.noiseX += 0.05; p.noiseY += 0.05;
+                    let jiggleX = Math.sin(p.noiseX) * 4;
+                    let jiggleY = Math.cos(p.noiseY) * 4;
+
+                    let targetX = p.baseX;
+                    if (polarizationLevel > 0) {
+                        let drift = polarizationLevel * 120; 
+                        if (p.baseX < w*0.45) {
+                            // Traffic jam before the throat
+                            targetX = Math.min(w*0.45 - 10 - (Math.random()*20), p.baseX + drift);
+                        } else if (p.baseX > w*0.55) {
+                            targetX = p.baseX + drift;
+                            if (targetX > w) targetX -= w; 
+                        }
+                    }
+
+                    p.x = targetX + jiggleX;
+                    p.y = p.baseY + jiggleY;
+
+                    // Constrain to pore
+                    let halfGap = 50;
+                    if(p.x > w*0.4 && p.x < w*0.6) halfGap = 20 + Math.abs(p.x - w*0.5); 
+                    p.y = Math.max(h/2 - halfGap + 10, Math.min(h/2 + halfGap - 10, p.y));
+
+                    // Draw Positive Ion with explicit + label
+                    ctx.fillStyle = '#38bdf8'; 
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 8, 0, Math.PI*2); ctx.fill();
+                    
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = 'bold 12px Inter';
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText('+', p.x, p.y);
+                });
+                
+                // Reset alignment
+                ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+                if (polarizationLevel > 0.1) {
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.font = 'bold 14px Inter';
+                    ctx.globalAlpha = polarizationLevel;
+                    ctx.fillText('➔ IONS PILE UP HERE', w*0.2, h/2 - 10);
+                    ctx.globalAlpha = 1.0;
+                }
+
+            } 
+            else if (currentTab === 2) { // ELECTRODE
+                
+                let cx = w/2;
+                let cy = h/2;
+                let r = 90;
+
+                // Draw Metal Grain
+                ctx.fillStyle = '#ca8a04'; 
+                ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = '#a16207'; ctx.lineWidth = 4; ctx.stroke();
+
+                ctx.fillStyle = '#fef08a';
+                ctx.font = 'bold 16px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('METALLIC MINERAL', cx, cy - 25);
+                ctx.textAlign = 'left';
+
+                // Electrons inside metal
+                electrons.forEach(e => {
+                    e.noiseX += 0.1; e.noiseY += 0.1;
+                    let jiggleX = Math.sin(e.noiseX) * 3;
+                    let jiggleY = Math.cos(e.noiseY) * 3;
+
+                    // Electrons (-) drift LEFT against the E-field
+                    let maxDrift = 60;
+                    let targetX = e.baseX - (maxDrift * polarizationLevel);
+                    
+                    let dx = targetX - cx;
+                    let dy = e.baseY - cy;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist > r - 10) {
+                        let angle = Math.atan2(dy, dx);
+                        targetX = cx + Math.cos(angle) * (r - 10);
+                        e.baseY = cy + Math.sin(angle) * (r - 10);
+                    }
+
+                    // Draw Electron with label
+                    let renderX = targetX + jiggleX;
+                    let renderY = e.baseY + jiggleY;
+                    ctx.fillStyle = '#fde047'; 
+                    ctx.beginPath(); ctx.arc(renderX, renderY, 7, 0, Math.PI*2); ctx.fill();
+                    
+                    ctx.fillStyle = '#854d0e';
+                    ctx.font = 'bold 10px Inter';
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText('e⁻', renderX, renderY);
+                });
+
+                // Fluid Ions outside
+                particles.forEach(p => {
+                    p.noiseX += 0.05; p.noiseY += 0.05;
+                    let jiggleX = Math.sin(p.noiseX) * 4;
+                    let jiggleY = Math.cos(p.noiseY) * 4;
+
+                    // Positives (+) drift Right, Negatives (-) drift Left
+                    let maxDrift = p.charge === 1 ? 100 : -100;
+                    let targetX = p.baseX + (maxDrift * polarizationLevel);
+                    
+                    let dx = targetX - cx;
+                    let dy = p.baseY - cy;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < r + 15) {
+                        let angle = Math.atan2(dy, dx);
+                        targetX = cx + Math.cos(angle) * (r + 15 + (Math.random()*5));
+                        p.baseY = cy + Math.sin(angle) * (r + 15 + (Math.random()*5));
+                    }
+
+                    if (targetX > w + 10) targetX = -10;
+                    if (targetX < -10) targetX = w + 10;
+
+                    let renderX = targetX + jiggleX;
+                    let renderY = p.baseY + jiggleY;
+
+                    // Draw Ion with label
+                    ctx.fillStyle = p.charge === 1 ? '#38bdf8' : '#f87171';
+                    ctx.beginPath(); ctx.arc(renderX, renderY, 8, 0, Math.PI*2); ctx.fill();
+                    
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = 'bold 14px Inter';
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(p.charge === 1 ? '+' : '-', renderX, renderY);
+                });
+                
+                ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; // reset
+
+                // Explanatory text arrows pointing to the pile ups
+                if (polarizationLevel > 0.5) {
+                    ctx.globalAlpha = polarizationLevel;
+                    ctx.fillStyle = '#fef08a';
+                    ctx.font = 'bold 12px Inter';
+                    ctx.fillText('Electrons (e⁻) pile up', cx - r - 120, cy - 20);
+                    ctx.fillText('to meet positive ions', cx - r - 120, cy - 5);
+                    
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.fillText('Positive ions (+)', cx - r - 120, cy + 20);
+                    ctx.fillText('attracted to boundary', cx - r - 120, cy + 35);
+                    ctx.globalAlpha = 1.0;
+                }
+            }
+
+            // --- DRAW LIVE OSCILLOSCOPE ---
+            drawOscilloscope(w, h);
+
+            animationFrameId = requestAnimationFrame(draw);
+        }
+
+        function drawOscilloscope(w, h) {
+            let oscW = 280;
+            let oscH = 120;
+            let oscX = w - oscW - 20;
+            let oscY = h - oscH - 20;
+
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.roundRect(oscX, oscY, oscW, oscH, 8); ctx.fill(); ctx.stroke();
+            
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '10px font-mono uppercase tracking-widest';
+            ctx.fillText('Measured Voltage vs Time', oscX + 10, oscY + 20);
+            
+            ctx.strokeStyle = '#334155';
+            ctx.setLineDash([2, 4]);
+            let zeroY = oscY + oscH - 20;
+            let maxV_Y = oscY + 30;
+            ctx.beginPath(); ctx.moveTo(oscX + 10, zeroY); ctx.lineTo(oscX + oscW - 10, zeroY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(oscX + 10, maxV_Y); ctx.lineTo(oscX + oscW - 10, maxV_Y); ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('0V', oscX + 10, zeroY - 4);
+            ctx.fillText('V(ON)', oscX + 10, maxV_Y - 4);
+
+            ctx.strokeStyle = '#a855f7'; 
+            ctx.lineWidth = 3; // thicker line for visibility
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            
+            let graphWidth = oscW - 20;
+            let stepX = graphWidth / voltageHistory.length;
+            
+            for(let i=0; i<voltageHistory.length; i++) {
+                let v = voltageHistory[i]; 
+                let plotX = oscX + 10 + (i * stepX);
+                let plotY = zeroY - (v * (zeroY - maxV_Y));
+                
+                if (i === 0) ctx.moveTo(plotX, plotY);
+                else ctx.lineTo(plotX, plotY);
+            }
+            ctx.stroke();
+
+            if (!isCurrentOn && polarizationLevel > 0.05) {
+                ctx.fillStyle = '#a855f7';
+                ctx.font = 'bold 11px Inter';
+                ctx.fillText('← IP Decay Tail', oscX + oscW/2, zeroY - (polarizationLevel * (zeroY - maxV_Y)) - 10);
+            }
+        }
+
+        setTimeout(() => {
+            resizeCanvas();
+            switchTab(1);
+            draw();
+        }, 100);
+        
+    </script>
+</body>
+</html>

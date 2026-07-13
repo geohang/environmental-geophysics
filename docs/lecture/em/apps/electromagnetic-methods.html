@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EM System Animation Activity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b1521;
+            color: #e0e0e0;
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #00bcd4;
+        }
+
+        .header i {
+            font-size: 28px;
+            color: #ffb74d;
+        }
+
+        .header h1 {
+            font-family: 'Urbanist', sans-serif;
+            color: #f4c542;
+            font-size: 30px;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+            height: calc(100vh - 120px);
+            min-height: 600px;
+        }
+
+        /* Left Side: Animation (70%) */
+        .animation-panel {
+            flex: 2.5;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Compact Stepper */
+        .stepper {
+            display: flex;
+            gap: 10px;
+            background: #15202b;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #2a3b4c;
+        }
+
+        .step-tab {
+            flex: 1;
+            padding: 12px 10px;
+            text-align: center;
+            background-color: #1a2530;
+            border-radius: 8px;
+            font-family: 'Urbanist', sans-serif;
+            font-weight: 600;
+            color: #78909c;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .step-tab:hover {
+            background-color: #243447;
+            color: #b0bec5;
+        }
+
+        .step-tab.active {
+            background-color: #00bcd4;
+            color: #0b1521;
+            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
+        }
+
+        .step-tab.completed {
+            border-bottom: 3px solid #00bcd4;
+            color: #00bcd4;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Animation Canvas Area */
+        .animation-board {
+            background-color: #0f1a24;
+            border: 2px dashed #37474f;
+            border-radius: 12px;
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Right Side: Sidebar (30%) */
+        .sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background-color: #15202b;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #2a3b4c;
+        }
+
+        .panel h3 {
+            font-family: 'Urbanist', sans-serif;
+            color: #f4c542;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Step Info Text */
+        .step-info p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #cfd8dc;
+            margin-bottom: 20px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-family: 'Urbanist', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: #00bcd4;
+            color: #0d1b2a;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #4dd0e1;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #f4c542;
+            border: 2px solid #f4c542;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: rgba(244, 197, 66, 0.1);
+        }
+
+        button:disabled {
+            background-color: #2a3b4c;
+            color: #546e7a;
+            border-color: transparent;
+            cursor: not-allowed;
+        }
+
+        /* Interactive Slider */
+        .slider-container {
+            margin-top: 10px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #b0bec5;
+        }
+
+        .slider-value {
+            color: #00bcd4;
+            font-weight: bold;
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: #00bcd4;
+            height: 6px;
+            border-radius: 3px;
+            background: #2a3b4c;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00bcd4;
+            cursor: pointer;
+            border: 3px solid #0b1521;
+        }
+
+        .param-hint {
+            font-size: 14px;
+            color: #78909c;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* SVG Element Styles & Animations */
+        .ground-line { stroke: #78909c; stroke-width: 3; stroke-dasharray: 1200; stroke-dashoffset: 1200; transition: stroke-dashoffset 1.5s ease; }
+        .coil { opacity: 0; transition: opacity 1s ease 0.5s, transform 1s ease 0.5s; transform: translateY(-20px); }
+        .primary-field path { fill: none; stroke: #00bcd4; stroke-width: 3; stroke-dasharray: 1500; stroke-dashoffset: 1500; transition: stroke-dashoffset 2s ease-in-out; }
+        
+        .blob { opacity: 0; transform: scale(0.8); transform-origin: 600px 260px; transition: all 1s ease; }
+        
+        /* Dynamic physics elements */
+        .dynamic-eddy {
+            fill: none;
+            stroke: #f4c542;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            transition: stroke-dashoffset 1.5s ease 0.5s, stroke-width 0.3s, opacity 0.3s;
+        }
+        .dynamic-eddy-arrow {
+            opacity: 0;
+            transition: opacity 0.3s ease 1.8s, fill 0.3s;
+        }
+        .dynamic-secondary path {
+            fill: none;
+            stroke: #f4c542;
+            stroke-dasharray: 15, 10;
+            transition: stroke-width 0.3s, opacity 0.3s;
+        }
+
+        .reveal-rect { width: 0; height: 500px; transition: width 2s ease-in-out; }
+        .label { font-family: 'Urbanist', sans-serif; font-size: 20px; font-weight: bold; opacity: 0; transition: opacity 1s ease 1.5s; }
+        .label-p { fill: #00bcd4; }
+        .label-s { fill: #f4c542; transition: opacity 1s ease 1.5s, font-size 0.3s; }
+        .annotation { fill: #b0bec5; font-size: 16px; font-family: 'Lato', sans-serif; }
+
+        /* Step Activation Logic */
+        .step-1 .ground-line { stroke-dashoffset: 0; }
+        .step-1 .coil { opacity: 1; transform: translateY(0); }
+        .step-1 .primary-field path { stroke-dashoffset: 0; transition-delay: 1.2s; }
+        .step-1 .label-p { opacity: 1; transition-delay: 2.5s; }
+
+        .step-2 .ground-line { stroke-dashoffset: 0; }
+        .step-2 .coil { opacity: 1; transform: translateY(0); }
+        .step-2 .primary-field path { stroke-dashoffset: 0; }
+        .step-2 .label-p { opacity: 1; transition-delay: 0s; }
+        .step-2 .blob { opacity: 1; transform: scale(1); }
+        .step-2 .dynamic-eddy { stroke-dashoffset: 0; }
+        .step-2 .dynamic-eddy-arrow { opacity: 1; }
+
+        .step-3 .ground-line { stroke-dashoffset: 0; }
+        .step-3 .coil { opacity: 1; transform: translateY(0); }
+        .step-3 .primary-field path { stroke-dashoffset: 0; }
+        .step-3 .label-p { opacity: 1; transition-delay: 0s; }
+        .step-3 .blob { opacity: 1; transform: scale(1); }
+        .step-3 .dynamic-eddy { stroke-dashoffset: 0; transition-delay: 0s; }
+        .step-3 .dynamic-eddy-arrow { opacity: 1; transition-delay: 0s; }
+        .step-3 .reveal-rect { width: 1200px; }
+        .step-3 .label-s { opacity: 1; transition-delay: 1.5s; }
+    </style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="header">
+        <i class="fa-solid fa-clipboard-list"></i>
+        <h1>Whiteboard Exercise: EM Induction Principle</h1>
+    </div>
+
+    <div class="main-container">
+        
+        <!-- Left Column: Animation Focus -->
+        <div class="animation-panel">
+            
+            <!-- Compact Stepper -->
+            <div class="stepper">
+                <div class="step-tab active" id="tab-0" onclick="setStep(0)"><i class="fa-solid fa-chalkboard"></i> 0. Start</div>
+                <div class="step-tab" id="tab-1" onclick="setStep(1)"><i class="fa-solid fa-satellite-dish"></i> 1. Primary</div>
+                <div class="step-tab" id="tab-2" onclick="setStep(2)"><i class="fa-solid fa-water"></i> 2. Eddy Currents</div>
+                <div class="step-tab" id="tab-3" onclick="setStep(3)"><i class="fa-solid fa-magnet"></i> 3. Secondary</div>
+            </div>
+
+            <!-- Animation Canvas -->
+            <div class="animation-board" id="anim-board">
+                <svg viewBox="0 0 1200 450" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <clipPath id="secondary-mask">
+                            <rect class="reveal-rect" x="350" y="0" width="0" height="450" />
+                        </clipPath>
+                        <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#00bcd4" />
+                        </marker>
+                        <marker id="arrow-yellow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" id="arrow-yellow-path" fill="#f4c542" />
+                        </marker>
+                    </defs>
+
+                    <!-- Ground Line -->
+                    <line class="ground-line" x1="100" y1="150" x2="1100" y2="150" />
+                    <text x="1050" y="170" class="annotation" opacity="0.7">Ground Surface</text>
+
+                    <!-- Component 1: TX & RX Coils -->
+                    <g class="coil" id="tx-coil">
+                        <rect x="250" y="90" width="60" height="60" rx="8" fill="#1e2d3b" stroke="#00bcd4" stroke-width="2" />
+                        <text x="280" y="125" fill="#00bcd4" font-weight="bold" font-family="Urbanist" font-size="20" text-anchor="middle">TX</text>
+                        <text x="280" y="80" class="annotation" text-anchor="middle">Transmitter</text>
+                    </g>
+                    
+                    <g class="coil" id="rx-coil">
+                        <rect x="850" y="90" width="60" height="60" rx="8" fill="#1e2d3b" stroke="#00bcd4" stroke-width="2" />
+                        <text x="880" y="125" fill="#00bcd4" font-weight="bold" font-family="Urbanist" font-size="20" text-anchor="middle">RX</text>
+                        <text x="880" y="80" class="annotation" text-anchor="middle">Receiver</text>
+                    </g>
+
+                    <!-- Primary Field Lines -->
+                    <g class="primary-field">
+                        <path d="M 280 150 C 280 400, 880 400, 880 150" marker-end="url(#arrow-cyan)"/>
+                        <path d="M 300 150 C 300 320, 860 320, 860 150" marker-end="url(#arrow-cyan)"/>
+                    </g>
+                    <text x="580" y="380" class="label label-p" text-anchor="middle">Primary Field (H_primary)</text>
+
+                    <!-- Conductive Body & Eddy Currents -->
+                    <g class="blob">
+                        <ellipse id="conductive-blob" cx="600" cy="260" rx="120" ry="60" fill="#263238" stroke="#546e7a" stroke-width="2" transition="fill 0.3s"/>
+                        <text x="600" y="265" fill="#cfd8dc" font-family="Lato" font-size="18" text-anchor="middle">Conductive Target</text>
+                        
+                        <!-- Left loop -->
+                        <path class="dynamic-eddy" d="M 520 260 A 15 15 0 1 1 520.1 260" />
+                        <polygon class="dynamic-eddy-arrow" points="535,260 540,268 530,268" />
+                        <!-- Right loop -->
+                        <path class="dynamic-eddy" d="M 680 260 A 15 15 0 1 1 680.1 260" />
+                        <polygon class="dynamic-eddy-arrow" points="695,260 700,268 690,268" />
+                    </g>
+
+                    <!-- Secondary Field Lines -->
+                    <g class="dynamic-secondary" clip-path="url(#secondary-mask)">
+                        <path class="sec-path" d="M 630 220 C 700 120, 800 100, 850 120" marker-end="url(#arrow-yellow)" />
+                        <path class="sec-path" d="M 680 250 C 750 200, 850 150, 860 150" marker-end="url(#arrow-yellow)" />
+                    </g>
+                    <text x="750" y="100" class="label label-s" id="sec-label">Secondary Field (H_secondary)</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="sidebar">
+            
+            <!-- Instructions Panel -->
+            <div class="panel step-info">
+                <h3 id="step-title"><i class="fa-solid fa-chalkboard"></i> 0. Start</h3>
+                <p id="step-desc">The whiteboard is blank. Get ready to draw the components of the electromagnetic system.</p>
+                
+                <div class="controls">
+                    <button id="btn-next" class="btn-primary" onclick="nextStep()">Next Step <i class="fa-solid fa-arrow-right"></i></button>
+                    <div style="display:flex; gap:10px;">
+                        <button id="btn-prev" class="btn-secondary" style="flex:1" onclick="prevStep()" disabled><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                        <button id="btn-reset" class="btn-secondary" style="flex:1" onclick="setStep(0)"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Physics Parameter Panel -->
+            <div class="panel" id="physics-panel" style="opacity: 0.5; pointer-events: none; transition: opacity 0.5s;">
+                <h3><i class="fa-solid fa-sliders"></i> Physics Controls</h3>
+                <p style="font-size:14px; color:#cfd8dc; margin-bottom:15px;">Adjust the target's properties to see how the physical response changes.</p>
+                
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Target Conductivity (σ)</span>
+                        <span class="slider-value" id="cond-display">Medium</span>
+                    </div>
+                    <!-- Slider goes from 1 to 100 representing low to high conductivity -->
+                    <input type="range" id="conductivity" min="1" max="100" value="50" oninput="updatePhysics()">
+                    <div class="param-hint" id="cond-hint">Example: Damp Soil or Till</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 3;
+        const board = document.getElementById('anim-board');
+        
+        // Step Data content
+        const stepData = [
+            {
+                title: "<i class='fa-solid fa-chalkboard'></i> 0. Start",
+                desc: "The whiteboard is blank. Get ready to draw the components of the electromagnetic system."
+            },
+            {
+                title: "<i class='fa-solid fa-satellite-dish'></i> 1. Setup & Primary Field",
+                desc: "1. Draw a horizontal line for the ground.<br>2. Place the TX coil (transmitter) and RX coil (receiver) above ground.<br>3. Draw curved lines representing the primary magnetic field radiating from the TX coil into the earth."
+            },
+            {
+                title: "<i class='fa-solid fa-water'></i> 2. Eddy Currents",
+                desc: "Draw a conductive body underground. Because the primary magnetic field is alternating, it induces electrical currents (Eddy Currents) to swirl inside the conductive material according to Faraday's Law."
+            },
+            {
+                title: "<i class='fa-solid fa-magnet'></i> 3. Secondary Field",
+                desc: "These eddy currents generate their own magnetic field! Draw dotted lines traveling from the target back up to the RX coil. The RX coil measures this secondary field to detect the object."
+            }
+        ];
+
+        function updateUI() {
+            board.className = 'animation-board step-' + currentStep;
+
+            // Update text content
+            document.getElementById('step-title').innerHTML = stepData[currentStep].title;
+            document.getElementById('step-desc').innerHTML = stepData[currentStep].desc;
+
+            // Update Tabs
+            for (let i = 0; i <= totalSteps; i++) {
+                const tab = document.getElementById('tab-' + i);
+                if (i === currentStep) {
+                    tab.className = 'step-tab active';
+                } else if (i < currentStep) {
+                    tab.className = 'step-tab completed';
+                } else {
+                    tab.className = 'step-tab';
+                }
+            }
+
+            // Enable/Disable Physics Panel (Only active in step 2 and 3)
+            const physicsPanel = document.getElementById('physics-panel');
+            if(currentStep >= 2) {
+                physicsPanel.style.opacity = '1';
+                physicsPanel.style.pointerEvents = 'auto';
+            } else {
+                physicsPanel.style.opacity = '0.5';
+                physicsPanel.style.pointerEvents = 'none';
+            }
+
+            // Update Buttons
+            document.getElementById('btn-prev').disabled = currentStep === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                btnNext.disabled = true;
+                btnNext.innerHTML = "Complete <i class='fa-solid fa-check'></i>";
+            } else {
+                btnNext.disabled = false;
+                btnNext.innerHTML = "Next Step <i class='fa-solid fa-arrow-right'></i>";
+            }
+            
+            // Ensure physics matches slider if jumping to step 2/3
+            if(currentStep >= 2) updatePhysics();
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) { currentStep++; updateUI(); }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) { currentStep--; updateUI(); }
+        }
+
+        function setStep(step) {
+            currentStep = step; updateUI();
+        }
+
+        // --- Physics Interactive Logic --- //
+        function updatePhysics() {
+            const val = parseInt(document.getElementById('conductivity').value); // 1 to 100
+            
+            // Map 1-100 to physical visuals
+            // Opacity: 0.1 (faint) to 1.0 (bright)
+            const opacity = 0.1 + (val / 100) * 0.9;
+            // Stroke width: 1px to 6px
+            const strokeW = 1 + (val / 100) * 5;
+            
+            // UI text mapping
+            const display = document.getElementById('cond-display');
+            const hint = document.getElementById('cond-hint');
+            const blob = document.getElementById('conductive-blob');
+            
+            if(val < 33) {
+                display.innerText = "Low";
+                display.style.color = "#ffb74d";
+                hint.innerText = "Example: Dry Sand, Gravel, Ice";
+                blob.style.fill = "#1e2d3b"; // Lighter/less dense
+            } else if (val < 66) {
+                display.innerText = "Medium";
+                display.style.color = "#00bcd4";
+                hint.innerText = "Example: Damp Soil, Till, Fresh Water";
+                blob.style.fill = "#263238"; // Medium density
+            } else {
+                display.innerText = "High";
+                display.style.color = "#f4c542";
+                hint.innerText = "Example: Clay, Saltwater, Metallic Ore";
+                blob.style.fill = "#37474f"; // Dense
+            }
+
+            // Apply SVG style changes dynamically
+            document.querySelectorAll('.dynamic-eddy').forEach(p => {
+                p.style.strokeWidth = strokeW + "px";
+                p.style.opacity = opacity;
+            });
+            
+            document.querySelectorAll('.dynamic-eddy-arrow').forEach(a => {
+                a.style.opacity = currentStep >= 2 ? opacity : 0;
+            });
+
+            document.querySelectorAll('.sec-path').forEach(p => {
+                p.style.strokeWidth = strokeW + "px";
+                p.style.opacity = opacity;
+            });
+
+            // Make the secondary field label bolder/larger if highly conductive
+            const label = document.getElementById('sec-label');
+            label.style.fontSize = (16 + (val/100)*8) + "px";
+            label.style.opacity = currentStep >= 3 ? opacity : 0;
+        }
+
+        // Initialize UI
+        updateUI();
+        updatePhysics();
+    </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geophysical Method & Spacing Simulator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { margin: 0; color: #2c3e50; }
+        p.subtitle { color: #666; font-style: italic; }
+
+        .controls { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; align-items: center;}
+        .control-group { display: flex; flex-direction: column; align-items: center; min-width: 200px; }
+        label { font-weight: bold; margin-bottom: 5px; font-size: 0.9rem;}
+        input[type=range] { width: 100%; cursor: pointer; }
+        .val-display { font-size: 0.8rem; color: #777; margin-top: 5px;}
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+        .card { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; }
+        .card h3 { text-align: center; font-size: 1rem; margin: 5px 0 10px 0; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        
+        /* Method Colors */
+        .card.grav { border-top: 4px solid #9b59b6; }
+        .card.mag { border-top: 4px solid #e74c3c; }
+        .card.res { border-top: 4px solid #f1c40f; }
+        .card.seis { border-top: 4px solid #2ecc71; }
+
+        canvas { width: 100% !important; height: 200px !important; }
+
+        .lesson { background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 0.9rem; text-align: center;}
+    </style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+<div class="container">
+    <header>
+        <h1>Geophysics Simulator: Spacing & Noise</h1>
+        <p class="subtitle">Scenario: 5m Wide Tank at 0m | Power Line at +20m</p>
+    </header>
+
+    <div class="lesson">
+        <strong>The Spacing Lesson:</strong> The target is <strong>5m wide</strong>. If your spacing is > 2.5m, you risk "Aliasing" (misrepresenting the shape). If spacing is <strong>10m</strong>, you might miss it entirely!
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="spacingSlider">Grid Spacing (Resolution)</label>
+            <input type="range" id="spacingSlider" min="1" max="20" value="1">
+            <span class="val-display" id="spacingVal">0.5 m</span>
+        </div>
+
+        <div class="control-group">
+            <label for="noiseSlider">Random Noise</label>
+            <input type="range" id="noiseSlider" min="0" max="10" value="1">
+            <span class="val-display" id="noiseVal">Low</span>
+        </div>
+
+        <div class="control-group">
+            <label for="powerSlider">Power Line Interference</label>
+            <input type="range" id="powerSlider" min="0" max="50" value="0">
+            <span class="val-display" id="powerVal">None</span>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card grav">
+            <h3>1. Micro-Gravity (Density)</h3>
+            <canvas id="chartGrav"></canvas>
+        </div>
+
+        <div class="card mag">
+            <h3>2. Magnetometry (Magnetic)</h3>
+            <canvas id="chartMag"></canvas>
+        </div>
+
+        <div class="card res">
+            <h3>3. EM / Conductivity</h3>
+            <canvas id="chartRes"></canvas>
+        </div>
+
+        <div class="card seis">
+            <h3>4. Seismic (Stiffness)</h3>
+            <canvas id="chartSeis"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctxGrav = document.getElementById('chartGrav').getContext('2d');
+    const ctxMag = document.getElementById('chartMag').getContext('2d');
+    const ctxRes = document.getElementById('chartRes').getContext('2d');
+    const ctxSeis = document.getElementById('chartSeis').getContext('2d');
+
+    // Chart Configuration
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { 
+                type: 'linear', 
+                min: -20, max: 20, 
+                title: { display: true, text: 'Distance (m)' } 
+            },
+            y: { display: false } // Hide Y axis for cleaner look
+        }
+    };
+
+    // We use scatter plots connected by lines to show the "dots" clearly
+    function createChart(ctx, color) {
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    borderColor: color,
+                    backgroundColor: color,
+                    borderWidth: 2,
+                    pointRadius: 4, // Make points visible to emphasize spacing
+                    pointHoverRadius: 6,
+                    showLine: true,
+                    tension: 0, // Straight lines between points
+                    data: []
+                }]
+            },
+            options: commonOptions
+        });
+    }
+
+    let chartGrav = createChart(ctxGrav, '#9b59b6');
+    let chartMag = createChart(ctxMag, '#e74c3c');
+    let chartRes = createChart(ctxRes, '#f1c40f');
+    let chartSeis = createChart(ctxSeis, '#2ecc71');
+
+    function updateCharts() {
+        // Get Slider Values
+        // Slider value 1 = 0.5m, 20 = 10m spacing
+        let spacingInput = parseInt(document.getElementById('spacingSlider').value);
+        let spacing = spacingInput * 0.5; 
+        document.getElementById('spacingVal').innerText = spacing + " m";
+
+        let noiseLvl = parseInt(document.getElementById('noiseSlider').value);
+        document.getElementById('noiseVal').innerText = noiseLvl === 0 ? "None" : (noiseLvl < 5 ? "Low" : "High");
+        
+        let powerLvl = parseInt(document.getElementById('powerSlider').value);
+        document.getElementById('powerVal').innerText = powerLvl === 0 ? "None" : "Active";
+
+        // Generate Data Points based on Spacing
+        const dataGrav = [];
+        const dataMag = [];
+        const dataRes = [];
+        const dataSeis = [];
+
+        // Loop from -20 to +20 stepping by "Spacing"
+        // We add a small offset (0.1) to avoid hitting exactly 0 sometimes, simulating real world grid misalignment
+        for(let x = -20; x <= 20.1; x += spacing) {
+            
+            // Re-calculate noise for each distinct point
+            let r = (Math.random() - 0.5) * noiseLvl * 5; 
+
+            // 1. Gravity: Empty tank (Negative Anomaly)
+            let gSignal = -50 * Math.exp(-(x*x)/10); 
+            dataGrav.push({x: x, y: gSignal + r});
+
+            // 2. Mag: Dipole + Power Line
+            let mSignal = -100 * (x / 5) * Math.exp(-(x*x)/15);
+            let mPower = 0;
+            if(powerLvl > 0) {
+                let distToLine = 22 - x; 
+                mPower = (powerLvl * 50) / (distToLine * distToLine); 
+            }
+            // Mag noise increases near power line
+            dataMag.push({x: x, y: mSignal + mPower + (r * (1 + powerLvl/10))});
+
+            // 3. Conductivity: Peak
+            let cSignal = 80 * Math.exp(-(x*x)/8);
+            let cPower = 0;
+            if(powerLvl > 0) {
+                 cPower = (powerLvl * 2) * Math.sin(x); 
+                 cPower += (powerLvl * 10) / (25 - x);
+            }
+            dataRes.push({x: x, y: cSignal + cPower + (r * 2)});
+
+            // 4. Seismic: Velocity Bump
+            let sSignal = 40 * Math.exp(-(x*x)/20);
+            dataSeis.push({x: x, y: sSignal + r});
+        }
+
+        // Update Data
+        chartGrav.data.datasets[0].data = dataGrav;
+        chartGrav.update();
+
+        chartMag.data.datasets[0].data = dataMag;
+        chartMag.update();
+
+        chartRes.data.datasets[0].data = dataRes;
+        chartRes.update();
+
+        chartSeis.data.datasets[0].data = dataSeis;
+        chartSeis.update();
+    }
+
+    // Event Listeners
+    document.getElementById('spacingSlider').addEventListener('input', updateCharts);
+    document.getElementById('noiseSlider').addEventListener('input', updateCharts);
+    document.getElementById('powerSlider').addEventListener('input', updateCharts);
+
+    updateCharts(); // Init
+
+</script>
+</body>
+</html>

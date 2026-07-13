@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dipole Anomaly vs. Inclination Explorer</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{--primary:#38bdf8;--accent:#fbbf24;--danger:#ef5350;--success:#4ade80;--bg-dark:#0f172a;--card-bg:#1e293b;--text-main:#f1f5f9;--text-muted:#94a3b8;}
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6;margin:0;}
+header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#0f172a,#1e293b);border-bottom:1px solid #334155;}
+h1{font-size:2rem;color:var(--primary);margin:0;}
+.subtitle{color:var(--text-muted);margin-top:8px;}
+.container{max-width:1100px;margin:0 auto;padding:20px;}
+.panel{background:var(--card-bg);border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,.3);}
+canvas{width:100%;display:block;background:#0b1220;border-radius:8px;}
+.controls{display:grid;grid-template-columns:1fr;gap:16px;}
+@media(min-width:720px){.controls{grid-template-columns:1fr 1fr;}}
+.ctrl label{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px;font-size:.9rem;}
+.ctrl label span{color:var(--accent);}
+input[type=range]{width:100%;accent-color:var(--primary);}
+.preset{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.preset button{background:#162032;border:1px solid var(--primary);color:var(--text-main);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.85rem;}
+.preset button:hover{background:var(--primary);color:#0b1220;}
+.formula{background:rgba(56,189,248,.1);border-left:4px solid var(--primary);padding:12px 16px;margin-top:16px;border-radius:4px;font-size:.9rem;}
+</style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Magnetic Methods</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+<header>
+  <h1>Dipole Anomaly vs. Magnetic Inclination</h1>
+  <div class="subtitle">The same buried body makes a different anomaly depending on where you are on Earth. Move it from the equator to the pole.</div>
+</header>
+<div class="container">
+  <div class="panel">
+    <canvas id="cv" width="1040" height="440"></canvas>
+  </div>
+  <div class="panel">
+    <div class="preset">
+      <button data-i="0">Magnetic equator (I = 0°)</button>
+      <button data-i="45">Mid-latitude (I = 45°)</button>
+      <button data-i="70">Iowa (I ≈ 70°)</button>
+      <button data-i="90">Magnetic pole (I = 90°)</button>
+    </div>
+    <div class="controls">
+      <div class="ctrl"><label>Inclination $I$ <span id="iv">70°</span></label><input id="i" type="range" min="0" max="90" value="70" step="1"></div>
+      <div class="ctrl"><label>Depth to dipole $z$ <span id="zv">20 m</span></label><input id="z" type="range" min="5" max="60" value="20" step="1"></div>
+    </div>
+    <div class="formula" id="fbox">
+      Total-field anomaly of a buried dipole magnetized by the ambient field. At low inclination the anomaly is a positive-negative pair; toward the pole it becomes a single symmetric high centered on the body.
+    </div>
+  </div>
+</div>
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+function draw(){
+  const I=+document.getElementById('i').value*Math.PI/180;
+  const z=+document.getElementById('z').value;
+  document.getElementById('iv').textContent=(I*180/Math.PI).toFixed(0)+'°';
+  document.getElementById('zv').textContent=z+' m';
+  const W=cv.width,H=cv.height,mid=H*0.52;ctx.clearRect(0,0,W,H);
+  // profile in x from -60..60 m, assume 2D induced dipole, profile along magnetic N.
+  // Total-field anomaly for a point dipole (2D approximation along strike-perp profile):
+  // Use dipole field projected on ambient direction. Body at x=0,depth z.
+  const X0=-60,X1=60,sx=x=>W*(x-X0)/(X1-X0);
+  const N=400,ys=[];let amax=1e-9;
+  // unit ambient field direction (vertical component sinI, horizontal cosI along profile)
+  const bx=Math.cos(I), bz=Math.sin(I);
+  for(let k=0;k<=N;k++){
+    const x=X0+(X1-X0)*k/N;
+    const r2=x*x+z*z, r=Math.sqrt(r2);
+    // dipole moment aligned with ambient field (induced): m=(bx,bz)
+    // field of dipole: B = [3(m·r̂)r̂ - m]/r^3  (drop constants)
+    const rx=x/r, rz=z/r;               // r̂ points from dipole to observation (up = -z)... observation above
+    // observation at surface (0 depth), dipole at depth z => vector from dipole to obs = (x, -z)
+    const ux=x/r, uz=-z/r;
+    const mdotr=bx*ux+bz*uz;
+    const Hx=(3*mdotr*ux-bx)/(r2*r);
+    const Hz=(3*mdotr*uz-bz)/(r2*r);
+    // total-field anomaly = projection of anomalous field on ambient direction
+    const dT=Hx*bx+Hz*bz;
+    ys.push(dT); if(Math.abs(dT)>amax)amax=Math.abs(dT);
+  }
+  // graph
+  const gTop=20,gBot=mid-20,base=(gTop+gBot)/2,span=(gBot-gTop);
+  ctx.strokeStyle='#233046';ctx.beginPath();ctx.moveTo(0,base);ctx.lineTo(W,base);ctx.stroke();
+  ctx.fillStyle='#64748b';ctx.font='12px Segoe UI';ctx.textAlign='left';ctx.fillText('total-field anomaly ΔT (relative)',10,gTop+2);
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.beginPath();
+  for(let k=0;k<=N;k++){const x=X0+(X1-X0)*k/N;const py=base-(ys[k]/amax)*(span*0.45);k?ctx.lineTo(sx(x),py):ctx.moveTo(sx(x),py);}
+  ctx.stroke();
+  // subsurface
+  ctx.fillStyle='#0e1830';ctx.fillRect(0,mid,W,H-mid);
+  ctx.strokeStyle='#334155';ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(W,mid);ctx.stroke();
+  ctx.fillStyle='#94a3b8';ctx.fillText('surface',8,mid+14);
+  const dz=(H-mid)/70, by=mid+z*dz, cxp=sx(0);
+  // body
+  ctx.fillStyle='#ef5350cc';ctx.strokeStyle='#ef5350';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(cxp,by,10,0,7);ctx.fill();ctx.stroke();
+  // induced magnetization arrow (direction of ambient field)
+  const al=34;ctx.strokeStyle='#38bdf8';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(cxp-bx*al,by+bz*al);ctx.lineTo(cxp+bx*al,by-bz*al);ctx.stroke();
+  // arrow head
+  ctx.fillStyle='#38bdf8';const hx=cxp+bx*al,hy=by-bz*al;
+  ctx.beginPath();ctx.arc(hx,hy,4,0,7);ctx.fill();
+  ctx.fillStyle='#e2e8f0';ctx.fillText('induced magnetization ∥ Earth field',cxp+14,by+4);
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([document.getElementById('fbox')]);
+}
+document.getElementById('i').addEventListener('input',draw);
+document.getElementById('z').addEventListener('input',draw);
+document.querySelectorAll('.preset button').forEach(b=>b.addEventListener('click',()=>{
+  document.getElementById('i').value=b.dataset.i;draw();
+}));
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EM Waveforms Animation Activity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b1521;
+            color: #e0e0e0;
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #00bcd4;
+        }
+
+        .header i {
+            font-size: 28px;
+            color: #00bcd4;
+        }
+
+        .header h1 {
+            font-family: 'Urbanist', sans-serif;
+            color: #f4c542;
+            font-size: 30px;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+            height: calc(100vh - 120px);
+            min-height: 600px;
+        }
+
+        /* Left Side: Animation (70%) */
+        .animation-panel {
+            flex: 2.5;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Compact Stepper */
+        .stepper {
+            display: flex;
+            gap: 10px;
+            background: #15202b;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #2a3b4c;
+        }
+
+        .step-tab {
+            flex: 1;
+            padding: 12px 10px;
+            text-align: center;
+            background-color: #1a2530;
+            border-radius: 8px;
+            font-family: 'Urbanist', sans-serif;
+            font-weight: 600;
+            color: #78909c;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .step-tab.active {
+            background-color: #00bcd4;
+            color: #0b1521;
+            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
+        }
+
+        .step-tab.completed {
+            border-bottom: 3px solid #00bcd4;
+            color: #00bcd4;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Animation Canvas Area */
+        .animation-board {
+            background-color: #0f1a24;
+            border: 2px dashed #37474f;
+            border-radius: 12px;
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            background-image: 
+                linear-gradient(rgba(42, 59, 76, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 59, 76, 0.3) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Panel Title Text within Canvas */
+        .panel-title {
+            font-family: 'Urbanist', sans-serif;
+            font-size: 26px;
+            font-weight: bold;
+            fill: #ffffff;
+        }
+
+        /* SVG Element Styles & Animations */
+        .axis-line {
+            stroke: #546e7a;
+            stroke-width: 2;
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .axis-label {
+            fill: #78909c;
+            font-size: 14px;
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 0.5s ease 1s;
+        }
+
+        /* Signal Paths */
+        .tx-path {
+            fill: none;
+            stroke: #00bcd4;
+            stroke-width: 4;
+            stroke-dasharray: 2000;
+            stroke-dashoffset: 2000;
+            transition: stroke-dashoffset 2s linear;
+        }
+
+        .rx-path {
+            fill: none;
+            stroke: #f4c542;
+            stroke-width: 4;
+            stroke-dasharray: 2000;
+            stroke-dashoffset: 2000;
+            transition: stroke-dashoffset 2s linear;
+        }
+
+        .rx-path-dashed {
+            stroke-dasharray: 10, 10;
+        }
+
+        /* Labels and Annotations */
+        .annotation {
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            fill: #cfd8dc;
+            opacity: 0;
+            transition: opacity 0.5s ease 2s;
+        }
+
+        .annotation-bold {
+            font-family: 'Urbanist', sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .cyan-text { fill: #00bcd4; }
+        .yellow-text { fill: #f4c542; }
+        .red-text { fill: #ff6b6b; }
+
+        /* Step Activation Logic */
+        .step-0 .axis-line { stroke-dashoffset: 0; }
+        .step-0 .axis-label { opacity: 1; }
+
+        .step-1 .axis-line { stroke-dashoffset: 0; }
+        .step-1 .axis-label { opacity: 1; }
+        .step-1 .tx-path { stroke-dashoffset: 0; }
+        .step-1 .anno-tx { opacity: 1; }
+
+        .step-2 .axis-line { stroke-dashoffset: 0; }
+        .step-2 .axis-label { opacity: 1; }
+        .step-2 .tx-path { stroke-dashoffset: 0; transition-duration: 0s; }
+        .step-2 .anno-tx { opacity: 1; transition-duration: 0s; }
+        .step-2 .rx-path { stroke-dashoffset: 0; }
+        .step-2 .anno-rx { opacity: 1; }
+
+        .step-3 .axis-line { stroke-dashoffset: 0; }
+        .step-3 .axis-label { opacity: 1; }
+        .step-3 .tx-path { stroke-dashoffset: 0; transition-duration: 0s; }
+        .step-3 .anno-tx { opacity: 1; transition-duration: 0s; }
+        .step-3 .rx-path { stroke-dashoffset: 0; transition-duration: 0s; }
+        .step-3 .anno-rx { opacity: 1; transition-duration: 0s; }
+        .step-3 .anno-detail { opacity: 1; transition-delay: 0.5s; }
+
+        /* Right Side: Sidebar (30%) */
+        .sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background-color: #15202b;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #2a3b4c;
+        }
+
+        .panel h3 {
+            font-family: 'Urbanist', sans-serif;
+            color: #f4c542;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-info p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #cfd8dc;
+            margin-bottom: 20px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-family: 'Urbanist', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: #00bcd4;
+            color: #0d1b2a;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #4dd0e1;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #f4c542;
+            border: 2px solid #f4c542;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: rgba(244, 197, 66, 0.1);
+        }
+
+        button:disabled {
+            background-color: #2a3b4c;
+            color: #546e7a;
+            border-color: transparent;
+            cursor: not-allowed;
+        }
+
+        /* Interactive Slider */
+        .slider-container {
+            margin-top: 10px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #b0bec5;
+        }
+
+        .slider-value {
+            color: #f4c542;
+            font-weight: bold;
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: #f4c542;
+            height: 6px;
+            border-radius: 3px;
+            background: #2a3b4c;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #f4c542;
+            cursor: pointer;
+            border: 3px solid #0b1521;
+        }
+
+        .param-hint {
+            font-size: 14px;
+            color: #78909c;
+            margin-top: 10px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <i class="fa-solid fa-wave-square"></i>
+        <h1>CW vs TEM Waveforms</h1>
+    </div>
+
+    <div class="main-container">
+        
+        <!-- Left Column: Animation Focus -->
+        <div class="animation-panel">
+            
+            <!-- Compact Stepper -->
+            <div class="stepper">
+                <div class="step-tab active" id="tab-0" onclick="setStep(0)"><i class="fa-solid fa-chalkboard"></i> 0. Axes</div>
+                <div class="step-tab" id="tab-1" onclick="setStep(1)"><i class="fa-solid fa-tower-broadcast"></i> 1. TX Signal</div>
+                <div class="step-tab" id="tab-2" onclick="setStep(2)"><i class="fa-solid fa-satellite-dish"></i> 2. RX Signal</div>
+                <div class="step-tab" id="tab-3" onclick="setStep(3)"><i class="fa-solid fa-tags"></i> 3. Labels</div>
+            </div>
+
+            <!-- Animation Canvas -->
+            <div class="animation-board" id="anim-board">
+                <svg viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid meet">
+                    
+                    <defs>
+                        <marker id="arrow-grey" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#546e7a" />
+                        </marker>
+                        <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff6b6b" />
+                        </marker>
+                    </defs>
+
+                    <!-- Divider Line -->
+                    <line x1="600" y1="20" x2="600" y2="480" stroke="#2a3b4c" stroke-width="2" stroke-dasharray="10 5"/>
+
+                    <!-- ========================================== -->
+                    <!-- LEFT PANEL: CW SYSTEM                      -->
+                    <!-- ========================================== -->
+                    <text x="300" y="50" class="panel-title" text-anchor="middle">Continuous-Wave (CW)</text>
+                    
+                    <!-- Axes -->
+                    <g class="axes">
+                        <!-- X Axis -->
+                        <line class="axis-line" x1="50" y1="250" x2="550" y2="250" marker-end="url(#arrow-grey)"/>
+                        <text x="530" y="270" class="axis-label">Time</text>
+                        <!-- Y Axis -->
+                        <line class="axis-line" x1="70" y1="420" x2="70" y2="100" marker-end="url(#arrow-grey)"/>
+                        <text x="50" y="90" class="axis-label">Current / Amp</text>
+                    </g>
+
+                    <!-- Waveforms -->
+                    <!-- CW TX Path generated by JS -->
+                    <path id="cw-tx-path" class="tx-path" />
+                    <!-- CW RX Path generated by JS -->
+                    <path id="cw-rx-path" class="rx-path rx-path-dashed" />
+
+                    <!-- Annotations & Labels -->
+                    <!-- TX Anno (Step 1) -->
+                    <g class="annotation anno-tx">
+                        <text x="90" y="140" class="cyan-text annotation-bold">Transmitter (TX)</text>
+                        <text x="90" y="160" class="cyan-text" font-size="14">Constant Amplitude Sine Wave</text>
+                    </g>
+
+                    <!-- RX Anno (Step 2) -->
+                    <g class="annotation anno-rx">
+                        <text x="400" y="380" class="yellow-text annotation-bold">Receiver (RX)</text>
+                        <text x="400" y="400" class="yellow-text" font-size="14">Shifted Phase & Lower Amp</text>
+                    </g>
+
+                    <!-- Detail Labels (Step 3) -->
+                    <g class="annotation anno-detail">
+                        <text x="180" y="130" class="annotation-bold" fill="#ffffff">f = 10 kHz</text>
+                        <!-- Legend -->
+                        <rect x="80" y="430" width="150" height="50" fill="#15202b" stroke="#37474f" rx="5"/>
+                        <line x1="90" y1="445" x2="120" y2="445" stroke="#00bcd4" stroke-width="3"/>
+                        <text x="130" y="450" fill="#cfd8dc" font-size="14">TX Field</text>
+                        
+                        <line x1="90" y1="465" x2="120" y2="465" stroke="#f4c542" stroke-width="3" stroke-dasharray="4 4"/>
+                        <text x="130" y="470" fill="#cfd8dc" font-size="14">RX Secondary</text>
+                    </g>
+
+
+                    <!-- ========================================== -->
+                    <!-- RIGHT PANEL: TEM SYSTEM                    -->
+                    <!-- ========================================== -->
+                    <text x="900" y="50" class="panel-title" text-anchor="middle">Time-Domain (TEM)</text>
+
+                    <!-- Axes -->
+                    <g class="axes">
+                        <!-- X Axis (Base at y=350 to allow room for decay) -->
+                        <line class="axis-line" x1="650" y1="350" x2="1150" y2="350" marker-end="url(#arrow-grey)"/>
+                        <text x="1120" y="370" class="axis-label">Time</text>
+                        <!-- Y Axis -->
+                        <line class="axis-line" x1="670" y1="420" x2="670" y2="100" marker-end="url(#arrow-grey)"/>
+                        <text x="650" y="90" class="axis-label">Current / Amp</text>
+                    </g>
+
+                    <!-- Waveforms -->
+                    <!-- TEM TX Pulse -->
+                    <path class="tx-path" d="M 670 350 L 700 350 L 700 150 L 850 150 L 850 350 L 1150 350" />
+                    
+                    <!-- TEM RX Decay Path generated dynamically by JS based on slider -->
+                    <path id="tem-rx-path" class="rx-path" />
+
+                    <!-- Annotations & Labels -->
+                    <!-- TX Anno (Step 1) -->
+                    <g class="annotation anno-tx">
+                        <text x="730" y="130" class="cyan-text annotation-bold">TX ON</text>
+                        <text x="860" y="130" class="cyan-text annotation-bold">TX OFF</text>
+                        <line x1="850" y1="140" x2="850" y2="200" stroke="#00bcd4" stroke-width="2" marker-end="url(#arrow-cyan)" stroke-dasharray="4 4"/>
+                    </g>
+
+                    <!-- RX Anno (Step 2) -->
+                    <g class="annotation anno-rx">
+                        <text x="900" y="240" class="yellow-text annotation-bold">RX Decay Curve</text>
+                        <text x="900" y="260" class="yellow-text" font-size="14">Measured during the "off-time"</text>
+                    </g>
+
+                    <!-- Detail Labels (Step 3) -->
+                    <g class="annotation anno-detail">
+                        <!-- Measure bracket -->
+                        <path d="M 860 100 L 860 80 L 1130 80 L 1130 100" fill="none" stroke="#cfd8dc" stroke-width="2"/>
+                        <text x="995" y="70" text-anchor="middle" fill="#cfd8dc" font-style="italic">Measure here (Off-Time)</text>
+                        
+                        <!-- Early / Late time markers -->
+                        <line x1="880" y1="350" x2="880" y2="380" stroke="#ff6b6b" stroke-width="2"/>
+                        <text x="880" y="400" text-anchor="middle" class="red-text annotation-bold" font-size="14">Early Time</text>
+                        
+                        <line x1="1050" y1="350" x2="1050" y2="380" stroke="#ff6b6b" stroke-width="2"/>
+                        <text x="1050" y="400" text-anchor="middle" class="red-text annotation-bold" font-size="14">Late Time</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="sidebar">
+            
+            <!-- Instructions Panel -->
+            <div class="panel step-info">
+                <h3 id="step-title"><i class="fa-solid fa-chalkboard"></i> 0. Axes</h3>
+                <p id="step-desc">Start by drawing the X (Time) and Y (Current) axes for both the Continuous-Wave and Time-Domain systems.</p>
+                
+                <div class="controls">
+                    <button id="btn-next" class="btn-primary" onclick="nextStep()">Next Step <i class="fa-solid fa-arrow-right"></i></button>
+                    <div style="display:flex; gap:10px;">
+                        <button id="btn-prev" class="btn-secondary" style="flex:1" onclick="prevStep()" disabled><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                        <button id="btn-reset" class="btn-secondary" style="flex:1" onclick="setStep(0)"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Physics Parameter Panel (TEM Only) -->
+            <div class="panel" id="physics-panel" style="opacity: 0.5; pointer-events: none; transition: opacity 0.5s;">
+                <h3><i class="fa-solid fa-sliders"></i> TEM Physics Control</h3>
+                <p style="font-size:14px; color:#cfd8dc; margin-bottom:15px;">Adjust the target's conductivity to see how the TEM decay curve changes.</p>
+                
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Conductivity (σ)</span>
+                        <span class="slider-value" id="cond-display">Medium</span>
+                    </div>
+                    <!-- Slider goes from 1 to 100 representing low to high conductivity -->
+                    <input type="range" id="conductivity" min="1" max="100" value="50" oninput="updatePhysics()">
+                    <div class="param-hint" id="cond-hint">Medium decay rate.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 3;
+        const board = document.getElementById('anim-board');
+        
+        // Step Data content
+        const stepData = [
+            {
+                title: "<i class='fa-solid fa-chalkboard'></i> 0. Axes",
+                desc: "Start by drawing the X (Time) and Y (Current) axes for both the Continuous-Wave and Time-Domain systems."
+            },
+            {
+                title: "<i class='fa-solid fa-tower-broadcast'></i> 1. TX Signal",
+                desc: "<b>CW:</b> Draw a smooth, continuous sine wave with constant amplitude.<br><br><b>TEM:</b> Draw a rectangular pulse (TX ON), followed by an abrupt drop to zero (TX OFF)."
+            },
+            {
+                title: "<i class='fa-solid fa-satellite-dish'></i> 2. RX Signal",
+                desc: "<b>CW:</b> Draw a dotted sine wave. It is phase-shifted and usually lower amplitude.<br><br><b>TEM:</b> Draw an exponentially decaying curve starting the moment the transmitter turns off."
+            },
+            {
+                title: "<i class='fa-solid fa-tags'></i> 3. Labels",
+                desc: "<b>CW:</b> Label the frequency (e.g., f = 10 kHz).<br><br><b>TEM:</b> Mark the 'off-time' window where measurements occur. Note the difference between <i>Early Time</i> (shallow features) and <i>Late Time</i> (deep features)."
+            }
+        ];
+
+        // --- Initialization of Static Paths (CW) --- //
+        function initPaths() {
+            // Generate CW Transmitter Sine Wave
+            let cwTx = "M 70 250 ";
+            for(let x=70; x<=550; x+=5) {
+                let y = 250 - 100 * Math.sin((x-70) * 0.035);
+                cwTx += `L ${x} ${y} `;
+            }
+            document.getElementById('cw-tx-path').setAttribute('d', cwTx);
+
+            // Generate CW Receiver Sine Wave (Phase shifted and lower amp)
+            let cwRx = "M 70 250 ";
+            for(let x=70; x<=550; x+=5) {
+                // Amplitude 60, Phase shift ~1.2 radians
+                let y = 250 - 60 * Math.sin((x-70) * 0.035 - 1.2);
+                cwRx += `L ${x} ${y} `;
+            }
+            document.getElementById('cw-rx-path').setAttribute('d', cwRx);
+            
+            // Generate initial TEM RX
+            updatePhysics();
+        }
+
+        // --- UI Update Logic --- //
+        function updateUI() {
+            // Apply CSS class to trigger path drawing animations
+            board.className = 'animation-board step-' + currentStep;
+
+            // Update text content
+            document.getElementById('step-title').innerHTML = stepData[currentStep].title;
+            document.getElementById('step-desc').innerHTML = stepData[currentStep].desc;
+
+            // Update Tabs
+            for (let i = 0; i <= totalSteps; i++) {
+                const tab = document.getElementById('tab-' + i);
+                if (i === currentStep) {
+                    tab.className = 'step-tab active';
+                } else if (i < currentStep) {
+                    tab.className = 'step-tab completed';
+                } else {
+                    tab.className = 'step-tab';
+                }
+            }
+
+            // Enable/Disable Physics Panel (TEM Decay only makes sense in step 2 & 3)
+            const physicsPanel = document.getElementById('physics-panel');
+            if(currentStep >= 2) {
+                physicsPanel.style.opacity = '1';
+                physicsPanel.style.pointerEvents = 'auto';
+            } else {
+                physicsPanel.style.opacity = '0.5';
+                physicsPanel.style.pointerEvents = 'none';
+            }
+
+            // Update Buttons
+            document.getElementById('btn-prev').disabled = currentStep === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                btnNext.disabled = true;
+                btnNext.innerHTML = "Complete <i class='fa-solid fa-check'></i>";
+            } else {
+                btnNext.disabled = false;
+                btnNext.innerHTML = "Next Step <i class='fa-solid fa-arrow-right'></i>";
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) { currentStep++; updateUI(); }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) { currentStep--; updateUI(); }
+        }
+
+        function setStep(step) {
+            currentStep = step; updateUI();
+        }
+
+        // --- Physics Interactive Logic (TEM Decay Curve) --- //
+        function updatePhysics() {
+            const val = parseInt(document.getElementById('conductivity').value); // 1 to 100
+            
+            // Map slider (1 to 100) to decay constant 'k'
+            // High Conductivity -> Small k -> Slow Decay
+            // Low Conductivity -> Large k -> Fast Decay
+            // Formula maps 1 -> 0.06 (fast), 100 -> 0.005 (slow)
+            const k = 0.06 - ((val - 1) / 99) * 0.055;
+            
+            // Generate TEM Receiver Exponential Decay Curve
+            // Starts at x=850 (TX OFF), y=150 (peak induced) dropping to y=350 (baseline)
+            let temRx = "M 850 350 L 850 150 "; // Immediate spike on turnoff
+            for(let x=850; x<=1150; x+=5) {
+                // y = baseline - (amplitude * e^(-k * time_elapsed))
+                let y = 350 - 200 * Math.exp(-k * (x - 850));
+                temRx += `L ${x} ${y} `;
+            }
+            
+            // In step 2 or 3, we update the path. 
+            // We temporarily remove transition so the slider feels responsive instead of animating slowly.
+            const rxPathEl = document.getElementById('tem-rx-path');
+            if(currentStep >= 2) {
+                rxPathEl.style.transition = 'none';
+                rxPathEl.setAttribute('d', temRx);
+            } else {
+                // If not visible yet, set it normally so drawing animation works later
+                rxPathEl.style.transition = 'stroke-dashoffset 2s linear';
+                rxPathEl.setAttribute('d', temRx);
+            }
+
+            // UI text mapping
+            const display = document.getElementById('cond-display');
+            const hint = document.getElementById('cond-hint');
+            
+            if(val < 33) {
+                display.innerText = "Low";
+                display.style.color = "#ffb74d";
+                hint.innerHTML = "<b>Fast Decay:</b> Resistive target (signal dies quickly).";
+            } else if (val < 66) {
+                display.innerText = "Medium";
+                display.style.color = "#00bcd4";
+                hint.innerHTML = "<b>Medium Decay:</b> Moderate conductivity.";
+            } else {
+                display.innerText = "High";
+                display.style.color = "#f4c542";
+                hint.innerHTML = "<b>Slow Decay:</b> Conductive target (eddy currents linger).";
+            }
+        }
+
+        // Initialize Paths and UI on load
+        initPaths();
+        updateUI();
+    </script>
+</body>
+</html>

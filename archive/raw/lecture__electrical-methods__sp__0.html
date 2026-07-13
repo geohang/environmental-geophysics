@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SP Signal Mechanisms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Dark slate matching the image */
+            color: #f8fafc;
+        }
+        .mechanism-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .mechanism-btn.active {
+            background-color: #1e293b;
+            border-left: 4px solid #38bdf8;
+        }
+        canvas {
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+
+    <div class="max-w-6xl w-full">
+        <!-- Header -->
+        <header class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl md:text-5xl font-bold text-sky-400 mb-2">Three Mechanisms Generate SP Signals</h1>
+            <p class="text-slate-400 text-lg">Interactive physical models of Spontaneous Potential generation.</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Navigation and Descriptions -->
+            <div class="space-y-4 lg:col-span-1 flex flex-col">
+                
+                <div class="space-y-2">
+                    <!-- Mechanism 1 -->
+                    <button onclick="switchTab(1)" id="btn-1" class="w-full mechanism-btn active text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-sky-400">1. Electrokinetic (Streaming)</h2>
+                    </button>
+
+                    <!-- Mechanism 2 -->
+                    <button onclick="switchTab(2)" id="btn-2" class="w-full mechanism-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-sky-400">2. Electrochemical (Redox)</h2>
+                    </button>
+
+                    <!-- Mechanism 3 -->
+                    <button onclick="switchTab(3)" id="btn-3" class="w-full mechanism-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-sky-400">3. Thermoelectric</h2>
+                    </button>
+                </div>
+
+                <!-- Concept Explanation Card -->
+                <div class="bg-slate-800 p-5 rounded-lg border border-slate-600 shadow-lg mt-2">
+                    <h3 class="text-sm font-bold text-emerald-400 mb-2 uppercase tracking-wider flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Concept Breakdown
+                    </h3>
+                    <p id="concept-text" class="text-slate-300 text-sm leading-relaxed mb-4">
+                        <!-- Populated by JS -->
+                    </p>
+                    
+                    <div class="border-t border-slate-700 pt-4 mt-4">
+                        <label id="slider-label" class="block text-sm font-semibold text-sky-300 mb-2">Adjust Variable</label>
+                        <input type="range" id="interactive-slider" min="0" max="100" value="50" class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legend Card -->
+                <div class="mt-auto pt-2">
+                    <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                        <h3 class="text-sm font-semibold text-slate-200 mb-3 uppercase tracking-wider">Animation Legend</h3>
+                        <ul class="space-y-2 text-sm text-slate-400" id="legend-content">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Canvas Animation -->
+            <div class="lg:col-span-2 relative h-[500px] lg:h-auto min-h-[500px] border border-slate-700 rounded-xl overflow-hidden bg-slate-800 flex flex-col">
+                
+                <!-- Educational overlay text -->
+                <div class="absolute top-4 left-4 z-10 pointer-events-none drop-shadow-md">
+                    <h3 id="canvas-title" class="text-2xl font-bold text-white">Streaming Potential</h3>
+                    <p id="canvas-subtitle" class="text-sky-300 text-sm">Drag of the electrical double layer</p>
+                </div>
+                
+                <!-- Voltage Indicator -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-slate-900/80 px-6 py-2 rounded-full border border-slate-600 flex items-center space-x-4">
+                    <span id="volt-left" class="text-red-400 font-bold text-lg">-</span>
+                    <div class="w-32 h-2 bg-slate-700 rounded-full overflow-hidden relative">
+                        <div id="volt-meter" class="absolute top-0 left-0 h-full bg-gradient-to-r from-red-500 to-sky-500 w-full transition-all duration-500 opacity-50"></div>
+                    </div>
+                    <span id="volt-right" class="text-sky-400 font-bold text-lg">+</span>
+                </div>
+
+                <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('sim-canvas');
+        const ctx = canvas.getContext('2d');
+        let currentTab = 1;
+        let animationFrameId;
+        let time = 0;
+
+        // Simulation State Arrays
+        let particles = [];
+        let grains = [];
+        let electrons = [];
+        let sliderValue = 50; // New state for the interactive slider
+
+        document.getElementById('interactive-slider').addEventListener('input', (e) => {
+            sliderValue = parseInt(e.target.value);
+        });
+
+        // Resize handler to maintain high-DPI rendering
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            initSimulation(currentTab); // Re-initialize particles on resize
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // UI Updates
+        const titles = [
+            { 
+                title: "Streaming Potential", 
+                sub: "Drag of the electrical double layer", 
+                left: "Low Voltage (-)", 
+                right: "High Voltage (+)", 
+                legend: `<li><span class="inline-block w-4 h-4 rounded-full border-2 border-red-400 bg-slate-500 mr-2 align-middle"></span>Rock Grain w/ Negative Layer</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-400 mr-2 align-middle"></span>Positive Ion (Mobile)</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-400 mr-2 align-middle"></span>Negative Ion (Diffuse)</li>`,
+                concept: "<strong>How it works:</strong> Groundwater flowing through rock pores naturally drags 'loose' positive ions with it. Meanwhile, the rock surfaces hold tightly onto a fixed layer of negative charge (the <strong>Electrical Double Layer</strong>, shown as the red ring). This physical pulling apart of charges creates a voltage difference across the aquifer.<br><br><em>Drag the slider to increase the fluid flow speed. Notice how faster flow forces more positive charge to build up on the right side.</em>",
+                sliderLabel: "Fluid Flow Speed"
+            },
+            { 
+                title: "Redox Diffusion Potential", 
+                sub: "Self-potential over a sulfide ore body", 
+                left: "Surface (+)", 
+                right: "Underground (-)", 
+                legend: `<li><span class="inline-block w-3 h-3 bg-slate-600 mr-2"></span>Conductive Ore Body</li><li><span class="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>Electron (e⁻)</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-400 mr-2"></span>Ion Current in Groundwater</li>`,
+                concept: "<strong>How it works:</strong> A conductive ore body acts like a giant natural battery connecting two environments. Near the surface, plentiful oxygen pulls electrons out of the rock. Deep underground, a lack of oxygen pushes electrons into the rock. Electrons flow up through the solid ore, and ions in the water complete the electrical circuit.<br><br><em>Drag the slider to adjust the chemical reaction rate.</em>",
+                sliderLabel: "Chemical Reaction Rate"
+            },
+            { 
+                title: "Thermoelectric Effect", 
+                sub: "Differential ion mobility in a thermal gradient", 
+                left: "Hot (+)", 
+                right: "Cold (-)", 
+                legend: `<li><span class="inline-block w-3 h-3 bg-gradient-to-r from-red-500 to-blue-500 mr-2"></span>Heat Difference</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-400 mr-2"></span>Small/Fast Ion (e.g., H+)</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-400 mr-2"></span>Large/Slow Ion</li>`,
+                concept: "<strong>How it works:</strong> Heat gives ions kinetic energy, causing them to vibrate and spread toward cooler areas. However, lighter/smaller ions travel much faster than heavier ones. Because the fast positive ions win the race to the cold side first, the cold side becomes positively charged.<br><br><em>Drag the slider to increase the temperature difference between the hot and cold sides.</em>",
+                sliderLabel: "Temperature Difference (Gradient)"
+            }
+        ];
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            time = 0;
+            sliderValue = 50; // Reset slider
+            document.getElementById('interactive-slider').value = 50;
+            
+            // Update buttons
+            document.querySelectorAll('.mechanism-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${tabId}`).classList.add('active');
+
+            // Update text
+            document.getElementById('canvas-title').innerText = titles[tabId-1].title;
+            document.getElementById('canvas-subtitle').innerText = titles[tabId-1].sub;
+            document.getElementById('volt-left').innerText = titles[tabId-1].left;
+            document.getElementById('volt-right').innerText = titles[tabId-1].right;
+            document.getElementById('legend-content').innerHTML = titles[tabId-1].legend;
+            document.getElementById('concept-text').innerHTML = titles[tabId-1].concept;
+            document.getElementById('slider-label').innerText = titles[tabId-1].sliderLabel;
+
+            // Update Voltmeter visual
+            const meter = document.getElementById('volt-meter');
+            if(tabId === 1) meter.style.background = 'linear-gradient(to right, #f87171, #38bdf8)';
+            if(tabId === 2) meter.style.background = 'linear-gradient(to top, #f87171, #38bdf8)';
+            if(tabId === 3) meter.style.background = 'linear-gradient(to right, #f87171, #38bdf8)';
+
+            initSimulation(tabId);
+        }
+
+        // --- SIMULATION INITIALIZATION ---
+        function initSimulation(tabId) {
+            particles = [];
+            grains = [];
+            electrons = [];
+            
+            const w = canvas.width;
+            const h = canvas.height;
+
+            if (tabId === 1) { // Electrokinetic
+                // Create rock grains
+                for(let i=0; i<8; i++) {
+                    grains.push({
+                        x: w * (0.1 + Math.random() * 0.8),
+                        y: h * (0.1 + Math.random() * 0.8),
+                        r: 30 + Math.random() * 40
+                    });
+                }
+                
+                // Create ions
+                for(let i=0; i<150; i++) {
+                    let isPositive = Math.random() > 0.5;
+                    particles.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        charge: isPositive ? 1 : -1,
+                        speed: isPositive ? 2 + Math.random()*2 : 0.2 + Math.random()*0.5, // Positives move with flow, negatives stick to grains
+                        radius: isPositive ? 4 : 3
+                    });
+                }
+            } 
+            else if (tabId === 2) { // Electrochemical
+                // Create electrons moving up the ore body
+                for(let i=0; i<40; i++) {
+                    electrons.push({
+                        progress: Math.random() // 0 to 1 along the ore body
+                    });
+                }
+                // Create fluid ions returning
+                for(let i=0; i<60; i++) {
+                    particles.push({
+                        angle: Math.random() * Math.PI * 2,
+                        radius: 50 + Math.random() * (w/2.5),
+                        speed: 0.005 + Math.random() * 0.01
+                    });
+                }
+            }
+            else if (tabId === 3) { // Thermoelectric
+                // Create ions
+                for(let i=0; i<200; i++) {
+                    let isFast = Math.random() > 0.5;
+                    particles.push({
+                        x: w/2 + (Math.random() - 0.5) * 50, // Start mostly in middle
+                        y: Math.random() * h,
+                        type: isFast ? 'fast' : 'slow',
+                        vx: 0,
+                        vy: 0
+                    });
+                }
+            }
+        }
+
+        // --- DRAWING LOOPS ---
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const w = canvas.width;
+            const h = canvas.height;
+            time++;
+
+            // Calculate a multiplier based on the slider (0.1x to 2.0x speed/intensity)
+            const intensity = Math.max(0.1, sliderValue / 50);
+
+            if (currentTab === 1) {
+                // Background Flow indicator
+                ctx.fillStyle = `rgba(56, 189, 248, ${0.05 * intensity})`;
+                for(let i=0; i<5; i++) {
+                    let flowX = ((time * 2 * intensity) + i * (w/5)) % w;
+                    ctx.fillRect(flowX, 0, 50, h);
+                }
+
+                // Draw Grains
+                grains.forEach(g => {
+                    // FIX: Reset fillStyle inside the loop so rocks stay gray!
+                    ctx.fillStyle = '#475569';
+                    ctx.beginPath();
+                    ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Draw negative boundary layer around grains
+                    ctx.strokeStyle = 'rgba(248, 113, 113, 0.6)';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.arc(g.x, g.y, g.r + 8, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // Add clear text label inside the rock
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.font = 'bold 12px Inter';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('ROCK', g.x, g.y);
+
+                    // Explicitly draw minus signs around the boundary layer
+                    ctx.fillStyle = '#f87171';
+                    ctx.font = 'bold 18px Inter';
+                    for(let i=0; i<6; i++) {
+                        let angle = (i / 6) * Math.PI * 2;
+                        let mx = g.x + Math.cos(angle) * (g.r + 16);
+                        let my = g.y + Math.sin(angle) * (g.r + 16);
+                        ctx.fillText('-', mx, my);
+                    }
+                });
+                
+                // Reset text alignment for other elements
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'alphabetic';
+
+                // Draw and move particles
+                particles.forEach(p => {
+                    // Apply user-controlled intensity to flow speed
+                    let currentSpeed = p.charge === 1 ? p.speed * intensity : p.speed;
+                    p.x += currentSpeed;
+                    
+                    // Collision avoidance for flowing particles (positive)
+                    if(p.charge === 1) {
+                        grains.forEach(g => {
+                            let dx = p.x - g.x;
+                            let dy = p.y - g.y;
+                            let dist = Math.sqrt(dx*dx + dy*dy);
+                            if(dist < g.r + 15) {
+                                p.y += (dy > 0 ? 1 : -1) * (2 * intensity); // push away harder if flowing faster
+                            }
+                        });
+                    } else {
+                        // Negative particles drift slowly and stick to grains roughly
+                        p.y += Math.sin(time*0.05 + p.x) * 0.5;
+                    }
+
+                    if(p.x > w + 10) p.x = -10;
+                    if(p.y > h) p.y = 0;
+                    if(p.y < 0) p.y = h;
+
+                    ctx.fillStyle = p.charge === 1 ? '#38bdf8' : '#f87171';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add tiny + sign to mobile ions for clarity
+                    if(p.charge === 1 && p.radius >= 4) {
+                        ctx.fillStyle = '#0f172a';
+                        ctx.font = '10px Inter';
+                        ctx.fillText('+', p.x - 3, p.y + 3);
+                    }
+                });
+
+                // Labels
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '16px Inter';
+                ctx.fillText('Groundwater Flow →', 20, h - 60);
+
+            } 
+            else if (currentTab === 2) {
+                // Water table line
+                let waterY = h * 0.35;
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.1)';
+                ctx.fillRect(0, waterY, w, h - waterY);
+                
+                ctx.strokeStyle = '#38bdf8';
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(0, waterY);
+                ctx.lineTo(w, waterY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '14px Inter';
+                ctx.fillText('Water Table (High Oxygen Above)', 10, waterY - 10);
+
+                // Draw Ore Body (Rectangle)
+                ctx.save();
+                ctx.translate(w/2, h/2);
+                ctx.rotate(-Math.PI / 6); // tilt
+                ctx.fillStyle = '#334155'; // Dark gray ore
+                ctx.fillRect(-40, -h/2 + 50, 80, h - 100);
+                ctx.restore();
+
+                // Draw Oxidation/Reduction Labels
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = '14px Inter';
+                ctx.fillText('Reduction (Pulls Electrons)', w/2 - 80, waterY - 40);
+                ctx.fillText('O₂ + 2H₂O + 4e⁻ → 4OH⁻', w/2 - 70, waterY - 20);
+
+                ctx.fillText('Oxidation (Pushes Electrons)', w/2 + 20, h - 60);
+                ctx.fillText('S²⁻ → S + 2e⁻', w/2 + 20, h - 40);
+
+                // Animate Electrons moving UP the ore body
+                ctx.fillStyle = '#fbbf24'; // Yellow electrons
+                electrons.forEach(e => {
+                    e.progress -= 0.005 * intensity; // Move up faster based on slider
+                    if(e.progress < 0) e.progress = 1;
+                    
+                    // Map progress to coordinates along the tilted rectangle
+                    let oreLen = h - 100;
+                    let yOffset = -oreLen/2 + (e.progress * oreLen);
+                    
+                    ctx.save();
+                    ctx.translate(w/2, h/2);
+                    ctx.rotate(-Math.PI / 6);
+                    ctx.beginPath();
+                    ctx.arc((Math.random()-0.5)*40, yOffset, 4, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Add tiny 'e' for electron
+                    ctx.fillStyle = '#000';
+                    ctx.font = '10px Inter';
+                    ctx.fillText('e⁻', (Math.random()-0.5)*5 - 4, yOffset + 4);
+                    ctx.restore();
+                });
+
+                // Animate return current (ions in fluid)
+                ctx.fillStyle = '#38bdf8';
+                particles.forEach(p => {
+                    p.angle += p.speed * intensity; // Move in a circle faster based on slider
+                    
+                    // Center of the current loops
+                    let cx1 = w/2 - 100;
+                    let cy1 = h/2;
+                    let cx2 = w/2 + 100;
+
+                    // Draw left loop particles
+                    ctx.beginPath();
+                    ctx.arc(cx1 + Math.cos(p.angle) * p.radius*0.6, cy1 + Math.sin(p.angle) * p.radius, 3, 0, Math.PI*2);
+                    ctx.fill();
+
+                    // Draw right loop particles
+                    ctx.beginPath();
+                    ctx.arc(cx2 - Math.cos(p.angle) * p.radius*0.6, cy1 + Math.sin(p.angle) * p.radius, 3, 0, Math.PI*2);
+                    ctx.fill();
+                });
+            }
+            else if (currentTab === 3) {
+                // Background Gradient
+                let grad = ctx.createLinearGradient(0, 0, w, 0);
+                // Heat color scales with slider intensity
+                grad.addColorStop(0, `rgba(248, 113, 113, ${0.1 + (intensity * 0.15)})`); 
+                grad.addColorStop(1, 'rgba(56, 189, 248, 0.2)'); // Blue (Cold)
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+
+                // Gradient Labels
+                ctx.fillStyle = '#f87171';
+                ctx.font = 'bold 20px Inter';
+                ctx.fillText(`HOT (T = ${Math.floor(20 + 80*intensity)}°C)`, 20, h - 30);
+                
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillText('COLD (T = 20°C)', w - 180, h - 30);
+
+                // Particles (Brownian motion + drift)
+                particles.forEach(p => {
+                    // Random jiggle (temperature effect)
+                    // Hotter on left (x=0), cooler on right (x=w)
+                    let tempFactor = 1 - (p.x / w); 
+                    let jiggle = ((tempFactor * 2) + 0.5) * intensity; // Jiggle scales with slider
+
+                    p.vx += (Math.random() - 0.5) * jiggle;
+                    p.vy += (Math.random() - 0.5) * jiggle;
+
+                    // Apply thermal diffusion drift (moving from hot to cold -> left to right)
+                    // Fast particles (e.g. H+) drift faster than slow particles (e.g. Cl-)
+                    let drift = p.type === 'fast' ? 0.3 : 0.05;
+                    p.vx += drift * tempFactor * intensity; // Drift scales with slider
+
+                    // Friction/Damping
+                    p.vx *= 0.9;
+                    p.vy *= 0.9;
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Boundary checks
+                    if(p.x < 10) { p.x = 10; p.vx *= -1; }
+                    if(p.x > w - 10) { p.x = w - 10; p.vx *= -1; }
+                    if(p.y < 10) { p.y = 10; p.vy *= -1; }
+                    if(p.y > h - 10) { p.y = h - 10; p.vy *= -1; }
+
+                    ctx.fillStyle = p.type === 'fast' ? '#38bdf8' : '#f87171';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.type === 'fast' ? 6 : 9, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Labels on ions
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = '10px Inter';
+                    if(p.type === 'fast') {
+                        ctx.fillText('+', p.x - 3, p.y + 3);
+                    } else {
+                        ctx.fillText('-', p.x - 3, p.y + 3);
+                    }
+                });
+            }
+
+            animationFrameId = requestAnimationFrame(draw);
+        }
+
+        // Initialize first load
+        setTimeout(() => {
+            resizeCanvas();
+            switchTab(1);
+            draw();
+        }, 100);
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPR Hyperbola Velocity Estimator</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{--primary:#38bdf8;--accent:#fbbf24;--danger:#ef5350;--success:#4ade80;--bg-dark:#0f172a;--card-bg:#1e293b;--text-main:#f1f5f9;--text-muted:#94a3b8;}
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6;margin:0;}
+header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#0f172a,#1e293b);border-bottom:1px solid #334155;}
+h1{font-size:2rem;color:var(--primary);margin:0;}
+.subtitle{color:var(--text-muted);margin-top:8px;}
+.container{max-width:1100px;margin:0 auto;padding:20px;}
+.panel{background:var(--card-bg);border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,.3);}
+canvas{width:100%;display:block;background:#0b1220;border-radius:8px;cursor:crosshair;}
+.controls{display:grid;grid-template-columns:1fr;gap:16px;}
+@media(min-width:720px){.controls{grid-template-columns:1fr 1fr;}}
+.ctrl label{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px;font-size:.9rem;}
+.ctrl label span{color:var(--accent);}
+input[type=range]{width:100%;accent-color:var(--primary);}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+.stat{background:#162032;border:1px solid #334155;border-radius:8px;padding:12px;text-align:center;}
+.stat .v{font-size:1.3rem;font-weight:bold;color:var(--primary);}
+.stat .l{font-size:.72rem;color:var(--text-muted);}
+.stat.match .v{color:var(--success);}
+.formula{background:rgba(56,189,248,.1);border-left:4px solid var(--primary);padding:12px 16px;margin-top:16px;border-radius:4px;font-size:.9rem;}
+.hint{color:var(--text-muted);font-size:.85rem;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Ground-Penetrating Radar</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+<header>
+  <h1>GPR Hyperbola Velocity Estimator</h1>
+  <div class="subtitle">A buried point target makes a diffraction hyperbola. Match your fit curve to it to recover wave velocity and target depth.</div>
+</header>
+<div class="container">
+  <div class="panel">
+    <div class="hint">The greyscale is a synthetic radargram with one buried object (its true velocity is hidden). Adjust your fit until the yellow curve overlies the hyperbola.</div>
+    <canvas id="cv" width="1040" height="420"></canvas>
+  </div>
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>Your fit velocity $v$ <span id="vv">0.10 m/ns</span></label><input id="v" type="range" min="0.033" max="0.30" value="0.10" step="0.001"></div>
+      <div class="ctrl"><label>Apex position (auto-locked to target)</label><input id="dummy" type="range" min="0" max="1" value="0.5" step="0.01" disabled></div>
+    </div>
+    <div class="readout">
+      <div class="stat" id="s1"><div class="v" id="vout">0.10</div><div class="l">fit velocity (m/ns)</div></div>
+      <div class="stat"><div class="v" id="epsout">–</div><div class="l">implied εᵣ</div></div>
+      <div class="stat" id="s3"><div class="v" id="depthout">–</div><div class="l">target depth (m)</div></div>
+    </div>
+    <div class="formula" id="fbox">
+      Two-way time along the hyperbola: $t(x)=\dfrac{2\sqrt{d^2+(x-x_0)^2}}{v}$. Relative permittivity from velocity: $\varepsilon_r=\left(\dfrac{c}{v}\right)^2$ with $c=0.30$ m/ns. A good fit means your curve matches the recorded hyperbola.
+    </div>
+    <button id="reveal" style="margin-top:14px;background:#162032;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:8px 16px;cursor:pointer;">Reveal true velocity</button>
+    <span id="truth" style="margin-left:12px;color:var(--text-muted);"></span>
+  </div>
+</div>
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+// hidden truth
+const TRUE_V=0.12, X0=52, D=1.8;   // m/ns, m, m
+const XMAX=100, TMAX=60;           // survey metres (position), ns (two-way time)
+const px=x=>60+(cv.width-80)*x/XMAX, py=t=>30+(cv.height-60)*t/TMAX;
+// helper: convert survey position (m) to time (ns) on the diffraction hyperbola
+function tHyp(xpos, v, x0m, dm){
+  const dx=(xpos-x0m); // metres
+  return 2*Math.sqrt(dm*dm+dx*dx)/v; // ns
+}
+function drawGPR(){
+  const v=+document.getElementById('v').value;
+  document.getElementById('vv').textContent=v.toFixed(3)+' m/ns';
+  document.getElementById('vout').textContent=v.toFixed(3);
+  const eps=Math.pow(0.30/v,2);
+  document.getElementById('epsout').textContent=eps.toFixed(1);
+  // depth from apex time of the recorded hyperbola using the fit velocity
+  const tApex=tHyp(X0,TRUE_V,X0,D);       // recorded apex two-way time (ns)
+  const depth=v*tApex/2;                   // m, using the user's velocity
+  document.getElementById('depthout').textContent=depth.toFixed(2);
+  const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0b1220';ctx.fillRect(0,0,W,H);
+  // draw synthetic radargram: bright along true hyperbola with a wavelet
+  for(let sx=0;sx<=XMAX;sx+=0.5){
+    const tt=tHyp(sx,TRUE_V,X0,D);
+    if(tt>TMAX)continue;
+    for(let dt=-3;dt<=3;dt+=0.5){
+      const amp=Math.cos(dt*1.2)*Math.exp(-dt*dt/4);
+      const g=Math.max(0,amp);
+      ctx.fillStyle=`rgba(226,232,240,${0.9*g})`;
+      ctx.fillRect(px(sx)-1,py(tt+dt)-1,2,2);
+    }
+  }
+  // axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1;ctx.strokeRect(60,30,W-80,H-60);
+  ctx.fillStyle='#64748b';ctx.font='11px Segoe UI';ctx.textAlign='center';
+  for(let x=0;x<=XMAX;x+=20)ctx.fillText(x+' m',px(x),H-14);
+  ctx.textAlign='right';
+  for(let t=0;t<=TMAX;t+=10)ctx.fillText(t+' ns',54,py(t)+3);
+  ctx.save();ctx.translate(16,H/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#94a3b8';ctx.fillText('two-way time (ns)',0,0);ctx.restore();
+  ctx.fillStyle='#94a3b8';ctx.textAlign='center';ctx.fillText('antenna position (m)',W/2,H-2);
+  // fit hyperbola (user velocity, apex fixed to target position/depth-time)
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.beginPath();let started=false;
+  for(let sx=0;sx<=XMAX;sx+=0.5){
+    const tt=tHyp(sx,v,X0,D)/1; // using fit v but true depth D -> matches when v≈TRUE_V
+    // Note: with correct v the curve overlays; mismatched v changes curvature
+    const tFit=2*Math.sqrt(D*D+(sx-X0)*(sx-X0))/v;
+    if(tFit>TMAX){started=false;continue;}
+    const X=px(sx),Y=py(tFit);started?ctx.lineTo(X,Y):ctx.moveTo(X,Y);started=true;
+  }
+  ctx.stroke();
+  // apex marker
+  ctx.fillStyle='#f87171';ctx.beginPath();ctx.arc(px(X0),py(tHyp(X0,TRUE_V,X0,D)),4,0,7);ctx.fill();
+  // closeness feedback
+  const err=Math.abs(v-TRUE_V)/TRUE_V;
+  document.getElementById('s1').classList.toggle('match',err<0.06);
+  document.getElementById('s3').classList.toggle('match',err<0.06);
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([document.getElementById('fbox')]);
+}
+document.getElementById('v').addEventListener('input',drawGPR);
+document.getElementById('reveal').addEventListener('click',()=>{
+  document.getElementById('truth').textContent=`True velocity = ${TRUE_V} m/ns  (εᵣ = ${Math.pow(0.30/TRUE_V,2).toFixed(1)}), true depth = ${D} m`;
+});
+drawGPR();
+</script>
+</body>
+</html>

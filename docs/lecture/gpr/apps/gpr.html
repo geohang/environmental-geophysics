@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electromagnetic Physics: Conduction vs Displacement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        
+        .math-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+
+        .equation-box {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 0.5rem;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex items-center justify-center">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="max-w-7xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col lg:flex-row border border-slate-200">
+        
+        <!-- Left Panel: Controls & Explanations -->
+        <div class="w-full lg:w-1/3 bg-slate-50 p-6 border-r border-slate-200 flex flex-col gap-6 overflow-y-auto max-h-[900px]">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> Ground Physics
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">Comparing Conduction & Polarization</p>
+            </div>
+
+            <!-- E-Field Controls -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-wave-square text-red-500"></i> Applied Electric Field (E)
+                </h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-1 flex justify-between">
+                        <span>Frequency (AC Oscillation)</span>
+                        <span id="freqLabel" class="text-blue-600 font-semibold text-xs">1.0 Hz</span>
+                    </label>
+                    <input type="range" id="freqSlider" min="0" max="3" step="0.1" value="1.0">
+                    <p class="text-xs text-slate-400 mt-1">Set to 0 for a steady DC field.</p>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-1 flex justify-between">
+                        <span>Amplitude (Strength)</span>
+                        <span id="ampLabel" class="text-blue-600 font-semibold text-xs">100%</span>
+                    </label>
+                    <input type="range" id="ampSlider" min="0" max="1" step="0.05" value="1.0">
+                </div>
+            </div>
+
+            <!-- Material Controls -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-cube text-emerald-500"></i> Material Properties
+                </h2>
+                
+                <div class="mb-4 bg-amber-50 p-3 rounded border border-amber-100">
+                    <label class="block text-sm font-medium text-amber-900 mb-1 flex justify-between">
+                        <span>Conductivity (&sigma;)</span>
+                        <span id="sigmaLabel" class="text-amber-700 font-semibold text-xs">High</span>
+                    </label>
+                    <input type="range" id="sigmaSlider" min="0" max="1" step="0.05" value="0.8">
+                    <p class="text-xs text-amber-700 mt-1">Controls how easily free charges flow (EM Induction).</p>
+                </div>
+
+                <div class="mb-2 bg-blue-50 p-3 rounded border border-blue-100">
+                    <label class="block text-sm font-medium text-blue-900 mb-1 flex justify-between">
+                        <span>Permittivity (&epsilon;)</span>
+                        <span id="epsilonLabel" class="text-blue-700 font-semibold text-xs">High</span>
+                    </label>
+                    <input type="range" id="epsilonSlider" min="0" max="1" step="0.05" value="0.8">
+                    <p class="text-xs text-blue-700 mt-1">Controls how easily bound molecules stretch (GPR).</p>
+                </div>
+            </div>
+
+            <!-- Play/Pause -->
+            <button id="toggleBtn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid fa-pause"></i> Pause Animation
+            </button>
+
+            <!-- Guide -->
+            <div class="mt-auto text-sm text-slate-600 bg-slate-100 p-4 rounded-xl border border-slate-200">
+                <p class="font-bold text-slate-800 mb-2">Class Questions:</p>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li>What happens to the molecules when you increase Permittivity (&epsilon;)?</li>
+                    <li>If you set Frequency to 0 (DC), which particles keep moving forever? Which stop?</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Panel: Visualizations -->
+        <div class="w-full lg:w-2/3 p-6 flex flex-col gap-6 bg-slate-200 h-[900px] lg:h-auto">
+            
+            <!-- E-Field Indicator -->
+            <div class="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between border-2 border-slate-300">
+                <span class="font-bold text-slate-700">Applied Electric Field (E)</span>
+                <div class="w-64 h-8 relative flex items-center justify-center bg-slate-100 rounded">
+                    <div id="eFieldArrow" class="h-2 bg-red-500 absolute rounded" style="width: 0%; transition: none;"></div>
+                    <span id="eFieldText" class="relative z-10 font-bold text-slate-800 math-font">E = 0.0</span>
+                </div>
+            </div>
+
+            <!-- Canvas 1: Conduction (J) -->
+            <div class="flex-1 flex flex-col relative bg-white rounded-xl shadow-sm border-2 border-amber-300 overflow-hidden">
+                <div class="absolute top-0 left-0 w-full bg-amber-50 border-b border-amber-200 p-3 flex justify-between items-center z-10">
+                    <div>
+                        <h3 class="text-amber-900 font-bold">Conduction Current Density (Flow)</h3>
+                        <p class="text-xs text-amber-700">Free electrons/ions moving continuously through the material.</p>
+                    </div>
+                    <div class="equation-box !mb-0 !p-2 !bg-white text-amber-600 math-font border-amber-300">
+                        J = &sigma;E
+                    </div>
+                </div>
+                <div class="flex-1 relative mt-16">
+                    <canvas id="conductionCanvas"></canvas>
+                    <div class="absolute bottom-2 right-2 bg-white/90 px-3 py-1 rounded shadow text-sm font-bold text-amber-600 math-font border border-amber-200">
+                        Current Flow (J): <span id="jValue">0.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas 2: Displacement (D) -->
+            <div class="flex-1 flex flex-col relative bg-white rounded-xl shadow-sm border-2 border-blue-300 overflow-hidden">
+                <div class="absolute top-0 left-0 w-full bg-blue-50 border-b border-blue-200 p-3 flex justify-between items-center z-10">
+                    <div>
+                        <h3 class="text-blue-900 font-bold">Electric Displacement (Polarization)</h3>
+                        <p class="text-xs text-blue-700">Bound molecules (dipoles) stretching in place. They do not flow.</p>
+                    </div>
+                    <div class="equation-box !mb-0 !p-2 !bg-white text-blue-600 math-font border-blue-300">
+                        D = &epsilon;E
+                    </div>
+                </div>
+                <div class="flex-1 relative mt-16">
+                    <canvas id="displacementCanvas"></canvas>
+                    <div class="absolute bottom-2 right-2 bg-white/90 px-3 py-1 rounded shadow text-sm font-bold text-blue-600 math-font border border-blue-200">
+                        Polarization (D): <span id="dValue">0.0</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const cCanvas = document.getElementById('conductionCanvas');
+        const cCtx = cCanvas.getContext('2d');
+        const dCanvas = document.getElementById('displacementCanvas');
+        const dCtx = dCanvas.getContext('2d');
+        
+        // State Variables
+        let isPlaying = true;
+        let time = 0;
+        
+        // Physics Parameters
+        let freq = 1.0;
+        let amplitude = 1.0;
+        let sigma = 0.8;
+        let epsilon = 0.8;
+        let currentE = 0;
+
+        // Entities Arrays
+        let freeCharges = [];
+        let dipoles = [];
+
+        // Resize Canvases
+        function resize() {
+            const cRect = cCanvas.parentElement.getBoundingClientRect();
+            cCanvas.width = cRect.width;
+            cCanvas.height = cRect.height;
+            
+            const dRect = dCanvas.parentElement.getBoundingClientRect();
+            dCanvas.width = dRect.width;
+            dCanvas.height = dRect.height;
+
+            initParticles();
+        }
+        window.addEventListener('resize', resize);
+
+        // Initialize Particles
+        function initParticles() {
+            freeCharges = [];
+            dipoles = [];
+            
+            // Conduction Particles (Free flowing)
+            const numCharges = 40;
+            for(let i=0; i<numCharges; i++) {
+                freeCharges.push({
+                    x: Math.random() * cCanvas.width,
+                    y: Math.random() * cCanvas.height,
+                    radius: 6 + Math.random() * 2,
+                    speedFactor: 0.8 + Math.random() * 0.4
+                });
+            }
+
+            // Displacement Particles (Grid of bound dipoles)
+            const rows = 4;
+            const cols = 8;
+            const xStep = dCanvas.width / (cols + 1);
+            const yStep = dCanvas.height / (rows + 1);
+            
+            for(let r=1; r<=rows; r++) {
+                for(let c=1; c<=cols; c++) {
+                    dipoles.push({
+                        baseX: c * xStep,
+                        baseY: r * yStep,
+                        stretch: 0 // Will vary based on E * epsilon
+                    });
+                }
+            }
+        }
+
+        // Draw Conduction Canvas (J = sigma * E)
+        function drawConduction() {
+            cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+            
+            // Draw background material (grainy)
+            cCtx.fillStyle = '#fef3c7'; // Amber-50
+            cCtx.fillRect(0, 0, cCanvas.width, cCanvas.height);
+            
+            // Draw stationary lattice (atoms of the conductor)
+            cCtx.fillStyle = 'rgba(217, 119, 6, 0.2)'; // Amber-600 with low opacity
+            const latticeSpacing = 40;
+            for(let x=20; x<cCanvas.width; x+=latticeSpacing) {
+                for(let y=20; y<cCanvas.height; y+=latticeSpacing) {
+                    cCtx.beginPath();
+                    cCtx.arc(x, y, 10, 0, Math.PI*2);
+                    cCtx.fill();
+                }
+            }
+
+            // Calculate Current Density J
+            const J = sigma * currentE;
+            const baseSpeed = 5; // px per frame at max
+            
+            // Update and draw free charges
+            freeCharges.forEach(charge => {
+                if (isPlaying) {
+                    // Velocity is proportional to J (v = J/nq)
+                    charge.x += (J * baseSpeed * charge.speedFactor);
+                    
+                    // Wrap around screen
+                    if (charge.x > cCanvas.width + 10) charge.x = -10;
+                    if (charge.x < -10) charge.x = cCanvas.width + 10;
+                }
+
+                // Draw Electron/Ion
+                cCtx.beginPath();
+                cCtx.arc(charge.x, charge.y, charge.radius, 0, Math.PI*2);
+                cCtx.fillStyle = '#ef4444'; // Red for charge
+                cCtx.fill();
+                cCtx.strokeStyle = '#991b1b';
+                cCtx.stroke();
+                
+                // Draw minus sign
+                cCtx.fillStyle = '#fff';
+                cCtx.fillRect(charge.x - 3, charge.y - 1, 6, 2);
+            });
+
+            // Update Math Display
+            document.getElementById('jValue').textContent = J.toFixed(2);
+        }
+
+        // Draw Displacement Canvas (D = epsilon * E)
+        function drawDisplacement() {
+            dCtx.clearRect(0, 0, dCanvas.width, dCanvas.height);
+            
+            // Draw background material
+            dCtx.fillStyle = '#eff6ff'; // Blue-50
+            dCtx.fillRect(0, 0, dCanvas.width, dCanvas.height);
+
+            // Calculate Polarization D
+            const D = epsilon * currentE;
+            const maxStretch = 25; // max pixel separation
+
+            // Draw bound dipoles
+            dipoles.forEach(dipole => {
+                // Stretch is proportional to D
+                let targetStretch = D * maxStretch;
+                
+                // Smooth animation towards target stretch if playing
+                if (isPlaying) {
+                    dipole.stretch += (targetStretch - dipole.stretch) * 0.2;
+                }
+
+                const dX = dipole.stretch;
+                
+                // Draw spring/bond
+                dCtx.beginPath();
+                dCtx.moveTo(dipole.baseX - dX, dipole.baseY);
+                dCtx.lineTo(dipole.baseX + dX, dipole.baseY);
+                dCtx.strokeStyle = '#94a3b8';
+                dCtx.lineWidth = 3;
+                dCtx.stroke();
+
+                // Draw Negative Pole (shifts left if E is positive)
+                dCtx.beginPath();
+                dCtx.arc(dipole.baseX - dX, dipole.baseY, 12, 0, Math.PI*2);
+                dCtx.fillStyle = '#ef4444'; // Red (-)
+                dCtx.fill();
+                dCtx.fillStyle = '#fff';
+                dCtx.fillRect(dipole.baseX - dX - 4, dipole.baseY - 1.5, 8, 3); // minus sign
+
+                // Draw Positive Pole (shifts right if E is positive)
+                dCtx.beginPath();
+                dCtx.arc(dipole.baseX + dX, dipole.baseY, 12, 0, Math.PI*2);
+                dCtx.fillStyle = '#3b82f6'; // Blue (+)
+                dCtx.fill();
+                dCtx.fillStyle = '#fff';
+                dCtx.fillRect(dipole.baseX + dX - 4, dipole.baseY - 1.5, 8, 3); // plus sign horizontal
+                dCtx.fillRect(dipole.baseX + dX - 1.5, dipole.baseY - 4, 3, 8); // plus sign vertical
+            });
+
+            // Update Math Display
+            document.getElementById('dValue').textContent = D.toFixed(2);
+        }
+
+        // Main Animation Loop
+        function animate() {
+            if (isPlaying) {
+                time += 0.03;
+                
+                // Calculate Electric Field E(t) = Amp * sin(w*t)
+                // If freq is 0, make it a DC field (constant)
+                if (freq === 0) {
+                    currentE = amplitude;
+                } else {
+                    currentE = amplitude * Math.sin(time * freq * Math.PI);
+                }
+
+                // Update UI Arrow
+                const arrow = document.getElementById('eFieldArrow');
+                const percent = Math.abs(currentE) * 100;
+                arrow.style.width = `${percent / 2}%`; // Half width because it stems from center
+                
+                if (currentE > 0) {
+                    arrow.style.left = '50%';
+                    arrow.style.right = 'auto';
+                    arrow.style.transformOrigin = 'left';
+                } else {
+                    arrow.style.right = '50%';
+                    arrow.style.left = 'auto';
+                    arrow.style.transformOrigin = 'right';
+                }
+                
+                document.getElementById('eFieldText').textContent = `E = ${currentE.toFixed(2)}`;
+            }
+
+            drawConduction();
+            drawDisplacement();
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Event Listeners for Controls
+        document.getElementById('freqSlider').addEventListener('input', (e) => {
+            freq = parseFloat(e.target.value);
+            document.getElementById('freqLabel').textContent = freq === 0 ? 'DC (0 Hz)' : `${freq.toFixed(1)} Hz`;
+        });
+
+        document.getElementById('ampSlider').addEventListener('input', (e) => {
+            amplitude = parseFloat(e.target.value);
+            document.getElementById('ampLabel').textContent = `${(amplitude*100).toFixed(0)}%`;
+            if(!isPlaying && freq === 0) { currentE = amplitude; animate(); } // Force update if paused in DC mode
+        });
+
+        document.getElementById('sigmaSlider').addEventListener('input', (e) => {
+            sigma = parseFloat(e.target.value);
+            let label = "Medium";
+            if(sigma < 0.3) label = "Low (Resistor)";
+            if(sigma > 0.7) label = "High (Conductor)";
+            document.getElementById('sigmaLabel').textContent = label;
+        });
+
+        document.getElementById('epsilonSlider').addEventListener('input', (e) => {
+            epsilon = parseFloat(e.target.value);
+            let label = "Medium";
+            if(epsilon < 0.3) label = "Low (Air/Vacuum)";
+            if(epsilon > 0.7) label = "High (Water)";
+            document.getElementById('epsilonLabel').textContent = label;
+        });
+
+        document.getElementById('toggleBtn').addEventListener('click', (e) => {
+            isPlaying = !isPlaying;
+            const btn = e.currentTarget;
+            if (isPlaying) {
+                btn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause Animation';
+                btn.classList.replace('bg-emerald-600', 'bg-slate-800');
+                btn.classList.replace('hover:bg-emerald-700', 'hover:bg-slate-900');
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-play"></i> Play Animation';
+                btn.classList.replace('bg-slate-800', 'bg-emerald-600');
+                btn.classList.replace('hover:bg-slate-900', 'hover:bg-emerald-700');
+            }
+        });
+
+        // Init
+        setTimeout(() => {
+            resize();
+            animate();
+        }, 100);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep EM Methods - Interactive Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #0f172a;        
+            --bg-panel: #1e293b;       
+            --bg-panel-light: #334155; 
+            --text-main: #f8fafc;      
+            --text-muted: #94a3b8;     
+            --accent-blue: #38bdf8;    
+            --accent-orange: #f59e0b;  
+            --accent-green: #10b981;   
+            --accent-red: #ef4444;
+            --border-color: #334155;
+            
+            /* Earth Colors */
+            --sky-top: #020617;
+            --sky-bottom: #1e293b;
+            --earth-surface: #451a03;
+            --earth-deep: #170500;
+            --ocean-top: #0284c7;
+            --ocean-bottom: #082f49;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2vh 2vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            width: 100%;
+            max-width: 1400px;
+            background-color: var(--bg-panel);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 26px;
+            margin: 0 0 8px 0;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: 0;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .method-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-method {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .btn-method i { font-size: 20px; width: 24px; text-align: center; }
+        
+        .btn-method:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-main);
+            background-color: rgba(56, 189, 248, 0.05);
+        }
+
+        .btn-method.active {
+            border-color: var(--accent-orange);
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+        }
+
+        .educational-card {
+            background-color: var(--bg-main);
+            border-radius: 16px;
+            padding: 20px;
+            border-top: 4px solid var(--accent-blue);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .educational-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-main);
+            margin: 0 0 12px 0;
+            font-size: 20px;
+        }
+
+        .educational-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 16px 0;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .tag {
+            background-color: var(--bg-panel-light);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        /* --- MAIN VIEW --- */
+        .main-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .canvas-container {
+            background-color: var(--bg-main);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
+            flex-grow: 1;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Floating Overlays on Canvas */
+        .overlay-panel {
+            position: absolute;
+            background-color: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .legend-overlay { top: 20px; right: 20px; }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .legend-item:last-child { margin-bottom: 0; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+
+        .scale-overlay {
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .scale-line { width: 2px; height: 60px; background: linear-gradient(to bottom, transparent, var(--text-muted), transparent); }
+        .scale-text { font-size: 12px; font-weight: bold; color: var(--accent-blue); letter-spacing: 1px;}
+
+        /* Controls Bar */
+        .playback-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-main);
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-icon {
+            background-color: var(--bg-panel-light);
+            border: none;
+            color: var(--text-main);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        .btn-icon:hover { background-color: var(--accent-blue); color: #000; }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 150px;
+            background: var(--bg-panel-light);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .sidebar { flex-direction: row; flex-wrap: wrap; }
+            .header { width: 100%; }
+            .method-selector { flex-direction: row; width: 100%; flex-wrap: wrap; }
+            .btn-method { flex: 1; min-width: 200px; }
+            .canvas-container { min-height: 400px; }
+        }
+    </style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="header">
+                <h1>Deep EM Visualizer</h1>
+                <p>Interactive Physics Dashboard</p>
+            </div>
+
+            <div class="method-selector">
+                <button class="btn-method active" onclick="setMethod('GMS')" id="btn-GMS">
+                    <i class="fa-solid fa-earth-americas"></i> GMS (Mantle)
+                </button>
+                <button class="btn-method" onclick="setMethod('MT')" id="btn-MT">
+                    <i class="fa-solid fa-bolt"></i> MT (Deep Crust)
+                </button>
+                <button class="btn-method" onclick="setMethod('CSEM')" id="btn-CSEM">
+                    <i class="fa-solid fa-ship"></i> CSEM (Marine)
+                </button>
+                <button class="btn-method" onclick="setMethod('TEM')" id="btn-TEM">
+                    <i class="fa-solid fa-stopwatch"></i> TEM (Minerals)
+                </button>
+            </div>
+
+            <div class="educational-card">
+                <h3 id="infoTitle">Geomagnetic Sounding (GMS)</h3>
+                <p id="infoDesc">...</p>
+                <div class="tags" id="infoTags"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-view">
+            <div class="canvas-container">
+                <canvas id="emCanvas" width="1000" height="600"></canvas>
+                
+                <!-- Legend -->
+                <div class="overlay-panel legend-overlay" id="legend"></div>
+                
+                <!-- Depth Scale Indicator -->
+                <div class="overlay-panel scale-overlay">
+                    <span class="scale-text" id="scale-top">0km</span>
+                    <div class="scale-line"></div>
+                    <span class="scale-text" id="scale-bottom">Depth</span>
+                </div>
+            </div>
+
+            <!-- Playback Controls -->
+            <div class="playback-controls">
+                <div class="control-group">
+                    <button class="btn-icon" onclick="togglePlay()" id="playBtn">
+                        <i class="fa-solid fa-pause"></i>
+                    </button>
+                    <span id="status-text" style="font-weight: 600; color: var(--accent-blue);">Playing</span>
+                </div>
+                
+                <div class="slider-container">
+                    <i class="fa-solid fa-turtle"></i>
+                    <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
+                    <i class="fa-solid fa-rabbit-running"></i>
+                    <span>Animation Speed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONTENT DATA ---
+        const methodData = {
+            'GMS': {
+                title: 'Geomagnetic Sounding',
+                desc: 'Uses variations in the Earth\'s natural magnetic field caused by the solar wind. By measuring only the magnetic field (H) at the surface, we detect ultra-deep massive conductors like mantle plumes.',
+                tags: ['Natural Source', 'Magnetic Only', 'Depth: 500-2000 km'],
+                scaleScale: '1000 km',
+                colorTop: '#38bdf8', colorAcc: '#ef4444',
+                legend: [
+                    { color: 'rgba(255, 200, 0, 0.8)', label: 'Solar Wind B-Field' },
+                    { color: '#ef4444', label: 'Conductive Plume' },
+                    { color: '#94a3b8', label: 'Magnetometer' }
+                ]
+            },
+            'MT': {
+                title: 'Magnetotellurics (MT)',
+                desc: 'Uses natural sources (lightning & solar wind) to induce both Electric (E) and Magnetic (H) fields. The ratio of E to H gives us rock resistivity. Excellent for finding geothermal reservoirs.',
+                tags: ['Natural Source', 'E & H Fields', 'Depth: 5-100 km'],
+                scaleScale: '50 km',
+                colorTop: '#f59e0b', colorAcc: '#10b981',
+                legend: [
+                    { color: '#f59e0b', label: 'EM Plane Waves' },
+                    { color: '#00ffff', label: 'Electric Field (E)' },
+                    { color: '#ff00ff', label: 'Magnetic Field (H)' },
+                    { color: '#ef4444', label: 'Geothermal Fluid' }
+                ]
+            },
+            'CSEM': {
+                title: 'Controlled-Source EM',
+                desc: 'A ship tows a massive transmitter emitting continuous EM waves. Because oil is highly resistive compared to seawater, the waves propagate faster and with less decay through the oil, reflecting back to seafloor receivers.',
+                tags: ['Active Source', 'Frequency Domain', 'Depth: 1-5 km'],
+                scaleScale: '3 km',
+                colorTop: '#38bdf8', colorAcc: '#f59e0b',
+                legend: [
+                    { color: 'rgba(56, 189, 248, 0.8)', label: 'Primary Field' },
+                    { color: 'rgba(245, 158, 11, 0.8)', label: 'Refracted Field' },
+                    { color: '#f59e0b', label: 'Resistive Oil' }
+                ]
+            },
+            'TEM': {
+                title: 'Transient EM (Time Domain)',
+                desc: 'We pulse a strong current through a ground loop, then turn it off. This abrupt change creates secondary "smoke rings" of current in the earth. Conductive mineral ores prolong this decay, acting like an echo.',
+                tags: ['Active Source', 'Time Domain (Pulsed)', 'Depth: 0-1 km'],
+                scaleScale: '1 km',
+                colorTop: '#10b981', colorAcc: '#ef4444',
+                legend: [
+                    { color: '#10b981', label: 'Primary Pulse (ON)' },
+                    { color: '#ef4444', label: 'Secondary Decay (OFF)' },
+                    { color: '#38bdf8', label: 'Conductive Ore' }
+                ]
+            }
+        };
+
+        // --- GLOBAL VARIABLES ---
+        const canvas = document.getElementById('emCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let currentMethod = 'GMS';
+        let animationTime = 0;
+        let isPlaying = true;
+        let animationFrameId;
+        
+        const GROUND_LEVEL = 280;
+        const SEA_LEVEL = 100;
+
+        // --- UI LOGIC ---
+        function setMethod(method) {
+            currentMethod = method;
+            animationTime = 0;
+            
+            // Buttons
+            document.querySelectorAll('.btn-method').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${method}`).classList.add('active');
+
+            // Data Population
+            const data = methodData[method];
+            document.getElementById('infoTitle').innerText = data.title;
+            document.getElementById('infoDesc').innerText = data.desc;
+            document.getElementById('infoTags').innerHTML = data.tags.map(t => `<span class="tag">${t}</span>`).join('');
+            document.getElementById('scale-bottom').innerText = data.scaleScale;
+            
+            // Card Theme color
+            document.querySelector('.educational-card').style.borderTopColor = data.colorTop;
+
+            // Legend
+            document.getElementById('legend').innerHTML = data.legend.map(item => `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: ${item.color}"></div>
+                    <span>${item.label}</span>
+                </div>
+            `).join('');
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('playBtn');
+            const status = document.getElementById('status-text');
+            if (isPlaying) {
+                btn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                status.innerText = 'Playing';
+                status.style.color = 'var(--accent-blue)';
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-play"></i>';
+                status.innerText = 'Paused';
+                status.style.color = 'var(--text-muted)';
+            }
+        }
+
+        // --- DRAWING HELPERS ---
+        function drawLabel(x, y, text, color = '#ffffff', bgColor = 'rgba(15, 23, 42, 0.7)') {
+            ctx.font = '12px Inter';
+            ctx.fontWeight = '600';
+            const metrics = ctx.measureText(text);
+            const padX = 8, padY = 6;
+            
+            ctx.fillStyle = bgColor;
+            ctx.beginPath();
+            ctx.roundRect(x - padX, y - 12 - padY, metrics.width + padX*2, 12 + padY*2, 4);
+            ctx.fill();
+            
+            ctx.fillStyle = color;
+            ctx.fillText(text, x, y);
+        }
+
+        function drawBackground() {
+            // Sky Gradient
+            let sky = ctx.createLinearGradient(0, 0, 0, GROUND_LEVEL);
+            sky.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--sky-top'));
+            sky.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--sky-bottom'));
+            ctx.fillStyle = sky;
+            ctx.fillRect(0, 0, canvas.width, GROUND_LEVEL);
+
+            // Earth Gradient
+            let earth = ctx.createLinearGradient(0, GROUND_LEVEL, 0, canvas.height);
+            earth.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--earth-surface'));
+            earth.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--earth-deep'));
+
+            if(currentMethod === 'CSEM') {
+                ctx.fillStyle = sky;
+                ctx.fillRect(0, 0, canvas.width, SEA_LEVEL);
+                
+                let ocean = ctx.createLinearGradient(0, SEA_LEVEL, 0, GROUND_LEVEL);
+                ocean.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--ocean-top'));
+                ocean.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--ocean-bottom'));
+                ctx.fillStyle = ocean;
+                ctx.fillRect(0, SEA_LEVEL, canvas.width, GROUND_LEVEL - SEA_LEVEL);
+            }
+
+            ctx.fillStyle = earth;
+            ctx.fillRect(0, GROUND_LEVEL, canvas.width, canvas.height - GROUND_LEVEL);
+            
+            // Surface Crust Line
+            ctx.beginPath();
+            ctx.moveTo(0, GROUND_LEVEL);
+            ctx.lineTo(canvas.width, GROUND_LEVEL);
+            ctx.strokeStyle = (currentMethod === 'CSEM') ? '#0c4a6e' : '#78350f';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+            
+            // Grid lines for depth context
+            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.lineWidth = 1;
+            for(let y = GROUND_LEVEL + 50; y < canvas.height; y += 50) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+        }
+
+        // --- SPECIFIC METHOD ANIMATIONS ---
+
+        function drawGMS(t) {
+            // Ionosphere / Solar Wind Band
+            let ionosphere = ctx.createLinearGradient(0, 0, 0, 80);
+            ionosphere.addColorStop(0, 'rgba(245, 158, 11, 0.4)');
+            ionosphere.addColorStop(1, 'transparent');
+            ctx.fillStyle = ionosphere;
+            ctx.fillRect(0, 0, canvas.width, 80);
+            drawLabel(canvas.width/2 - 60, 40, "Solar Wind / Ionosphere", "#f59e0b", "transparent");
+
+            // Source Waves moving in sky
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+            ctx.lineWidth = 2;
+            for(let i=0; i<3; i++) {
+                ctx.beginPath();
+                for(let x=0; x<canvas.width; x+=20) {
+                    let y = 30 + i*20 + Math.sin(x*0.02 - t*0.05)*10;
+                    if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+                }
+                ctx.stroke();
+            }
+
+            // Target: Mantle Plume
+            let plumeX = canvas.width/2 + 100;
+            let plumeY = canvas.height + 80;
+            let plumeGrad = ctx.createRadialGradient(plumeX, plumeY, 20, plumeX, plumeY, 250);
+            plumeGrad.addColorStop(0, 'rgba(239, 68, 68, 0.9)'); // Red core
+            plumeGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.4)');
+            plumeGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = plumeGrad;
+            ctx.beginPath(); ctx.arc(plumeX, plumeY, 250, 0, Math.PI*2); ctx.fill();
+            drawLabel(plumeX - 40, canvas.height - 50, "Hot Mantle Plume", "#fca5a5");
+
+            // Penetrating Magnetic Fields (B)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 3;
+            for(let i=1; i<=7; i++) {
+                let startX = (canvas.width/8) * i;
+                ctx.beginPath();
+                ctx.moveTo(startX, 80);
+                
+                // Curve towards the highly conductive plume
+                let cpy1 = GROUND_LEVEL;
+                let endX = startX + (plumeX - startX) * 0.4;
+                
+                ctx.quadraticCurveTo(startX, cpy1, endX, canvas.height);
+                ctx.stroke();
+
+                // Draw moving dots on field lines
+                let dotProgress = ((t*0.5 + i*20) % 100) / 100;
+                let dotX = startX + (endX - startX) * dotProgress;
+                let dotY = 80 + (canvas.height - 80) * dotProgress; // simplified lerp
+                ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                ctx.beginPath(); ctx.arc(dotX, dotY, 3, 0, Math.PI*2); ctx.fill();
+            }
+
+            // Surface Magnetometer (Rx)
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(canvas.width/2 - 15, GROUND_LEVEL - 20, 30, 20);
+            ctx.fillStyle = '#ef4444'; // blinking light
+            if(Math.floor(t/10) % 2 === 0) ctx.fillRect(canvas.width/2 - 3, GROUND_LEVEL - 25, 6, 5);
+            drawLabel(canvas.width/2 - 45, GROUND_LEVEL - 35, "Magnetometer (Rx)", "#fff");
+
+            // --- HUD GRAPHIC FOR GMS OBSERVATION ---
+            drawGMSGraph(t);
+        }
+
+        function drawMT(t) {
+            // Source: Lightning & Plane Waves
+            if (t % 120 < 10) {
+                // Lightning flash
+                ctx.strokeStyle = '#fef08a';
+                ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(150, 0); ctx.lineTo(170, 50); ctx.lineTo(140, 90); ctx.lineTo(180, GROUND_LEVEL); ctx.stroke();
+                
+                // Flash glow
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.fillRect(0,0, canvas.width, GROUND_LEVEL);
+            }
+
+            // Plane waves descending
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)'; // Orangeish
+            ctx.lineWidth = 2;
+            let waveGap = 80;
+            let waveSpeed = 1.5;
+            for(let yOffset = 0; yOffset < canvas.height; yOffset += waveGap) {
+                let y = ((t * waveSpeed) + yOffset) % canvas.height;
+                if(y > GROUND_LEVEL) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                }
+            }
+
+            // Target: Geothermal Fault (Conductive)
+            let faultX = canvas.width/2 + 80;
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.4)'; // Reddish fluid
+            ctx.beginPath();
+            ctx.moveTo(faultX, GROUND_LEVEL + 50);
+            ctx.lineTo(faultX + 40, canvas.height);
+            ctx.lineTo(faultX - 20, canvas.height);
+            ctx.fill();
+            
+            // Draw fracture lines
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(faultX, GROUND_LEVEL+50); ctx.lineTo(faultX+20, GROUND_LEVEL+150); ctx.lineTo(faultX, GROUND_LEVEL+200); ctx.stroke();
+            drawLabel(faultX + 30, GROUND_LEVEL + 150, "Hot Geothermal Fluids", "#fca5a5");
+
+            // Propagating E and H fields
+            let fieldY = GROUND_LEVEL + ((t * 1.5) % (canvas.height - GROUND_LEVEL));
+            if(fieldY > GROUND_LEVEL + 20) {
+                // E Field (Horizontal - Cyan)
+                ctx.strokeStyle = '#00ffff'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(canvas.width/3 - 40, fieldY); ctx.lineTo(canvas.width/3 + 40, fieldY); ctx.stroke();
+                ctx.fillStyle = '#00ffff'; ctx.fillText("E-Field", canvas.width/3 + 45, fieldY + 4);
+
+                // H Field (Diagonal simulating into-page - Magenta)
+                ctx.strokeStyle = '#ff00ff';
+                ctx.beginPath(); ctx.moveTo(canvas.width/3, fieldY); ctx.lineTo(canvas.width/3 - 25, fieldY - 20); ctx.stroke();
+                ctx.fillStyle = '#ff00ff'; ctx.fillText("H-Field", canvas.width/3 - 65, fieldY - 25);
+            }
+
+            // Current concentration in fault
+            let currentPulse = Math.sin(t*0.1)*0.5 + 0.5;
+            ctx.fillStyle = `rgba(0, 255, 255, ${currentPulse * 0.5})`;
+            ctx.beginPath(); ctx.arc(faultX + 10, canvas.height - 100, 30 + currentPulse*10, 0, Math.PI*2); ctx.fill();
+
+            // Sensors (Electric Dipole + Magnetic Coil)
+            // Wires
+            ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(canvas.width/2 - 80, GROUND_LEVEL - 5); ctx.lineTo(canvas.width/2 + 80, GROUND_LEVEL - 5); ctx.stroke();
+            // Electrodes
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(canvas.width/2 - 85, GROUND_LEVEL - 15, 10, 15);
+            ctx.fillRect(canvas.width/2 + 75, GROUND_LEVEL - 15, 10, 15);
+            // Logger
+            ctx.fillStyle = '#1e293b'; ctx.fillRect(canvas.width/2 - 15, GROUND_LEVEL - 20, 30, 20);
+            drawLabel(canvas.width/2 - 40, GROUND_LEVEL - 30, "MT Station (Ex, Ey, Hx, Hy)", "#fff");
+
+            // --- HUD GRAPHIC FOR MT OBSERVATION ---
+            drawMTGraph(t);
+        }
+
+        function drawCSEM(t) {
+            // Target: Oil Reservoir (Resistive)
+            let resX = canvas.width/2 + 150;
+            let resY = GROUND_LEVEL + 180;
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.4)'; // Gold/Oil
+            ctx.strokeStyle = '#d97706';
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.ellipse(resX, resY, 160, 50, 0, 0, 2 * Math.PI);
+            ctx.fill(); ctx.stroke();
+            
+            // Texture inside reservoir
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)';
+            for(let i=-120; i<120; i+=20) {
+                ctx.beginPath(); ctx.moveTo(resX+i, resY-30); ctx.lineTo(resX+i, resY+30); ctx.stroke();
+            }
+            drawLabel(resX - 40, resY + 5, "Resistive Oil Reservoir", "#fde68a");
+
+            // Survey Ship
+            let shipX = (t * 0.8) % (canvas.width + 300) - 100;
+            
+            ctx.fillStyle = '#cbd5e1';
+            ctx.beginPath();
+            ctx.moveTo(shipX - 60, SEA_LEVEL);
+            ctx.lineTo(shipX + 70, SEA_LEVEL); // Bow
+            ctx.lineTo(shipX + 40, SEA_LEVEL + 25); // Hull bottom
+            ctx.lineTo(shipX - 50, SEA_LEVEL + 25);
+            ctx.fill();
+            // Superstructure
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(shipX - 30, SEA_LEVEL - 30, 40, 30);
+            ctx.fillRect(shipX - 10, SEA_LEVEL - 50, 10, 20);
+            drawLabel(shipX - 30, SEA_LEVEL - 60, "Survey Vessel", "#fff");
+
+            // Tow Cable & Transmitter
+            let txX = shipX - 180;
+            let txY = GROUND_LEVEL - 30; // Deep tow
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(shipX - 50, SEA_LEVEL); ctx.lineTo(txX, txY); ctx.stroke();
+            
+            // Transmitter Body
+            ctx.fillStyle = '#38bdf8'; // Blue glowing TX
+            ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 15;
+            ctx.fillRect(txX - 30, txY - 8, 60, 16);
+            ctx.shadowBlur = 0; // reset
+            drawLabel(txX - 40, txY - 20, "Transmitter (Tx)", "#38bdf8");
+
+            // Seafloor Receivers
+            ctx.fillStyle = '#10b981';
+            for(let i=0; i<4; i++) {
+                let rxX = 350 + i*140;
+                ctx.fillRect(rxX, GROUND_LEVEL - 15, 20, 15);
+                if(i===2) drawLabel(rxX - 30, GROUND_LEVEL - 25, "Receivers (Rx)", "#10b981");
+            }
+
+            // Continuous EM Wave Propagation
+            ctx.globalCompositeOperation = 'screen';
+            for(let i=0; i<6; i++) {
+                let radius = ((t * 2.5) + i * 50) % 400;
+                
+                if (radius > 10) {
+                    // Primary descending wave
+                    ctx.strokeStyle = `rgba(56, 189, 248, ${1 - radius/400})`;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.arc(txX, txY, radius, 0, Math.PI); ctx.stroke();
+
+                    // Refraction/Guiding along the resistive reservoir
+                    if (radius > 150) {
+                        let hitDist = Math.abs((txX + radius) - (resX - 100));
+                        if(hitDist < 150) {
+                            // Secondary returning wave (guided by reservoir)
+                            ctx.strokeStyle = `rgba(245, 158, 11, ${1 - radius/400})`;
+                            ctx.beginPath(); 
+                            ctx.arc(resX, resY, radius/2, Math.PI, 2*Math.PI); 
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            ctx.globalCompositeOperation = 'source-over';
+
+            // --- HUD GRAPHIC FOR CSEM OBSERVATION ---
+            drawCSEMGraph(t, shipX, resX);
+        }
+
+        function drawTEM(t) {
+            // Target: Conductive Massive Sulfide Ore
+            let oreX = canvas.width/2 + 60;
+            let oreY = GROUND_LEVEL + 160;
+            ctx.fillStyle = '#10b981'; // Green ore
+            ctx.beginPath();
+            ctx.moveTo(oreX, oreY - 40); ctx.lineTo(oreX + 120, oreY - 20);
+            ctx.lineTo(oreX + 80, oreY + 80); ctx.lineTo(oreX - 20, oreY + 60);
+            ctx.fill();
+            drawLabel(oreX + 10, oreY + 20, "Highly Conductive Ore (Ni/Cu)", "#a7f3d0", "rgba(0,0,0,0.5)");
+
+            // Source Loop (Tx) on ground
+            ctx.strokeStyle = '#ef4444'; // Red loop
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            // Isometric ellipse for loop
+            ctx.ellipse(canvas.width/2 - 100, GROUND_LEVEL, 120, 20, 0, 0, 2*Math.PI);
+            ctx.stroke();
+            drawLabel(canvas.width/2 - 250, GROUND_LEVEL - 10, "Tx Loop", "#ef4444");
+
+            // Receiver Coil (Rx) inside loop
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(canvas.width/2 - 110, GROUND_LEVEL - 15, 20, 15);
+            drawLabel(canvas.width/2 - 110, GROUND_LEVEL - 25, "Rx", "#38bdf8", "transparent");
+
+            // Timing logic
+            let cycleLength = 300;
+            let cycle = t % cycleLength;
+            let pulseDuration = 80;
+            let isPulseOn = cycle < pulseDuration;
+
+            // --- HUD GRAPHIC FOR TEM TIMING ---
+            drawTEMGraph(cycle, cycleLength, pulseDuration);
+
+            if (isPulseOn) {
+                // STATE 1: CURRENT ON (Building Primary Field)
+                let buildUp = cycle / pulseDuration;
+                ctx.strokeStyle = `rgba(239, 68, 68, ${0.3 + buildUp*0.5})`; // Reddish primary field
+                ctx.lineWidth = 4;
+                for(let i=1; i<=4; i++) {
+                    ctx.beginPath();
+                    ctx.ellipse(canvas.width/2 - 100, GROUND_LEVEL, (80 + i*40)*buildUp, (40 + i*60)*buildUp, 0, 0, Math.PI);
+                    ctx.stroke();
+                }
+                
+                // Visual Indicator
+                drawLabel(canvas.width/2 - 150, GROUND_LEVEL + 50, "STATE: Primary Field Charging", "#fca5a5", "rgba(239,68,68,0.2)");
+            } else {
+                // STATE 2: CURRENT OFF (Secondary field decay)
+                let decayTime = cycle - pulseDuration;
+                let maxDecay = cycleLength - pulseDuration;
+                
+                // Expanding, descending "Smoke Rings"
+                let ringDepth = GROUND_LEVEL + decayTime * 2;
+                let ringWidth = 240 + decayTime * 1.5;
+                
+                let alpha = 1 - (decayTime / maxDecay);
+                ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`; // Greenish secondary
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.ellipse(canvas.width/2 - 100, ringDepth, ringWidth/2, 30 + decayTime/4, 0, 0, 2*Math.PI);
+                ctx.stroke();
+
+                // Interaction with ore body
+                if (ringDepth > oreY - 40 && ringDepth < oreY + 80) {
+                    // Flash the ore body
+                    ctx.fillStyle = `rgba(255, 255, 255, ${0.5 * alpha})`;
+                    ctx.beginPath();
+                    ctx.moveTo(oreX, oreY - 40); ctx.lineTo(oreX + 120, oreY - 20);
+                    ctx.lineTo(oreX + 80, oreY + 80); ctx.lineTo(oreX - 20, oreY + 60);
+                    ctx.fill();
+
+                    // Echo field returning to surface Rx
+                    ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath(); ctx.moveTo(oreX + 40, ringDepth); ctx.lineTo(canvas.width/2 - 100, GROUND_LEVEL); ctx.stroke();
+                    drawLabel(oreX + 50, ringDepth - 20, "Secondary 'Echo'", "#38bdf8", "transparent");
+                }
+
+                drawLabel(canvas.width/2 - 150, GROUND_LEVEL + 50, "STATE: Listening to Decay", "#6ee7b7", "rgba(16,185,129,0.2)");
+            }
+        }
+
+        function drawGMSGraph(t) {
+            let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
+            
+            // Background
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+
+            // Label
+            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillText("Observed Magnetic Field (Bz)", gX + 10, gY + 20);
+
+            // Axes
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+gW, gY+gH+10); ctx.stroke(); // X
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
+
+            // Plot scrolling sine wave
+            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            for(let i=0; i<gW-20; i++) {
+                let historyT = t - (gW - 20 - i);
+                let val = Math.sin(historyT*0.05) * 20;
+                let plotX = gX + 10 + i;
+                let plotY = gY + 60 + val;
+                if(i===0) ctx.moveTo(plotX, plotY); else ctx.lineTo(plotX, plotY);
+            }
+            ctx.stroke();
+            
+            // Current value dot
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.arc(gX + gW - 10, gY + 60 + Math.sin(t*0.05)*20, 4, 0, Math.PI*2); ctx.fill();
+        }
+
+        function drawMTGraph(t) {
+            let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
+            
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+
+            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillText("MT Time Series (E & H)", gX + 10, gY + 20);
+
+            // Axes
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+gW, gY+gH+10); ctx.stroke(); // X
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
+
+            // E and H Waves
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.strokeStyle = '#00ffff'; // E-field
+            for(let i=0; i<gW-20; i++) {
+                let historyT = t - (gW - 20 - i);
+                let val = Math.sin(historyT*0.1) * 15;
+                if(i===0) ctx.moveTo(gX+10+i, gY+55+val); else ctx.lineTo(gX+10+i, gY+55+val);
+            }
+            ctx.stroke();
+
+            ctx.beginPath(); ctx.strokeStyle = '#ff00ff'; // H-field
+            for(let i=0; i<gW-20; i++) {
+                let historyT = t - (gW - 20 - i);
+                let val = Math.sin(historyT*0.1 - Math.PI/4) * 20; // Phase shifted
+                if(i===0) ctx.moveTo(gX+10+i, gY+65+val); else ctx.lineTo(gX+10+i, gY+65+val);
+            }
+            ctx.stroke();
+            
+            // Apparent Resistivity readout
+            ctx.fillStyle = '#10b981'; ctx.font = 'bold 11px Inter';
+            let rhoA = 120 + Math.sin(t*0.05)*5; // Simulated fluctuation
+            ctx.fillText(`Apparent ρ ≈ ${rhoA.toFixed(1)} Ω·m`, gX + 10, gY + gH + 30);
+        }
+
+        function drawCSEMGraph(t, shipX, resX) {
+            let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
+            
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+
+            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillText("Magnitude vs Offset (MVO)", gX + 10, gY + 20);
+
+            // Axes
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+gW, gY+gH+10); ctx.stroke(); // X
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
+            
+            // Labels
+            ctx.fillStyle = '#94a3b8'; ctx.font = '9px Inter';
+            ctx.fillText("Offset (Ship Pos)", gX + gW/2 - 20, gY + gH + 25);
+            ctx.save(); ctx.translate(gX-5, gY+gH/2+20); ctx.rotate(-Math.PI/2); ctx.fillText("Amplitude", 0, 0); ctx.restore();
+
+            // Baseline curve (exponential decay)
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let x=0; x<gW-20; x++) {
+                let y = gY + 35 + (x*x)/500; // quadratic/exp decay shape
+                if(y > gY+gH+10) y = gY+gH+10;
+                if(x===0) ctx.moveTo(gX+10+x, y); else ctx.lineTo(gX+10+x, y);
+            }
+            ctx.stroke();
+
+            // Anomaly curve
+            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            // Map reservoir position to graph width
+            let anomalyCenterPoint = (resX / canvas.width) * (gW - 20); 
+            for(let x=0; x<gW-20; x++) {
+                let base_y = 35 + (x*x)/500;
+                let anomaly = Math.exp(-Math.pow(x - anomalyCenterPoint, 2) / 400) * 20; 
+                let y = gY + base_y - anomaly;
+                if(y > gY+gH+10) y = gY+gH+10;
+                if(x===0) ctx.moveTo(gX+10+x, y); else ctx.lineTo(gX+10+x, y);
+            }
+            ctx.stroke();
+
+            // Moving dot representing ship
+            let shipProgress = shipX / canvas.width;
+            let dotX = gX + 10 + shipProgress * (gW - 20);
+            if (dotX >= gX + 10 && dotX <= gX + gW - 10) {
+                let xMapped = dotX - (gX + 10);
+                let base_y = 35 + (xMapped*xMapped)/500;
+                let anomaly = Math.exp(-Math.pow(xMapped - anomalyCenterPoint, 2) / 400) * 20;
+                let dotY = gY + base_y - anomaly;
+                if(dotY > gY+gH+10) dotY = gY+gH+10;
+
+                ctx.fillStyle = '#38bdf8';
+                ctx.beginPath(); ctx.arc(dotX, dotY, 4, 0, Math.PI*2); ctx.fill();
+            }
+        }
+
+        function drawTEMGraph(cycle, cycleLength, pulseDuration) {
+            let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
+
+            // Background
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+
+            // Label
+            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillText("TEM Observations", gX + 10, gY + 20);
+
+            // Axes
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+gW, gY+gH+10); ctx.stroke(); // X
+            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
+            
+            // Legend
+            ctx.fillStyle = '#ef4444'; ctx.fillText("Tx (I)", gX + 140, gY + 20);
+            ctx.fillStyle = '#10b981'; ctx.fillText("Rx (dB/dt)", gX + 180, gY + 20);
+
+            // The waveform (Square pulse)
+            let pulseW = (pulseDuration / cycleLength) * (gW - 20);
+            
+            // 1. Draw Tx Current (I)
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(gX+10, gY+gH+5); // Start 0
+            ctx.lineTo(gX+10, gY+40); // Up
+            ctx.lineTo(gX+10+pulseW, gY+40); // Across (ON)
+            ctx.lineTo(gX+10+pulseW, gY+gH+5); // Down
+            ctx.lineTo(gX+gW, gY+gH+5); // Across (OFF)
+            ctx.stroke();
+
+            // 2. Draw Rx Voltage (dB/dt)
+            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(gX+10, gY+gH+10);
+            ctx.lineTo(gX+10+pulseW, gY+gH+10); // 0 during ON time
+            ctx.lineTo(gX+10+pulseW, gY+gH+30); // Spike down
+            for(let x=10+pulseW; x<gW; x+=2) {
+                let decay_t = x - (10+pulseW);
+                // Secondary decay
+                let decay_val = Math.exp(-decay_t / 15) * 20;
+                ctx.lineTo(gX+x, gY+gH+10 + decay_val);
+            }
+            ctx.stroke();
+
+            // Progress dot/line
+            let progressX = gX + 10 + (cycle / cycleLength) * (gW - 20);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.setLineDash([2, 2]);
+            ctx.beginPath(); ctx.moveTo(progressX, gY+30); ctx.lineTo(progressX, gY+gH+15); ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // --- RENDER LOOP ---
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawBackground();
+
+            switch(currentMethod) {
+                case 'GMS': drawGMS(animationTime); break;
+                case 'MT': drawMT(animationTime); break;
+                case 'CSEM': drawCSEM(animationTime); break;
+                case 'TEM': drawTEM(animationTime); break;
+            }
+
+            if (isPlaying) {
+                let speed = parseFloat(document.getElementById('speedSlider').value);
+                animationTime += (1 * speed);
+            }
+            
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        setMethod('GMS');
+        animate();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+site_name: "SEES:4800 Environmental Geophysics"
+site_url: https://geohang.github.io/environmental-geophysics/
+site_author: Hang Chen
+site_description: >-
+  Interactive course website for SEES:4800 Environmental Geophysics at the
+  University of Iowa: lectures, simulators, activities, data, and notebooks.
+
+repo_url: https://github.com/geohang/environmental-geophysics
+repo_name: geohang/environmental-geophysics
+
+copyright: "&copy; 2026 Hang Chen · School of Earth, Environment, and Sustainability · University of Iowa"
+
+theme:
+  name: material
+  favicon: assets/favicon.svg
+  icon:
+    logo: material/earth
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: light blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: light blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - assets/javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/geohang
+
+nav:
+  - Home: index.md
+  - Lectures:
+      - Overview: lecture/index.md
+      - Introduction: lecture/intro/index.md
+      - Gravity Methods: lecture/gravity/index.md
+      - Magnetic Methods: lecture/magnetic/index.md
+      - Seismic Methods: lecture/seismic/index.md
+      - Electrical Methods: lecture/electrical/index.md
+      - Electromagnetic Methods: lecture/em/index.md
+      - Ground-Penetrating Radar: lecture/gpr/index.md
+      - Magnetotellurics: lecture/mt/index.md
+      - Borehole Geophysics: lecture/borehole/index.md
+  - Data: data/index.md
+  - Notebooks: notebooks/index.md

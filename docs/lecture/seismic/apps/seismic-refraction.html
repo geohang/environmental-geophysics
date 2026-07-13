@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seismic Refraction Lab</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo, useEffect, useRef } = React;
+
+        // --- Icons (Inline SVGs to remove dependencies) ---
+        const Play = ({ size = 24, className = "", fill = "none" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        );
+        const RotateCcw = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        );
+        const Info = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        );
+        const CheckCircle2 = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        );
+        const AlertCircle = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        );
+        const Layers = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        );
+        const Timer = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+        );
+
+
+        // --- Utility Functions ---
+        const calculateTime = (distance, velocity) => (distance / velocity) * 1000; // returns ms
+
+        const calculateRefraction2Layer = (x, v1, v2, h1) => {
+            if (v2 <= v1) return null;
+            const thetaC = Math.asin(v1 / v2);
+            const term1 = x / v2;
+            const term2 = (2 * h1 * Math.cos(thetaC)) / v1;
+            return (term1 + term2) * 1000;
+        };
+
+        const calculateRefraction3Layer = (x, v1, v2, v3, h1, h2) => {
+            if (v3 <= v2 || v2 <= v1) return null;
+            const thetaC2 = Math.asin(v2 / v3);
+            const theta1 = Math.asin(v1 / v3);
+            const term1 = x / v3;
+            const term2 = (2 * h1 * Math.cos(theta1)) / v1;
+            const term3 = (2 * h2 * Math.cos(thetaC2)) / v2;
+            return (term1 + term2 + term3) * 1000;
+        };
+
+        const calculateReflection = (x, v1, h1) => {
+            const dist = Math.sqrt(x * x + 4 * h1 * h1);
+            return (dist / v1) * 1000;
+        };
+
+        const calculateCriticalDistance = (v1, v2, h1) => {
+            if (v2 <= v1) return Infinity;
+            const thetaC = Math.asin(v1/v2);
+            return 2 * h1 * Math.tan(thetaC);
+        }
+
+        const getRayPaths = (dist, v1, v2, v3, h1, h2, mode) => {
+            const paths = {
+                direct: `M 0,0 L ${dist},0`,
+                reflect: `M 0,0 L ${dist/2},${h1} L ${dist},0`,
+                refract1: null,
+                refract2: null
+            };
+
+            // 2-Layer Refraction Path
+            if (v2 > v1) {
+                const thetaC = Math.asin(v1/v2);
+                const xOffset = h1 * Math.tan(thetaC);
+                if (dist > 2 * xOffset) {
+                    paths.refract1 = `M 0,0 L ${xOffset},${h1} L ${dist - xOffset},${h1} L ${dist},0`;
+                }
+            }
+
+            // 3-Layer Refraction Path
+            if (mode === '3layer' && v3 > v2 && v2 > v1) {
+                const thetaC2 = Math.asin(v2/v3);
+                const theta1 = Math.asin(v1/v3);
+                
+                const dx1 = h1 * Math.tan(theta1);
+                const dx2 = h2 * Math.tan(thetaC2);
+                const totalOffset = 2 * (dx1 + dx2);
+
+                if (dist > totalOffset) {
+                    paths.refract2 = `M 0,0 L ${dx1},${h1} L ${dx1+dx2},${h1+h2} L ${dist-dx1-dx2},${h1+h2} L ${dist-dx1},${h1} L ${dist},0`;
+                }
+            }
+            return paths;
+        };
+
+        // --- Components ---
+
+        const ControlSlider = ({ label, value, onChange, min, max, step, unit }) => (
+            <div className="mb-4">
+                <div className="flex justify-between mb-1">
+                    <label className="text-sm font-medium text-slate-700">{label}</label>
+                    <span className="text-sm font-mono text-slate-500">{value} {unit}</span>
+                </div>
+                <input
+                    type="range"
+                    min={min}
+                    max={max}
+                    step={step}
+                    value={value}
+                    onChange={(e) => onChange(Number(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                />
+            </div>
+        );
+
+        const ActivityQuestion = ({ question, options, correctIndex, explanation }) => {
+            const [selected, setSelected] = useState(null);
+            const [showExplanation, setShowExplanation] = useState(false);
+
+            return (
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200 mb-4">
+                    <h4 className="font-semibold text-slate-800 mb-3">{question}</h4>
+                    <div className="space-y-2">
+                        {options.map((opt, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => { setSelected(idx); setShowExplanation(true); }}
+                            className={`w-full text-left p-3 rounded transition-colors flex items-center justify-between ${
+                            selected === idx
+                                ? idx === correctIndex
+                                ? 'bg-green-50 border border-green-200 text-green-800'
+                                : 'bg-red-50 border border-red-200 text-red-800'
+                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700'
+                            }`}
+                        >
+                            <span>{opt}</span>
+                            {selected === idx && (
+                            idx === correctIndex ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />
+                            )}
+                        </button>
+                        ))}
+                    </div>
+                    {showExplanation && (
+                        <div className={`mt-3 p-3 text-sm rounded ${selected === correctIndex ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-600'}`}>
+                        <strong>{selected === correctIndex ? 'Correct!' : 'Not quite.'}</strong> {explanation}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        function App() {
+            const [mode, setMode] = useState('2layer'); 
+            const [v1, setV1] = useState(1000); 
+            const [v2, setV2] = useState(2000); 
+            const [v3, setV3] = useState(3000); 
+            const [h1, setH1] = useState(20);   
+            const [h2, setH2] = useState(20);   
+            const [showReflection, setShowReflection] = useState(true);
+            
+            // Animation State
+            const [geoDist, setGeoDist] = useState(120); 
+            const [animKey, setAnimKey] = useState(0); 
+            const [isPlaying, setIsPlaying] = useState(false);
+
+            const handleReset = () => {
+                setV1(1000); setV2(2000); setV3(3000);
+                setH1(20); setH2(20);
+                setGeoDist(120);
+                setAnimKey(p => p + 1);
+            };
+
+            const playAnimation = () => {
+                setAnimKey(prev => prev + 1);
+                setIsPlaying(true);
+                setTimeout(() => setIsPlaying(false), 5000); 
+            };
+
+            // Calculations
+            const maxX = 200; 
+            const maxY = 200; 
+            
+            const graphData = useMemo(() => {
+                const data = [];
+                for (let x = 0; x <= maxX; x += 2) {
+                const direct = calculateTime(x, v1);
+                let refract1 = null;
+                const xCrit1 = calculateCriticalDistance(v1, v2, h1);
+                if (x >= xCrit1) refract1 = calculateRefraction2Layer(x, v1, v2, h1);
+
+                let refract2 = null;
+                if (mode === '3layer') {
+                    const thetaC2 = Math.asin(v2/v3);
+                    const theta1 = Math.asin(v1/v3);
+                    const xCrit2 = 2*h1*Math.tan(theta1) + 2*h2*Math.tan(thetaC2);
+                    if (x >= xCrit2) refract2 = calculateRefraction3Layer(x, v1, v2, v3, h1, h2);
+                }
+                const reflect = calculateReflection(x, v1, h1);
+                data.push({ x, direct, refract1, refract2, reflect });
+                }
+                return data;
+            }, [v1, v2, v3, h1, h2, mode]);
+
+            const rayPaths = useMemo(() => getRayPaths(geoDist, v1, v2, v3, h1, h2, mode), [geoDist, v1, v2, v3, h1, h2, mode]);
+
+            const arrivalTimes = useMemo(() => {
+                return {
+                direct: calculateTime(geoDist, v1),
+                reflect: calculateReflection(geoDist, v1, h1),
+                refract1: calculateRefraction2Layer(geoDist, v1, v2, h1),
+                refract2: mode === '3layer' ? calculateRefraction3Layer(geoDist, v1, v2, v3, h1, h2) : null
+                };
+            }, [geoDist, v1, v2, v3, h1, h2, mode]);
+
+            const maxTime = Math.max(
+                arrivalTimes.direct || 0, 
+                arrivalTimes.reflect || 0, 
+                arrivalTimes.refract1 || 0, 
+                arrivalTimes.refract2 || 0
+            );
+            const animFactor = 4 / (maxTime || 1); 
+
+            // SVG Scales
+            const width = 600;
+            const height = 400;
+            const padding = 50;
+            const scaleX = (val) => padding + (val / maxX) * (width - 2 * padding);
+            const scaleY = (val) => height - padding - (val / maxY) * (height - 2 * padding);
+
+            // Cross Section Scales
+            const csWidth = 600;
+            const csHeight = 200; 
+            const csMaxDepth = 80; 
+            const csScaleX = (val) => (val / maxX) * csWidth;
+            const csScaleY = (val) => (val / csMaxDepth) * csHeight;
+
+            return (
+                <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-12">
+                    {/* Header */}
+                    <header className="bg-blue-900 text-white p-6 shadow-lg sticky top-0 z-50">
+                        <div className="max-w-6xl mx-auto flex items-center justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold flex items-center gap-2">
+                            <span className="text-blue-300">Seismic</span> Refraction Lab
+                            </h1>
+                            <p className="text-blue-200 text-sm mt-1">Interactive T-X Graph & Wave Propagation Model</p>
+                        </div>
+                        <button 
+                            onClick={handleReset}
+                            className="flex items-center gap-2 bg-blue-800 hover:bg-blue-700 px-4 py-2 rounded-lg transition text-sm font-medium"
+                        >
+                            <RotateCcw size={16} /> Reset
+                        </button>
+                        </div>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        {/* Left Column: Visuals */}
+                        <div className="lg:col-span-8 space-y-6">
+                        
+                        {/* 1. T-X Graph */}
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+                            <h2 className="font-semibold text-lg text-slate-800">1. Time-Distance Plot</h2>
+                            <div className="flex gap-4 text-xs">
+                                <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-500 rounded-full"></div> Direct</div>
+                                <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded-full"></div> Refraction 1</div>
+                                {mode === '3layer' && <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-500 rounded-full"></div> Refraction 2</div>}
+                            </div>
+                            </div>
+                            
+                            <div className="relative w-full h-[350px] bg-white">
+                            <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full">
+                                {/* Grid */}
+                                {Array.from({ length: 11 }).map((_, i) => {
+                                const y = scaleY(i * (maxY / 10));
+                                const x = scaleX(i * (maxX / 10));
+                                return (
+                                    <g key={i}>
+                                    <line x1={padding} y1={y} x2={width - padding} y2={y} stroke="#f1f5f9" strokeWidth="1" />
+                                    <text x={padding - 10} y={y + 4} textAnchor="end" fontSize="10" fill="#94a3b8">{Math.round(i * (maxY / 10))}</text>
+                                    <line x1={x} y1={padding} x2={x} y2={height - padding} stroke="#f1f5f9" strokeWidth="1" />
+                                    <text x={x} y={height - padding + 15} textAnchor="middle" fontSize="10" fill="#94a3b8">{Math.round(i * (maxX / 10))}</text>
+                                    </g>
+                                );
+                                })}
+
+                                {/* Axes */}
+                                <text x={width / 2} y={height - 10} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#475569">Distance (x) [m]</text>
+                                <text x={15} y={height / 2} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#475569" transform={`rotate(-90, 15, ${height / 2})`}>Time (t) [ms]</text>
+
+                                {/* Data Lines */}
+                                <path d={`M ${graphData.map(p => `${scaleX(p.x)},${scaleY(p.direct)}`).join(' ')}`} fill="none" stroke="#3b82f6" strokeWidth="2" />
+                                {showReflection && <path d={`M ${graphData.map(p => `${scaleX(p.x)},${scaleY(p.reflect)}`).join(' ')}`} fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="5,5" opacity="0.5"/>}
+                                <path d={`M ${graphData.filter(p => p.refract1 !== null).map(p => `${scaleX(p.x)},${scaleY(p.refract1)}`).join(' ')}`} fill="none" stroke="#22c55e" strokeWidth="2" />
+                                {mode === '3layer' && <path d={`M ${graphData.filter(p => p.refract2 !== null).map(p => `${scaleX(p.x)},${scaleY(p.refract2)}`).join(' ')}`} fill="none" stroke="#ef4444" strokeWidth="2" />}
+
+                                {/* Vertical Indicator for current GeoDist */}
+                                <line x1={scaleX(geoDist)} y1={padding} x2={scaleX(geoDist)} y2={height - padding} stroke="#f59e0b" strokeWidth="2" strokeDasharray="4,4" />
+                                <text x={scaleX(geoDist)} y={padding - 10} textAnchor="middle" fill="#f59e0b" fontSize="12" fontWeight="bold">Geophone</text>
+                            </svg>
+                            </div>
+                        </div>
+
+                        {/* 2. Wave Propagation Model */}
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                                <h2 className="font-semibold text-lg text-slate-800 flex items-center gap-2">
+                                <Layers size={20} className="text-indigo-600"/> 2. Wave Propagation Model
+                                </h2>
+                                <div className="flex items-center gap-4">
+                                <div className="text-xs text-slate-500 font-mono bg-white px-2 py-1 rounded border">x = {geoDist}m</div>
+                                <button 
+                                    onClick={playAnimation}
+                                    disabled={isPlaying}
+                                    className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition ${isPlaying ? 'bg-slate-200 text-slate-400' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md'}`}
+                                >
+                                    <Play size={14} fill="currentColor" /> {isPlaying ? 'Simulating...' : 'Simulate Waves'}
+                                </button>
+                                </div>
+                            </div>
+                            
+                            <div className="relative w-full h-[250px] bg-slate-900 overflow-hidden">
+                                <svg viewBox={`0 0 ${csWidth} ${csHeight}`} className="w-full h-full">
+                                {/* Layer 1 */}
+                                <rect x="0" y="0" width={csWidth} height={csScaleY(h1)} fill="#3b82f6" fillOpacity="0.1" />
+                                <text x="10" y={csScaleY(h1/2)} fill="#3b82f6" opacity="0.5" fontSize="12">Layer 1 (v1={v1})</text>
+                                <line x1="0" y1={csScaleY(h1)} x2={csWidth} y2={csScaleY(h1)} stroke="#3b82f6" strokeWidth="1" opacity="0.3"/>
+
+                                {/* Layer 2 */}
+                                <rect x="0" y={csScaleY(h1)} width={csWidth} height={csScaleY(h2)} fill="#22c55e" fillOpacity="0.1" />
+                                <text x="10" y={csScaleY(h1 + h2/2)} fill="#22c55e" opacity="0.5" fontSize="12">Layer 2 (v2={v2})</text>
+                                <line x1="0" y1={csScaleY(h1+h2)} x2={csWidth} y2={csScaleY(h1+h2)} stroke="#22c55e" strokeWidth="1" opacity="0.3"/>
+
+                                {/* Layer 3 */}
+                                <rect x="0" y={csScaleY(h1+h2)} width={csWidth} height={csHeight} fill="#ef4444" fillOpacity="0.1" />
+                                {mode === '3layer' && <text x="10" y={csScaleY(h1+h2 + 10)} fill="#ef4444" opacity="0.5" fontSize="12">Layer 3 (v3={v3})</text>}
+
+                                {/* Source */}
+                                <circle cx="0" cy="0" r="8" fill="#fbbf24" stroke="white" strokeWidth="2"/>
+                                
+                                {/* Receiver */}
+                                <path transform={`translate(${csScaleX(geoDist)}, 0)`} d="M -6,0 L 6,0 L 0,10 Z" fill="#f59e0b" />
+                                <text x={csScaleX(geoDist)} y="25" textAnchor="middle" fill="#f59e0b" fontSize="10">Geo</text>
+
+                                {/* Ray Paths & Particles */}
+                                <g key={animKey}>
+                                    {/* Direct Wave */}
+                                    <path d={`M 0,0 L ${csScaleX(geoDist)},0`} stroke="#3b82f6" strokeWidth="2" strokeDasharray="4,4" opacity="0.4" fill="none"/>
+                                    <circle r="6" fill="#3b82f6" stroke="white" strokeWidth="2">
+                                        <animateMotion 
+                                        dur={`${arrivalTimes.direct * animFactor}s`} 
+                                        fill="freeze" 
+                                        begin="0s" 
+                                        path={`M 0,0 L ${csScaleX(geoDist)},0`} 
+                                        rotate="auto" 
+                                        calcMode="linear" 
+                                        />
+                                    </circle>
+
+                                    {/* Reflection */}
+                                    {showReflection && (
+                                        <>
+                                        <path d={`M 0,0 L ${csScaleX(geoDist/2)},${csScaleY(h1)} L ${csScaleX(geoDist)},0`} stroke="#94a3b8" strokeWidth="2" strokeDasharray="4,4" opacity="0.3" fill="none"/>
+                                        <circle r="4" fill="#94a3b8" stroke="white" strokeWidth="1">
+                                            <animateMotion 
+                                                dur={`${arrivalTimes.reflect * animFactor}s`} 
+                                                fill="freeze" 
+                                                begin="0s" 
+                                                path={`M 0,0 L ${csScaleX(geoDist/2)},${csScaleY(h1)} L ${csScaleX(geoDist)},0`} 
+                                                rotate="auto" 
+                                                calcMode="linear" 
+                                            />
+                                        </circle>
+                                        </>
+                                    )}
+
+                                    {/* Refraction 1 */}
+                                    {rayPaths.refract1 && (
+                                        <>
+                                        {/* Generate scaled path for visualization and animation */}
+                                        {(() => {
+                                            const pts = rayPaths.refract1.split(' L ').map(p => {
+                                                const xy = p.replace('M ', '').split(',');
+                                                return { x: parseFloat(xy[0]), y: parseFloat(xy[1]) };
+                                            });
+                                            const dScaled = `M 0,0 L ${csScaleX(pts[1].x)},${csScaleY(pts[1].y)} L ${csScaleX(pts[2].x)},${csScaleY(pts[2].y)} L ${csScaleX(geoDist)},0`;
+                                            
+                                            return (
+                                                <g>
+                                                <path d={dScaled} stroke="#22c55e" strokeWidth="2" strokeDasharray="4,4" opacity="0.4" fill="none"/>
+                                                <circle r="6" fill="#22c55e" stroke="white" strokeWidth="2">
+                                                    <animateMotion 
+                                                    dur={`${arrivalTimes.refract1 * animFactor}s`} 
+                                                    fill="freeze" 
+                                                    begin="0s" 
+                                                    path={dScaled} 
+                                                    calcMode="linear"
+                                                    />
+                                                </circle>
+                                                </g>
+                                            );
+                                        })()}
+                                        </>
+                                    )}
+
+                                    {/* Refraction 2 */}
+                                    {mode === '3layer' && rayPaths.refract2 && (
+                                        <>
+                                        {(() => {
+                                            const pts = rayPaths.refract2.split(' L ').map(p => {
+                                                const xy = p.replace('M ', '').split(',');
+                                                return { x: parseFloat(xy[0]), y: parseFloat(xy[1]) };
+                                            });
+                                            
+                                            const dScaled = `M 0,0 L ${csScaleX(pts[1].x)},${csScaleY(pts[1].y)} L ${csScaleX(pts[2].x)},${csScaleY(pts[2].y)} L ${csScaleX(pts[3].x)},${csScaleY(pts[3].y)} L ${csScaleX(pts[4].x)},${csScaleY(pts[4].y)} L ${csScaleX(geoDist)},0`;
+                                            
+                                            return (
+                                                <g>
+                                                    <path d={dScaled} stroke="#ef4444" strokeWidth="2" strokeDasharray="4,4" opacity="0.4" fill="none"/>
+                                                    <circle r="6" fill="#ef4444" stroke="white" strokeWidth="2">
+                                                    <animateMotion 
+                                                        dur={`${arrivalTimes.refract2 * animFactor}s`} 
+                                                        fill="freeze" 
+                                                        begin="0s" 
+                                                        path={dScaled} 
+                                                        calcMode="linear" 
+                                                    />
+                                                    </circle>
+                                                </g>
+                                            )
+                                        })()}
+                                        </>
+                                    )}
+                                </g>
+
+                                {/* Arrival Time Labels (appear at end) */}
+                                {!isPlaying && animKey > 0 && (
+                                    <g transform={`translate(${csScaleX(geoDist) + 10}, 20)`}>
+                                        <text y="0" fontSize="10" fill="#3b82f6" fontWeight="bold">Direct: {arrivalTimes.direct.toFixed(1)}ms</text>
+                                        {arrivalTimes.refract1 && <text y="15" fontSize="10" fill="#22c55e" fontWeight="bold">Refr 1: {arrivalTimes.refract1.toFixed(1)}ms</text>}
+                                        {mode === '3layer' && arrivalTimes.refract2 && <text y="30" fontSize="10" fill="#ef4444" fontWeight="bold">Refr 2: {arrivalTimes.refract2.toFixed(1)}ms</text>}
+                                        {showReflection && <text y="45" fontSize="10" fill="#94a3b8">Refl: {arrivalTimes.reflect.toFixed(1)}ms</text>}
+                                    </g>
+                                )}
+
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-100 p-6 rounded-xl border border-slate-200">
+                            <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <Play className="text-blue-600" size={20} /> Class Activity
+                            </h3>
+                            <ActivityQuestion 
+                            question="1. Set the Geophone Distance to 150m. Which wave arrives first?"
+                            options={["Direct Wave", "Refracted Wave (Layer 2)", "Reflected Wave", "Sound Wave"]}
+                            correctIndex={1}
+                            explanation="At large distances (beyond the crossover distance), the Refracted wave (traveling through the faster, deeper layer) will overtake the Direct wave and arrive first, even though it traveled a longer path."
+                            />
+                            <ActivityQuestion 
+                            question="2. Why does the refracted wave angle look like it bends 'away' from the vertical?"
+                            options={["Because the rock is softer", "Snell's Law: moving from slow to fast medium bends rays away from the normal", "Gravity pulls it up", "It's an optical illusion"]}
+                            correctIndex={1}
+                            explanation="When a seismic wave moves from a slower medium (Layer 1) to a faster medium (Layer 2), it refracts away from the normal. At the critical angle, it refracts exactly 90 degrees along the interface."
+                            />
+                            <ActivityQuestion 
+                            question="3. What happens if Layer 2 is slower than Layer 1 (v2 < v1)?"
+                            options={["Refraction works normally", "No critical refraction occurs (rays bend towards normal)", "The waves stop completely", "The crossover distance is zero"]}
+                            correctIndex={1}
+                            explanation="For critical refraction (head waves) to occur, the lower layer must be faster. If v2 < v1, rays bend towards the normal (Snell's Law) and travel deeper into the earth, never returning to the surface as head waves."
+                            />
+                             <ActivityQuestion 
+                            question="4. If the slope of the refraction line becomes flatter (less steep), what does that indicate?"
+                            options={["The layer is thinner", "The layer is thicker", "The layer has a higher velocity", "The layer has a lower velocity"]}
+                            correctIndex={2}
+                            explanation="Slope = 1/velocity. A smaller slope (flatter line) implies a smaller 1/v, which means Velocity (v) is larger. Faster layers appear as flatter lines."
+                            />
+                            <ActivityQuestion 
+                            question="5. What physical parameter relates most directly to the 'Intercept Time' (where the green line hits the Y-axis)?"
+                            options={["Source Energy", "Layer Thickness (Depth)", "Geophone Sensitivity", "Surface Temperature"]}
+                            correctIndex={1}
+                            explanation="The time intercept (t0) is a function of thickness and velocity. If velocities are constant, a higher intercept time means the wave had to travel down and up through a thicker layer."
+                            />
+                        </div>
+
+                        </div>
+
+                        {/* Right Column: Controls */}
+                        <div className="lg:col-span-4 space-y-6">
+                        
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <div className="flex items-center justify-between mb-6">
+                            <h3 className="font-bold text-slate-800">Model Parameters</h3>
+                            <div className="flex bg-slate-100 p-1 rounded-lg">
+                                <button onClick={() => setMode('2layer')} className={`px-3 py-1 text-sm rounded-md transition ${mode === '2layer' ? 'bg-white shadow text-blue-600 font-medium' : 'text-slate-500'}`}>2 Layers</button>
+                                <button onClick={() => setMode('3layer')} className={`px-3 py-1 text-sm rounded-md transition ${mode === '3layer' ? 'bg-white shadow text-blue-600 font-medium' : 'text-slate-500'}`}>3 Layers</button>
+                            </div>
+                            </div>
+
+                            <div className="space-y-6">
+                            {/* Simulation Control */}
+                            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-100">
+                                <h4 className="font-semibold text-indigo-900 mb-4 text-sm uppercase tracking-wide flex items-center gap-2"><Timer size={14}/> Simulation Control</h4>
+                                <ControlSlider label="Geophone Distance (x)" value={geoDist} min={10} max={maxX} step={5} unit="m" onChange={(v) => { setGeoDist(v); setAnimKey(0); }} />
+                                <p className="text-xs text-indigo-700 italic">Adjust this to move the receiver in the Wave Model above.</p>
+                            </div>
+
+                            <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                <h4 className="font-semibold text-blue-900 mb-4 text-sm uppercase tracking-wide">Layer 1 (Top)</h4>
+                                <ControlSlider label="Velocity (v1)" value={v1} min={500} max={2000} step={50} unit="m/s" onChange={setV1} />
+                                <ControlSlider label="Thickness (h1)" value={h1} min={5} max={50} step={1} unit="m" onChange={setH1} />
+                            </div>
+
+                            <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                                <h4 className="font-semibold text-green-900 mb-4 text-sm uppercase tracking-wide">Layer 2 (Middle)</h4>
+                                <ControlSlider label="Velocity (v2)" value={v2} min={v1 + 100} max={4000} step={50} unit="m/s" onChange={setV2} />
+                                {mode === '3layer' && <ControlSlider label="Thickness (h2)" value={h2} min={5} max={50} step={1} unit="m" onChange={setH2} />}
+                                {v2 <= v1 && <div className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12}/> v2 must be &gt; v1 for refraction</div>}
+                            </div>
+
+                            {mode === '3layer' && (
+                                <div className="p-4 bg-red-50 rounded-lg border border-red-100">
+                                <h4 className="font-semibold text-red-900 mb-4 text-sm uppercase tracking-wide">Layer 3 (Bottom)</h4>
+                                <ControlSlider label="Velocity (v3)" value={v3} min={v2 + 100} max={5000} step={50} unit="m/s" onChange={setV3} />
+                                {v3 <= v2 && <div className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12}/> v3 must be &gt; v2 for refraction</div>}
+                                </div>
+                            )}
+
+                            <div className="pt-4 border-t border-slate-100">
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" checked={showReflection} onChange={(e) => setShowReflection(e.target.checked)} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
+                                <span className="text-slate-700 text-sm">Show Reflected Arrival (Layer 1)</span>
+                                </label>
+                            </div>
+                            </div>
+                        </div>
+                        
+                        <div className="bg-indigo-900 text-white p-5 rounded-xl shadow-lg">
+                            <h3 className="font-bold flex items-center gap-2 mb-2"><Info size={18} /> Physics Notes</h3>
+                            <ul className="text-sm space-y-2 text-indigo-100">
+                            <li>• <strong>Animation Speed:</strong> The wave particles move at relative speeds proportional to the physics. Watch how the refracted wave (Green/Red) eventually overtakes the direct wave (Blue)!</li>
+                            <li>• <strong>Snell's Law:</strong> Ray paths bend at interfaces based on velocity contrast.</li>
+                            </ul>
+                        </div>
+
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

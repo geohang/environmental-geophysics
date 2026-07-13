@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geomagnetic Exploration: Continuation Simulator</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e74c3c;
+            --ground-line: #27ae60;
+            --sensor-line: #c0392b;
+            --text: #333;
+            --shallow-color: #e67e22; /* Orange for shallow */
+            --deep-color: #8e44ad;    /* Purple for deep */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f2f5;
+            color: var(--text);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            width: 900px;
+            max-width: 100%;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #eef2f3 0%, #fff 100%);
+        }
+
+        canvas {
+            display: block;
+            cursor: default;
+        }
+
+        /* Controls Area */
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .status-display {
+            font-family: monospace;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .line-sample {
+            width: 30px;
+            height: 3px;
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-left: 4px solid #3498db;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .box-label {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Magnetic Continuation Simulator</h1>
+    <div class="subtitle">Scenario: Local Target vs. Regional Trend</div>
+
+    <div class="container">
+        
+        <div class="canvas-wrapper">
+            <canvas id="mainCanvas" width="900" height="600"></canvas>
+        </div>
+
+        <div class="controls">
+            <!-- Left Column: Geometry -->
+            <div class="control-group">
+                <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 5px; font-weight:bold; color:var(--primary);">Subsurface Models</div>
+                
+                <div class="slider-container">
+                    <label>
+                        <span style="color:var(--shallow-color);">● Local Anomaly Depth (Shallow)</span>
+                        <span id="val-depth1" class="status-display">30 m</span>
+                    </label>
+                    <input type="range" id="depthSlider1" min="10" max="100" value="30">
+                </div>
+
+                <div class="slider-container">
+                    <label>
+                        <span style="color:var(--deep-color);">● Regional Trend Depth (Deep)</span>
+                        <span id="val-depth2" class="status-display">300 m</span>
+                    </label>
+                    <input type="range" id="depthSlider2" min="100" max="500" value="300">
+                </div>
+            </div>
+
+            <!-- Right Column: Observation -->
+            <div class="control-group">
+                <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 5px; font-weight:bold; color:var(--primary);">Observation & Processing</div>
+                
+                <div class="slider-container">
+                    <label>
+                        Observation Height (h)
+                        <span id="val-height" class="status-display">0 m</span>
+                    </label>
+                    <!-- Range from -80 (downward) to +200 (upward) -->
+                    <input type="range" id="heightSlider" min="-100" max="400" value="0" step="5">
+                </div>
+
+                <div class="info-text" id="continuation-status" style="margin-top: 5px; font-weight: bold; color: #2c3e50; font-size: 0.9em;">
+                    Status: Ground Level Observation
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:5px; margin-top:5px;">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="componentsToggle" checked>
+                        <label for="componentsToggle" style="font-weight: normal;">Show Components (Regional/Local)</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="noiseToggle">
+                        <label for="noiseToggle" style="font-weight: normal;">Add Random Noise</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="line-sample" style="background:black; height: 2px;"></div>
+                <span>Ground Truth (z=0)</span>
+            </div>
+            <div class="legend-item">
+                <div class="line-sample" style="background:var(--sensor-line); height: 4px;"></div>
+                <span><strong>Total Field (z=h)</strong></span>
+            </div>
+            <div class="legend-item">
+                <div class="line-sample" style="border-top: 2px dashed var(--shallow-color); height:0;"></div>
+                <span>Local Component</span>
+            </div>
+            <div class="legend-item">
+                <div class="line-sample" style="border-top: 2px dashed var(--deep-color); height:0;"></div>
+                <span>Regional Component</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>Simulation Guide:</strong>
+            <ul>
+                <li><strong>The Scenario:</strong> A sharp, local target (Orange, depth=30m) is superimposed on a deep, broad regional basement trend (Purple, depth=300m).</li>
+                <li><strong>Ground Level (h=0):</strong> You see a small "bump" or spike riding on top of a broad hill.</li>
+                <li><strong>Upward Continuation (h > 0):</strong> As you move the sensor up (drag right), the local spike vanishes rapidly. The curve becomes smooth, representing only the Regional Trend. This is how geophysicists separate deep basement structures from surface noise.</li>
+                <li><strong>Downward Continuation (h < 0):</strong> As you move closer to the source (drag left), the local spike grows taller and sharper, separating from the background. This enhances resolution but is mathematically unstable (see what happens with noise!).</li>
+            </ul>
+        </div>
+    </div>
+
+<script>
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // State
+    const state = {
+        width: 900,
+        height: 600,
+        groundY: 400, // Pixel Y coordinate of the ground surface
+        scale: 1.0,   // Pixels per meter (approx)
+        
+        // Bodies
+        // Body 1: Shallow, Local Target (Weaker M, but close)
+        body1: { x: 420, depth: 30, color: '#e67e22', strength: 1.0 }, 
+        // Body 2: Deep, Regional Trend (Very Strong M to show up at depth)
+        body2: { x: 480, depth: 300, color: '#8e44ad', strength: 25.0 }, 
+        
+        obsHeight: 0, // Observation height (meters, + is up, - is down)
+        
+        // Base Magnetic Moment Scaling
+        M_base: 2000, 
+        
+        noise: false,
+        showComponents: true,
+        noiseData: [] // Cache noise to keep it static while moving slider
+    };
+
+    // UI Elements
+    const depthSlider1 = document.getElementById('depthSlider1');
+    const depthSlider2 = document.getElementById('depthSlider2');
+    const heightSlider = document.getElementById('heightSlider');
+    const noiseToggle = document.getElementById('noiseToggle');
+    const componentsToggle = document.getElementById('componentsToggle');
+    
+    const valDepth1 = document.getElementById('val-depth1');
+    const valDepth2 = document.getElementById('val-depth2');
+    const valHeight = document.getElementById('val-height');
+    const statusText = document.getElementById('continuation-status');
+
+    // Generate static noise array
+    function generateNoise() {
+        state.noiseData = [];
+        for(let i=0; i<=state.width; i++) {
+            // Higher frequency noise for realism
+            state.noiseData.push((Math.random() - 0.5) * 25); 
+        }
+    }
+    generateNoise();
+
+    // Event Listeners
+    depthSlider1.addEventListener('input', update);
+    depthSlider2.addEventListener('input', update);
+    heightSlider.addEventListener('input', update);
+    noiseToggle.addEventListener('change', () => {
+        state.noise = noiseToggle.checked;
+        if(state.noise) generateNoise();
+        draw();
+    });
+    componentsToggle.addEventListener('change', () => {
+        state.showComponents = componentsToggle.checked;
+        draw();
+    });
+
+    function update() {
+        state.body1.depth = parseInt(depthSlider1.value);
+        state.body2.depth = parseInt(depthSlider2.value);
+        state.obsHeight = parseInt(heightSlider.value);
+
+        // Update Text
+        valDepth1.textContent = state.body1.depth + " m";
+        valDepth2.textContent = state.body2.depth + " m";
+        valHeight.textContent = state.obsHeight + " m";
+
+        // Update Status Text
+        if (state.obsHeight > 0) {
+            statusText.textContent = `Status: Upward Continuation (+${state.obsHeight}m) - Filtering Local Anomalies`;
+            statusText.style.color = "#27ae60";
+        } else if (state.obsHeight < 0) {
+            statusText.textContent = `Status: Downward Continuation (${state.obsHeight}m) - Enhancing Resolution`;
+            statusText.style.color = "#c0392b";
+        } else {
+            statusText.textContent = "Status: Ground Level Observation";
+            statusText.style.color = "#2c3e50";
+        }
+
+        // Limit downward continuation physically
+        const minDepth = Math.min(state.body1.depth, state.body2.depth);
+        if (state.obsHeight <= -minDepth + 10) {
+            statusText.textContent += " [Warning: Near Source Singularity!]";
+        }
+
+        draw();
+    }
+
+    // --- Physics Engine ---
+
+    // Calculate Vertical Field (Za) for a 2D Horizontal Cylinder (Line Source)
+    // 2D approximation decays as 1/r^2. 
+    function calculateFieldAtPoint(x, z, bodyX, bodyZ, strengthFactor) {
+        const dx = x - bodyX;
+        const dz = z - bodyZ; // z is obs, bodyZ is source
+        
+        const r2 = dx*dx + dz*dz;
+        
+        // Singularity protection
+        if (r2 < 50) return 5000; 
+
+        // 2D Cylinder Formula: Za = 2*M * (z^2 - x^2) / (x^2 + z^2)^2
+        const D = Math.abs(dz); 
+        
+        // Total M = Base * Specific Body Strength
+        const K = state.M_base * strengthFactor * 50; 
+        
+        // Vertical field of vertical line source (2D)
+        const val = K * (D*D - dx*dx) / (r2 * r2);
+        
+        return val;
+    }
+
+    function getAnomalies(x, heightOffset) {
+        const obsZ = -heightOffset; 
+        
+        // Calculate components separately
+        const val1 = calculateFieldAtPoint(x, obsZ, state.body1.x, state.body1.depth, state.body1.strength);
+        const val2 = calculateFieldAtPoint(x, obsZ, state.body2.x, state.body2.depth, state.body2.strength);
+        
+        return {
+            v1: val1,
+            v2: val2,
+            total: val1 + val2
+        };
+    }
+
+    // --- Drawing ---
+
+    function draw() {
+        ctx.clearRect(0, 0, state.width, state.height);
+        drawWorld();
+        drawGraphs();
+    }
+
+    function drawWorld() {
+        const gY = state.groundY;
+        
+        // Sky
+        ctx.fillStyle = "#f4f6f7";
+        ctx.fillRect(0, 0, state.width, gY);
+        
+        // Earth
+        ctx.fillStyle = "#e9e9e3";
+        ctx.fillRect(0, gY, state.width, state.height - gY);
+        
+        // Ground Line
+        ctx.beginPath();
+        ctx.moveTo(0, gY);
+        ctx.lineTo(state.width, gY);
+        ctx.strokeStyle = "#27ae60";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = "#27ae60";
+        ctx.fillText("Ground (z=0)", 10, gY + 15);
+
+        // Sensor Line
+        const pixelScale = 1.0; 
+        const sensorY = gY - (state.obsHeight * pixelScale);
+        
+        // Limit drawing of sensor line if it goes off screen
+        if (sensorY > 0 && sensorY < state.height) {
+            ctx.beginPath();
+            ctx.moveTo(0, sensorY);
+            ctx.lineTo(state.width, sensorY);
+            ctx.strokeStyle = "#c0392b";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = "#c0392b";
+            ctx.fillText(`Observation Plane (z=${state.obsHeight}m)`, 10, sensorY - 5);
+        }
+
+        // Draw Bodies
+        // Body 1 (Small, Local)
+        drawBody(state.body1.x, gY + state.body1.depth, state.body1.color, "Local Anomaly", 20);
+        // Body 2 (Large, Regional - visually represented as larger)
+        drawBody(state.body2.x, gY + state.body2.depth, state.body2.color, "Regional Trend", 60);
+    }
+
+    function drawBody(x, y, color, label, size) {
+        ctx.fillStyle = color;
+        // Check if body is in visible range
+        if (y < state.height + 100) {
+            ctx.fillRect(x - size/2, y - size/2, size, size);
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x - size/2, y - size/2, size, size);
+            
+            ctx.fillStyle = "#333";
+            ctx.font = "12px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(label, x, y + size/2 + 15);
+            ctx.textAlign = "left"; // Reset
+        }
+    }
+
+    function drawGraphs() {
+        const zeroY = 200; // Moved down slightly to give more headroom for spikes
+        const scaleY = 0.3; // Scaled down to fit stronger regional signals
+
+        // Axis
+        ctx.beginPath();
+        ctx.moveTo(0, zeroY);
+        ctx.lineTo(state.width, zeroY);
+        ctx.strokeStyle = "#ccc";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.fillStyle = "#999";
+        ctx.fillText("0 nT", 5, zeroY - 2);
+
+        // 1. Draw Ground Reference (Faint Black)
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(0,0,0,0.2)";
+        ctx.lineWidth = 2;
+        for (let x = 0; x < state.width; x+=3) {
+            let vals = getAnomalies(x, 0); 
+            let val = vals.total;
+            if (state.noise) val += state.noiseData[x] || 0;
+            const plotY = zeroY - val * scaleY;
+            if (x===0) ctx.moveTo(x, plotY); else ctx.lineTo(x, plotY);
+        }
+        ctx.stroke();
+
+        // 2. Draw Continued Fields
+        
+        // Prepare arrays for paths
+        const pathTotal = [];
+        const path1 = [];
+        const path2 = [];
+
+        // Noise Factor Calculation
+        let noiseFactor = 1.0;
+        if (state.obsHeight < 0) {
+            // Downward: Amplify significantly
+            noiseFactor = 1.0 + (Math.abs(state.obsHeight) / 5); 
+        } else {
+            // Upward: Attenuate
+            noiseFactor = 1.0 / (1.0 + state.obsHeight / 20);
+        }
+
+        for (let x = 0; x < state.width; x+=3) {
+            let vals = getAnomalies(x, state.obsHeight);
+            
+            let noiseVal = (state.noise ? (state.noiseData[x]||0)*noiseFactor : 0);
+            
+            pathTotal.push({x:x, y: zeroY - (vals.total + noiseVal) * scaleY});
+            path1.push({x:x, y: zeroY - vals.v1 * scaleY});
+            path2.push({x:x, y: zeroY - vals.v2 * scaleY});
+        }
+
+        // Draw Components (if enabled)
+        if (state.showComponents) {
+            // Shallow Component (Orange dashed)
+            ctx.beginPath();
+            ctx.strokeStyle = state.body1.color;
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 5]);
+            for(let p of path1) {
+                // simple clip visual
+                let y = Math.max(p.y, 0); 
+                y = Math.min(y, state.groundY);
+                ctx.lineTo(p.x, y);
+            }
+            ctx.stroke();
+
+            // Deep Component (Purple dashed)
+            ctx.beginPath();
+            ctx.strokeStyle = state.body2.color;
+            ctx.setLineDash([5, 5]);
+            for(let p of path2) {
+                let y = Math.max(p.y, 0);
+                y = Math.min(y, state.groundY);
+                ctx.lineTo(p.x, y);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Draw Total (Red Solid)
+        ctx.beginPath();
+        ctx.strokeStyle = "#c0392b";
+        ctx.lineWidth = 3;
+        for(let i=0; i<pathTotal.length; i++) {
+            let p = pathTotal[i];
+            // Clip to avoid drawing over ground controls
+            let y = Math.max(p.y, 0);
+            y = Math.min(y, state.groundY);
+            
+            if(i===0) ctx.moveTo(p.x, y); else ctx.lineTo(p.x, y);
+        }
+        ctx.stroke();
+    }
+
+    // Init
+    update();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1D Magnetotelluric Sounding Explorer</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{--primary:#38bdf8;--accent:#fbbf24;--danger:#ef5350;--success:#4ade80;--bg-dark:#0f172a;--card-bg:#1e293b;--text-main:#f1f5f9;--text-muted:#94a3b8;}
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6;margin:0;}
+header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#0f172a,#1e293b);border-bottom:1px solid #334155;}
+h1{font-size:2rem;color:var(--primary);margin:0;}
+.subtitle{color:var(--text-muted);margin-top:8px;}
+.container{max-width:1100px;margin:0 auto;padding:20px;}
+.panel{background:var(--card-bg);border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,.3);}
+canvas{width:100%;display:block;background:#0b1220;border-radius:8px;}
+.controls{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:720px){.controls{grid-template-columns:1fr 1fr 1fr;}}
+.ctrl label{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px;font-size:.82rem;}
+.ctrl label span{color:var(--accent);}
+input[type=range]{width:100%;accent-color:var(--primary);}
+.formula{background:rgba(56,189,248,.1);border-left:4px solid var(--primary);padding:12px 16px;margin-top:16px;border-radius:4px;font-size:.9rem;}
+h3{color:var(--accent);margin:6px 0;}
+</style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Magnetotellurics</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+<header>
+  <h1>1D Magnetotelluric Sounding Explorer</h1>
+  <div class="subtitle">A three-layer earth. See how the apparent-resistivity and phase curves respond as you change each layer, and how longer periods sense deeper.</div>
+</header>
+<div class="container">
+  <div class="panel">
+    <canvas id="cv" width="1040" height="440"></canvas>
+  </div>
+  <div class="panel">
+    <h3>Layer 1 (top)</h3>
+    <div class="controls">
+      <div class="ctrl"><label>ρ₁ <span id="r1v">100 Ω·m</span></label><input id="r1" type="range" min="0.5" max="4" value="2" step="0.05"></div>
+      <div class="ctrl"><label>thickness h₁ <span id="h1v">300 m</span></label><input id="h1" type="range" min="1.7" max="3.7" value="2.48" step="0.02"></div>
+      <div class="ctrl"><label>ρ₂ (middle) <span id="r2v">10 Ω·m</span></label><input id="r2" type="range" min="0.5" max="4" value="1" step="0.05"></div>
+    </div>
+    <h3 style="margin-top:16px;">Layer 2 thickness &amp; basement</h3>
+    <div class="controls">
+      <div class="ctrl"><label>thickness h₂ <span id="h2v">1000 m</span></label><input id="h2" type="range" min="2" max="4" value="3" step="0.02"></div>
+      <div class="ctrl"><label>ρ₃ (basement) <span id="r3v">1000 Ω·m</span></label><input id="r3" type="range" min="0.5" max="4.3" value="3" step="0.05"></div>
+      <div class="ctrl"><label style="visibility:hidden">.</label></div>
+    </div>
+    <div class="formula">
+      Apparent resistivity $\rho_a=\dfrac{1}{\omega\mu_0}|Z|^2$ and phase $\phi=\arg Z$, where the surface impedance $Z$ comes from the layered-earth recursion. A phase above 45° means resistivity decreasing with depth; below 45° means increasing.
+    </div>
+  </div>
+</div>
+<script>
+// minimal complex arithmetic
+const C=(re,im=0)=>({re,im});
+const cadd=(a,b)=>C(a.re+b.re,a.im+b.im);
+const csub=(a,b)=>C(a.re-b.re,a.im-b.im);
+const cmul=(a,b)=>C(a.re*b.re-a.im*b.im,a.re*b.im+a.im*b.re);
+const cdiv=(a,b)=>{const d=b.re*b.re+b.im*b.im;return C((a.re*b.re+a.im*b.im)/d,(a.im*b.re-a.re*b.im)/d);};
+const cabs=a=>Math.hypot(a.re,a.im);
+function csqrt(a){const r=cabs(a),re=Math.sqrt((r+a.re)/2);let im=Math.sqrt((r-a.re)/2);if(a.im<0)im=-im;return C(re,im);}
+function cexp(a){const e=Math.exp(a.re);return C(e*Math.cos(a.im),e*Math.sin(a.im));}
+const MU=4*Math.PI*1e-7;
+
+function mt1d(period, rhos, hs){
+  const w=2*Math.PI/period;
+  // bottom half-space intrinsic impedance
+  const N=rhos.length;
+  // k_j = sqrt(i w mu / rho_j); Zc_j = i w mu / k_j
+  function kj(rho){return csqrt(C(0, w*MU/rho));}
+  function Zc(rho){const k=kj(rho);return cdiv(C(0,w*MU),k);}
+  let Z=Zc(rhos[N-1]);           // basement
+  for(let j=N-2;j>=0;j--){
+    const zc=Zc(rhos[j]);const k=kj(rhos[j]);
+    const R=cdiv(csub(zc,Z),cadd(zc,Z));
+    const e=cexp(cmul(C(-2,0),cmul(k,C(hs[j],0))));
+    const num=csub(C(1,0),cmul(R,e));
+    const den=cadd(C(1,0),cmul(R,e));
+    Z=cmul(zc,cdiv(num,den));
+  }
+  const rhoa=(1/(w*MU))*cabs(Z)*cabs(Z);
+  let phase=Math.atan2(Z.im,Z.re)*180/Math.PI;
+  return {rhoa,phase};
+}
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+function draw(){
+  const r1=Math.pow(10,+document.getElementById('r1').value);
+  const r2=Math.pow(10,+document.getElementById('r2').value);
+  const r3=Math.pow(10,+document.getElementById('r3').value);
+  const h1=Math.pow(10,+document.getElementById('h1').value);
+  const h2=Math.pow(10,+document.getElementById('h2').value);
+  document.getElementById('r1v').textContent=r1.toFixed(r1<10?1:0)+' Ω·m';
+  document.getElementById('r2v').textContent=r2.toFixed(r2<10?1:0)+' Ω·m';
+  document.getElementById('r3v').textContent=r3.toFixed(r3<10?1:0)+' Ω·m';
+  document.getElementById('h1v').textContent=h1<1000?h1.toFixed(0)+' m':(h1/1000).toFixed(2)+' km';
+  document.getElementById('h2v').textContent=h2<1000?h2.toFixed(0)+' m':(h2/1000).toFixed(2)+' km';
+  // sweep periods 1e-3 .. 1e3 s
+  const P0=-3,P1=3,NP=120,rhoArr=[],phArr=[],perArr=[];
+  let rmin=1e9,rmax=1e-9;
+  for(let i=0;i<=NP;i++){const per=Math.pow(10,P0+(P1-P0)*i/NP);const m=mt1d(per,[r1,r2,r3],[h1,h2]);
+    perArr.push(per);rhoArr.push(m.rhoa);phArr.push(m.phase);rmin=Math.min(rmin,m.rhoa);rmax=Math.max(rmax,m.rhoa);}
+  rmin=Math.min(rmin,r1,r2,r3)*0.6;rmax=Math.max(rmax,r1,r2,r3)*1.6;
+  const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  // two stacked plots: apparent resistivity (top), phase (bottom)
+  const split=H*0.60, gx0=70,gx1=W-20;
+  const lymin=Math.log10(rmin),lymax=Math.log10(rmax);
+  const px=p=>gx0+(gx1-gx0)*(Math.log10(p)-P0)/(P1-P0);
+  const pyR=r=>30+(split-60)*(1-(Math.log10(r)-lymin)/(lymax-lymin));
+  const pyP=ph=>split+10+(H-split-40)*(1-ph/90);
+  // grids
+  ctx.font='11px Segoe UI';ctx.textAlign='center';
+  for(let e=P0;e<=P1;e++){const x=px(Math.pow(10,e));ctx.strokeStyle='#1e293b';ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,H-30);ctx.stroke();
+    ctx.fillStyle='#475569';ctx.fillText('10'+(e)+' s',x,H-14);}
+  // rho axis labels
+  ctx.textAlign='right';ctx.fillStyle='#475569';
+  for(let e=Math.ceil(lymin);e<=Math.floor(lymax);e++){const y=pyR(Math.pow(10,e));ctx.fillText('10'+e,gx0-6,y+3);}
+  ctx.fillStyle='#38bdf8';ctx.textAlign='left';ctx.font='12px Segoe UI';ctx.fillText('apparent resistivity ρₐ (Ω·m)',gx0,24);
+  // rho curve
+  ctx.strokeStyle='#38bdf8';ctx.lineWidth=2.5;ctx.beginPath();
+  rhoArr.forEach((r,i)=>{const X=px(perArr[i]),Y=pyR(r);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});ctx.stroke();
+  // phase panel
+  ctx.strokeStyle='#334155';ctx.beginPath();ctx.moveTo(gx0,pyP(45));ctx.lineTo(gx1,pyP(45));ctx.stroke();
+  ctx.fillStyle='#64748b';ctx.textAlign='right';ctx.fillText('45°',gx0-6,pyP(45)+3);ctx.fillText('90°',gx0-6,pyP(90)+3);ctx.fillText('0°',gx0-6,pyP(0)+3);
+  ctx.fillStyle='#fbbf24';ctx.textAlign='left';ctx.fillText('phase φ (degrees)',gx0,split+8);
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.beginPath();
+  phArr.forEach((p,i)=>{const X=px(perArr[i]),Y=pyP(p);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});ctx.stroke();
+}
+['r1','r2','r3','h1','h2'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+draw();
+if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();
+</script>
+</body>
+</html>

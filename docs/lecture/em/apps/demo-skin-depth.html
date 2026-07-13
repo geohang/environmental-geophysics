@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skin Depth Calculator & Visualizer</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{--primary:#38bdf8;--accent:#fbbf24;--danger:#ef5350;--success:#4ade80;--bg-dark:#0f172a;--card-bg:#1e293b;--text-main:#f1f5f9;--text-muted:#94a3b8;}
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6;margin:0;}
+header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#0f172a,#1e293b);border-bottom:1px solid #334155;}
+h1{font-size:2rem;color:var(--primary);margin:0;}
+.subtitle{color:var(--text-muted);margin-top:8px;}
+.container{max-width:1100px;margin:0 auto;padding:20px;}
+.panel{background:var(--card-bg);border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,.3);}
+canvas{width:100%;display:block;background:#0b1220;border-radius:8px;}
+.controls{display:grid;grid-template-columns:1fr;gap:16px;}
+@media(min-width:720px){.controls{grid-template-columns:1fr 1fr;}}
+.ctrl label{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px;font-size:.9rem;}
+.ctrl label span{color:var(--accent);}
+input[type=range]{width:100%;accent-color:var(--primary);}
+.big{text-align:center;margin:16px 0;}
+.big .v{font-size:2.6rem;font-weight:bold;color:var(--success);}
+.big .l{color:var(--text-muted);}
+.formula{background:rgba(56,189,248,.1);border-left:4px solid var(--primary);padding:12px 16px;margin-top:16px;border-radius:4px;font-size:.95rem;}
+</style>
+</head>
+<body>
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Electromagnetic Methods</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+<header>
+  <h1>Skin Depth Calculator & Visualizer</h1>
+  <div class="subtitle">How deep does an EM field reach? Skin depth sets the answer, and it depends on frequency and ground conductivity.</div>
+</header>
+<div class="container">
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl"><label>Frequency $f$ <span id="fv">1 kHz</span></label><input id="f" type="range" min="0" max="6" value="3" step="0.05"></div>
+      <div class="ctrl"><label>Resistivity $\rho$ <span id="rv">100 Ω·m</span></label><input id="r" type="range" min="0" max="4" value="2" step="0.05"></div>
+    </div>
+    <div class="big"><div class="v" id="skin">–</div><div class="l">skin depth δ (field falls to 1/e ≈ 37%)</div></div>
+    <canvas id="cv" width="1040" height="300"></canvas>
+    <div class="formula">
+      $\delta = \sqrt{\dfrac{2}{\omega\mu\sigma}} \approx 503\sqrt{\dfrac{\rho}{f}}$ (metres, with $\rho$ in Ω·m and $f$ in Hz). Lower frequency and more resistive ground both push the field deeper.
+    </div>
+  </div>
+</div>
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+function draw(){
+  const f=Math.pow(10,+document.getElementById('f').value);   // Hz
+  const rho=Math.pow(10,+document.getElementById('r').value);  // ohm-m
+  const delta=503*Math.sqrt(rho/f);                            // m
+  document.getElementById('fv').textContent = f>=1000?(f/1000).toFixed(f>=1e4?0:1)+' kHz':f.toFixed(0)+' Hz';
+  document.getElementById('rv').textContent = rho.toFixed(rho<10?1:0)+' Ω·m';
+  document.getElementById('skin').textContent = delta<1?(delta*100).toFixed(0)+' cm' : delta<1000?delta.toFixed(1)+' m' : (delta/1000).toFixed(2)+' km';
+  const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  // amplitude decay exp(-z/delta) over depth axis 0..3*delta (auto)
+  const ZMAX=3*delta;
+  const px=z=>60+(W-80)*z/ZMAX, py=a=>H-40-(H-70)*a;
+  // ground shading (attenuation heatmap)
+  for(let x=60;x<W-20;x++){
+    const z=ZMAX*(x-60)/(W-80);const a=Math.exp(-z/delta);
+    ctx.fillStyle=`rgba(56,189,248,${0.08+0.5*a})`;ctx.fillRect(x,40,1,H-80);
+  }
+  // curve
+  ctx.strokeStyle='#38bdf8';ctx.lineWidth=3;ctx.beginPath();
+  for(let k=0;k<=200;k++){const z=ZMAX*k/200;const a=Math.exp(-z/delta);k?ctx.lineTo(px(z),py(a)):ctx.moveTo(px(z),py(a));}
+  ctx.stroke();
+  // 1/e marker at z=delta
+  ctx.strokeStyle='#fbbf24';ctx.setLineDash([6,4]);ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(px(delta),40);ctx.lineTo(px(delta),H-40);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24';ctx.font='13px Segoe UI';ctx.textAlign='center';
+  ctx.fillText('z = δ  (37%)',px(delta),30);
+  // axes labels
+  ctx.fillStyle='#64748b';ctx.font='11px Segoe UI';ctx.textAlign='left';
+  ctx.fillText('field amplitude →',8,H/2);
+  ctx.textAlign='center';
+  for(let m=0;m<=3;m++){const z=delta*m;ctx.fillText(z<1?(z*100).toFixed(0)+'cm':z.toFixed(z<10?1:0)+'m',px(z),H-22);}
+  ctx.fillText('depth →',W-60,H-22);
+}
+document.getElementById('f').addEventListener('input',draw);
+document.getElementById('r').addEventListener('input',draw);
+draw();
+</script>
+</body>
+</html>

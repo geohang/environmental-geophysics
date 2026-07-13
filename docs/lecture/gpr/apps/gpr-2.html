@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPR Interactive Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        
+        .math-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+
+        .radargram-canvas {
+            background-color: #000;
+        }
+
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="p-6 min-h-screen flex items-center justify-center">
+<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
+  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
+  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
+  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+</div>
+
+
+    <div class="max-w-6xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-slate-200">
+        
+        <!-- Left Panel: Controls & Instructions -->
+        <div class="w-full md:w-1/3 bg-slate-50 p-6 border-r border-slate-200 flex flex-col gap-6 h-[800px] overflow-y-auto">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-satellite-dish text-blue-600"></i> GPR Simulator
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">Class Activity: Hyperbola Formation</p>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="font-semibold text-slate-800 mb-3"><i class="fa-solid fa-sliders text-slate-400 mr-2"></i> Environment Controls</h2>
+                
+                <!-- Material Dropdown -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Soil Material (Dielectric &epsilon;<sub>r</sub>)</label>
+                    <select id="materialSelect" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                        <option value="1">Air (&epsilon;r = 1, V = 0.30 m/ns)</option>
+                        <option value="4" selected>Dry Sand (&epsilon;r = 4, V = 0.15 m/ns)</option>
+                        <option value="9">Dry Concrete (&epsilon;r = 9, V = 0.10 m/ns)</option>
+                        <option value="25">Wet Soil (&epsilon;r = 25, V = 0.06 m/ns)</option>
+                        <option value="80">Fresh Water (&epsilon;r = 80, V = 0.03 m/ns)</option>
+                    </select>
+                </div>
+
+                <!-- Custom Target Instructions -->
+                <div class="mb-4 bg-blue-50 p-3 rounded-lg border border-blue-100">
+                    <p class="text-sm text-blue-700 font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-hand-pointer"></i> Click on the Physical World canvas to bury new targets!
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-2 mt-6">
+                    <button id="startBtn" class="flex-1 min-w-[120px] bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Scan
+                    </button>
+                    <button id="resetBtn" title="Reset Scan" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-medium py-2 px-4 rounded-lg transition-colors">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button id="clearBtn" title="Clear All Targets" class="bg-red-100 hover:bg-red-200 text-red-700 font-medium py-2 px-4 rounded-lg transition-colors">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Real-time Math Display -->
+            <div class="bg-slate-800 text-slate-100 p-4 rounded-xl shadow-sm">
+                <h2 class="font-semibold text-slate-300 mb-3 text-sm uppercase tracking-wider">Real-Time Data</h2>
+                <div class="space-y-2 text-sm math-font">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Velocity (v):</span>
+                        <span id="velDisplay" class="text-green-400">0.150 m/ns</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Cart Dist (x):</span>
+                        <span id="xDisplay" class="text-yellow-400">0.00 m</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Nearest (d):</span>
+                        <span id="dDisplay" class="text-yellow-400">0.00 m</span>
+                    </div>
+                    <div class="flex justify-between border-t border-slate-600 pt-2 mt-2">
+                        <span class="text-slate-400">Nearest TWT:</span>
+                        <span id="twtDisplay" class="text-white font-bold">0.0 ns</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Educational Notes -->
+            <div class="text-sm text-slate-600 bg-blue-50 p-4 rounded-xl border border-blue-100 mt-auto">
+                <p class="font-semibold text-blue-800 mb-1"><i class="fa-solid fa-lightbulb"></i> Class Activity</p>
+                <p class="mb-2">1. Note the shape of the hyperbola.</p>
+                <p class="mb-2">2. Change the soil to <strong>Wet Soil</strong>. Run the scan again. Why is the hyperbola steeper and deeper?</p>
+                <p><em>(Hint: Look at the velocity and TWT!)</em></p>
+            </div>
+        </div>
+
+        <!-- Right Panel: Visualizations -->
+        <div class="w-full md:w-2/3 p-6 flex flex-col gap-4 h-[800px]">
+            
+            <!-- Physical World Canvas -->
+            <div class="flex-1 flex flex-col relative">
+                <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Physical World</h3>
+                <div class="relative flex-1 rounded-xl overflow-hidden border-2 border-slate-200">
+                    <canvas id="physicalCanvas"></canvas>
+                    <div class="absolute top-2 left-2 bg-white/80 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-slate-600">Cross-Section (Depth: 0m to 5m)</div>
+                </div>
+            </div>
+
+            <!-- Radargram Canvas -->
+            <div class="flex-1 flex flex-col relative">
+                <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Radargram (B-Scan)</h3>
+                <div class="relative flex-1 rounded-xl overflow-hidden border-2 border-slate-800 bg-black">
+                    <canvas id="radargramCanvas" class="radargram-canvas"></canvas>
+                    <div class="absolute top-2 left-2 bg-black/80 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-slate-400 border border-slate-700">Time (0ns to 100ns)</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- CONSTANTS & CONFIG ---
+        const physicalCanvas = document.getElementById('physicalCanvas');
+        const pCtx = physicalCanvas.getContext('2d');
+        const radargramCanvas = document.getElementById('radargramCanvas');
+        const rCtx = radargramCanvas.getContext('2d');
+        
+        // Speed of light in vacuum (m/ns)
+        const c = 0.3; 
+        
+        // World Bounds
+        const worldWidthMeters = 10;
+        const worldDepthMeters = 5;
+        const maxTimeNs = 100;
+
+        // Target Configuration
+        let targets = [
+            { x: 3.0, z: 1.5 },
+            { x: 5.0, z: 2.5 },
+            { x: 7.0, z: 1.0 }
+        ];
+        let dielectric = 4.0;
+        let velocity = c / Math.sqrt(dielectric);
+
+        // Animation State
+        let isPlaying = false;
+        let cartX = 0; // Starts at 0 meters
+        let radargramData = []; // Stores {x, reflections: []}
+        let animationId;
+
+        // --- RESIZE HANDLING ---
+        function resizeCanvases() {
+            const pRect = physicalCanvas.parentElement.getBoundingClientRect();
+            physicalCanvas.width = pRect.width;
+            physicalCanvas.height = pRect.height;
+
+            const rRect = radargramCanvas.parentElement.getBoundingClientRect();
+            radargramCanvas.width = rRect.width;
+            radargramCanvas.height = rRect.height;
+            
+            draw();
+        }
+        window.addEventListener('resize', resizeCanvases);
+
+        // --- MATH HELPERS ---
+        function getDistance(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        }
+
+        // Coordinate mapping (Meters -> Pixels)
+        function mToPxX(meters, canvas) {
+            return (meters / worldWidthMeters) * canvas.width;
+        }
+        function mToPxY(meters, canvas) {
+            return (meters / worldDepthMeters) * canvas.height;
+        }
+        function nsToPxY(ns, canvas) {
+            return (ns / maxTimeNs) * canvas.height;
+        }
+
+        // --- DRAWING FUNCTIONS ---
+        function drawPhysicalWorld() {
+            pCtx.clearRect(0, 0, physicalCanvas.width, physicalCanvas.height);
+
+            // 1. Draw Soil Background (color based on dielectric)
+            let soilColor = '#e2e8f0';
+            if(dielectric == 4) soilColor = '#fde68a'; // Sand
+            if(dielectric == 9) soilColor = '#cbd5e1'; // Concrete
+            if(dielectric == 25) soilColor = '#a1a1aa'; // Wet Soil
+            if(dielectric == 80) soilColor = '#bae6fd'; // Water
+            if(dielectric == 1) soilColor = '#ffffff'; // Air
+
+            pCtx.fillStyle = soilColor;
+            pCtx.fillRect(0, mToPxY(0, physicalCanvas), physicalCanvas.width, physicalCanvas.height);
+            
+            // Draw surface line
+            pCtx.beginPath();
+            pCtx.moveTo(0, mToPxY(0.2, physicalCanvas));
+            pCtx.lineTo(physicalCanvas.width, mToPxY(0.2, physicalCanvas));
+            pCtx.strokeStyle = '#475569';
+            pCtx.lineWidth = 2;
+            pCtx.stroke();
+
+            // 2. Draw Targets (Pipes)
+            targets.forEach(t => {
+                const tPxX = mToPxX(t.x, physicalCanvas);
+                const tPxY = mToPxY(t.z, physicalCanvas);
+                
+                pCtx.beginPath();
+                pCtx.arc(tPxX, tPxY, 15, 0, Math.PI * 2);
+                pCtx.fillStyle = '#ef4444'; // Red pipe
+                pCtx.fill();
+                pCtx.strokeStyle = '#991b1b';
+                pCtx.lineWidth = 3;
+                pCtx.stroke();
+            });
+
+            // 3. Draw Radar Beam / Waves if playing
+            const cartPxX = mToPxX(cartX, physicalCanvas);
+            const cartPxY = mToPxY(0.1, physicalCanvas); // Cart sits on surface
+
+            if (isPlaying || cartX > 0) {
+                // Draw beam cone
+                pCtx.beginPath();
+                pCtx.moveTo(cartPxX, cartPxY);
+                pCtx.lineTo(cartPxX - 150, physicalCanvas.height);
+                pCtx.lineTo(cartPxX + 150, physicalCanvas.height);
+                pCtx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+                pCtx.fill();
+
+                // Find closest target to draw the connecting line
+                if (cartX < worldWidthMeters && targets.length > 0) {
+                    let closestTarget = targets[0];
+                    let minDist = getDistance(cartX, 0, closestTarget.x, closestTarget.z);
+                    
+                    for(let i=1; i<targets.length; i++) {
+                        let d = getDistance(cartX, 0, targets[i].x, targets[i].z);
+                        if(d < minDist) {
+                            minDist = d;
+                            closestTarget = targets[i];
+                        }
+                    }
+
+                    const tPxX = mToPxX(closestTarget.x, physicalCanvas);
+                    const tPxY = mToPxY(closestTarget.z, physicalCanvas);
+
+                    // Draw connecting line to nearest target
+                    pCtx.beginPath();
+                    pCtx.moveTo(cartPxX, cartPxY);
+                    pCtx.lineTo(tPxX, tPxY);
+                    pCtx.strokeStyle = 'rgba(59, 130, 246, 0.5)';
+                    pCtx.setLineDash([5, 5]);
+                    pCtx.lineWidth = 2;
+                    pCtx.stroke();
+                    pCtx.setLineDash([]);
+                }
+            }
+
+            // 4. Draw GPR Cart
+            pCtx.fillStyle = '#1e293b';
+            pCtx.fillRect(cartPxX - 20, cartPxY - 20, 40, 20); // Body
+            pCtx.fillStyle = '#fbbf24';
+            pCtx.fillRect(cartPxX - 15, cartPxY, 30, 10); // Antenna
+            
+            // Wheels
+            pCtx.beginPath(); pCtx.arc(cartPxX - 12, cartPxY + 10, 6, 0, Math.PI*2); pCtx.fillStyle='#334155'; pCtx.fill();
+            pCtx.beginPath(); pCtx.arc(cartPxX + 12, cartPxY + 10, 6, 0, Math.PI*2); pCtx.fill();
+        }
+
+        function drawRadargram() {
+            // Draw background
+            rCtx.fillStyle = '#0f172a';
+            rCtx.fillRect(0, 0, radargramCanvas.width, radargramCanvas.height);
+
+            // Draw grid lines
+            rCtx.strokeStyle = '#1e293b';
+            rCtx.lineWidth = 1;
+            for(let i = 0; i <= maxTimeNs; i += 20) {
+                const y = nsToPxY(i, radargramCanvas);
+                rCtx.beginPath(); rCtx.moveTo(0, y); rCtx.lineTo(radargramCanvas.width, y); rCtx.stroke();
+                if(i > 0) {
+                    rCtx.fillStyle = '#475569';
+                    rCtx.font = '10px Arial';
+                    rCtx.fillText(i + ' ns', 5, y - 5);
+                }
+            }
+
+            // Draw historical trace data (The Hyperbola)
+            rCtx.lineWidth = 3;
+            for (let i = 0; i < radargramData.length; i++) {
+                const trace = radargramData[i];
+                const pxX = mToPxX(trace.x, radargramCanvas);
+                
+                trace.reflections.forEach(ref => {
+                    const pxY = nsToPxY(ref.twt, radargramCanvas);
+
+                    // Draw standard GPR wavelet representation (black/white/black dot)
+                    rCtx.fillStyle = `rgba(255, 255, 255, ${ref.intensity})`;
+                    rCtx.beginPath();
+                    rCtx.arc(pxX, pxY, 3, 0, Math.PI*2);
+                    rCtx.fill();
+
+                    // Add slight ringing (typical GPR artifact)
+                    rCtx.fillStyle = `rgba(100, 149, 237, ${ref.intensity * 0.5})`;
+                    rCtx.beginPath();
+                    rCtx.arc(pxX, pxY + 4, 2, 0, Math.PI*2);
+                    rCtx.fill();
+                });
+            }
+
+            // Draw current scan line (red vertical line)
+            if (cartX > 0 && cartX < worldWidthMeters && isPlaying) {
+                const currentPxX = mToPxX(cartX, radargramCanvas);
+                rCtx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+                rCtx.lineWidth = 2;
+                rCtx.beginPath();
+                rCtx.moveTo(currentPxX, 0);
+                rCtx.lineTo(currentPxX, radargramCanvas.height);
+                rCtx.stroke();
+            }
+        }
+
+        // --- ANIMATION LOOP ---
+        function update() {
+            if (!isPlaying) return;
+
+            // Move Cart
+            cartX += 0.05; // speed in meters per frame
+
+            if (cartX >= worldWidthMeters) {
+                isPlaying = false;
+                document.getElementById('startBtn').innerHTML = '<i class="fa-solid fa-play"></i> Scan';
+                document.getElementById('startBtn').classList.replace('bg-amber-500', 'bg-blue-600');
+                document.getElementById('startBtn').classList.replace('hover:bg-amber-600', 'hover:bg-blue-700');
+            } else {
+                let reflections = [];
+                let minTwt = 0;
+                let minDist = Infinity;
+
+                // Calculate Physics for all targets
+                targets.forEach(t => {
+                    const distToTarget = getDistance(cartX, 0, t.x, t.z);
+                    const twt = (2 * distToTarget) / velocity;
+                    
+                    // Calculate intensity (stronger when cart is directly over target)
+                    const horizontalDist = Math.abs(cartX - t.x);
+                    const intensity = Math.max(0, 1 - (horizontalDist / 3)); // Fades out at 3m away
+
+                    // Save reflection if within time window
+                    if (twt <= maxTimeNs) {
+                        reflections.push({
+                            twt: twt,
+                            intensity: intensity
+                        });
+                    }
+
+                    if (distToTarget < minDist) {
+                        minDist = distToTarget;
+                        minTwt = twt;
+                    }
+                });
+
+                radargramData.push({
+                    x: cartX,
+                    reflections: reflections
+                });
+
+                // Update UI math panel
+                document.getElementById('xDisplay').textContent = cartX.toFixed(2) + ' m';
+                if(targets.length > 0) {
+                    document.getElementById('dDisplay').textContent = minDist.toFixed(2) + ' m';
+                    document.getElementById('twtDisplay').textContent = minTwt.toFixed(1) + ' ns';
+                } else {
+                    document.getElementById('dDisplay').textContent = 'N/A';
+                    document.getElementById('twtDisplay').textContent = 'N/A';
+                }
+            }
+
+            draw();
+            if(isPlaying) {
+                animationId = requestAnimationFrame(update);
+            }
+        }
+
+        function draw() {
+            drawPhysicalWorld();
+            drawRadargram();
+        }
+
+        // --- EVENT LISTENERS ---
+        document.getElementById('startBtn').addEventListener('click', () => {
+            if (cartX >= worldWidthMeters) {
+                // Auto reset if at end
+                cartX = 0;
+                radargramData = [];
+            }
+            
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('startBtn');
+            if (isPlaying) {
+                btn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+                btn.classList.replace('bg-blue-600', 'bg-amber-500');
+                btn.classList.replace('hover:bg-blue-700', 'hover:bg-amber-600');
+                update();
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-play"></i> Resume';
+                btn.classList.replace('bg-amber-500', 'bg-blue-600');
+                btn.classList.replace('hover:bg-amber-600', 'hover:bg-blue-700');
+                cancelAnimationFrame(animationId);
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            isPlaying = false;
+            cancelAnimationFrame(animationId);
+            cartX = 0;
+            radargramData = [];
+            
+            const btn = document.getElementById('startBtn');
+            btn.innerHTML = '<i class="fa-solid fa-play"></i> Scan';
+            btn.classList.replace('bg-amber-500', 'bg-blue-600');
+            btn.classList.replace('hover:bg-amber-600', 'hover:bg-blue-700');
+            
+            document.getElementById('xDisplay').textContent = '0.00 m';
+            document.getElementById('dDisplay').textContent = '0.00 m';
+            document.getElementById('twtDisplay').textContent = '0.0 ns';
+            
+            draw();
+        });
+
+        document.getElementById('materialSelect').addEventListener('change', (e) => {
+            dielectric = parseFloat(e.target.value);
+            velocity = c / Math.sqrt(dielectric);
+            document.getElementById('velDisplay').textContent = velocity.toFixed(3) + ' m/ns';
+            
+            // Visual feedback - auto reset to show change
+            if(radargramData.length > 0 && !isPlaying) {
+               document.getElementById('resetBtn').click();
+            }
+            draw();
+        });
+
+        // Add Target via Click
+        physicalCanvas.addEventListener('click', (e) => {
+            const rect = physicalCanvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            const meterX = (clickX / physicalCanvas.width) * worldWidthMeters;
+            const meterZ = (clickY / physicalCanvas.height) * worldDepthMeters;
+
+            // Only add target if below surface (z > 0.3m roughly)
+            if (meterZ > 0.3) {
+                targets.push({ x: meterX, z: meterZ });
+                
+                if(radargramData.length > 0 && !isPlaying) {
+                   document.getElementById('resetBtn').click();
+                } else {
+                   draw();
+                }
+            }
+        });
+
+        // Clear All Targets
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            targets = [];
+            document.getElementById('resetBtn').click();
+        });
+
+        // --- INITIALIZATION ---
+        setTimeout(() => {
+            resizeCanvases();
+        }, 100);
+
+    </script>
+</body>
+</html>

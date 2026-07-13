@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SP Method Applications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .app-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .app-btn.active {
+            background-color: #1e293b;
+            border-left: 4px solid #10b981; /* Emerald green */
+        }
+        canvas {
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+
+    <div class="max-w-6xl w-full">
+        <!-- Header -->
+        <header class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl md:text-5xl font-bold text-emerald-400 mb-2">Field Applications of SP</h1>
+            <p class="text-slate-400 text-lg">Interactive surveys: How geophysicists use Spontaneous Potential in the real world.</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Navigation and Descriptions -->
+            <div class="space-y-4 lg:col-span-1 flex flex-col">
+                
+                <div class="space-y-2">
+                    <!-- Application 1 -->
+                    <button onclick="switchTab(1)" id="btn-1" class="w-full app-btn active text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-emerald-400">1. Mineral Exploration</h2>
+                        <p class="text-xs text-slate-400 mt-1">Locating massive sulfide ore bodies.</p>
+                    </button>
+
+                    <!-- Application 2 -->
+                    <button onclick="switchTab(2)" id="btn-2" class="w-full app-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-emerald-400">2. Dam Seepage Detection</h2>
+                        <p class="text-xs text-slate-400 mt-1">Finding dangerous leaks in earthen dams.</p>
+                    </button>
+
+                    <!-- Application 3 -->
+                    <button onclick="switchTab(3)" id="btn-3" class="w-full app-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
+                        <h2 class="text-lg font-bold text-emerald-400">3. Geothermal Mapping</h2>
+                        <p class="text-xs text-slate-400 mt-1">Finding upwelling hot water sources.</p>
+                    </button>
+                </div>
+
+                <!-- Concept Explanation Card -->
+                <div class="bg-slate-800 p-5 rounded-lg border border-slate-600 shadow-lg mt-2 flex-grow">
+                    <h3 class="text-sm font-bold text-sky-400 mb-2 uppercase tracking-wider flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                        Survey Briefing
+                    </h3>
+                    <p id="concept-text" class="text-slate-300 text-sm leading-relaxed mb-4">
+                        <!-- Populated by JS -->
+                    </p>
+                    
+                    <div id="interactive-controls" class="border-t border-slate-700 pt-4 mt-4 hidden">
+                        <label id="slider-label" class="block text-sm font-semibold text-emerald-300 mb-2">Adjust Variable</label>
+                        <input type="range" id="interactive-slider" min="0" max="100" value="50" class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span id="slider-min">Low</span>
+                            <span id="slider-max">High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voltmeter Readout -->
+                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Live Sensor Reading</h3>
+                        <p class="text-xs text-slate-500">Move mouse to survey</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="live-voltage" class="text-3xl font-mono font-bold text-white">0</span>
+                        <span class="text-slate-400 font-mono"> mV</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Canvas Animation -->
+            <div class="lg:col-span-2 relative h-[500px] lg:h-[600px] border border-slate-700 rounded-xl overflow-hidden bg-slate-800 flex flex-col">
+                
+                <!-- Educational overlay text -->
+                <div class="absolute top-4 left-4 z-10 pointer-events-none drop-shadow-md">
+                    <h3 id="canvas-title" class="text-2xl font-bold text-white">Massive Sulfide Exploration</h3>
+                    <p id="canvas-subtitle" class="text-emerald-300 text-sm">Drag your mouse across the surface to survey</p>
+                </div>
+                
+                <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('sim-canvas');
+        const ctx = canvas.getContext('2d');
+        let currentTab = 1;
+        let animationFrameId;
+        let time = 0;
+
+        // Interaction State
+        let mouseX = canvas.width / 2;
+        let sliderValue = 50;
+        let particles = []; // For water/heat flow
+
+        // Handle Mouse Movement for the "Sensor"
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+        });
+
+        // Touch support for mobile/tablets
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            mouseX = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width);
+        }, { passive: false });
+
+        document.getElementById('interactive-slider').addEventListener('input', (e) => {
+            sliderValue = parseInt(e.target.value);
+            if(currentTab !== 1) initParticles(); // Refresh flow particles
+        });
+
+        // Resize handler
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            mouseX = canvas.width / 2;
+            initParticles();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // UI Updates
+        const apps = [
+            { 
+                title: "Massive Sulfide Exploration", 
+                sub: "Drag your mouse to survey the ground surface", 
+                concept: "<strong>The Goal:</strong> Find a hidden, valuable metal sulfide deposit.<br><br><strong>How it works:</strong> The ore body acts like a battery spanning the water table. Electrons travel up the conductive ore, causing a strongly negative electrical anomaly at the surface directly above it.<br><br><strong>Your Task:</strong> Move your mouse (the sensor) across the surface. Look at the live graph. The distinct 'V' shaped dip marks the exact location to drill!",
+                hasSlider: false
+            },
+            { 
+                title: "Dam Seepage Detection", 
+                sub: "Monitoring earthen infrastructure for dangerous leaks", 
+                concept: "<strong>The Goal:</strong> Identify where water is leaking through an earthen dam before it fails.<br><br><strong>How it works:</strong> As water flows through the soil pores, it drags positive ions with it (Electrokinetic mechanism). Where the water exits the dam on the downstream side, positive charges pile up.<br><br><strong>Your Task:</strong> Sweep your sensor along the dam. A positive anomaly indicates a leak exit. Use the slider below to worsen the leak and see how the SP signal strengthens.",
+                hasSlider: true,
+                sliderLabel: "Internal Leak Severity",
+                sliderMin: "Safe",
+                sliderMax: "Danger"
+            },
+            { 
+                title: "Geothermal Mapping", 
+                sub: "Locating blind geothermal upflow zones", 
+                concept: "<strong>The Goal:</strong> Find a source of hot groundwater for geothermal energy production.<br><br><strong>How it works:</strong> Deep hot water rises towards the surface through faults. This upward movement combined with the heat difference carries positive ions toward the surface, creating a positive SP bump directly over the hidden fault.<br><br><strong>Your Task:</strong> Survey the surface to find the upflow zone. Use the slider to increase the geothermal heat source.",
+                hasSlider: true,
+                sliderLabel: "Geothermal Heat Intensity",
+                sliderMin: "Cool",
+                sliderMax: "Active"
+            }
+        ];
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            time = 0;
+            sliderValue = 50;
+            document.getElementById('interactive-slider').value = 50;
+            
+            // Update buttons
+            document.querySelectorAll('.app-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${tabId}`).classList.add('active');
+
+            // Update text
+            document.getElementById('canvas-title').innerText = apps[tabId-1].title;
+            document.getElementById('canvas-subtitle').innerText = apps[tabId-1].sub;
+            document.getElementById('concept-text').innerHTML = apps[tabId-1].concept;
+            
+            // Toggle Slider
+            const controls = document.getElementById('interactive-controls');
+            if (apps[tabId-1].hasSlider) {
+                controls.classList.remove('hidden');
+                document.getElementById('slider-label').innerText = apps[tabId-1].sliderLabel;
+                document.getElementById('slider-min').innerText = apps[tabId-1].sliderMin;
+                document.getElementById('slider-max').innerText = apps[tabId-1].sliderMax;
+            } else {
+                controls.classList.add('hidden');
+            }
+
+            initParticles();
+        }
+
+        function initParticles() {
+            particles = [];
+            const w = canvas.width;
+            const h = canvas.height;
+            const intensity = sliderValue / 100;
+
+            if (currentTab === 2) { // Dam leak particles
+                let numParticles = Math.floor(20 + 80 * intensity);
+                for(let i=0; i<numParticles; i++) {
+                    particles.push({
+                        progress: Math.random(),
+                        speed: 0.002 + (0.005 * intensity)
+                    });
+                }
+            } else if (currentTab === 3) { // Geothermal upflow particles
+                let numParticles = Math.floor(30 + 70 * intensity);
+                for(let i=0; i<numParticles; i++) {
+                    particles.push({
+                        xOffset: (Math.random() - 0.5) * 60,
+                        y: h/2 + Math.random() * (h/2),
+                        speed: 1 + (3 * intensity)
+                    });
+                }
+            }
+        }
+
+        // --- MATH FUNCTIONS FOR ANOMALIES ---
+        // Generates the theoretical SP profile curves
+        function getSPValue(x, tabId, w) {
+            let voltage = 0;
+            
+            if (tabId === 1) { // Mineral: Negative dip over ore body at w*0.6
+                let oreX = w * 0.6;
+                voltage = -350 / (1 + Math.pow((x - oreX) / 60, 2));
+                voltage += (Math.sin(x*0.1) + Math.cos(x*0.05)) * 2; // noise
+            } 
+            else if (tabId === 2) { // Dam: Positive peak at seepage exit (toe of dam)
+                let intensity = sliderValue / 100;
+                let toeX = w * 0.7; // exit point
+                voltage = (200 * intensity) / (1 + Math.pow((x - toeX) / 80, 2));
+                voltage -= (80 * intensity) / (1 + Math.pow((x - w*0.3) / 60, 2));
+            }
+            else if (tabId === 3) { // Geothermal: Positive peak over fault
+                let intensity = sliderValue / 100;
+                let faultX = w * 0.5;
+                voltage = (150 * intensity) / (1 + Math.pow((x - faultX) / 120, 2));
+                voltage += (Math.sin(x*0.03)) * 5; // ground noise
+            }
+
+            return voltage;
+        }
+
+        // --- DRAWING LOOPS ---
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const w = canvas.width;
+            const h = canvas.height;
+            const groundY = h * 0.45; // Top 45% is the graph, bottom 55% is geology
+            time++;
+
+            // 1. DRAW GRAPH BACKGROUND
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, w, groundY);
+            
+            // Draw Graph Grid & Zero Line
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            let zeroY = groundY / 2;
+            ctx.moveTo(0, zeroY); ctx.lineTo(w, zeroY); ctx.stroke();
+            
+            ctx.fillStyle = '#64748b';
+            ctx.font = '12px Inter';
+            ctx.fillText('0 mV', 10, zeroY - 5);
+            ctx.fillText('+ SP', 10, 20);
+            ctx.fillText('- SP', 10, groundY - 10);
+
+            // 2. DRAW GEOLOGY
+            ctx.save();
+            ctx.translate(0, groundY);
+            let geoH = h - groundY;
+
+            if (currentTab === 1) { // Mineral
+                // Soil / Rock
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(0, 0, w, geoH);
+                
+                // Water Table
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+                ctx.fillRect(0, geoH*0.3, w, geoH*0.7);
+                ctx.strokeStyle = '#38bdf8';
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath(); ctx.moveTo(0, geoH*0.3); ctx.lineTo(w, geoH*0.3); ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Ore Body
+                let oreX = w * 0.6;
+                ctx.save();
+                ctx.translate(oreX, geoH*0.5);
+                ctx.rotate(-Math.PI / 8);
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(-30, -geoH*0.4, 60, geoH*0.8);
+                
+                ctx.fillStyle = '#f87171';
+                ctx.font = 'bold 24px Inter';
+                ctx.fillText('-', -5, -geoH*0.3);
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillText('+', -5, geoH*0.3);
+                ctx.restore();
+            } 
+            else if (currentTab === 2) { // Dam
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(0, 0, w, geoH);
+
+                // Reservoir Water
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+                ctx.fillRect(0, geoH*0.2, w*0.3, geoH*0.8);
+
+                // Dam structure
+                ctx.fillStyle = '#78350f';
+                ctx.beginPath();
+                ctx.moveTo(w*0.3, geoH);
+                ctx.lineTo(w*0.3, geoH*0.2);
+                ctx.lineTo(w*0.45, geoH*0.1);
+                ctx.lineTo(w*0.7, geoH);
+                ctx.closePath();
+                ctx.fill();
+
+                // Base
+                ctx.fillStyle = '#451a03';
+                ctx.fillRect(0, geoH - 20, w, 20);
+
+                // Seepage Water particles
+                ctx.fillStyle = '#38bdf8';
+                particles.forEach(p => {
+                    p.progress += p.speed;
+                    if(p.progress > 1) p.progress = 0;
+                    
+                    let startX = w * 0.3;
+                    let startY = geoH * 0.8;
+                    let endX = w * 0.7;
+                    let endY = geoH - 20;
+
+                    let currX = startX + (endX - startX) * p.progress;
+                    let currY = startY + (endY - startY) * p.progress - Math.sin(p.progress * Math.PI) * 40;
+
+                    ctx.beginPath();
+                    ctx.arc(currX, currY + (Math.random()-0.5)*15, 2.5, 0, Math.PI*2);
+                    ctx.fill();
+                });
+
+                // Indicate Leak Exit
+                if (sliderValue > 10) {
+                    ctx.fillStyle = `rgba(56, 189, 248, ${sliderValue/100})`;
+                    ctx.beginPath();
+                    ctx.arc(w*0.7, geoH-20, 10 + (sliderValue/10)*2, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '10px Inter';
+                    ctx.fillText('LEAK EXIT', w*0.7 + 20, geoH - 25);
+                }
+            }
+            else if (currentTab === 3) { // Geothermal
+                ctx.fillStyle = '#334155';
+                ctx.fillRect(0, 0, w, geoH);
+
+                let intensity = sliderValue / 100;
+                let grad = ctx.createRadialGradient(w/2, geoH + 50, 0, w/2, geoH + 50, 200 + (100*intensity));
+                grad.addColorStop(0, `rgba(248, 113, 113, ${0.8 + 0.2*intensity})`);
+                grad.addColorStop(1, 'rgba(248, 113, 113, 0)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, geoH*0.5, w, geoH*0.5);
+
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(w*0.5, 0);
+                ctx.lineTo(w*0.5, geoH);
+                ctx.stroke();
+
+                ctx.fillStyle = '#fca5a5';
+                particles.forEach(p => {
+                    p.y -= p.speed;
+                    if(p.y < 0) p.y = geoH;
+                    let width = 10 + (p.y / geoH) * 80;
+                    let pX = w*0.5 + (p.xOffset * (width/60));
+                    ctx.beginPath();
+                    ctx.arc(pX, p.y, 3, 0, Math.PI*2);
+                    ctx.fill();
+                });
+            }
+
+            // Ground Line
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, 0); ctx.lineTo(w, 0); ctx.stroke();
+
+            ctx.restore();
+
+            // 3. DRAW SP GRAPH
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#38bdf8';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            
+            for(let x=0; x<w; x+=5) {
+                let v = getSPValue(x, currentTab, w);
+                let graphY = zeroY - (v * (zeroY / 400));
+                graphY = Math.max(10, Math.min(groundY - 10, graphY));
+
+                if(x===0) ctx.moveTo(x, graphY);
+                else ctx.lineTo(x, graphY);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // 4. DRAW VIRTUAL SENSOR
+            let currentV = getSPValue(mouseX, currentTab, w);
+            let activeGraphY = zeroY - (currentV * (zeroY / 400));
+            activeGraphY = Math.max(10, Math.min(groundY - 10, activeGraphY));
+
+            document.getElementById('live-voltage').innerText = Math.round(currentV);
+            const readout = document.getElementById('live-voltage');
+            if(currentV < -50) readout.className = "text-3xl font-mono font-bold text-red-400";
+            else if(currentV > 50) readout.className = "text-3xl font-mono font-bold text-sky-400";
+            else readout.className = "text-3xl font-mono font-bold text-white";
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(mouseX, activeGraphY);
+            ctx.lineTo(mouseX, groundY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(mouseX - 6, groundY - 12, 12, 12);
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.moveTo(mouseX - 6, groundY);
+            ctx.lineTo(mouseX + 6, groundY);
+            ctx.lineTo(mouseX, groundY + 8);
+            ctx.fill();
+
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(mouseX, activeGraphY, 6, 0, Math.PI*2);
+            ctx.fill();
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(mouseX + 15, activeGraphY - 25, 60, 24);
+            ctx.strokeStyle = '#475569';
+            ctx.strokeRect(mouseX + 15, activeGraphY - 25, 60, 24);
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px font-mono';
+            ctx.fillText(`${Math.round(currentV)} mV`, mouseX + 22, activeGraphY - 9);
+
+            animationFrameId = requestAnimationFrame(draw);
+        }
+
+        setTimeout(() => {
+            resizeCanvas();
+            switchTab(1);
+            draw();
+        }, 100);
+        
+    </script>
+</body>
+</html>
