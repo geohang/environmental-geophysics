@@ -40,8 +40,7 @@ def build_notebook() -> nbf.NotebookNode:
 This notebook works with **real field data** collected at the University of Iowa's
 [Ashton Prairie Living Laboratory](https://sees.uiowa.edu/research/ashton-prairie).
 It uses the public `PyHydroGeophysX` API for seismic reading and preprocessing,
-and explicit parsers for the field ERT exports whose vendor formats are not yet
-handled reliably by the package's general ERT loader.
+and PyGIMLi for the two approved positive-only ERT teaching datasets.
 
 **Data boundary.** Raw files are unchanged. Derived values carry provenance and
 quality flags. The optional synthetic overlays are teaching hypotheses, never
@@ -81,7 +80,6 @@ from urllib.request import urlretrieve
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from pyproj import Transformer
 from scipy.spatial import cKDTree
 
 from PyHydroGeophysX.data_processing import normalize_traces, read_segy
