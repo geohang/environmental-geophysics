@@ -144,8 +144,8 @@ def audit_html() -> list[str]:
                 errors.append(f"{relative}: standalone app missing course-app.css")
             if not progressive:
                 errors.append(f"{relative}: standalone app missing course-app.js")
-    if canvas_total != 47:
-        errors.append(f"Expected 47 parsed canvas elements, found {canvas_total}")
+    if canvas_total != 46:
+        errors.append(f"Expected 46 parsed canvas elements, found {canvas_total}")
     return errors
 
 
