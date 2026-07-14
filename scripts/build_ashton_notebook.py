@@ -285,6 +285,8 @@ interactive map is the course site's **Ashton Field Data Explorer**.
 """
         ),
     ]
+    for index, cell in enumerate(notebook["cells"]):
+        cell["id"] = f"ashton-{index:02d}"
     return notebook
 
 
