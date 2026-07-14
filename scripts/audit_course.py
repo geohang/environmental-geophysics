@@ -196,6 +196,14 @@ def audit_assessments() -> list[str]:
             errors.append(f"Active-learning lessons: missing slide role {required}")
     if "How to use and cite these frameworks" in lesson_text:
         errors.append("Active-learning lessons still contain the old framework preamble")
+    for forbidden in (
+        "Undergraduate Core",
+        "Graduate Extension",
+        "Instructor role",
+        "teacher mini-lesson",
+    ):
+        if forbidden in lesson_text:
+            errors.append(f"Active-learning lessons expose presentation meta-text: {forbidden}")
     return errors
 
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Teacher-ready active-learning slide lessons for Environmental Geophysics.">
+<meta name="description" content="Interactive lecture slides for Environmental Geophysics.">
 <title>Active-Learning Lessons | Environmental Geophysics</title>
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/stylesheets/course-app.css">
@@ -14,7 +14,7 @@
 .course-nav-bar{display:flex;align-items:center;gap:18px;min-height:50px;padding:8px 18px;background:#fff;border-bottom:1px solid var(--line)}.course-nav-bar a{color:var(--blue);font-weight:750;text-decoration:none}.course-nav-bar .spacer{margin-left:auto;color:var(--muted)}
 .lesson-toolbar{position:sticky;top:0;z-index:20;display:flex;align-items:end;gap:12px;padding:10px max(14px,calc((100vw - 1280px)/2));background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);box-shadow:0 5px 20px rgba(20,33,61,.07)}.lesson-toolbar label{display:grid;gap:3px;color:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.lesson-toolbar select{min-width:220px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:7px 34px 7px 11px}.toolbar-spacer{flex:1}.tool{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);padding:8px 13px;cursor:pointer;font-weight:750;text-decoration:none}.tool:hover,.tool:focus-visible{border-color:var(--blue);outline:3px solid rgba(21,101,192,.16)}.timer{min-width:76px;font-variant-numeric:tabular-nums;color:var(--green)}
 .presentation{width:min(96vw,1280px);margin:16px auto 28px}.stage{position:relative;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:var(--shadow)}.slide{position:absolute;inset:0;padding:4.6% 5.5%;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#fff 72%,#eef6ff 100%)}.slide::after{content:"";position:absolute;right:-8%;bottom:-25%;width:34%;aspect-ratio:1;border-radius:50%;background:rgba(21,101,192,.065)}.slide>*{position:relative;z-index:1}
-.slide-top{display:flex;align-items:center;gap:10px;margin-bottom:1.3%}.kicker{text-transform:uppercase;letter-spacing:.12em;font-size:clamp(.68rem,1vw,.92rem);font-weight:850;color:var(--gold)}.time-chip{margin-left:auto;border-radius:999px;background:var(--gold-soft);color:#9a5700;padding:6px 10px;font-size:clamp(.65rem,.85vw,.78rem);font-weight:800}.level-chip{border-radius:999px;background:#e6fcf5;color:var(--green);padding:6px 10px;font-size:clamp(.65rem,.85vw,.78rem);font-weight:800}
+.slide-top{display:flex;align-items:center;gap:10px;margin-bottom:1.3%}.kicker{text-transform:uppercase;letter-spacing:.12em;font-size:clamp(.68rem,1vw,.92rem);font-weight:850;color:var(--gold)}.time-chip{margin-left:auto;border-radius:999px;background:var(--gold-soft);color:#9a5700;padding:6px 10px;font-size:clamp(.65rem,.85vw,.78rem);font-weight:800}
 h1,h2{margin:0 0 1.7%;color:var(--navy);line-height:1.07}h1{font-size:clamp(2rem,4vw,4rem)}h2{font-size:clamp(1.65rem,3.05vw,3rem)}h3{margin:0 0 .35em;color:var(--blue);font-size:clamp(.98rem,1.5vw,1.32rem)}p,li{font-size:clamp(.84rem,1.35vw,1.18rem);line-height:1.38}.lead{max-width:910px;color:var(--muted);font-size:clamp(1rem,1.7vw,1.45rem)}ul,ol{margin:.35em 0;padding-left:1.3em}li+li{margin-top:.32em}
 .hero{display:grid;align-content:center;height:86%;max-width:88%}.field-question{margin:2.5% 0;padding:2.2% 2.6%;border-left:7px solid var(--gold);border-radius:13px;background:var(--gold-soft);color:var(--blue-dark);font-size:clamp(1.15rem,2.15vw,1.9rem);font-weight:780;line-height:1.3}.goal-row,.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5%;margin-top:2%}.goal,.card{border:1px solid var(--line);border-radius:15px;background:#f8fafc;padding:3.5%}.goal{font-size:clamp(.78rem,1.2vw,1.05rem);font-weight:700}.card p{margin:.3em 0;color:var(--muted)}
 .signal-path{display:flex;gap:1%;align-items:stretch;margin:3% 0}.signal-step{flex:1;border-top:5px solid var(--blue);border-radius:13px;background:var(--blue-soft);padding:2.5%}.signal-step b{display:block;color:var(--blue);font-size:clamp(.82rem,1.25vw,1.08rem)}.signal-step span{font-size:clamp(.72rem,1.05vw,.94rem);color:var(--muted)}.arrow{align-self:center;color:var(--muted);font-size:clamp(1.2rem,2vw,2rem)}
@@ -29,7 +29,7 @@ h1,h2{margin:0 0 1.7%;color:var(--navy);line-height:1.07}h1{font-size:clamp(2rem
 </style>
 </head>
 <body>
-<nav class="course-nav-bar" aria-label="Course navigation"><a href="../">&#8592; Course Home</a><a href="../lecture/">Modules</a><a href="classroom-labs.html">Classroom Labs</a><span class="spacer">Teacher-ready active-learning lessons</span></nav>
+<nav class="course-nav-bar" aria-label="Course navigation"><a href="../">&#8592; Course Home</a><a href="../lecture/">Modules</a><a href="classroom-labs.html">Classroom Labs</a><span class="spacer">Interactive lecture slides</span></nav>
 <div class="lesson-toolbar">
   <label for="chapter-select">Lesson<select id="chapter-select"></select></label>
   <div class="toolbar-spacer"></div>
@@ -51,7 +51,7 @@ h1,h2{margin:0 0 1.7%;color:var(--navy);line-height:1.07}h1{font-size:clamp(2rem
       <button class="tool" id="next" type="button">Next &#8594;</button>
       <span class="keyboard-hint">Arrow keys or Space</span>
     </div>
-    <div class="student-link">Students can open this same chapter link. <button id="copy-student-link" type="button">Copy it</button></div>
+    <div class="student-link">Share this lesson: <button id="copy-student-link" type="button">Copy link</button></div>
   </div>
 </main>
 
@@ -80,7 +80,7 @@ const lessons={
     practice:'practice-lab.html#intro',activity:'field-missions.html',activityLabel:'Apply it in a Field Mission',
     discuss:['Compare two groups that chose different methods. Which assumption caused the difference?','Is “95% site coverage” automatically better evidence than sparse ground truth?','What must be verified before a client can act on an anomaly?'],
     exit:'For the tank scenario, submit: measured property → expected signal → survey spacing → strongest limitation.',
-    next:'../lecture/gravity/',nextLabel:'Next chapter: Gravity',graduate:'Frame the choice as expected information gain under cost and noise.'
+    next:'../lecture/gravity/',nextLabel:'Next chapter: Gravity'
   },
   gravity:{
     nav:'Gravity',title:'Gravity Methods',decision:'Can a small gravity low justify a cavity investigation beneath planned infrastructure?',
@@ -105,7 +105,7 @@ const lessons={
     practice:'practice-lab.html#gravity',activity:'classroom-labs.html#gravity',activityLabel:'Open cavity classroom lab',
     discuss:['Could a filled channel and an air cavity fit the same profile?','Which independent observation best constrains density or geometry?','What wording belongs in an engineering recommendation?'],
     exit:'State the observed anomaly, idealized model, depth assumption, and one reason the cavity is not confirmed.',
-    next:'../lecture/magnetic/',nextLabel:'Next chapter: Magnetics',graduate:'Perturb density, regional removal, and geometry; report the resulting depth range.'
+    next:'../lecture/magnetic/',nextLabel:'Next chapter: Magnetics'
   },
   magnetic:{
     nav:'Magnetics',title:'Magnetic Methods',decision:'Where is the buried ferrous target—and how certain can its excavation location be?',
@@ -130,7 +130,7 @@ const lessons={
     practice:'practice-lab.html#magnetic',activity:'classroom-labs.html#magnetic',activityLabel:'Open dyke & vessel lab',
     discuss:['Which observation constrains location better: peak, trough, or zero crossing?','What field check separates cultural metal from geology?','Why is a Peters-style estimate reconnaissance rather than truth?'],
     exit:'Report the likely target zone, the unit of the plotted datum, and the largest location uncertainty.',
-    next:'../lecture/seismic/',nextLabel:'Next chapter: Seismic',graduate:'Test magnetization-direction sensitivity before accepting RTP or a depth rule.'
+    next:'../lecture/seismic/',nextLabel:'Next chapter: Seismic'
   },
   seismic:{
     nav:'Seismic',title:'Seismic Methods',decision:'How deep is competent bedrock, and could first arrivals miss an intermediate layer?',
@@ -155,7 +155,7 @@ const lessons={
     practice:'practice-lab.html#seismic',activity:'classroom-labs.html#seismic',activityLabel:'Open foundation seismic lab',
     discuss:['Would reflection detect an interface that refraction misses?','How does one uncertain first-break pick affect the fitted model?','What statement about saturation differs for P and S waves?'],
     exit:'Submit one fitted velocity, its evidence on the T–X plot, the model assumption, and one hidden-layer risk.',
-    next:'../lecture/electrical/',nextLabel:'Next chapter: Electrical',graduate:'Propagate pick and fitting-window changes into layer-depth uncertainty.'
+    next:'../lecture/electrical/',nextLabel:'Next chapter: Electrical'
   },
   electrical:{
     nav:'Electrical',title:'Electrical, SP, and IP Methods',decision:'Does a conductive anomaly indicate water, clay, salinity, contamination—or several at once?',
@@ -180,7 +180,7 @@ const lessons={
     practice:'practice-lab.html#electrical',activity:'classroom-labs.html#electrical',activityLabel:'Open VES group lab',
     discuss:['Which claim is supported: “conductive zone” or “aquifer”?','How does regularization change the image?','What calibration is needed before estimating water content?'],
     exit:'Write one defensible interpretation sentence using observable → model → possible cause → limitation.',
-    next:'../lecture/em/',nextLabel:'Next chapter: EM',graduate:'Compare sensitivity and equivalence before selecting an inversion model.'
+    next:'../lecture/em/',nextLabel:'Next chapter: EM'
   },
   em:{
     nav:'EM',title:'Electromagnetic Methods',decision:'Which FDEM frequency or TEM time range can sense the target without pretending depth is a hard boundary?',
@@ -205,7 +205,7 @@ const lessons={
     practice:'practice-lab.html#em',activity:'classroom-labs.html#em',activityLabel:'Open FDEM/TEM classroom lab',
     discuss:['When would the proxy choose the wrong instrument setting?','What full forward model would be needed?','How can multiple layers produce a similar apparent response?'],
     exit:'Choose one setting, state the expected sensitivity, and name the missing system physics.',
-    next:'../lecture/mt/',nextLabel:'Deep EM extension: MT',graduate:'Replace the proxy with a system-specific layered-earth sensitivity calculation.'
+    next:'../lecture/mt/',nextLabel:'Deep EM extension: MT'
   },
   gpr:{
     nav:'GPR',title:'Ground-Penetrating Radar',decision:'Is the utility deep enough for a proposed excavation, given uncertain radar velocity?',
@@ -230,7 +230,7 @@ const lessons={
     practice:'practice-lab.html#gpr',activity:'classroom-labs.html#gpr',activityLabel:'Open utility safety lab',
     discuss:['Should the recommendation use the preferred depth or full range?','How do zero-time and antenna separation bias depth?','When is potholing still required?'],
     exit:'Report the two-way time, velocity evidence, depth range, and conservative safety recommendation.',
-    next:'../lecture/borehole/',nextLabel:'Next chapter: Borehole',graduate:'Quantify uncertainty from velocity fit, time zero, anisotropy, and finite antenna separation.'
+    next:'../lecture/borehole/',nextLabel:'Next chapter: Borehole'
   },
   mt:{
     nav:'EM · Magnetotellurics',title:'Magnetotellurics and Deep EM',decision:'Does a deep conductor indicate fluids, graphite, melt, or an unresolved combination?',
@@ -255,7 +255,7 @@ const lessons={
     practice:'practice-lab.html#mt',activity:'../lecture/mt/',activityLabel:'Open MT chapter apps',
     discuss:['Which additional method best constrains the conductor geometry?','What evidence is required before claiming partial melt?','How would 3D structure change the workflow?'],
     exit:'Submit the measured MT quantities, the observed pattern, one geological hypothesis, and one competing explanation.',
-    next:'../lecture/gpr/',nextLabel:'Next chapter: GPR',graduate:'Use tensor dimensionality, error floors, and model sensitivity before interpreting a conductor.'
+    next:'../lecture/gpr/',nextLabel:'Next chapter: GPR'
   },
   borehole:{
     nav:'Borehole',title:'Borehole Geophysics',decision:'Which combination of logs can distinguish lithology, fluid conditions, and active fractures?',
@@ -280,7 +280,7 @@ const lessons={
     practice:'practice-lab.html#borehole',activity:'../lecture/borehole/',activityLabel:'Open all borehole apps',
     discuss:['Which two logs provide complementary evidence?','How does vertical resolution affect thin beds?','What surface method would extend the borehole interpretation laterally?'],
     exit:'Choose a log suite and state one measured signal, one correction, one interpretation, and one remaining ambiguity.',
-    next:'../lecture/',nextLabel:'Return to all modules',graduate:'Model response-function mixing and propagate calibration uncertainty into the joint interpretation.'
+    next:'../lecture/',nextLabel:'Return to all modules'
   }
 };
 
@@ -290,20 +290,20 @@ let chapter='intro';let slideIndex=0;let seconds=3000;let timerId=null;
 const slide=document.getElementById('slide');const select=document.getElementById('chapter-select');
 
 function escapeHTML(value){return String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));}
-function slideTop(kicker,index){return `<div class="slide-top"><div class="kicker">${escapeHTML(kicker)}</div><span class="level-chip">Undergraduate Core</span><span class="time-chip">${times[index]}</span></div>`;}
+function slideTop(kicker,index){return `<div class="slide-top"><div class="kicker">${escapeHTML(kicker)}</div><span class="time-chip">${times[index]}</span></div>`;}
 function sourceFooter(){return '<div class="source-note">Original course graphics and wording · scientific sources linked from the course References page</div>';}
 function renderSlide(){
   const lesson=lessons[chapter];let html='';
   if(slideIndex===0){
     html=`${slideTop('Field decision & goals',0)}<div class="hero"><h1>${escapeHTML(lesson.title)}</h1><div class="field-question">${escapeHTML(lesson.decision)}</div><div class="goal-row">${lesson.goals.map((goal,i)=>`<div class="goal">${i+1}. ${escapeHTML(goal)}</div>`).join('')}</div></div>${sourceFooter()}`;
   }else if(slideIndex===1){
-    html=`${slideTop('Essential physics — teacher mini-lesson',1)}<h2>Only what students need before the app</h2><div class="card-grid">${lesson.core.map(item=>`<div class="card"><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.text)}</p></div>`).join('')}</div><div class="signal-path">${lesson.path.map((item,i)=>`${i?'<span class="arrow">→</span>':''}<div class="signal-step"><b>${escapeHTML(item)}</b><span>${['Question','Physics','Observable','Evidence-limited conclusion'][i]}</span></div>`).join('')}</div>${sourceFooter()}`;
+    html=`${slideTop('Essential physics',1)}<h2>How the method turns physics into evidence</h2><div class="card-grid">${lesson.core.map(item=>`<div class="card"><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.text)}</p></div>`).join('')}</div><div class="signal-path">${lesson.path.map((item,i)=>`${i?'<span class="arrow">→</span>':''}<div class="signal-step"><b>${escapeHTML(item)}</b><span>${['Question','Physics','Observable','Evidence-limited conclusion'][i]}</span></div>`).join('')}</div>${sourceFooter()}`;
   }else if(slideIndex===2){
     html=`${slideTop('Predict before clicking',2)}<h2>Commit to an answer first</h2><div class="prediction">${escapeHTML(lesson.prediction)}</div><div class="write-row"><div class="write-box"><h3>Prediction</h3>Write the expected method, signal, trend, or threshold.</div><div class="write-box"><h3>Reason</h3>Name the physical contrast or survey geometry behind it.</div></div>${sourceFooter()}`;
   }else if(slideIndex===3){
-    html=`${slideTop('Play the demo or activity',3)}<h2>Change parameters. Record evidence.</h2><div class="launch-row">${lesson.apps.map(app=>`<a class="launch${app.secondary?' secondary':''}" href="${app.url}" target="_blank" rel="noopener">${escapeHTML(app.label)} ↗</a>`).join('')}</div><table class="task-table"><thead><tr><th>Test</th><th>Change in the app</th><th class="evidence">Evidence to record</th></tr></thead><tbody>${lesson.tasks.map(row=>`<tr>${row.map(cell=>`<td>${escapeHTML(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table><div class="prompt"><strong>Instructor role:</strong> circulate and ask “What changed on the graph or readout?” before explaining.</div>${sourceFooter()}`;
+    html=`${slideTop('Play the demo or activity',3)}<h2>Change parameters. Record evidence.</h2><div class="launch-row">${lesson.apps.map(app=>`<a class="launch${app.secondary?' secondary':''}" href="${app.url}" target="_blank" rel="noopener">${escapeHTML(app.label)} ↗</a>`).join('')}</div><table class="task-table"><thead><tr><th>Test</th><th>Change in the app</th><th class="evidence">Evidence to record</th></tr></thead><tbody>${lesson.tasks.map(row=>`<tr>${row.map(cell=>`<td>${escapeHTML(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table><div class="prompt"><strong>Evidence rule:</strong> Describe what changed in the graph or readout before explaining why.</div>${sourceFooter()}`;
   }else if(slideIndex===4){
-    html=`${slideTop('Guided exploration',4)}<h2>Answer with evidence from the app</h2><div class="question-grid">${lesson.questions.map((question,i)=>`<div class="question-card"><b>Q${i+1}</b><p>${escapeHTML(question)}</p></div>`).join('')}</div><div class="prompt"><strong>Graduate Extension:</strong> ${escapeHTML(lesson.graduate)}</div>${sourceFooter()}`;
+    html=`${slideTop('Guided exploration',4)}<h2>Answer with evidence from the app</h2><div class="question-grid">${lesson.questions.map((question,i)=>`<div class="question-card"><b>Q${i+1}</b><p>${escapeHTML(question)}</p></div>`).join('')}</div><div class="prompt"><strong>Limit the claim:</strong> What conclusion would this demo not justify at a real site?</div>${sourceFooter()}`;
   }else if(slideIndex===5){
     html=`${slideTop('Formative practice',5)}<h2>Apply the observation before the debrief</h2><div class="practice-grid"><div class="practice-card"><h3>Individual → pair</h3><ol><li>Open the linked practice set.</li><li>Complete the chapter questions using your demo notes.</li><li>Compare one changed answer with a partner.</li></ol><div class="launch-row"><a class="launch" href="${lesson.practice}" target="_blank" rel="noopener">Open Practice Lab ↗</a></div></div><div class="practice-card"><h3>Apply it to a field workflow</h3><p>Use the observation to make a method, processing, or safety decision.</p><a class="launch secondary" href="${lesson.activity}" target="_blank" rel="noopener">${escapeHTML(lesson.activityLabel)} ↗</a></div></div>${sourceFooter()}`;
   }else{
