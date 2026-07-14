@@ -15,7 +15,7 @@ Electrical resistivity spans more orders of magnitude than any other rock proper
     Examine sensitivity functions, regularization, equivalence, Cole–Cole conventions, and uncertainty in petrophysical conversion from resistivity to water content.
 
 [Practice this module](../../apps/practice-lab.html#electrical){ .md-button }
-[View lecture framework](../../apps/lecture-frameworks.html#electrical){ .md-button }
+[Teach with active-learning slides](../../apps/lecture-frameworks.html#electrical){ .md-button }
 
 ## Interactive Lecture
 

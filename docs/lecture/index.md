@@ -1,8 +1,8 @@
 # Lecture Overview
 
-The course walks through the near-surface geophysical toolbox one method at a time. Each module combines an interactive lecture, hands-on activities, and quick concept demos. Work through them in order, or jump straight to the method you need.
+The course walks through the subsurface geophysical toolbox one method at a time. Each module combines an interactive lecture, hands-on activities, and quick concept demos. Work through them in order, or jump straight to the method you need.
 
-[Open the chapter-by-chapter lecture frameworks](../apps/lecture-frameworks.html){ .md-button }
+[Teach with the active-learning slide lessons](../apps/lecture-frameworks.html){ .md-button }
 
 | Module | Interactive Materials | Core Ideas |
 |---|---|---|
@@ -11,9 +11,8 @@ The course walks through the near-surface geophysical toolbox one method at a ti
 | [Magnetic Methods](magnetic/index.md) | Rock magnetism lab + 3 topic apps + demo | Anomaly shape, continuation, depth rules |
 | [Seismic Methods](seismic/index.md) | 2 topic apps + demo | Elasticity, refraction travel times |
 | [Electrical Methods](electrical/index.md) | Lecture app + 6 topic apps + demo | Conduction, arrays, ERT, SP, IP |
-| [Electromagnetic Methods](em/index.md) | 3 apps + demo | Induction, FDEM and TEM, 1D modeling |
+| [Electromagnetic Methods](em/index.md), including [Magnetotellurics & Deep EM](mt/index.md) | 5 apps + 2 demos | Induction, FDEM, TEM, MT impedance, apparent resistivity, and phase |
 | [Ground-Penetrating Radar](gpr/index.md) | 2 apps + demo | Wave propagation, radargram interpretation |
-| [Magnetotellurics](mt/index.md) | Visualizer + demo | Deep sounding, apparent resistivity and phase |
 | [Borehole Geophysics](borehole/index.md) | Dashboard + demo | Wireline logs, integrated interpretation |
 
 !!! tip "Tools open full screen"

@@ -8,7 +8,7 @@
 
 [🧭 Interactive Course Guide](apps/course-guide.html){ .md-button .md-button--primary }
 [📚 Browse Modules](lecture/index.md){ .md-button }
-[🗂️ Lecture Frameworks](apps/lecture-frameworks.html){ .md-button }
+[🎓 Active-Learning Lessons](apps/lecture-frameworks.html){ .md-button }
 [🧪 Classroom Labs](apps/classroom-labs.html){ .md-button }
 [🗺️ Field Missions](apps/field-missions.html){ .md-button }
 [✅ Practice Lab](apps/practice-lab.html){ .md-button }
@@ -57,19 +57,13 @@ Environmental geophysics investigates the subsurface by measuring physical field
 
     ---
 
-    Induction principles, FDEM and TEM systems, and 1D forward modeling.
+    Induction principles, FDEM and TEM systems, and 1D forward modeling, with **[Magnetotellurics and Deep EM](lecture/mt/index.md)** as the deep-sounding extension.
 
 -   🛰️ **[Ground-Penetrating Radar](lecture/gpr/index.md)**
 
     ---
 
     Radar wave propagation, dielectric properties, and radargram interpretation.
-
--   🌍 **[Magnetotellurics](lecture/mt/index.md)**
-
-    ---
-
-    Natural-source deep sounding with apparent resistivity and phase curves.
 
 -   🕳️ **[Borehole Geophysics](lecture/borehole/index.md)**
 

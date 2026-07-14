@@ -15,7 +15,7 @@ Lateral density contrasts in the subsurface produce tiny variations in gravitati
     Evaluate regional–residual separation, parameter trade-offs, equivalent-source behavior, and uncertainty in density-contrast inversion.
 
 [Practice this module](../../apps/practice-lab.html#gravity){ .md-button }
-[View lecture framework](../../apps/lecture-frameworks.html#gravity){ .md-button }
+[Teach with active-learning slides](../../apps/lecture-frameworks.html#gravity){ .md-button }
 
 ## Interactive Lecture
 

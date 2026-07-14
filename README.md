@@ -6,10 +6,10 @@ Open, interactive course materials for upper-level undergraduate environmental g
 
 ## What is here
 
-- **9 method modules** covering foundations, gravity, magnetics, seismic, electrical/SP/IP, EM, GPR, MT/CSEM, and borehole geophysics.
+- **8 chapter groups** covering foundations, gravity, magnetics, seismic, electrical/SP/IP, electromagnetic methods (including MT/CSEM), GPR, and borehole geophysics.
 - **35 original interactive lecture and demonstration pages**, with shared navigation, responsive layouts, keyboard support, accessible controls, and explicit scientific assumptions.
 - **Classroom Lab Studio**, with six course-tested workflows, five downloadable synthetic datasets, and a public processing-pipeline review challenge.
-- **Lecture Frameworks**, with a PPT-informed teaching arc, 50-minute run of show, misconception check, and undergraduate/graduate pathway for every module.
+- **Active-Learning Lessons**, with short foundation slides, prediction, linked app exploration, formative practice, discussion, and exit tickets for every module.
 - **Field Missions**, with four lightweight, explicitly synthetic environmental case studies.
 - **Practice Lab**, with 45 formative questions tagged for Undergraduate, Graduate, or Both levels and immediate explanatory feedback.
 - **4 notebooks** for gravity processing/modeling, seismic refraction, and ERT forward modeling, plus sample datasets.

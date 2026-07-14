@@ -15,7 +15,7 @@ Rocks acquire magnetization from magnetic minerals, magnetite above all, and tha
     Assess the assumptions and instability of continuation, RTP, and source-depth estimators, especially at low inclination and for remanently magnetized bodies.
 
 [Practice this module](../../apps/practice-lab.html#magnetic){ .md-button }
-[View lecture framework](../../apps/lecture-frameworks.html#magnetic){ .md-button }
+[Teach with active-learning slides](../../apps/lecture-frameworks.html#magnetic){ .md-button }
 
 ## Interactive Lecture
 

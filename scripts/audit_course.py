@@ -176,6 +176,26 @@ def audit_assessments() -> list[str]:
     for field in ("cff-version:", "title:", "authors:", "repository-code:", "license:"):
         if field not in citation:
             errors.append(f"CITATION.cff missing {field}")
+
+    lesson_path = DOCS / "apps" / "lecture-frameworks.html"
+    lesson_text = lesson_path.read_text(encoding="utf-8")
+    lesson_names = re.findall(r"\n  ([a-z]+):\{\n    nav:'", lesson_text)
+    if len(lesson_names) != 9:
+        errors.append(f"Active-learning lessons: expected 9 lessons, found {len(lesson_names)}")
+    for link in re.findall(r"(?:url|practice|activity|next):'([^']+)'", lesson_text):
+        if not source_target_exists(lesson_path, link):
+            errors.append(f"Active-learning lessons: missing local target {link}")
+    for required in (
+        "Predict before clicking",
+        "Play the demo or activity",
+        "Guided exploration",
+        "Formative practice",
+        "Discussion & exit ticket",
+    ):
+        if required not in lesson_text:
+            errors.append(f"Active-learning lessons: missing slide role {required}")
+    if "How to use and cite these frameworks" in lesson_text:
+        errors.append("Active-learning lessons still contain the old framework preamble")
     return errors
 
 
@@ -357,7 +377,7 @@ def main() -> int:
     html_count = sum(1 for _ in DOCS.rglob("*.html"))
     print(
         f"Course audit passed: {html_count} source HTML apps/pages, 45 practice questions, "
-        "7 numerical benchmarks, and 5 classroom dataset suites."
+        "9 active-learning lessons, 7 numerical benchmarks, and 5 classroom dataset suites."
     )
     return 0
 

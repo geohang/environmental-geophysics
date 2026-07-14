@@ -15,7 +15,7 @@ GPR transmits radar pulses into the ground and records reflections from contrast
     Analyze velocity uncertainty, migration, finite antenna separation, anisotropy, and the non-uniqueness of radar facies interpretation.
 
 [Practice this module](../../apps/practice-lab.html#gpr){ .md-button }
-[View lecture framework](../../apps/lecture-frameworks.html#gpr){ .md-button }
+[Teach with active-learning slides](../../apps/lecture-frameworks.html#gpr){ .md-button }
 
 ## Topic Apps
 

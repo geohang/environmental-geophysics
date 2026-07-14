@@ -15,7 +15,7 @@ Seismic waves travel at speeds set by the elastic moduli and density of the mate
     Compare intercept-time interpretation with refraction tomography, reciprocal acquisition, regularization, resolution, and uncertainty analysis.
 
 [Practice this module](../../apps/practice-lab.html#seismic){ .md-button }
-[View lecture framework](../../apps/lecture-frameworks.html#seismic){ .md-button }
+[Teach with active-learning slides](../../apps/lecture-frameworks.html#seismic){ .md-button }
 
 ## Topic Apps
 

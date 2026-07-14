@@ -70,15 +70,16 @@ nav:
   - Home: index.md
   - Lectures:
       - Overview: lecture/index.md
-      - Lecture Frameworks: apps/lecture-frameworks.html
+      - Active-Learning Lessons: apps/lecture-frameworks.html
       - Introduction: lecture/intro/index.md
       - Gravity Methods: lecture/gravity/index.md
       - Magnetic Methods: lecture/magnetic/index.md
       - Seismic Methods: lecture/seismic/index.md
       - Electrical Methods: lecture/electrical/index.md
-      - Electromagnetic Methods: lecture/em/index.md
+      - Electromagnetic Methods:
+          - Overview: lecture/em/index.md
+          - Magnetotellurics & Deep EM: lecture/mt/index.md
       - Ground-Penetrating Radar: lecture/gpr/index.md
-      - Magnetotellurics: lecture/mt/index.md
       - Borehole Geophysics: lecture/borehole/index.md
   - Practice:
       - Classroom Labs: apps/classroom-labs.html
