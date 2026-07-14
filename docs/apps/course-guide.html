@@ -1,679 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Environmental Geophysics: An Interactive Guide</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Chosen Palette: Warm Neutrals & Earth Tones -->
-    <!-- Background: #FDFCF8 (Off-white/Sand) -->
-    <!-- Text: #333333 (Dark Grey) -->
-    <!-- Accents: #A67B5B (Terra Cotta), #708A81 (Sage Green), #5B7BA6 (Slate Blue) -->
-    
-    <!-- Application Structure Plan: 
-         The app is designed as a "Field Guide" dashboard divided into four logical modules:
-         1. Scope & Definitions: High-level introduction to the sub-disciplines (Venn diagram concept).
-         2. The Business Case (Value Prop): Interactive comparison of Geophysics vs. Intrusive methods based on Table 1.1 data.
-            Justification: The report emphasizes the economic and risk-management arguments; a calculator makes this abstract concept concrete.
-         3. Method Selector: An interactive filtering tool based on Table 1.2.
-            Justification: Students need to match physical properties to problems; this reinforces that connection actively.
-         4. Survey Design Lab: A canvas-based simulator for "Aliasing" (Figure 1.8).
-            Justification: "Aliasing" is a visual concept best understood by doing; static images don't convey the "loss of information" as well as moving the sampling interval yourself.
-    -->
-
-    <!-- Visualization & Content Choices:
-         1. Interactive Calculator (Chart.js): Visualizes the massive disparity in "Area Sampled" (0.1% vs 95%) from the report.
-         2. Method Matrix (DOM Manipulation): Turns static Table 1.2 into a problem-solving tool.
-         3. Aliasing Simulator (Canvas API): Draws the "ground truth" anomaly and overlays dynamic sampling points to show the "interpreted" result in real-time. 
-         4. Noise Visualizer (Chart.js): Shows signal + noise summation.
-         
-         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
-    -->
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FDFCF8;
-            color: #333333;
-        }
-        .nav-btn {
-            transition: all 0.3s ease;
-        }
-        .nav-btn.active {
-            border-bottom: 2px solid #A67B5B;
-            color: #A67B5B;
-            font-weight: 600;
-        }
-        .card {
-            background-color: white;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border-radius: 0.5rem;
-            transition: transform 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-2px);
-        }
-        /* Chart Container Styling as required */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px; /* max-w-xl equivalent */
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-        /* Custom Canvas for Aliasing */
-        #aliasingCanvas {
-            border: 1px solid #e5e7eb;
-            background-color: #fafafa;
-            width: 100%;
-            height: 100%;
-            border-radius: 0.5rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Environmental Geophysics: An Interactive Guide</title>
+<link rel="stylesheet" href="../assets/stylesheets/demo.css">
+<script src="../assets/javascripts/demo-theme.js"></script>
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+.lead { max-width: 820px; margin: 0 auto 8px; }
+.section-tag { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-accent); }
+.cards3 { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 14px; }
+@media(min-width: 760px){ .cards3 { grid-template-columns: repeat(3, 1fr); } }
+.mini { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.mini h4 { margin: 0 0 6px; color: var(--c-primary); font-size: 1.05rem; }
+.mini p { margin: 0; color: var(--text-muted); font-size: .92rem; }
+.split { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media(min-width: 860px){ .split { grid-template-columns: 1.15fr 1fr; align-items: start; } }
+.goals { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.goal { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 9px 16px; cursor: pointer; font-weight: 600; font-size: .9rem; color: var(--text); }
+.goal:hover { border-color: var(--c-primary); }
+.goal.active { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: var(--c-primary-soft); color: var(--c-primary); border: 1px solid var(--c-primary); border-radius: 8px; padding: 7px 13px; font-weight: 600; font-size: .88rem; }
+.chip:hover { background: var(--c-primary); color: #fff; }
+.flow { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+.step { flex: 1 1 150px; border-radius: 12px; padding: 14px; border: 1px solid var(--border); background: var(--surface-2); }
+.step .k { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); font-weight: 700; }
+.step .t { font-weight: 700; margin: 4px 0 3px; }
+.step .d { font-size: .82rem; color: var(--text-muted); }
+.step.hydro { border-top: 3px solid #0284c7; } .step.petro { border-top: 3px solid #d97706; }
+.step.fwd { border-top: 3px solid #0d9488; } .step.inv { border-top: 3px solid #7c3aed; }
+.step.out { border-top: 3px solid #059669; }
+.flow .arrow { align-self: center; color: var(--text-muted); font-size: 1.4rem; flex: 0 0 auto; }
+.explore { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 6px; }
+@media(min-width: 720px){ .explore { grid-template-columns: repeat(2, 1fr); } }
+.xcard { display: block; text-decoration: none; color: inherit; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; transition: transform .15s, border-color .15s; }
+.xcard:hover { transform: translateY(-3px); border-color: var(--c-primary); }
+.xcard b { color: var(--c-primary); }
+.xcard span { color: var(--text-muted); font-size: .88rem; }
+h2.sec { font-size: 1.6rem; margin: 6px 0 4px; }
+</style>
 </head>
-<body class="min-h-screen flex flex-col">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+<body>
+<div class="course-nav-bar">
+  <a href="../">&#8592; Course Home</a>
+  <span class="spacer">SEES:4800 Environmental Geophysics</span>
+</div>
+<header class="demo-header">
+  <div class="section-tag">SEES:4800 · Interactive Guide</div>
+  <h1>Seeing Water and Structure Underground</h1>
+  <div class="subtitle lead">Environmental geophysics images the shallow subsurface with physics rather than a shovel. This course teaches the methods; the goal is to learn where water sits, how it moves, and how the weathered ground above bedrock, the critical zone, is put together.</div>
+</header>
+
+<div class="container">
+
+  <!-- WHY -->
+  <div class="panel">
+    <div class="section-tag">Why geophysics</div>
+    <h2 class="sec">Four physical windows into the same ground</h2>
+    <p style="color:var(--text-muted);max-width:820px;">Each method senses a different physical property. No single one tells the whole story, so we combine them, then tie the result back to hydrology.</p>
+    <div class="cards3">
+      <div class="mini"><h4>Density &amp; magnetism</h4><p>Gravity and magnetic surveys map mass and magnetic mineral contrasts: basins, bedrock, buried structure.</p></div>
+      <div class="mini"><h4>Seismic velocity</h4><p>Refraction and surface waves track stiffness, which rises from loose soil to weathered rock to fresh bedrock.</p></div>
+      <div class="mini"><h4>Electrical resistivity</h4><p>ERT, SP, and IP respond to pore water and clay: the most direct window on subsurface moisture.</p></div>
+      <div class="mini"><h4>Electromagnetic fields</h4><p>GPR, FDEM, TEM, and MT sense conductivity and dielectric contrasts from centimetres to kilometres deep.</p></div>
+    </div>
+  </div>
+
+  <!-- ARCHIE INTERACTIVE -->
+  <div class="panel">
+    <div class="section-tag">The bridge</div>
+    <h2 class="sec">From resistivity to water content</h2>
+    <p style="color:var(--text-muted);max-width:820px;">Geophysics measures a physical property; hydrology wants water. Archie's law is the bridge that connects them, and it is the heart of the petrophysics in <a href="https://github.com/geohang/PyHydroGeophysX">PyHydroGeophysX</a>. Move the sliders and watch how drier ground becomes more resistive, exactly the signal a time-lapse ERT survey tracks.</p>
+    <div class="split">
+      <div><canvas id="archie" width="640" height="360"></canvas></div>
+      <div>
+        <div class="controls">
+          <div class="ctrl"><label>Porosity $\phi$ <span id="phiv">0.30</span></label><input id="phi" type="range" min="0.05" max="0.5" value="0.30" step="0.01"></div>
+          <div class="ctrl"><label>Water saturation $S_w$ <span id="swv">100%</span></label><input id="sw" type="range" min="0.1" max="1" value="1" step="0.01"></div>
+          <div class="ctrl"><label>Pore-water resistivity $\rho_w$ <span id="rwv">20 Ω·m</span></label><input id="rw" type="range" min="2" max="100" value="20" step="1"></div>
+        </div>
+        <div class="readout" style="grid-template-columns:1fr 1fr;">
+          <div class="stat"><div class="v" id="rho">–</div><div class="l">bulk resistivity (Ω·m)</div></div>
+          <div class="stat"><div class="v" id="ff">–</div><div class="l">formation factor F</div></div>
+        </div>
+        <div class="formula" id="fbox">Archie's law: $\rho = a\,\rho_w\,\phi^{-m}\,S_w^{-n}$ &nbsp;(here $a=1,\ m=2,\ n=2$). PyHydroGeophysX inverts field ERT and runs this in reverse to estimate $S_w$.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METHOD SELECTOR -->
+  <div class="panel">
+    <div class="section-tag">The toolbox</div>
+    <h2 class="sec">Pick a goal, find the method</h2>
+    <p style="color:var(--text-muted);max-width:820px;">Method choice follows the target. Choose a common near-surface question and see which of the course's nine methods fit, then jump straight to that module.</p>
+    <div class="goals" id="goals"></div>
+    <div id="why" style="color:var(--text-muted);font-size:.92rem;margin-bottom:6px;"></div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <!-- WORKFLOW -->
+  <div class="panel">
+    <div class="section-tag">The computational spine</div>
+    <h2 class="sec">The PyHydroGeophysX workflow</h2>
+    <p style="color:var(--text-muted);max-width:820px;">The through-line of this course is not one method, it is the chain that turns hydrology into geophysics and back. <a href="https://github.com/geohang/PyHydroGeophysX">PyHydroGeophysX</a> automates every box below.</p>
+    <div class="flow">
+      <div class="step hydro"><div class="k">Input</div><div class="t">Hydrological model</div><div class="d">MODFLOW / ParFlow water content and saturation</div></div>
+      <div class="arrow">→</div>
+      <div class="step petro"><div class="k">Bridge</div><div class="t">Petrophysics</div><div class="d">Archie, Waxman-Smits, rock-physics velocity</div></div>
+      <div class="arrow">→</div>
+      <div class="step fwd"><div class="k">Simulate</div><div class="t">Forward modeling</div><div class="d">ERT · seismic · EM synthetic response</div></div>
+      <div class="arrow">→</div>
+      <div class="step inv"><div class="k">Recover</div><div class="t">Inversion</div><div class="d">single, time-lapse, structure-constrained, joint</div></div>
+      <div class="arrow">→</div>
+      <div class="step out"><div class="k">Output</div><div class="t">Water content</div><div class="d">estimated moisture, compared with field data</div></div>
+    </div>
+    <div class="note">This is real research code, used for watershed monitoring and critical-zone studies. The <a href="../notebooks/">Notebooks</a> page runs these steps in Google Colab.</div>
+  </div>
+
+  <!-- EXPLORE -->
+  <div class="panel">
+    <div class="section-tag">Start exploring</div>
+    <h2 class="sec">Where to go next</h2>
+    <div class="explore">
+      <a class="xcard" href="../lecture/"><b>All nine method modules →</b><br><span>Interactive lectures, activities, and a demo for each method.</span></a>
+      <a class="xcard" href="../lecture/electrical/"><b>Electrical methods →</b><br><span>ERT, SP, IP, and the resistivity-to-moisture bridge above.</span></a>
+      <a class="xcard" href="../notebooks/"><b>Colab notebooks →</b><br><span>Run drift correction, forward modeling, and PyHydroGeophysX in the browser.</span></a>
+      <a class="xcard" href="../references/"><b>References →</b><br><span>Books, papers, and software, with copy-paste BibTeX.</span></a>
+    </div>
+  </div>
+
 </div>
 
+<script>
+// ---------- Archie interactive ----------
+const acv=document.getElementById('archie'), actx=acv.getContext('2d');
+const A=1, M=2, N=2;
+function archie(){
+  const P=demoPalette();
+  const phi=+document.getElementById('phi').value;
+  const sw=+document.getElementById('sw').value;
+  const rw=+document.getElementById('rw').value;
+  document.getElementById('phiv').textContent=phi.toFixed(2);
+  document.getElementById('swv').textContent=Math.round(sw*100)+'%';
+  document.getElementById('rwv').textContent=rw+' Ω·m';
+  const F=A*Math.pow(phi,-M);
+  const rho=F*rw*Math.pow(sw,-N);
+  document.getElementById('rho').textContent=rho<1000?rho.toFixed(0):(rho/1000).toFixed(1)+'k';
+  document.getElementById('ff').textContent=F.toFixed(1);
+  const W=acv.width,H=acv.height;actx.clearRect(0,0,W,H);actx.fillStyle=P.bg;actx.fillRect(0,0,W,H);
+  actx.font='11px Inter, Segoe UI';
+  // LEFT: core sample stacked bar (air / water / grains)
+  const bx=30,bw=120,bt=30,bb=H-40,bh=bb-bt;
+  const grains=1-phi, water=phi*sw, air=phi*(1-sw);
+  let y=bt;
+  actx.fillStyle=P.surface2;actx.fillRect(bx,y,bw,bh*air);
+  actx.strokeStyle=P.border;actx.strokeRect(bx,y,bw,bh*air);
+  actx.textAlign='center';
+  if(air>0.04){actx.fillStyle=P.muted;actx.fillText('air',bx+bw/2,y+bh*air/2+4);}
+  y+=bh*air;
+  actx.fillStyle='#38bdf8';actx.globalAlpha=.85;actx.fillRect(bx,y,bw,bh*water);actx.globalAlpha=1;
+  if(water>0.04){actx.fillStyle='#0b3a56';actx.fillText('water',bx+bw/2,y+bh*water/2+4);}
+  y+=bh*water;
+  actx.fillStyle=P.muted;actx.globalAlpha=.55;actx.fillRect(bx,y,bw,bh*grains);actx.globalAlpha=1;
+  actx.fillStyle=P.text;actx.fillText('grains',bx+bw/2,y+bh*grains/2+4);
+  actx.strokeStyle=P.border;actx.strokeRect(bx,bt,bw,bh);
+  actx.fillStyle=P.muted;actx.fillText('pore-scale sample',bx+bw/2,bb+18);
+  // RIGHT: resistivity vs saturation curve (log y)
+  const gx0=230,gx1=W-20,gy0=30,gy1=H-40;
+  const rhoOf=s=>F*rw*Math.pow(s,-N);
+  const rmin=rhoOf(1)*0.8, rmax=rhoOf(0.1)*1.1;
+  const lym=Math.log10(rmin), lyM=Math.log10(rmax);
+  const px=s=>gx0+(gx1-gx0)*(s-0.1)/0.9;
+  const py=r=>gy1-(gy1-gy0)*(Math.log10(r)-lym)/(lyM-lym);
+  actx.strokeStyle=P.border;actx.beginPath();actx.moveTo(gx0,gy0);actx.lineTo(gx0,gy1);actx.lineTo(gx1,gy1);actx.stroke();
+  actx.fillStyle=P.muted;actx.textAlign='center';
+  for(let s=0.2;s<=1.001;s+=0.2)actx.fillText(Math.round(s*100)+'%',px(s),gy1+15);
+  actx.fillText('water saturation',(gx0+gx1)/2,gy1+30);
+  actx.save();actx.translate(gx0-16,(gy0+gy1)/2);actx.rotate(-Math.PI/2);actx.fillText('resistivity (log)',0,0);actx.restore();
+  actx.strokeStyle=P.primary;actx.lineWidth=2.5;actx.beginPath();
+  for(let i=0;i<=100;i++){const s=0.1+0.9*i/100;const X=px(s),Y=py(rhoOf(s));i?actx.lineTo(X,Y):actx.moveTo(X,Y);}
+  actx.stroke();
+  actx.fillStyle=P.accent;actx.beginPath();actx.arc(px(sw),py(rho),6,0,7);actx.fill();
+  actx.fillStyle=P.text;actx.textAlign='left';actx.fillText('drier → more resistive',gx0+10,gy0+6);
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([document.getElementById('fbox')]);
+}
+['phi','sw','rw'].forEach(id=>document.getElementById(id).addEventListener('input',archie));
 
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <span class="text-2xl font-bold text-gray-800 tracking-tight">Geo<span class="text-[#A67B5B]">Physics</span> Explorer</span>
-                </div>
-                <nav class="hidden md:flex space-x-8">
-                    <button onclick="switchTab('intro')" id="nav-intro" class="nav-btn active px-3 py-2 text-sm font-medium">Scope</button>
-                    <button onclick="switchTab('business')" id="nav-business" class="nav-btn px-3 py-2 text-sm font-medium">Business Case</button>
-                    <button onclick="switchTab('methods')" id="nav-methods" class="nav-btn px-3 py-2 text-sm font-medium">Method Selector</button>
-                    <button onclick="switchTab('design')" id="nav-design" class="nav-btn px-3 py-2 text-sm font-medium">Survey Design</button>
-                </nav>
-                <!-- Mobile menu button placeholder (simplified) -->
-                <div class="md:hidden">
-                    <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-gray-700">☰</button>
-                </div>
-            </div>
-            <!-- Mobile Nav -->
-            <div id="mobile-menu" class="hidden md:hidden pb-4">
-                <div class="flex flex-col space-y-2">
-                    <button onclick="switchTab('intro')" class="text-left px-3 py-2 text-sm font-medium hover:bg-gray-50">Scope</button>
-                    <button onclick="switchTab('business')" class="text-left px-3 py-2 text-sm font-medium hover:bg-gray-50">Business Case</button>
-                    <button onclick="switchTab('methods')" class="text-left px-3 py-2 text-sm font-medium hover:bg-gray-50">Method Selector</button>
-                    <button onclick="switchTab('design')" class="text-left px-3 py-2 text-sm font-medium hover:bg-gray-50">Survey Design</button>
-                </div>
-            </div>
-        </div>
-    </header>
+// ---------- Method selector ----------
+const GOALS=[
+  {label:'Map the water table', why:'The saturated zone is more conductive and seismically slower; GPR often reflects off the table in sandy ground.',
+   methods:[['ERT','../lecture/electrical/'],['Seismic refraction','../lecture/seismic/'],['GPR','../lecture/gpr/']]},
+  {label:'Monitor soil moisture over time', why:'Repeat the same survey and image the change; wetting lowers resistivity and can be inverted to water content.',
+   methods:[['Time-lapse ERT','../lecture/electrical/'],['FDEM','../lecture/em/']]},
+  {label:'Find depth to bedrock', why:'Fresh rock is faster, more resistive, and denser than the weathered material above it.',
+   methods:[['Seismic refraction','../lecture/seismic/'],['ERT','../lecture/electrical/'],['Gravity','../lecture/gravity/']]},
+  {label:'Image the critical zone', why:'The weathering profile from soil to fresh rock shows up jointly in velocity and resistivity.',
+   methods:[['Seismic + ERT (joint)','../lecture/seismic/'],['Borehole logs','../lecture/borehole/']]},
+  {label:'Detect a contaminant plume', why:'Many plumes change pore-fluid conductivity or polarization relative to the background.',
+   methods:[['ERT','../lecture/electrical/'],['EM','../lecture/em/'],['SP','../lecture/electrical/'],['IP','../lecture/electrical/']]},
+  {label:'Locate a void or utility', why:'High-resolution reflection or a local mass deficit reveals shallow cavities and pipes.',
+   methods:[['GPR','../lecture/gpr/'],['Microgravity','../lecture/gravity/'],['EM','../lecture/em/']]},
+];
+const goalsEl=document.getElementById('goals'), whyEl=document.getElementById('why'), chipsEl=document.getElementById('chips');
+function selectGoal(i){
+  [...goalsEl.children].forEach((b,k)=>b.classList.toggle('active',k===i));
+  whyEl.textContent=GOALS[i].why;
+  chipsEl.innerHTML='';
+  GOALS[i].methods.forEach(([name,href])=>{
+    const a=document.createElement('a');a.className='chip';a.href=href;a.textContent=name;chipsEl.appendChild(a);
+  });
+}
+GOALS.forEach((g,i)=>{const b=document.createElement('button');b.className='goal';b.textContent=g.label;b.onclick=()=>selectGoal(i);goalsEl.appendChild(b);});
 
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-
-        <!-- INTRO SECTION -->
-        <section id="intro" class="space-y-8 animate-fade-in">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">Introduction to Environmental Geophysics</h1>
-                <p class="text-lg text-gray-600">
-                    Applied geophysics is the investigation of the Earth's crust and near-surface to achieve practical and economic aims. Unlike pure geophysics (global scale), we focus on the top 100 meters—where humanity interacts with the planet.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Definition Card -->
-                <div class="card p-6 border-l-4 border-[#A67B5B]">
-                    <h2 class="text-xl font-bold mb-3 text-gray-800">What is it?</h2>
-                    <p class="text-gray-600 mb-4">
-                        The application of physics to investigate near-surface bio-physico-chemical phenomena. It differs from <strong>Engineering Geophysics</strong> (focused on structures/materials) but the two often overlap.
-                    </p>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li class="flex items-start"><span class="text-[#A67B5B] mr-2">➤</span> <strong>Engineering:</strong> "Can we build here?" (Voids, rock strength)</li>
-                        <li class="flex items-start"><span class="text-[#708A81] mr-2">➤</span> <strong>Environmental:</strong> "Is it polluted?" (Contaminants, landfills)</li>
-                        <li class="flex items-start"><span class="text-[#5B7BA6] mr-2">➤</span> <strong>Forensic/Archaeo:</strong> "Is something hidden?" (Buried objects)</li>
-                    </ul>
-                </div>
-
-                <!-- Why do it? Card -->
-                <div class="card p-6 border-l-4 border-[#708A81]">
-                    <h2 class="text-xl font-bold mb-3 text-gray-800">The Core Benefit</h2>
-                    <p class="text-gray-600">
-                        Traditional site investigation relies on drilling holes or digging pits ("Intrusive Methods"). This is expensive and slow.
-                    </p>
-                    <div class="mt-4 bg-gray-50 p-4 rounded-lg">
-                        <p class="italic text-gray-700">"Instead of seeing geophysical survey as a cost, it should be viewed as adding value by making the entire site investigation more cost-effective."</p>
-                        <p class="text-right text-xs text-gray-500 mt-2">— Reynolds (2011)</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- BUSINESS CASE SECTION -->
-        <section id="business" class="hidden space-y-8">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">The Value Proposition</h2>
-                <p class="text-gray-600 mb-8">
-                    Based on the case study of a 2-hectare site in NW London (Table 1.1), we can mathematically demonstrate why relying solely on intrusive methods is risky. Explore the data below to see the difference between "Cost" and "Cost-Benefit".
-                </p>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Interactive Inputs -->
-                    <div class="card p-6">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4">Site Parameters (Interactive)</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Site Area (Square Meters)</label>
-                                <input type="number" id="siteArea" value="20000" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" onchange="updateBusinessCharts()">
-                            </div>
-                            
-                            <div class="bg-red-50 p-4 rounded-md border border-red-100">
-                                <h4 class="font-bold text-red-800 text-sm">Intrusive Strategy (Trial Pits)</h4>
-                                <p class="text-xs text-red-600 mb-2">High cost per sample point, low coverage.</p>
-                                <div class="flex justify-between text-sm">
-                                    <span>Cost per m²:</span>
-                                    <span class="font-mono">£18.23</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span>Sampling Rate:</span>
-                                    <span class="font-mono">< 1%</span>
-                                </div>
-                            </div>
-
-                            <div class="bg-green-50 p-4 rounded-md border border-green-100">
-                                <h4 class="font-bold text-green-800 text-sm">Geophysical Strategy</h4>
-                                <p class="text-xs text-green-600 mb-2">Low cost per sample point, high coverage.</p>
-                                <div class="flex justify-between text-sm">
-                                    <span>Cost per m²:</span>
-                                    <span class="font-mono">£0.33</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span>Sampling Rate:</span>
-                                    <span class="font-mono">> 95%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Charts -->
-                    <div class="flex flex-col space-y-6">
-                        <div class="card p-4">
-                            <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-2 text-center">Total Area Sampled (m²)</h4>
-                            <div class="chart-container">
-                                <canvas id="coverageChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="card p-4">
-                            <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-2 text-center">Probability of Target Detection</h4>
-                            <div class="chart-container">
-                                <canvas id="probabilityChart"></canvas>
-                            </div>
-                            <p class="text-xs text-center text-gray-500 mt-2">*Based on a 5m x 5m target</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- METHODS SELECTOR SECTION -->
-        <section id="methods" class="hidden space-y-8">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Method Selector</h2>
-                <p class="text-gray-600 mb-6">
-                    Geophysical methods rely on detecting <strong>contrasts</strong> in physical properties. Use this tool to select your target problem and identify the appropriate method (based on Table 1.2).
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Controls -->
-                    <div class="col-span-1 space-y-4">
-                        <div class="card p-6">
-                            <label class="block text-sm font-bold text-gray-700 mb-2">I am looking for:</label>
-                            <select id="targetSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" onchange="filterMethods()">
-                                <option value="all">Show All Methods</option>
-                                <option value="cavity">Cavities / Voids</option>
-                                <option value="metal">Buried Metal / Pipes</option>
-                                <option value="water">Groundwater / Contamination</option>
-                                <option value="bedrock">Depth to Bedrock / Engineering</option>
-                                <option value="landfill">Landfill Boundaries</option>
-                            </select>
-                            
-                            <div id="methodDescription" class="mt-6 text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-200">
-                                Select a target to see recommended methods.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Results Grid -->
-                    <div class="col-span-1 md:col-span-2">
-                        <div id="methodsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Cards will be injected here via JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SURVEY DESIGN SECTION -->
-        <section id="design" class="hidden space-y-8">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Survey Design: The Aliasing Trap</h2>
-                <p class="text-gray-600 mb-6">
-                    A common failure in survey design is <strong>Spatial Aliasing</strong>. This happens when the sampling interval is too large relative to the anomaly width. If you sample every 10m looking for a 2m pipe, you will likely miss it.
-                </p>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Simulator Controls -->
-                    <div class="col-span-1 card p-6 h-fit">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4">Survey Simulator</h3>
-                        <p class="text-sm text-gray-600 mb-4">
-                            The blue line represents a hidden underground anomaly (e.g., a pipe signal). The red dots are your measurement points.
-                        </p>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Sampling Interval (m)</label>
-                            <input type="range" id="samplingSlider" min="1" max="20" value="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>1m (Fine)</span>
-                                <span id="intervalValue" class="font-bold text-[#A67B5B]">10m</span>
-                                <span>20m (Coarse)</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-yellow-50 p-3 rounded border border-yellow-200">
-                            <h4 class="text-sm font-bold text-yellow-800">Observation:</h4>
-                            <p id="aliasingFeedback" class="text-xs text-yellow-700 mt-1">
-                                At 10m spacing, you are likely missing the peak of the anomaly.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Simulator Canvas -->
-                    <div class="col-span-1 lg:col-span-2">
-                        <div class="card p-4 h-96 flex flex-col items-center justify-center bg-gray-50">
-                            <canvas id="aliasingCanvas"></canvas>
-                        </div>
-                        <p class="text-center text-xs text-gray-400 mt-2">Interactive visualization of Figure 1.8 concepts</p>
-                    </div>
-                </div>
-                
-                <!-- Noise Section -->
-                 <div class="mt-12 border-t pt-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Handling Noise</h3>
-                    <p class="text-gray-600 mb-4">Noise can obscure your target. <strong>Coherent noise</strong> (like power lines) is systematic. <strong>Incoherent noise</strong> (wind, traffic) is random.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="chart-container">
-                            <canvas id="noiseChart"></canvas>
-                        </div>
-                        <div class="flex flex-col justify-center space-y-4">
-                            <label class="block text-sm font-medium text-gray-700">Incoherent Noise Level</label>
-                            <input type="range" id="noiseSlider" min="0" max="10" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" oninput="updateNoiseChart()">
-                            <p class="text-sm text-gray-600">Increase noise to see how the signal (Sine Wave) gets buried. This emphasizes the need for high Signal-to-Noise Ratio (SNR).</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-sm text-gray-500">Source: Reynolds, J. M. (2011). <em>An Introduction to Applied and Environmental Geophysics</em>. Generated for SEES:4800.</p>
-        </div>
-    </footer>
-
-    <!-- JavaScript Logic -->
-    <script>
-        // --- State Management ---
-        let currentTab = 'intro';
-        const methodData = [
-            { name: "Gravity", prop: "Density", apps: ["cavity", "bedrock"], description: "Detects missing mass (voids) or dense basement rocks." },
-            { name: "Magnetics", prop: "Susceptibility", apps: ["metal", "pipes", "archaeo"], description: "Ideal for buried steel drums, pipes, and firing features." },
-            { name: "Seismic Refraction", prop: "Elastic Moduli", apps: ["bedrock", "engineering"], description: "Standard for determining depth to bedrock and rock strength (rippability)." },
-            { name: "Resistivity", prop: "Conductivity", apps: ["water", "cavity"], description: "Excellent for mapping groundwater, clay layers, and contamination plumes." },
-            { name: "Ground Penetrating Radar (GPR)", prop: "Permittivity", apps: ["metal", "pipes", "archaeo", "cavity"], description: "High resolution shallow imaging for utilities and archaeology." },
-            { name: "Electromagnetic (EM)", prop: "Conductivity", apps: ["water", "metal", "landfill"], description: "Fast mapping of conductivity for pollution plumes and landfill boundaries." }
-        ];
-
-        // --- Navigation Logic ---
-        function switchTab(tabId) {
-            // Update UI State
-            document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(tabId).classList.remove('hidden');
-            
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            const navBtn = document.getElementById('nav-' + tabId);
-            if(navBtn) navBtn.classList.add('active');
-
-            // Trigger specific renders if needed
-            if (tabId === 'business') {
-                updateBusinessCharts();
-            } else if (tabId === 'methods') {
-                filterMethods(); // render all initially
-            } else if (tabId === 'design') {
-                initAliasingCanvas();
-                updateNoiseChart();
-            }
-            
-            currentTab = tabId;
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
-        // --- Business Case Charts (Chart.js) ---
-        let coverageChartInst = null;
-        let probabilityChartInst = null;
-
-        function updateBusinessCharts() {
-            const area = parseInt(document.getElementById('siteArea').value);
-            
-            // Data from Table 1.1:
-            // Pits: Sample ~192m2 per 20000m2 (ratio approx 0.0096)
-            // Geophysics: Sample ~19000m2 per 20000m2 (ratio approx 0.95)
-            
-            const pitCoverage = area * 0.0096;
-            const geoCoverage = area * 0.95;
-
-            // Coverage Chart
-            const ctx1 = document.getElementById('coverageChart').getContext('2d');
-            if (coverageChartInst) coverageChartInst.destroy();
-            
-            coverageChartInst = new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: ['Trial Pits Only', 'Geophysics + Targeted Pits'],
-                    datasets: [{
-                        label: 'Area Sampled (m²)',
-                        data: [pitCoverage, geoCoverage],
-                        backgroundColor: ['#EF4444', '#10B981'],
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, title: {display: true, text: 'Square Meters'} }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // Probability Chart (Conceptual based on Table 1.1)
-            // Table 1.1 says Pits < 10%, Geophysics > 90%
-            const ctx2 = document.getElementById('probabilityChart').getContext('2d');
-            if (probabilityChartInst) probabilityChartInst.destroy();
-
-            probabilityChartInst = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Success', 'Failure'],
-                    datasets: [
-                        {
-                            label: 'Trial Pits',
-                            data: [10, 90],
-                            backgroundColor: ['#EF4444', '#F3F4F6'],
-                            hoverOffset: 4
-                        },
-                        {
-                            label: 'Geophysics',
-                            data: [90, 10],
-                            backgroundColor: ['#10B981', '#F3F4F6'],
-                            hoverOffset: 4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: true, text: 'Outer: Geophysics | Inner: Trial Pits' }
-                    }
-                }
-            });
-        }
-
-        // --- Method Selector Logic ---
-        function filterMethods() {
-            const selection = document.getElementById('targetSelect').value;
-            const grid = document.getElementById('methodsGrid');
-            const desc = document.getElementById('methodDescription');
-            
-            grid.innerHTML = ''; // Clear current
-
-            let filtered = methodData;
-            if (selection !== 'all') {
-                filtered = methodData.filter(m => m.apps.includes(selection));
-                
-                // Update text description based on selection
-                const descriptions = {
-                    cavity: "Detection requires finding missing mass (Gravity) or resistive voids (Resistivity/GPR).",
-                    metal: "High magnetic susceptibility or high conductivity contrasts are key here.",
-                    water: "Water conductivity contrasts strongly with dry rock. Resistivity/EM are primary tools.",
-                    bedrock: "Seismic velocity increases in bedrock. Refraction is the standard tool.",
-                    landfill: "Leachate is highly conductive. EM and Resistivity define the plume boundaries."
-                };
-                desc.textContent = descriptions[selection] || "Methods filtered by application.";
-            } else {
-                desc.textContent = "Select a target to see recommended methods.";
-            }
-
-            filtered.forEach(m => {
-                const el = document.createElement('div');
-                el.className = 'card p-4 border-t-4 border-[#5B7BA6] hover:bg-gray-50';
-                el.innerHTML = `
-                    <h3 class="font-bold text-gray-800">${m.name}</h3>
-                    <div class="text-xs font-semibold text-[#A67B5B] uppercase tracking-wide mb-2">Property: ${m.prop}</div>
-                    <p class="text-sm text-gray-600">${m.description}</p>
-                `;
-                grid.appendChild(el);
-            });
-        }
-
-        // --- Aliasing Simulator (Canvas) ---
-        let aliasingCanvas, aliasingCtx;
-        
-        function initAliasingCanvas() {
-            aliasingCanvas = document.getElementById('aliasingCanvas');
-            const container = aliasingCanvas.parentElement;
-            aliasingCanvas.width = container.clientWidth;
-            aliasingCanvas.height = container.clientHeight;
-            aliasingCtx = aliasingCanvas.getContext('2d');
-            
-            drawAliasing(); // Initial draw
-            
-            // Handle resize
-            window.addEventListener('resize', () => {
-                if(currentTab === 'design') {
-                    aliasingCanvas.width = container.clientWidth;
-                    aliasingCanvas.height = container.clientHeight;
-                    drawAliasing();
-                }
-            });
-        }
-
-        document.getElementById('samplingSlider').addEventListener('input', (e) => {
-            document.getElementById('intervalValue').textContent = e.target.value + "m";
-            
-            // Update feedback text
-            const val = parseInt(e.target.value);
-            const feedback = document.getElementById('aliasingFeedback');
-            if (val <= 3) {
-                feedback.textContent = "Great! You are resolving the shape of the anomaly well.";
-                feedback.className = "text-xs text-green-700 mt-1";
-            } else if (val <= 8) {
-                feedback.textContent = "Warning: The shape is becoming distorted.";
-                feedback.className = "text-xs text-yellow-700 mt-1";
-            } else {
-                feedback.textContent = "CRITICAL: Severe aliasing. You might miss the target entirely.";
-                feedback.className = "text-xs text-red-700 mt-1";
-            }
-
-            drawAliasing();
-        });
-
-        function drawAliasing() {
-            if (!aliasingCtx) return;
-            const width = aliasingCanvas.width;
-            const height = aliasingCanvas.height;
-            const interval = parseInt(document.getElementById('samplingSlider').value);
-            
-            aliasingCtx.clearRect(0, 0, width, height);
-
-            // 1. Draw Ground Truth (The Anomaly - e.g., a Gaussian pulse)
-            // Representing a buried pipe or object
-            aliasingCtx.beginPath();
-            aliasingCtx.strokeStyle = "#5B7BA6"; // Blue
-            aliasingCtx.lineWidth = 3;
-            
-            const points = [];
-            for (let x = 0; x < width; x+=2) {
-                // Create a pulse in the center
-                const center = width / 2;
-                const spread = 40; // width of anomaly
-                const y = height/2 + 80 * Math.exp(-Math.pow(x - center, 2) / (2 * Math.pow(spread, 2))); // Gaussian
-                const invY = height - y + height/2 - 100; // Invert coordinates for canvas
-                if (x===0) aliasingCtx.moveTo(x, invY);
-                else aliasingCtx.lineTo(x, invY);
-                
-                points.push({x, y: invY});
-            }
-            aliasingCtx.stroke();
-
-            // 2. Draw Sampling Lines & Points
-            // Scale interval: 1 slider unit = approx 10 pixels
-            const pxInterval = interval * 15;
-            
-            aliasingCtx.fillStyle = "#EF4444"; // Red dots
-            
-            const sampledPoints = [];
-
-            // Draw grid lines
-            aliasingCtx.beginPath();
-            aliasingCtx.strokeStyle = "rgba(0,0,0,0.1)";
-            aliasingCtx.lineWidth = 1;
-
-            for (let x = 0; x < width; x += pxInterval) {
-                // Find Y at this X (approximate from our points array)
-                const point = points.find(p => Math.abs(p.x - x) < 2) || {y: height/2};
-                
-                // Draw vertical line
-                aliasingCtx.moveTo(x, 0);
-                aliasingCtx.lineTo(x, height);
-                
-                sampledPoints.push({x: x, y: point.y});
-            }
-            aliasingCtx.stroke();
-
-            // Draw Sampled Points
-            sampledPoints.forEach(p => {
-                aliasingCtx.beginPath();
-                aliasingCtx.arc(p.x, p.y, 5, 0, 2 * Math.PI);
-                aliasingCtx.fill();
-            });
-
-            // 3. Draw Interpolated Line (The "Measured" Reality)
-            aliasingCtx.beginPath();
-            aliasingCtx.strokeStyle = "#EF4444"; // Red
-            aliasingCtx.setLineDash([5, 5]);
-            aliasingCtx.lineWidth = 2;
-            
-            if (sampledPoints.length > 0) {
-                aliasingCtx.moveTo(sampledPoints[0].x, sampledPoints[0].y);
-                for (let i = 1; i < sampledPoints.length; i++) {
-                    aliasingCtx.lineTo(sampledPoints[i].x, sampledPoints[i].y);
-                }
-            }
-            aliasingCtx.stroke();
-            aliasingCtx.setLineDash([]); // Reset
-        }
-
-        // --- Noise Chart (Chart.js) ---
-        let noiseChartInst = null;
-        
-        function updateNoiseChart() {
-            if (currentTab !== 'design') return;
-            
-            const noiseLevel = parseInt(document.getElementById('noiseSlider').value);
-            const ctx = document.getElementById('noiseChart').getContext('2d');
-            
-            // Generate Data
-            const labels = [];
-            const signal = [];
-            const noise = [];
-            const combined = [];
-            
-            for (let i = 0; i < 50; i++) {
-                labels.push(i);
-                // Signal: Sine wave
-                const s = Math.sin(i * 0.2) * 10; 
-                signal.push(s);
-                // Noise: Random
-                const n = (Math.random() - 0.5) * noiseLevel * 5; 
-                noise.push(n);
-                combined.push(s + n);
-            }
-
-            if (noiseChartInst) noiseChartInst.destroy();
-            
-            noiseChartInst = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Pure Signal',
-                            data: signal,
-                            borderColor: '#10B981',
-                            borderWidth: 2,
-                            tension: 0.4,
-                            pointRadius: 0
-                        },
-                        {
-                            label: 'Observed Data (Signal + Noise)',
-                            data: combined,
-                            borderColor: '#333333',
-                            borderWidth: 1,
-                            tension: 0.1,
-                            pointRadius: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: false,
-                    scales: {
-                        y: { min: -30, max: 30 },
-                        x: { display: false }
-                    },
-                    plugins: {
-                        title: { display: true, text: 'Signal vs. Noise' }
-                    }
-                }
-            });
-        }
-
-        // Initialize default view
-        window.onload = function() {
-            switchTab('intro');
-            filterMethods();
-        };
-
-    </script>
+onThemeChange(archie);
+archie();
+selectGoal(0);
+</script>
 </body>
 </html>
