@@ -70,6 +70,7 @@ nav:
   - Home: index.md
   - Lectures:
       - Overview: lecture/index.md
+      - Lecture Frameworks: apps/lecture-frameworks.html
       - Introduction: lecture/intro/index.md
       - Gravity Methods: lecture/gravity/index.md
       - Magnetic Methods: lecture/magnetic/index.md
@@ -80,6 +81,7 @@ nav:
       - Magnetotellurics: lecture/mt/index.md
       - Borehole Geophysics: lecture/borehole/index.md
   - Practice:
+      - Classroom Labs: apps/classroom-labs.html
       - Field Missions: apps/field-missions.html
       - Practice Lab: apps/practice-lab.html
   - Data: data/index.md

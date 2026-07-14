@@ -15,6 +15,7 @@ Seismic waves travel at speeds set by the elastic moduli and density of the mate
     Compare intercept-time interpretation with refraction tomography, reciprocal acquisition, regularization, resolution, and uncertainty analysis.
 
 [Practice this module](../../apps/practice-lab.html#seismic){ .md-button }
+[View lecture framework](../../apps/lecture-frameworks.html#seismic){ .md-button }
 
 ## Topic Apps
 
@@ -45,6 +46,10 @@ Seismic waves travel at speeds set by the elastic moduli and density of the mate
     Adjust layer velocities and thickness in a two-layer earth and see the direct wave, head wave, crossover distance, and intercept time update live.
 
 </div>
+
+## Classroom Lab
+
+🧰 **[Foundation refraction and aquitard reflection](../../apps/classroom-labs.html#seismic)** — fit a three-segment T–X plot, estimate a layered model, test pick uncertainty, and diagnose a low-velocity hidden layer.
 
 ## Research Code: PyHydroGeophysX
 

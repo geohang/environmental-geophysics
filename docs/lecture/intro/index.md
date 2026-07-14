@@ -15,6 +15,7 @@ Geophysics lets us image the subsurface without digging: every method measures a
     Analyze method selection as a non-unique decision problem: compare sensitivity, expected data error, prior information, and the value of collecting complementary data.
 
 [Practice this module](../../apps/practice-lab.html#intro){ .md-button }
+[View lecture framework](../../apps/lecture-frameworks.html#intro){ .md-button }
 
 ## Interactive Lecture
 

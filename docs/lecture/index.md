@@ -2,6 +2,8 @@
 
 The course walks through the near-surface geophysical toolbox one method at a time. Each module combines an interactive lecture, hands-on activities, and quick concept demos. Work through them in order, or jump straight to the method you need.
 
+[Open the chapter-by-chapter lecture frameworks](../apps/lecture-frameworks.html){ .md-button }
+
 | Module | Interactive Materials | Core Ideas |
 |---|---|---|
 | [Introduction](intro/index.md) | Method and spacing simulator + demo | Choosing a method, depth vs. resolution |

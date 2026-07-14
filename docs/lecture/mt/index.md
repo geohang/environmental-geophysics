@@ -15,6 +15,7 @@ Magnetotellurics uses natural electromagnetic fields, from lightning activity an
     Evaluate dimensionality, tensor impedance, static shift, distortion, and regularization in 1D versus multidimensional MT inversion.
 
 [Practice this module](../../apps/practice-lab.html#mt){ .md-button }
+[View lecture framework](../../apps/lecture-frameworks.html#mt){ .md-button }
 
 ## Interactive Lecture
 

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Environmental Geophysics Classroom Labs</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/stylesheets/demo.css">
+<link rel="stylesheet" href="../assets/stylesheets/course-app.css">
+<style>
+.lab-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 4px; }
+.lab-tab { border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:999px; padding:8px 14px; font-weight:750; cursor:pointer; }
+.lab-tab:hover,.lab-tab.active { color:#fff; background:var(--c-primary); border-color:var(--c-primary); }
+.lab-view { display:none; }
+.lab-view.active { display:block; }
+.lab-head { display:grid; grid-template-columns:1fr auto; gap:14px; align-items:start; }
+.lab-head h2 { margin:.15rem 0 .35rem; }
+.lab-kicker { color:var(--c-primary); font-size:.78rem; font-weight:850; letter-spacing:.08em; text-transform:uppercase; }
+.tag-row { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
+.tag { border:1px solid var(--border); border-radius:999px; padding:4px 9px; color:var(--text-muted); font-size:.72rem; font-weight:750; white-space:nowrap; }
+.lab-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr); gap:18px; margin-top:16px; }
+.workflow { counter-reset:step; display:grid; gap:10px; margin:0; padding:0; list-style:none; }
+.workflow li { counter-increment:step; position:relative; padding:11px 12px 11px 46px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); }
+.workflow li::before { content:counter(step); position:absolute; left:12px; top:11px; width:25px; height:25px; display:grid; place-items:center; border-radius:50%; background:var(--c-primary); color:#fff; font-weight:850; }
+.deliverable { border-left:4px solid var(--c-success); border-radius:10px; background:color-mix(in srgb,var(--c-success) 9%,var(--surface)); padding:13px 15px; }
+.resource-box { border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--surface-2); }
+.resource-box h3 { margin-top:0; }
+.resource-links { display:grid; gap:8px; }
+.resource-links a { display:block; border:1px solid var(--border); border-radius:9px; padding:9px 11px; background:var(--surface); text-decoration:none; font-weight:700; }
+.resource-links a:hover { border-color:var(--c-primary); }
+.equation { overflow-x:auto; padding:11px 13px; border-radius:9px; background:var(--canvas-bg); border:1px solid var(--border); font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance { border-left:4px solid var(--c-primary); }
+.review-grid { display:grid; grid-template-columns:minmax(190px,.55fr) minmax(0,1.45fr); gap:18px; }
+.sequence { display:grid; gap:10px; }
+.sequence label { display:grid; grid-template-columns:82px 1fr; gap:10px; align-items:center; justify-content:stretch; }
+.sequence select { width:100%; background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px; }
+.review-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.feedback { min-height:28px; margin-top:10px; font-weight:700; }
+.feedback.good { color:var(--c-success); }.feedback.bad { color:var(--c-danger); }
+.source-list { font-size:.88rem; color:var(--text-muted); }
+.source-list li { margin-bottom:8px; }
+.privacy-note { display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:start; }
+.privacy-icon { font-size:1.6rem; }
+@media(max-width:760px){.lab-head,.lab-layout,.review-grid{grid-template-columns:1fr}.tag-row{justify-content:flex-start}.sequence label{grid-template-columns:1fr}.lab-tab{flex:1 1 140px}}
+</style>
+</head>
+<body>
+<div class="course-nav-bar">
+  <a href="../">← Course Home</a><a href="../lecture/">Modules</a><a href="practice-lab.html">Practice Lab</a>
+  <span class="spacer">Environmental Geophysics · Classroom Labs</span>
+</div>
+
+<header class="demo-header">
+  <div class="lab-kicker">From the University of Iowa classroom</div>
+  <h1>Classroom Lab Studio</h1>
+  <div class="subtitle">Six field-to-interpretation workflows adapted from the exercises used in class, plus a processing-pipeline review challenge.</div>
+</header>
+
+<main class="container">
+  <section class="panel provenance" aria-labelledby="provenance-title">
+    <div class="privacy-note">
+      <div class="privacy-icon" aria-hidden="true">🧾</div>
+      <div><h2 id="provenance-title">Public learning materials, not the formal exam</h2>
+      <p>These activities are rewritten from course-authored lab materials. Downloadable data are <strong>synthetic teaching datasets</strong> released under the course CC BY 4.0 content license. Formal examination questions, answer keys, and grading keys remain private. No third-party slide images are reproduced here; method claims are linked to scientific or government sources.</p></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="choose-lab-title">
+    <h2 id="choose-lab-title">Choose a classroom workflow</h2>
+    <div class="lab-tabs" role="tablist" aria-label="Classroom lab methods">
+      <button class="lab-tab" role="tab" data-lab="gravity">Gravity</button>
+      <button class="lab-tab" role="tab" data-lab="magnetic">Magnetics</button>
+      <button class="lab-tab" role="tab" data-lab="seismic">Seismic</button>
+      <button class="lab-tab" role="tab" data-lab="electrical">Electrical</button>
+      <button class="lab-tab" role="tab" data-lab="em">EM</button>
+      <button class="lab-tab" role="tab" data-lab="gpr">GPR</button>
+    </div>
+  </section>
+
+  <section class="panel lab-view" id="gravity" role="tabpanel">
+    <div class="lab-head"><div><div class="lab-kicker">Gravity data reduction</div><h2>Microgravity search for a limestone cavity</h2><p>Process a north-south profile from raw dial readings to a relative Bouguer anomaly, then test whether the anomaly shape is consistent with an air-filled cavity.</p></div><div class="tag-row"><span class="tag">Undergraduate Core</span><span class="tag">Spreadsheet or Python</span><span class="tag">Synthetic</span></div></div>
+    <div class="lab-layout"><div>
+      <ol class="workflow">
+        <li>Convert dial readings with the stated calibration factor and use repeated base readings to estimate linear instrument drift.</li>
+        <li>Apply latitude, free-air, and Bouguer terms with one documented sign convention and a 250 m datum.</li>
+        <li>Normalize the relative anomaly at Station 0 and plot anomaly versus profile distance.</li>
+        <li>Identify anomaly sign and center; estimate an ideal-sphere center depth with <strong>z ≈ 1.305x<sub>1/2</sub></strong>.</li>
+        <li>Write an engineering recommendation that distinguishes “cavity candidate” from “confirmed void.”</li>
+      </ol>
+      <div class="science-caveat"><strong>Scientific boundary:</strong> the half-width relation assumes an isolated sphere after adequate regional removal. Terrain, density uncertainty, non-spherical geometry, and nearby sources can dominate a real microgravity survey. Standard correction roles follow USGS gravity-reduction practice.<sup><a href="#ref-1">1</a></sup></div>
+      <div class="science-caveat"><strong>Data check:</strong> this revised dataset starts from a negative ideal-sphere response, then adds elevation, latitude, linear drift, and small deterministic noise before conversion to dial readings. With the listed correction signs, the recovered relative Bouguer anomaly must be a localized <em>low</em> near the profile midpoint and return close to its starting baseline. A positive-only or strongly sloping result signals a processing error; do not force both endpoints to zero.</div>
+      <div class="deliverable"><strong>Deliverable:</strong> one correction table, one annotated profile, a depth estimate with assumptions, and a 150-word client note.</div>
+    </div><aside class="resource-box"><h3>Open the lab</h3><div class="resource-links">
+      <a href="../data/gravity/cavity_survey.csv" download>⬇ Download cavity survey CSV</a>
+      <a href="../lecture/gravity/apps/activity-1.html">↗ Practice drift correction</a>
+      <a href="../lecture/gravity/apps/activity-3.html">↗ Test the half-width estimate</a>
+      <a href="../notebooks/gravity_drift_correction.ipynb">↗ Colab-ready notebook source</a>
+    </div></aside></div>
+  </section>
+
+  <section class="panel lab-view" id="magnetic" role="tabpanel">
+    <div class="lab-head"><div><div class="lab-kicker">Magnetic processing and hazard mapping</div><h2>Concealed dyke and buried-vessel profiles</h2><p>Use a base magnetometer to remove time variation from a total-field traverse, then compare that workflow with a vertical-gradient profile over a shallow ferrous target.</p></div><div class="tag-row"><span class="tag">Undergraduate Core</span><span class="tag">Two-part lab</span><span class="tag">Synthetic</span></div></div>
+    <div class="lab-layout"><div>
+      <ol class="workflow">
+        <li>Linearly interpolate base-station readings from five-minute samples to every survey minute.</li>
+        <li>Subtract the change relative to the starting base value, then remove the stated 0.5 nT/m regional gradient.</li>
+        <li>Plot the residual dyke anomaly and report how sampling, remanence, latitude, and source geometry limit a depth rule.</li>
+        <li>Plot the vertical-gradient profile; identify the positive peak, negative trough, and zero crossing.</li>
+        <li>Recommend a conservative investigation zone rather than an exact mechanical-dig depth.</li>
+      </ol>
+      <div class="science-caveat"><strong>Scientific boundary:</strong> base-station interpolation and diurnal correction are standard processing steps, while Peters/half-slope rules are geometry-dependent reconnaissance estimates. A gradient suppresses broad common-mode fields but does not remove all cultural or platform noise.<sup><a href="#ref-2">2</a></sup></div>
+      <div class="science-caveat"><strong>Data check:</strong> the gradiometer file reports the <em>difference between two sensors</em> in nT. It is not a calibrated vertical gradient until divided by the sensor separation, which was not specified in the source exercise. The cleaned website CSV also removes the extra filename row that caused incorrect import headers in the classroom CSV.</div>
+      <div class="deliverable"><strong>Deliverable:</strong> corrected and residual profiles, interpolation method, target-center estimate, uncertainty range, and a utility-safety recommendation.</div>
+    </div><aside class="resource-box"><h3>Open the data</h3><div class="resource-links">
+      <a href="../data/magnetic/base_station.csv" download>⬇ Base-station CSV</a>
+      <a href="../data/magnetic/raw_dyke_profile.csv" download>⬇ Raw dyke profile CSV</a>
+      <a href="../data/magnetic/gradiometer_profile.csv" download>⬇ Gradiometer profile CSV</a>
+      <a href="../lecture/magnetic/apps/depth-estimation.html">↗ Depth-estimation app</a>
+    </div></aside></div>
+  </section>
+
+  <section class="panel lab-view" id="seismic" role="tabpanel">
+    <div class="lab-head"><div><div class="lab-kicker">Applied seismic methods</div><h2>Foundation refraction and aquitard reflection</h2><p>Turn 24 first-arrival picks into a three-segment T-X interpretation, then decide why an underlying low-velocity clay can be invisible to first-arrival refraction.</p></div><div class="tag-row"><span class="tag">Undergraduate Core</span><span class="tag">Graduate uncertainty prompt</span><span class="tag">Synthetic</span></div></div>
+    <div class="lab-layout"><div>
+      <ol class="workflow">
+        <li>Plot arrival time in milliseconds versus offset and choose defensible fitting windows for the direct and refracted arrivals.</li>
+        <li>Fit each segment, convert slope to velocity with consistent SI units, and estimate intercept times.</li>
+        <li>Apply the horizontal-layer intercept-time model and report sensitivity to one-pick or one-window changes.</li>
+        <li>Use acoustic impedance and normal-incidence reflection coefficients to rank candidate reflectors.</li>
+        <li>Explain why a velocity inversion can hide an aquitard from refraction and how reflection or another method helps.</li>
+      </ol>
+      <div class="science-caveat"><strong>Scientific boundary:</strong> first-arrival refraction requires suitable velocity structure and sufficient refractor thickness. Thin intermediate layers, weak contrasts, and low-velocity layers beneath faster material can be missed; reciprocal shots and pick uncertainty belong in the interpretation.<sup><a href="#ref-3">3</a></sup></div>
+      <div class="science-caveat"><strong>Data check:</strong> these are idealized, rounded first arrivals with three internally consistent linear branches (approximately 500, 1500, and 3000 m/s). They check units and intercept-time algebra, but their near-perfect linearity must not be presented as field precision; add a pick-uncertainty test before interpreting depth.</div>
+      <div class="deliverable"><strong>Deliverable:</strong> annotated T-X graph, model table, uncertainty test, hidden-layer explanation, and an engineering interpretation.</div>
+    </div><aside class="resource-box"><h3>Open the lab</h3><div class="resource-links">
+      <a href="../data/seismic/three_layer_first_arrivals.csv" download>⬇ Three-layer first arrivals CSV</a>
+      <a href="../lecture/seismic/apps/seismic-refraction.html">↗ Seismic refraction lab app</a>
+      <a href="../lecture/seismic/apps/demo-refraction-traveltime.html">↗ T-X curve builder</a>
+      <a href="../notebooks/seismic_refraction.ipynb">↗ Seismic notebook source</a>
+    </div></aside></div>
+  </section>
+
+  <section class="panel lab-view" id="electrical" role="tabpanel">
+    <div class="lab-head"><div><div class="lab-kicker">VES group investigation</div><h2>Three-layer curves, suppression, and equivalence</h2><p>Use the interactive forward model in teams. Each team changes one family of parameters, documents what remains visible, and teaches one interpretation hazard to the class.</p></div><div class="tag-row"><span class="tag">Undergraduate Core</span><span class="tag">Graduate Extension</span><span class="tag">Group activity</span></div></div>
+    <div class="lab-layout"><div>
+      <ol class="workflow">
+        <li><strong>Team A — curve type:</strong> build H- and A-type models; show why a curve minimum is not automatically a layer resistivity or depth.</li>
+        <li><strong>Team B — suppression:</strong> vary middle-layer thickness and decide when a three-layer response becomes distinguishable from a two-layer response.</li>
+        <li><strong>Team C — equivalence:</strong> preserve transverse resistance or longitudinal conductance while changing thickness and resistivity.</li>
+        <li>Compare Wenner and Schlumberger spacing requirements without treating electrode spacing as a literal depth axis.</li>
+        <li>Propose one independent constraint that could reduce ambiguity: borehole, geology, water conductivity, or a second geophysical method.</li>
+      </ol>
+      <div class="science-caveat"><strong>Scientific boundary:</strong> measured apparent resistivity is a geometry-weighted datum, not a true layer property. Forward-model equivalence and inversion regularization mean that several Earth models may fit the same sounding.<sup><a href="#ref-4">4</a></sup></div>
+      <div class="deliverable"><strong>Deliverable:</strong> two model screenshots, parameter table, a two-minute group explanation, and a client-safe interpretation statement.</div>
+    </div><aside class="resource-box"><h3>Open the activity</h3><div class="resource-links">
+      <a href="../lecture/electrical/apps/ert-2.html">↗ Three-layer VES modeler</a>
+      <a href="../data/electrical/ves_sounding.csv" download>⬇ VES sounding CSV</a>
+      <a href="../lecture/electrical/apps/ert.html">↗ Array geometric factors</a>
+      <a href="../notebooks/ert_forward_model.ipynb">↗ ERT notebook source</a>
+    </div></aside></div>
+  </section>
+
+  <section class="panel lab-view" id="em" role="tabpanel">
+    <div class="lab-head"><div><div class="lab-kicker">1D electromagnetic interpretation</div><h2>FDEM plume triage and TEM bedrock comparison</h2><p>Use diffusion-depth approximations to make a first survey choice, then state why the calculation is not a substitute for a system-specific forward model.</p></div><div class="tag-row"><span class="tag">Undergraduate Core</span><span class="tag">Teaching proxy</span><span class="tag">Synthetic</span></div></div>
+    <div class="lab-layout"><div>
+      <ol class="workflow">
+        <li>For FDEM frequencies of 100 kHz, 10 kHz, 1 kHz, and 100 Hz, compute <strong>δ ≈ 503√(ρ/f)</strong> using the stated representative resistivity.</li>
+        <li>Select the highest frequency whose attenuation scale reaches a 12 m target; explain the resolution-depth trade-off.</li>
+        <li>Compare a simple two-layer longitudinal-conductance proxy with the measured apparent response.</li>
+        <li>For two TEM slope-change times, compute <strong>δ ≈ 500√(ρt)</strong> after converting milliseconds to seconds.</li>
+        <li>Recommend the lower-cost foundation site and name the uniform-overburden and instrument-response assumptions.</li>
+      </ol>
+      <div class="science-caveat"><strong>Scientific boundary:</strong> skin or diffusion depth is an attenuation scale, not a hard investigation depth. Coil geometry, waveform, coupling, conductivity layering, noise, and the chosen datum require full forward modeling before quantitative interpretation.</div>
+      <div class="deliverable"><strong>Deliverable:</strong> calculation table, frequency/site decisions, one sensitivity test, and a two-sentence engineering memo.</div>
+    </div><aside class="resource-box"><h3>Open the activity</h3><div class="resource-links">
+      <a href="../lecture/em/apps/demo-skin-depth.html">↗ Skin-depth visualizer</a>
+      <a href="../lecture/em/apps/fdem-tem.html">↗ FDEM/TEM 1D teaching model</a>
+      <a href="../lecture/em/apps/electromagnetic-methods-2.html">↗ Waveform activity</a>
+      <a href="../references/">↗ EM references</a>
+    </div></aside></div>
+  </section>
+
+  <section class="panel lab-view" id="gpr" role="tabpanel">
+    <div class="lab-head"><div><div class="lab-kicker">Utility locating and survey design</div><h2>Depth uncertainty before excavation</h2><p>Convert a utility hyperbola apex from time to depth under two plausible velocity models, then decide what can safely be recommended before intrusive work.</p></div><div class="tag-row"><span class="tag">Undergraduate Core</span><span class="tag">Safety decision</span><span class="tag">Synthetic</span></div></div>
+    <div class="lab-layout"><div>
+      <ol class="workflow">
+        <li>For a two-way time of 18 ns, compute velocity and depth for dry sand (ε<sub>r</sub> = 4) and wet sand (ε<sub>r</sub> = 16).</li>
+        <li>Use the range of depths—not the preferred value—to assess whether a proposed 1.2 m auger depth is defensible.</li>
+        <li>Calculate the magnitude and polarity of the normal-incidence reflection coefficient using a clearly stated sign convention.</li>
+        <li>Choose between 250 MHz and 1000 MHz for a 2.5 m target beneath clay-prone ground.</li>
+        <li>Specify one calibration step, one acquisition practice, and one artifact or limitation to check.</li>
+      </ol>
+      <div class="equation">v ≈ 0.30 / √ε<sub>r</sub> &nbsp; m/ns &nbsp;&nbsp;&nbsp; z = vt/2</div>
+      <div class="science-caveat"><strong>Scientific boundary:</strong> depth conversion assumes a representative velocity. Water content, heterogeneity, anisotropy, zero-time error, antenna separation, and target geometry can bias a hyperbola fit; conductive clay may prevent the target from being imaged at all.<sup><a href="#ref-5">5</a></sup></div>
+      <div class="deliverable"><strong>Deliverable:</strong> two depth estimates, an uncertainty-based safety statement, antenna choice, and a field checklist.</div>
+    </div><aside class="resource-box"><h3>Open the activity</h3><div class="resource-links">
+      <a href="../lecture/gpr/apps/demo-hyperbola.html">↗ Hyperbola velocity estimator</a>
+      <a href="../lecture/gpr/apps/gpr-2.html">↗ GPR survey simulator</a>
+      <a href="../lecture/gpr/">↗ GPR module</a>
+      <a href="../references/">↗ GPR references</a>
+    </div></aside></div>
+  </section>
+
+  <section class="panel" id="pipeline-review" aria-labelledby="pipeline-title">
+    <div class="lab-kicker">Formative review — both levels</div>
+    <h2 id="pipeline-title">Build the processing pipeline</h2>
+    <p>This public challenge captures the classroom blackboard activity without reproducing formal exam questions. Choose a method, then put the field-to-interpretation steps in order.</p>
+    <div class="review-grid">
+      <div class="resource-box">
+        <label for="pipeline-method"><strong>Assigned method</strong></label>
+        <select id="pipeline-method">
+          <option value="gravity">Gravity</option>
+          <option value="magnetic">Magnetics</option>
+          <option value="seismic">Seismic refraction</option>
+        </select>
+        <p class="hint">Each sequence ends with an interpretation that states assumptions and limitations.</p>
+      </div>
+      <div>
+        <div class="sequence" id="pipeline-sequence"></div>
+        <div class="review-actions"><button class="btn" id="check-pipeline">Check sequence</button><button class="btn" id="reset-pipeline">Reset</button></div>
+        <div class="feedback" id="pipeline-feedback" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="sources-title">
+    <h2 id="sources-title">Sources and attribution</h2>
+    <ol class="source-list">
+      <li id="ref-1">Roberts, C. W., Jachens, R. C., Katzenstein, A., Smith, G. A., & Johnson, R. (2002). <em>Gravity map and data of the eastern half of the Big Bear Lake 1:100,000-scale quadrangle, California, and analysis of the depths of several basins</em>. USGS Open-File Report 02-353. <a href="https://pubs.usgs.gov/of/2002/0353/method.html">Gravity methods and reduction notes</a>.</li>
+      <li id="ref-2">U.S. Geological Survey. (2004). <em>Long Valley Ground Magnetic Data Processing</em>, Open-File Report 2004-1096. <a href="https://pubs.usgs.gov/of/2004/1096/lv_data_proc.html">Processing steps and data channels</a>.</li>
+      <li id="ref-3">Haeni, F. P. (1988). <em>Application of Seismic-Refraction Techniques to Hydrologic Studies</em>. USGS Techniques of Water-Resources Investigations 02-D2. <a href="https://doi.org/10.3133/twri02D2">doi:10.3133/twri02D2</a>.</li>
+      <li id="ref-4">Loke, M. H., Chambers, J. E., Rucker, D. F., Kuras, O., & Wilkinson, P. B. (2013). Recent developments in the direct-current geoelectrical imaging method. <em>Journal of Applied Geophysics, 95</em>, 135–156. <a href="https://doi.org/10.1016/j.jappgeo.2013.02.017">doi:10.1016/j.jappgeo.2013.02.017</a>.</li>
+      <li id="ref-5">Jacob, R. W., & Hermance, J. F. (2004). Assessing the precision of GPR velocity and vertical two-way travel time estimates. <em>Journal of Environmental & Engineering Geophysics, 9</em>(3), 143–153. <a href="https://doi.org/10.4133/JEEG9.3.143">doi:10.4133/JEEG9.3.143</a>.</li>
+    </ol>
+    <p class="hint">The activity wording, synthetic datasets, and HTML graphics are original course materials by Hang Chen. References support the method principles and limitations; they are not sources for copied figures.</p>
+  </section>
+</main>
+
+<script>
+const tabs=[...document.querySelectorAll('.lab-tab')];
+const views=[...document.querySelectorAll('.lab-view')];
+function showLab(id,updateHash=true){
+  tabs.forEach(tab=>{const active=tab.dataset.lab===id;tab.classList.toggle('active',active);tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;});
+  views.forEach(view=>view.classList.toggle('active',view.id===id));
+  if(updateHash)history.replaceState(null,'',`#${id}`);
+}
+tabs.forEach(tab=>tab.addEventListener('click',()=>showLab(tab.dataset.lab)));
+
+const pipelines={
+  gravity:[
+    'Convert meter readings and close the base loop',
+    'Estimate and remove time-dependent drift',
+    'Apply latitude and elevation-related corrections with documented signs',
+    'Plot the residual or Bouguer anomaly',
+    'Estimate source depth only after checking geometry and uncertainty'
+  ],
+  magnetic:[
+    'Quality-control survey and base-station time series',
+    'Interpolate and subtract diurnal variation',
+    'Remove the stated main/regional field model',
+    'Plot the residual anomaly or gradient',
+    'Estimate target location/depth with magnetization and geometry caveats'
+  ],
+  seismic:[
+    'Quality-control geometry and first-arrival picks',
+    'Plot the T-X data and identify defensible segments',
+    'Fit slopes and convert slowness to apparent velocity',
+    'Estimate intercepts and layer depths with a stated model',
+    'Test reciprocity, hidden layers, lateral change, and pick uncertainty'
+  ]
+};
+const method=document.getElementById('pipeline-method');
+const sequence=document.getElementById('pipeline-sequence');
+const feedback=document.getElementById('pipeline-feedback');
+function renderPipeline(){
+  const correct=pipelines[method.value];
+  const options=[...correct].sort((a,b)=>a.localeCompare(b));
+  sequence.innerHTML=correct.map((_,index)=>`<label for="pipeline-step-${index}"><strong>Step ${index+1}</strong><select id="pipeline-step-${index}"><option value="">Choose a step…</option>${options.map(item=>`<option value="${item}">${item}</option>`).join('')}</select></label>`).join('');
+  feedback.textContent='';feedback.className='feedback';
+}
+function checkPipeline(){
+  const correct=pipelines[method.value];
+  const selected=correct.map((_,index)=>document.getElementById(`pipeline-step-${index}`).value);
+  if(selected.some(value=>!value)){feedback.textContent='Complete every step before checking.';feedback.className='feedback bad';return;}
+  const matches=selected.filter((value,index)=>value===correct[index]).length;
+  if(matches===correct.length){feedback.textContent='Strong workflow. Now explain why each correction or inference is needed, and identify the weakest assumption.';feedback.className='feedback good';return;}
+  const first=selected.findIndex((value,index)=>value!==correct[index]);
+  feedback.textContent=`${matches} of ${correct.length} positions are correct. Reconsider Step ${first+1}: processing should move from raw-data QC toward correction, modeling, and finally qualified interpretation.`;
+  feedback.className='feedback bad';
+}
+method.addEventListener('change',renderPipeline);
+document.getElementById('check-pipeline').addEventListener('click',checkPipeline);
+document.getElementById('reset-pipeline').addEventListener('click',renderPipeline);
+const requested=location.hash.slice(1);
+showLab(views.some(view=>view.id===requested)?requested:'gravity',false);
+renderPipeline();
+</script>
+<script src="../assets/javascripts/course-app.js"></script>
+</body>
+</html>

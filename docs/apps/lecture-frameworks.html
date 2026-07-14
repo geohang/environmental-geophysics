@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Nine evidence-aware lecture frameworks for Environmental Geophysics.">
+<title>Lecture Frameworks | Environmental Geophysics</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/stylesheets/demo.css">
+<link rel="stylesheet" href="../assets/stylesheets/course-app.css">
+<script src="../assets/javascripts/demo-theme.js"></script>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]}};</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+<script defer src="../assets/javascripts/course-app.js"></script>
+<style>
+.framework-nav{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 12px;scrollbar-width:thin}
+.framework-tab{min-height:44px;white-space:nowrap;border:1px solid var(--border);border-radius:999px;background:var(--surface-2);color:var(--text);padding:9px 15px;font:inherit;font-weight:700;cursor:pointer}
+.framework-tab[aria-selected="true"]{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
+.framework{display:none}.framework.active{display:block}
+.framework-head{display:grid;gap:14px;margin-bottom:18px}.framework-head h2{margin:2px 0 6px}.eyebrow{color:var(--c-accent);font-size:.78rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.source-deck{color:var(--text-muted);font-size:.88rem}
+.deck-arc,.run-of-show{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+.arc-step,.time-step{border:1px solid var(--border);border-radius:12px;background:var(--surface-2);padding:13px}
+.arc-step b,.time-step b{display:block;color:var(--c-primary);margin-bottom:4px}.arc-step span,.time-step span{color:var(--text-muted);font-size:.88rem}
+.teaching-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0}.teaching-card{border:1px solid var(--border);border-radius:12px;padding:16px;background:var(--surface)}.teaching-card h3{margin:0 0 8px;font-size:1rem}.teaching-card ul{margin:.35rem 0 0;padding-left:1.2rem}.teaching-card li+li{margin-top:.35rem}
+.level-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.level{border-left:4px solid var(--c-primary);background:var(--surface-2);border-radius:8px;padding:12px 14px}.level.graduate{border-color:var(--c-accent)}
+.framework-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.framework-links a{display:inline-flex;align-items:center;min-height:44px;border:1px solid var(--c-primary);border-radius:9px;padding:8px 13px;text-decoration:none;font-weight:700;color:var(--c-primary)}.framework-links a:hover{background:var(--c-primary);color:#fff}
+.rights-note{border-left:4px solid var(--c-accent);padding:12px 16px;background:var(--surface-2);border-radius:8px}.rights-note p{margin:.35rem 0}.rights-note a{font-weight:700}
+@media(max-width:760px){.deck-arc,.run-of-show,.teaching-grid,.level-row{grid-template-columns:1fr}.framework-nav{margin-inline:-6px}.panel{padding:18px}}
+</style>
+</head>
+<body>
+<div class="course-nav-bar"><a href="../">&#8592; Course Home</a><span class="spacer">Environmental Geophysics</span></div>
+<header class="demo-header">
+  <div class="eyebrow">Course-authored teaching map</div>
+  <h1>Lecture Frameworks</h1>
+  <div class="subtitle">A chapter-by-chapter HTML teaching spine distilled from the classroom slide decks: scientific sequence, 50-minute pacing, active-learning prompts, lab bridge, and extension path.</div>
+</header>
+
+<main class="container">
+  <section class="panel rights-note" aria-labelledby="use-title">
+    <h2 id="use-title">How to use and cite these frameworks</h2>
+    <p>The sequence and wording below are an original synthesis of Dr. Hang Chen's course materials. No third-party slide images are reproduced. When rebuilding a slide, use an original diagram or a clearly licensed source and place creator, year, source URL, and license in the slide footer. Method claims should point to the course <a href="../references/">references</a> or another primary source.</p>
+    <p><strong>Public boundary:</strong> these are teaching outlines, not formal exam content or answer keys.</p>
+  </section>
+
+  <nav class="framework-nav" role="tablist" aria-label="Lecture chapters">
+    <button class="framework-tab" role="tab" data-framework="intro">Introduction</button>
+    <button class="framework-tab" role="tab" data-framework="gravity">Gravity</button>
+    <button class="framework-tab" role="tab" data-framework="magnetic">Magnetics</button>
+    <button class="framework-tab" role="tab" data-framework="seismic">Seismic</button>
+    <button class="framework-tab" role="tab" data-framework="electrical">Electrical</button>
+    <button class="framework-tab" role="tab" data-framework="em">EM</button>
+    <button class="framework-tab" role="tab" data-framework="gpr">GPR</button>
+    <button class="framework-tab" role="tab" data-framework="mt">MT</button>
+    <button class="framework-tab" role="tab" data-framework="borehole">Borehole</button>
+  </nav>
+
+  <section class="panel framework" id="intro" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 1 · Method selection</div><h2>Introduction to Environmental Geophysics</h2><p>Build the central habit of the course: translate a site question into a detectable physical-property contrast, then design a survey that can actually sample it.</p><div class="source-deck">Deck basis: <em>Environmental Geophysics—Introduction &amp; Course Overview</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Why image?</b><span>Coverage, risk reduction, and the limits of intrusive sampling.</span></div><div class="arc-step"><b>2 · What is measured?</b><span>Fields, contrasts, anomalies, active versus passive methods.</span></div><div class="arc-step"><b>3 · Can we detect it?</b><span>Target size, depth, spacing, noise, logistics, and ground truth.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>Choose between sparse pits and a spatial survey for a buried hazard.</span></div><div class="time-step"><b>8–24 min · Physics map</b><span>Match density, susceptibility, velocity, resistivity, and permittivity to methods.</span></div><div class="time-step"><b>24–38 min · Design</b><span>Work through sampling, aliasing, noise, positioning, and constraints.</span></div><div class="time-step"><b>38–47 min · Mission plan</b><span>Teams design a survey for a steel underground tank near cultural noise.</span></div><div class="time-step"><b>47–50 min · Exit</b><span>Name the measured property, expected signal, and strongest ambiguity.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Board / slide essentials</h3><ul><li>Question → target → contrast → method → geometry → data → model → interpretation.</li><li>Resolution, depth, coverage, and signal-to-noise trade-offs.</li><li>Spatial sampling smaller than the feature scale; no universal depth rule.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>Geophysics does not detect “groundwater” or “a drum” directly. It detects a contrast whose geological cause is non-unique.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Defend one primary method and station spacing for a stated target.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Frame survey design as expected information gain under noise, cost, and prior uncertainty.</div></div>
+    <div class="framework-links"><a href="../lecture/intro/">Open chapter</a><a href="field-missions.html">Field Missions</a><a href="practice-lab.html#intro">Practice questions</a></div>
+  </section>
+
+  <section class="panel framework" id="gravity" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 2 · Density contrast</div><h2>Gravity Methods</h2><p>Move from Newtonian attraction and density contrast to field reduction, residual anomalies, and deliberately limited source-depth estimates.</p><div class="source-deck">Deck basis: <em>Gravity Methods—Physical Basis, Measurements, Corrections, and Interpretation</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Signal</b><span>Newton's law, acceleration units, density contrast, scale of a mGal.</span></div><div class="arc-step"><b>2 · Reduction</b><span>Base loop, tides, latitude, free air, Bouguer slab, and terrain.</span></div><div class="arc-step"><b>3 · Interpretation</b><span>Regional/residual separation, simple sources, half-width, non-uniqueness.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–7 min · Hook</b><span>Can missing rock mass beneath a road be measured from the surface?</span></div><div class="time-step"><b>7–20 min · Physics</b><span>Relate anomaly sign and width to density contrast and depth.</span></div><div class="time-step"><b>20–35 min · Corrections</b><span>Construct one sign-consistent reduction table from a base loop.</span></div><div class="time-step"><b>35–46 min · Interpret</b><span>Measure half amplitude and test an ideal-sphere depth estimate.</span></div><div class="time-step"><b>46–50 min · Exit</b><span>Separate “gravity low” from “confirmed cavity.”</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Equation / visual set</h3><ul><li>\(g=GM/r^2\), \(\Delta g\) from a density contrast.</li><li>Relative Bouguer anomaly with every correction sign documented.</li><li>Sphere only: \(z\approx1.305x_{1/2}\).</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>Terrain correction is positive under the standard convention, and a half-width relation is not transferable to an incompletely defined cylinder or arbitrary cavity.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Reduce the revised cavity dataset and explain the negative anomaly.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Propagate density, terrain, regional-removal, and geometry uncertainty into the depth claim.</div></div>
+    <div class="framework-links"><a href="../lecture/gravity/">Open chapter</a><a href="classroom-labs.html#gravity">Classroom lab</a><a href="practice-lab.html#gravity">Practice questions</a></div>
+  </section>
+
+  <section class="panel framework" id="magnetic" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 3 · Magnetization</div><h2>Magnetic Methods</h2><p>Connect the geomagnetic field, induced and remanent magnetization, instrumentation, processing, and the geometry-dependent shape of anomalies.</p><div class="source-deck">Deck basis: <em>Geomagnetic Methods—Earth's Field, Instruments, Interpretation, and Processing</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Field &amp; sources</b><span>F, inclination, declination, susceptibility, remanence.</span></div><div class="arc-step"><b>2 · Measure &amp; clean</b><span>Sensor types, base station, gradiometry, IGRF, leveling.</span></div><div class="arc-step"><b>3 · Transform &amp; infer</b><span>Continuation, RTP limits, Peters-style reconnaissance, modeling.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>Why can a source and its anomaly peak be horizontally displaced?</span></div><div class="time-step"><b>8–23 min · Physics</b><span>Compare induced and remanent vectors under different field inclinations.</span></div><div class="time-step"><b>23–35 min · Workflow</b><span>Interpolate a base record and remove a stated regional field.</span></div><div class="time-step"><b>35–46 min · Hazard profile</b><span>Locate a ferrous target while resisting false depth precision.</span></div><div class="time-step"><b>46–50 min · Exit</b><span>Name one condition that invalidates RTP or a slope rule.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Data literacy</h3><ul><li>Total field (nT) versus a sensor difference (nT) versus a calibrated gradient (nT/m).</li><li>Diurnal correction relative to a common base reference.</li><li>Peak location depends on field direction, source geometry, and remanence.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>A high–low pair is not a unique cylinder signature, and a zero crossing is not automatically the exact excavation point.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Produce corrected total-field and two-sensor-difference profiles with units.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Test magnetization-direction and geometry sensitivity before applying RTP or depth estimators.</div></div>
+    <div class="framework-links"><a href="../lecture/magnetic/">Open chapter</a><a href="classroom-labs.html#magnetic">Classroom lab</a><a href="practice-lab.html#magnetic">Practice questions</a></div>
+  </section>
+
+  <section class="panel framework" id="seismic" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 4 · Elastic waves</div><h2>Seismic Methods</h2><p>Link elastic properties to P- and S-wave behavior, then use travel-time slopes and intercepts without hiding the assumptions behind refraction.</p><div class="source-deck">Deck basis: <em>Seismic Exploration—Elasticity, Refraction, Reflection, and Environmental Applications</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Wave physics</b><span>Stress, strain, moduli, P/S waves, impedance.</span></div><div class="arc-step"><b>2 · Travel times</b><span>Direct, reflected, critically refracted waves and first-break picks.</span></div><div class="arc-step"><b>3 · Models &amp; limits</b><span>Intercept time, reciprocity, hidden layers, tomography, uncertainty.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>Interpret three straight branches on a T–X plot.</span></div><div class="time-step"><b>8–22 min · Physics</b><span>Derive velocity from slope and reflection polarity from impedance.</span></div><div class="time-step"><b>22–38 min · Calculation</b><span>Fit the 500/1500/3000 m/s synthetic branches and intercepts.</span></div><div class="time-step"><b>38–47 min · Failure case</b><span>Diagnose a low-velocity aquitard invisible to head waves.</span></div><div class="time-step"><b>47–50 min · Exit</b><span>State one acquisition check that could expose lateral variation.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Equation / visual set</h3><ul><li>\(V_P=\sqrt{(K+4G/3)/\rho}\), \(V_S=\sqrt{G/\rho}\).</li><li>T–X slope in s/m; velocity is its reciprocal.</li><li>\(R=(Z_2-Z_1)/(Z_2+Z_1)\) with a stated polarity convention.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>Saturation often raises shallow P-wave velocity across the unsaturated–saturated transition; its effect is not a universal “slower saturated zone,” and S waves respond differently.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Fit branches, calculate intercepts, and recognize velocity inversion.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Compare reciprocal picks and inversion resolution; propagate pick uncertainty into interface depth.</div></div>
+    <div class="framework-links"><a href="../lecture/seismic/">Open chapter</a><a href="classroom-labs.html#seismic">Classroom lab</a><a href="practice-lab.html#seismic">Practice questions</a></div>
+  </section>
+
+  <section class="panel framework" id="electrical" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 5 · Charge transport</div><h2>Electrical, SP, and IP Methods</h2><p>Separate rock-physics controls from array geometry and inversion, then compare galvanic resistivity with passive SP and time/frequency-dependent IP.</p><div class="source-deck">Deck basis: <em>Electrical Methods</em>, <em>ERT Principles—Three-Layer Model</em>, and <em>Self-Potential &amp; IP Methods</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Conduction</b><span>Pore fluids, Archie, clay surface conduction, salinity, temperature.</span></div><div class="arc-step"><b>2 · Survey response</b><span>Geometric factor, apparent resistivity, VES/ERT arrays, SP/IP observables.</span></div><div class="arc-step"><b>3 · Inversion</b><span>Sensitivity, regularization, equivalence, calibration, joint interpretation.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>Why can clay, saline water, and contamination all look conductive?</span></div><div class="time-step"><b>8–23 min · Physics</b><span>Calculate Archie only after naming its clean-sand assumptions.</span></div><div class="time-step"><b>23–36 min · Measurement</b><span>Build Wenner geometric factor and distinguish true from apparent resistivity.</span></div><div class="time-step"><b>36–47 min · VES teams</b><span>Explore H/A curves, suppression, equivalence, and DOI limits.</span></div><div class="time-step"><b>47–50 min · Exit</b><span>Write one sentence that does not overclaim water content.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Non-negotiable distinctions</h3><ul><li>Measured voltage/current → apparent resistivity → inverted model → geological interpretation.</li><li>SP and IP do not directly measure water content.</li><li>Cole–Cole exponent and Fourier-sign conventions must be declared.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>A low resistivity cell is not uniquely clay, water, salinity, or contaminant; Archie conversion requires site calibration and often fails in clay-rich media.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Calculate K and apparent resistivity, classify VES shape, and name ambiguity.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Compare sensitivity, regularization, equivalence, and petrophysical error propagation.</div></div>
+    <div class="framework-links"><a href="../lecture/electrical/">Open chapter</a><a href="classroom-labs.html#electrical">Classroom lab</a><a href="practice-lab.html#electrical">Practice questions</a></div>
+  </section>
+
+  <section class="panel framework" id="em" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 6 · Inductive diffusion</div><h2>Electromagnetic Methods</h2><p>Trace the transmitter–earth–receiver chain in FDEM and TEM, using diffusion-depth calculations as teaching proxies rather than full forward responses.</p><div class="source-deck">Deck basis: <em>EM Methods—Foundations</em> and <em>Deep EM Methods</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Induction</b><span>Faraday's law, primary field, eddy currents, secondary field.</span></div><div class="arc-step"><b>2 · FDEM / TEM</b><span>Frequency, quadrature/in-phase response, turn-off, decay gates.</span></div><div class="arc-step"><b>3 · Survey choice</b><span>Diffusion, geometry, coupling, cultural noise, inversion.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>Follow one transmitted field through a conductive plume.</span></div><div class="time-step"><b>8–23 min · Physics</b><span>Animate induction and distinguish diffusive response from wave reflection.</span></div><div class="time-step"><b>23–36 min · Compare</b><span>Map frequency to FDEM sensitivity and time gate to TEM sensitivity.</span></div><div class="time-step"><b>36–47 min · Lab proxy</b><span>Choose a plume frequency and compare two TEM sites.</span></div><div class="time-step"><b>47–50 min · Exit</b><span>Name what the skin-depth number does not include.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Equation / visual set</h3><ul><li>Skin depth as an attenuation scale, not a hard DOI.</li><li>Transmitter waveform, induced current system, and receiver datum.</li><li>System geometry and layered-earth sensitivity precede quantitative inversion.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>Low-frequency fields in conductive earth are predominantly diffusive; they do not simply travel faster and reflect from a resistor like a seismic ray.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Select FDEM/TEM settings using depth–resolution and noise trade-offs.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Replace the proxy with a system-specific layered-earth forward model and sensitivity analysis.</div></div>
+    <div class="framework-links"><a href="../lecture/em/">Open chapter</a><a href="classroom-labs.html#em">Classroom lab</a><a href="practice-lab.html#em">Practice questions</a></div>
+  </section>
+
+  <section class="panel framework" id="gpr" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 7 · Radar propagation</div><h2>Ground-Penetrating Radar</h2><p>Use dielectric contrast, two-way time, antenna frequency, and acquisition geometry to make a conservative utility or shallow-stratigraphy interpretation.</p><div class="source-deck">Deck basis: <em>Ground-Penetrating Radar—Integrated Course</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Propagation</b><span>Permittivity, conductivity, velocity, attenuation, wavelength.</span></div><div class="arc-step"><b>2 · Acquisition</b><span>Antenna frequency, traces, profiles, time zero, positioning.</span></div><div class="arc-step"><b>3 · Processing</b><span>Gain, filtering, velocity, migration, artifacts, depth uncertainty.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>Decide whether an 18 ns utility is safe to cross with a 1.2 m auger.</span></div><div class="time-step"><b>8–22 min · Physics</b><span>Compute velocity for dry and wet backfill and explain the difference.</span></div><div class="time-step"><b>22–35 min · Radargram</b><span>Read horizons, hyperbolas, ringing, multiples, and attenuation.</span></div><div class="time-step"><b>35–47 min · Field plan</b><span>Choose 250 versus 1000 MHz for a target beneath clay-prone ground.</span></div><div class="time-step"><b>47–50 min · Exit</b><span>State the velocity evidence needed before reporting depth.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Equation / visual set</h3><ul><li>\(v\approx c/\sqrt{\epsilon_r}\) under a low-loss approximation.</li><li>\(d=vt/2\): t is two-way time.</li><li>Reflection polarity requires an explicit field and display convention.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>A bright hyperbola is not automatically a pipe, and time is not depth until velocity and time zero are constrained.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Convert a plausible velocity range to a depth range and make a safe field recommendation.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Quantify hyperbola-fit, anisotropy, antenna-separation, migration, and zero-time uncertainty.</div></div>
+    <div class="framework-links"><a href="../lecture/gpr/">Open chapter</a><a href="classroom-labs.html#gpr">Classroom lab</a><a href="practice-lab.html#gpr">Practice questions</a></div>
+  </section>
+
+  <section class="panel framework" id="mt" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 8 · Natural-source EM</div><h2>Magnetotellurics and Marine CSEM</h2><p>Build MT from natural electric and magnetic time series to impedance, apparent resistivity, phase, dimensionality, and deep conductive-zone interpretation.</p><div class="source-deck">Deck basis: <em>MT &amp; Deep Crustal Methods</em> and <em>Deep EM Methods</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Source &amp; station</b><span>Lightning/solar sources, Ex/Ey, Hx/Hy, remote reference.</span></div><div class="arc-step"><b>2 · Data products</b><span>Tensor impedance, apparent resistivity, phase, period sensitivity.</span></div><div class="arc-step"><b>3 · Earth model</b><span>1D/2D/3D, static shift, distortion, inversion, integration.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>How can a passive station sense from hundreds of meters to the mantle?</span></div><div class="time-step"><b>8–23 min · Physics</b><span>Form E/H impedance and calculate the uniform half-space response.</span></div><div class="time-step"><b>23–35 min · Workflow</b><span>Move from time series through robust spectra to tensor data and errors.</span></div><div class="time-step"><b>35–47 min · Interpretation</b><span>Compare a deep conductor with fluids, graphite, and melt hypotheses.</span></div><div class="time-step"><b>47–50 min · Exit</b><span>Explain why phase heuristics are safest only in approximately 1D settings.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Equation / visual set</h3><ul><li>\(\mathbf{E}=\mathbf{Z}\mathbf{H}\), \(\rho_a=|Z|^2/(\mu_0\omega)\).</li><li>Uniform half-space phase is 45°, not a universal layered-earth rule.</li><li>Marine CSEM is a controlled, low-frequency diffusive-field method using amplitude and phase.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>An MT inversion images electrical structure, not rock type. A conductor supports several geological explanations and retains strong depth–conductance trade-offs.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Calculate apparent resistivity and explain period-dependent sensitivity.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Use tensor dimensionality, distortion tests, error floors, and model sensitivity before interpretation.</div></div>
+    <div class="framework-links"><a href="../lecture/mt/">Open chapter</a><a href="practice-lab.html#mt">Practice questions</a><a href="../references/">Primary sources</a></div>
+  </section>
+
+  <section class="panel framework" id="borehole" role="tabpanel">
+    <div class="framework-head"><div><div class="eyebrow">Chapter 9 · In-hole measurements</div><h2>Borehole Geophysics</h2><p>Organize logs by measured signal and investigation volume, then combine complementary responses while honoring casing, borehole, calibration, and resolution effects.</p><div class="source-deck">Deck basis: <em>Borehole Geophysics—Principles and Applications</em> and <em>Advanced Technical Borehole Geophysics</em>.</div></div></div>
+    <div class="deck-arc"><div class="arc-step"><b>1 · Common logs</b><span>Gamma, resistivity/induction, sonic, density, neutron, caliper.</span></div><div class="arc-step"><b>2 · Environmental tools</b><span>Televiewer, NMR, fluorescence, temperature, flowmeter.</span></div><div class="arc-step"><b>3 · Joint log</b><span>Depth match, environmental corrections, calibration, hydrostratigraphy.</span></div></div>
+    <div class="run-of-show"><div class="time-step"><b>0–8 min · Hook</b><span>Which logs can distinguish a clay aquitard from a water-bearing fracture?</span></div><div class="time-step"><b>8–24 min · Tool physics</b><span>Match each tool to source, detector, measured signal, and sampling volume.</span></div><div class="time-step"><b>24–36 min · Log panel</b><span>Jointly read gamma, caliper, induction, neutron, televiewer, and flow.</span></div><div class="time-step"><b>36–47 min · Failure cases</b><span>Diagnose casing, mud, invasion, washout, decentralization, and thin beds.</span></div><div class="time-step"><b>47–50 min · Exit</b><span>Name the calibration needed before converting one log to porosity or K.</span></div></div>
+    <div class="teaching-grid"><div class="teaching-card"><h3>Interpretation discipline</h3><ul><li>Measured count, voltage, travel time, or field response first.</li><li>Calibrated formation property second.</li><li>Lithology, fluid, fracture, or hydraulic interpretation only after joint evidence.</li></ul></div><div class="teaching-card"><h3>Misconception to surface</h3><p>Neutron, NMR, induction, and natural gamma are not direct universal readouts of porosity, hydraulic conductivity, salinity, or clay content; tool response and calibration matter.</p></div></div>
+    <div class="level-row"><div class="level"><strong>Undergraduate Core</strong><br>Choose a defensible log suite and identify environmental corrections.</div><div class="level graduate"><strong>Graduate Extension</strong><br>Model response-function mixing, vertical resolution, invasion, and uncertainty in joint petrophysical interpretation.</div></div>
+    <div class="framework-links"><a href="../lecture/borehole/">Open chapter</a><a href="practice-lab.html#borehole">Practice questions</a><a href="../references/">Primary sources</a></div>
+  </section>
+</main>
+
+<script>
+const tabs=[...document.querySelectorAll('.framework-tab')];
+const panels=[...document.querySelectorAll('.framework')];
+function showFramework(id,updateHash=true){
+  const safeId=panels.some(panel=>panel.id===id)?id:'intro';
+  panels.forEach(panel=>panel.classList.toggle('active',panel.id===safeId));
+  tabs.forEach(tab=>{
+    const active=tab.dataset.framework===safeId;
+    tab.setAttribute('aria-selected',String(active));
+    tab.tabIndex=active?0:-1;
+  });
+  if(updateHash) history.replaceState(null,'',`#${safeId}`);
+}
+tabs.forEach((tab,index)=>{
+  tab.addEventListener('click',()=>showFramework(tab.dataset.framework));
+  tab.addEventListener('keydown',event=>{
+    if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    let target=index;
+    if(event.key==='ArrowLeft') target=(index-1+tabs.length)%tabs.length;
+    if(event.key==='ArrowRight') target=(index+1)%tabs.length;
+    if(event.key==='Home') target=0;
+    if(event.key==='End') target=tabs.length-1;
+    tabs[target].focus();
+    showFramework(tabs[target].dataset.framework);
+  });
+});
+window.addEventListener('hashchange',()=>showFramework(location.hash.slice(1),false));
+showFramework(location.hash.slice(1)||'intro',false);
+</script>
+</body>
+</html>

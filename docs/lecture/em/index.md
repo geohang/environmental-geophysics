@@ -15,6 +15,7 @@ Electromagnetic induction lets us sense subsurface conductivity without ground c
     Distinguish qualitative diffusion-depth proxies from Maxwell-equation forward models and evaluate sensitivity, equivalence, and inversion regularization.
 
 [Practice this module](../../apps/practice-lab.html#em){ .md-button }
+[View lecture framework](../../apps/lecture-frameworks.html#em){ .md-button }
 
 ## Interactive Lecture
 
@@ -57,6 +58,10 @@ Electromagnetic induction lets us sense subsurface conductivity without ground c
     See how frequency and ground conductivity set the penetration of EM fields, with the classic skin-depth formula evaluated live.
 
 </div>
+
+## Classroom Lab
+
+🧰 **[FDEM plume triage and TEM bedrock comparison](../../apps/classroom-labs.html#em)** — use diffusion-depth teaching proxies to make survey decisions, then identify the assumptions that require a full forward model.
 
 ## Research Code: PyHydroGeophysX
 

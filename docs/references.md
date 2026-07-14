@@ -32,6 +32,15 @@ These references connect the geophysical methods to subsurface hydrology, the th
 - Berger, D. L., Ponce, D. A., & Ross, W. C. (2001). *Hydrogeologic Framework of Antelope Valley and Bedell Flat, Washoe County, West-Central Nevada*. U.S. Geological Survey Water-Resources Investigations Report 01-4220. [doi:10.3133/wri014220](https://doi.org/10.3133/wri014220) ([geophysical-methods section](https://pubs.usgs.gov/wri/wri014220/text/05_geophysical.htm))
 - Hays, W. W. (1976). *Interpretation of Gravity Data*. U.S. Geological Survey Open-File Report 76-479. [doi:10.3133/ofr76479](https://doi.org/10.3133/ofr76479)
 
+## Classroom Lab Sources
+
+These sources support the processing sequences and limitations used in the public Classroom Lab Studio. The lab wording, synthetic datasets, and HTML graphics are original course content; no figures from the sources are reproduced.
+
+- Roberts, C. W., Jachens, R. C., Katzenstein, A., Smith, G. A., & Johnson, R. (2002). *Gravity map and data of the eastern half of the Big Bear Lake 1:100,000-scale quadrangle, California, and analysis of the depths of several basins*. U.S. Geological Survey Open-File Report 02-353. [Gravity data-reduction methods](https://pubs.usgs.gov/of/2002/0353/method.html).
+- U.S. Geological Survey. (2004). *Long Valley Ground Magnetic Data Processing*. U.S. Geological Survey Open-File Report 2004-1096. [Processing steps and data-channel definitions](https://pubs.usgs.gov/of/2004/1096/lv_data_proc.html).
+- Haeni, F. P. (1988). *Application of Seismic-Refraction Techniques to Hydrologic Studies*. U.S. Geological Survey Techniques of Water-Resources Investigations 02-D2. [doi:10.3133/twri02D2](https://doi.org/10.3133/twri02D2).
+- Jacob, R. W., & Hermance, J. F. (2004). Assessing the precision of GPR velocity and vertical two-way travel time estimates. *Journal of Environmental & Engineering Geophysics*, 9(3), 143-153. [doi:10.4133/JEEG9.3.143](https://doi.org/10.4133/JEEG9.3.143).
+
 ## Software and Computational Tools
 
 The course notebooks use these open-source libraries. PyHydroGeophysX is developed in Dr. Chen's group and ties the hydrological and geophysical sides of the course together.

@@ -15,6 +15,7 @@ GPR transmits radar pulses into the ground and records reflections from contrast
     Analyze velocity uncertainty, migration, finite antenna separation, anisotropy, and the non-uniqueness of radar facies interpretation.
 
 [Practice this module](../../apps/practice-lab.html#gpr){ .md-button }
+[View lecture framework](../../apps/lecture-frameworks.html#gpr){ .md-button }
 
 ## Topic Apps
 
@@ -45,6 +46,10 @@ GPR transmits radar pulses into the ground and records reflections from contrast
     Fit a diffraction hyperbola on a radargram to recover wave velocity and target depth, the everyday calibration trick of GPR practice.
 
 </div>
+
+## Classroom Lab
+
+🧰 **[Depth uncertainty before excavation](../../apps/classroom-labs.html#gpr)** — compare dry- and wet-backfill velocity models, choose an antenna, and make a utility-safety recommendation from a depth range rather than one assumed value.
 
 ## Data and Notebooks
 

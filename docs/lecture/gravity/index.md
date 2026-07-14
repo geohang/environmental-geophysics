@@ -15,6 +15,7 @@ Lateral density contrasts in the subsurface produce tiny variations in gravitati
     Evaluate regional–residual separation, parameter trade-offs, equivalent-source behavior, and uncertainty in density-contrast inversion.
 
 [Practice this module](../../apps/practice-lab.html#gravity){ .md-button }
+[View lecture framework](../../apps/lecture-frameworks.html#gravity){ .md-button }
 
 ## Interactive Lecture
 
@@ -63,6 +64,10 @@ Lateral density contrasts in the subsurface produce tiny variations in gravitati
     Drag a sphere or horizontal cylinder in the subsurface, set its density contrast, and watch the surface anomaly respond in real time.
 
 </div>
+
+## Classroom Lab
+
+🧰 **[Microgravity search for a limestone cavity](../../apps/classroom-labs.html#gravity)** — reduce a full base-loop dataset, document correction signs, estimate an idealized source depth, and write a qualified engineering recommendation.
 
 ## Research Code: PyHydroGeophysX
 

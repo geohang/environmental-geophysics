@@ -8,6 +8,8 @@ Open, interactive course materials for upper-level undergraduate environmental g
 
 - **9 method modules** covering foundations, gravity, magnetics, seismic, electrical/SP/IP, EM, GPR, MT/CSEM, and borehole geophysics.
 - **35 original interactive lecture and demonstration pages**, with shared navigation, responsive layouts, keyboard support, accessible controls, and explicit scientific assumptions.
+- **Classroom Lab Studio**, with six course-tested workflows, five downloadable synthetic datasets, and a public processing-pipeline review challenge.
+- **Lecture Frameworks**, with a PPT-informed teaching arc, 50-minute run of show, misconception check, and undergraduate/graduate pathway for every module.
 - **Field Missions**, with four lightweight, explicitly synthetic environmental case studies.
 - **Practice Lab**, with 45 formative questions tagged for Undergraduate, Graduate, or Both levels and immediate explanatory feedback.
 - **4 notebooks** for gravity processing/modeling, seismic refraction, and ERT forward modeling, plus sample datasets.
@@ -34,7 +36,7 @@ Every push to `main` runs the static course audit and a strict MkDocs build befo
 ```text
 docs/                      MkDocs content root
   index.md                 course home
-  apps/                    course guide, missions, and practice lab
+  apps/                    course guide, classroom labs, missions, and practice lab
   lecture/<module>/        module page and interactive apps
   data/                    instructional datasets
   notebooks/               Colab-ready notebooks

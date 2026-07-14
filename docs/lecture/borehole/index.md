@@ -15,6 +15,7 @@ Wireline logging measures physical properties along a borehole wall, trading the
     Evaluate vertical resolution, environmental corrections, response-function mixing, petrophysical calibration, and joint interpretation with surface geophysics.
 
 [Practice this module](../../apps/practice-lab.html#borehole){ .md-button }
+[View lecture framework](../../apps/lecture-frameworks.html#borehole){ .md-button }
 
 ## Interactive Lecture
 

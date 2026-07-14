@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import math
 import re
 import sys
@@ -209,16 +210,155 @@ def audit_numerical_benchmarks() -> list[str]:
     return errors
 
 
+def audit_classroom_datasets() -> list[str]:
+    """Check the units, structure, and expected physics of public lab datasets."""
+    errors: list[str] = []
+
+    def rows(relative: str) -> list[dict[str, str]]:
+        with (DOCS / "data" / relative).open(encoding="utf-8", newline="") as stream:
+            return list(csv.DictReader(stream))
+
+    def minutes(value: str) -> int:
+        hour, minute = (int(part) for part in value.split(":"))
+        return 60 * hour + minute
+
+    def linear_fit(points: list[tuple[float, float]]) -> tuple[float, float]:
+        count = len(points)
+        mean_x = sum(point[0] for point in points) / count
+        mean_y = sum(point[1] for point in points) / count
+        variance = sum((point[0] - mean_x) ** 2 for point in points)
+        slope = sum((x - mean_x) * (y - mean_y) for x, y in points) / variance
+        return slope, mean_y - slope * mean_x
+
+    # Gravity: reverse the published reduction workflow and require a localized low.
+    gravity = rows("gravity/cavity_survey.csv")
+    expected_gravity_fields = {"station", "time", "dial_reading", "elevation_m", "north_offset_m"}
+    if len(gravity) != 23 or (gravity and set(gravity[0]) != expected_gravity_fields):
+        errors.append("Gravity classroom dataset must contain 23 rows and the documented five fields")
+    else:
+        calibration = 1.053
+        base_start = float(gravity[0]["dial_reading"]) * calibration
+        base_end = float(gravity[-1]["dial_reading"]) * calibration
+        start_time = minutes(gravity[0]["time"])
+        drift_rate = (base_end - base_start) / (minutes(gravity[-1]["time"]) - start_time)
+        anomaly: list[tuple[float, float]] = []
+        for item in gravity[1:-1]:
+            offset = float(item["north_offset_m"])
+            elevation_difference = float(item["elevation_m"]) - 250.0
+            relative_observed = float(item["dial_reading"]) * calibration - base_start
+            drift = drift_rate * (minutes(item["time"]) - start_time)
+            bouguer = (
+                relative_observed
+                - drift
+                - 0.000812 * offset
+                + 0.3086 * elevation_difference
+                - 0.04191 * 2.60 * elevation_difference
+            )
+            anomaly.append((offset, bouguer))
+        station_zero = anomaly[0][1]
+        anomaly = [(offset, value - station_zero) for offset, value in anomaly]
+        minimum = min(anomaly, key=lambda point: point[1])
+        if minimum[0] != 100.0 or not -0.185 <= minimum[1] <= -0.175:
+            errors.append(f"Gravity cavity response is not the expected midpoint low: {minimum}")
+        if abs(anomaly[-1][1]) > 0.002:
+            errors.append(f"Gravity profile does not close to baseline: {anomaly[-1][1]:.4g} mGal")
+        half_value = minimum[1] / 2.0
+        crossings: list[float] = []
+        for left, right in zip(anomaly[:-1], anomaly[1:]):
+            if (left[1] - half_value) * (right[1] - half_value) <= 0.0:
+                fraction = (half_value - left[1]) / (right[1] - left[1])
+                crossings.append(left[0] + fraction * (right[0] - left[0]))
+        if len(crossings) != 2:
+            errors.append(f"Gravity cavity response has {len(crossings)} half-amplitude crossings")
+        else:
+            estimated_depth = 1.305 * (crossings[1] - crossings[0]) / 2.0
+            if not 17.0 <= estimated_depth <= 20.0:
+                errors.append(f"Gravity half-width depth is inconsistent: {estimated_depth:.3f} m")
+
+    # Magnetics: reproduce base interpolation and verify the intentionally centered dyke response.
+    base = rows("magnetic/base_station.csv")
+    traverse = rows("magnetic/raw_dyke_profile.csv")
+    if len(base) != 13 or len(traverse) != 61:
+        errors.append("Magnetic datasets must contain 13 base and 61 traverse readings")
+    else:
+        base_minutes = [minutes(item["time"]) for item in base]
+        base_values = [float(item["base_field_nT"]) for item in base]
+
+        def interpolate_base(target: int) -> float:
+            for index in range(len(base_minutes) - 1):
+                left, right = base_minutes[index : index + 2]
+                if left <= target <= right:
+                    fraction = (target - left) / (right - left)
+                    return base_values[index] + fraction * (base_values[index + 1] - base_values[index])
+            raise ValueError(f"Magnetic survey time {target} falls outside the base record")
+
+        residual: list[tuple[float, float]] = []
+        for item in traverse:
+            position = float(item["position_m"])
+            diurnal_change = interpolate_base(minutes(item["time"])) - base_values[0]
+            value = float(item["raw_field_nT"]) - diurnal_change - (52000.0 + 0.5 * position)
+            residual.append((position, value))
+        peak = max(residual, key=lambda point: point[1])
+        if peak[0] != 62.0 or not 688.0 <= peak[1] <= 689.0:
+            errors.append(f"Magnetic corrected dyke peak is inconsistent: {peak}")
+
+    gradiometer = rows("magnetic/gradiometer_profile.csv")
+    if not gradiometer or set(gradiometer[0]) != {"position_m", "sensor_difference_nT"}:
+        errors.append("Gradiometer data must be labelled as a two-sensor difference in nT")
+    else:
+        gradient_points = [
+            (float(item["position_m"]), float(item["sensor_difference_nT"])) for item in gradiometer
+        ]
+        if max(gradient_points, key=lambda point: point[1]) != (14.0, 1450.0):
+            errors.append("Gradiometer positive extremum has changed")
+        if min(gradient_points, key=lambda point: point[1]) != (18.5, -1050.0):
+            errors.append("Gradiometer negative extremum has changed")
+
+    # Seismic: verify the three deliberately idealized first-arrival branches.
+    seismic = rows("seismic/three_layer_first_arrivals.csv")
+    seismic_points = [
+        (float(item["position_m"]), float(item["arrival_time_ms"])) for item in seismic
+    ]
+    for name, lower, upper, expected_velocity in (
+        ("direct", 5.0, 15.0, 500.0),
+        ("first refractor", 20.0, 90.0, 1500.0),
+        ("second refractor", 95.0, 120.0, 3000.0),
+    ):
+        branch = [point for point in seismic_points if lower <= point[0] <= upper]
+        slope, _ = linear_fit(branch)
+        velocity = 1000.0 / slope
+        if abs(velocity - expected_velocity) > 15.0:
+            errors.append(f"Seismic {name} branch gives {velocity:.2f} m/s")
+
+    # Electrical: the public VES curve must retain its stated H-type ordering.
+    ves = rows("electrical/ves_sounding.csv")
+    apparent = [float(item["apparent_resistivity_ohm_m"]) for item in ves]
+    minimum_index = apparent.index(min(apparent)) if apparent else -1
+    if not apparent or minimum_index in {0, len(apparent) - 1} or not (
+        apparent[0] > apparent[minimum_index] < apparent[-1]
+    ):
+        errors.append("VES sounding no longer expresses an H-type minimum")
+    return errors
+
+
 def main() -> int:
     """Run all checks and return a process exit status."""
-    errors = audit_html() + audit_assessments() + audit_numerical_benchmarks()
+    errors = (
+        audit_html()
+        + audit_assessments()
+        + audit_numerical_benchmarks()
+        + audit_classroom_datasets()
+    )
     if errors:
         print(f"Course audit failed with {len(errors)} issue(s):")
         for error in errors:
             print(f"- {error}")
         return 1
     html_count = sum(1 for _ in DOCS.rglob("*.html"))
-    print(f"Course audit passed: {html_count} source HTML apps/pages, 45 practice questions, and 7 numerical benchmarks.")
+    print(
+        f"Course audit passed: {html_count} source HTML apps/pages, 45 practice questions, "
+        "7 numerical benchmarks, and 5 classroom dataset suites."
+    )
     return 0
 
 

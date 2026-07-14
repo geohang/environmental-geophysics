@@ -8,6 +8,8 @@
 
 [🧭 Interactive Course Guide](apps/course-guide.html){ .md-button .md-button--primary }
 [📚 Browse Modules](lecture/index.md){ .md-button }
+[🗂️ Lecture Frameworks](apps/lecture-frameworks.html){ .md-button }
+[🧪 Classroom Labs](apps/classroom-labs.html){ .md-button }
 [🗺️ Field Missions](apps/field-missions.html){ .md-button }
 [✅ Practice Lab](apps/practice-lab.html){ .md-button }
 
@@ -95,6 +97,7 @@ Every module page offers four kinds of material:
 |---|---|
 | 🖥️ Interactive lectures | Self-contained simulators and guided explainers that run in your browser |
 | 🧪 Activities | Hands-on exercises with data reduction and interpretation tasks |
+| 🧰 Classroom labs | Current course workflows with synthetic datasets and client-style deliverables |
 | ⚡ Demos | Quick single-concept tools for building intuition |
 | 🚀 Notebooks and data | Downloadable datasets and Colab-ready Python notebooks |
 | ✅ Practice | Field missions and feedback-rich concept checks for undergraduate and graduate learners |
