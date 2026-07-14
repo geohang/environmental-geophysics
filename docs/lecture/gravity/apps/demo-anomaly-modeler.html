@@ -4,41 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buried-Body Gravity Anomaly Modeler</title>
+<link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
+<script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']] } };</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-:root{--primary:#38bdf8;--accent:#fbbf24;--danger:#ef5350;--success:#4ade80;--bg-dark:#0f172a;--card-bg:#1e293b;--text-main:#f1f5f9;--text-muted:#94a3b8;}
-*{box-sizing:border-box;}
-body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6;margin:0;}
-header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#0f172a,#1e293b);border-bottom:1px solid #334155;}
-h1{font-size:2rem;color:var(--primary);margin:0;}
-.subtitle{color:var(--text-muted);margin-top:8px;}
-.container{max-width:1100px;margin:0 auto;padding:20px;}
-.panel{background:var(--card-bg);border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,.3);}
-canvas{width:100%;display:block;background:#0b1220;border-radius:8px;}
-.controls{display:grid;grid-template-columns:1fr;gap:16px;}
-@media(min-width:720px){.controls{grid-template-columns:1fr 1fr;}}
-.ctrl label{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px;font-size:.9rem;}
-.ctrl label span{color:var(--accent);}
-input[type=range]{width:100%;accent-color:var(--primary);}
-.seg{display:inline-flex;border:1px solid var(--primary);border-radius:8px;overflow:hidden;margin-top:4px;}
-.seg button{background:transparent;color:var(--text-main);border:none;padding:8px 16px;cursor:pointer;font-weight:bold;font-size:.9rem;}
-.seg button.active{background:var(--primary);color:#0b1220;}
-.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
-.stat{background:#162032;border:1px solid #334155;border-radius:8px;padding:12px;text-align:center;}
-.stat .v{font-size:1.4rem;font-weight:bold;color:var(--primary);}
-.stat .l{font-size:.75rem;color:var(--text-muted);}
-.formula{background:rgba(56,189,248,.1);border-left:4px solid var(--primary);padding:12px 16px;margin-top:16px;border-radius:4px;font-size:.95rem;}
-a.back{color:var(--text-muted);}
-</style>
 </head>
 <body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Gravity Methods</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+<div class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Gravity Methods</a>
+  <span class="spacer">SEES:4800 Environmental Geophysics</span>
 </div>
-<header>
+<header class="demo-header">
   <h1>Buried-Body Gravity Anomaly Modeler</h1>
   <div class="subtitle">Set a target's depth, size, and density contrast, then read its gravity signature at the surface.</div>
 </header>
@@ -54,7 +31,7 @@ a.back{color:var(--text-muted);}
         <button data-s="cylinder">Horizontal cylinder</button>
       </div>
     </div>
-    <div class="controls">
+    <div class="controls cols-2">
       <div class="ctrl"><label>Depth to center $z$ <span id="zv">30 m</span></label><input id="z" type="range" min="5" max="120" value="30" step="1"></div>
       <div class="ctrl"><label>Radius $R$ <span id="rv">10 m</span></label><input id="r" type="range" min="2" max="40" value="10" step="1"></div>
       <div class="ctrl"><label>Density contrast $\Delta\rho$ <span id="dv">400 kg/m³</span></label><input id="d" type="range" min="-800" max="800" value="400" step="20"></div>
@@ -86,50 +63,41 @@ function gz(X,p){
   }
 }
 function draw(){
+  const P=demoPalette();
   const p=params();
   fmt('z',p.z+' m');fmt('r',p.r+' m');fmt('d',p.d+' kg/m³');fmt('x',p.x0+' m');
   const W=cv.width,H=cv.height, mid=H*0.42;
   ctx.clearRect(0,0,W,H);
-  // profile domain -150..150 m
+  ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
   const X0=-150,X1=150, sx=x=>W*(x-X0)/(X1-X0);
-  // sample anomaly
   const N=400, ys=[]; let pk=0;
   for(let i=0;i<=N;i++){const X=X0+(X1-X0)*i/N; const g=gz(X,p); ys.push(g); if(Math.abs(g)>Math.abs(pk))pk=g;}
   // ---- anomaly graph (top) ----
-  const gTop=20,gBot=mid-20, gspan=gBot-gTop;
+  const gTop=20,gBot=mid-20, gspan=gBot-gTop, base=gTop+gspan*0.5;
   const amax=Math.max(1e-6,Math.abs(pk))*1.2;
-  const gy=v=>gBot-(v/ (amax) )*(gspan)*0.5 - gspan*0.5*Math.sign(0) ; // baseline mid
-  const base=gTop+gspan*0.5;
   const gyv=v=>base-(v/amax)*(gspan*0.5);
-  // grid + baseline
-  ctx.strokeStyle='#233046';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,base);ctx.lineTo(W,base);ctx.stroke();
-  ctx.fillStyle='#64748b';ctx.font='12px Segoe UI';ctx.fillText('gravity anomaly (mGal)',10,gTop+4);
-  // curve
-  ctx.strokeStyle='#38bdf8';ctx.lineWidth=2.5;ctx.beginPath();
+  ctx.strokeStyle=P.grid;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,base);ctx.lineTo(W,base);ctx.stroke();
+  ctx.fillStyle=P.muted;ctx.font='12px Inter, Segoe UI';ctx.textAlign='left';ctx.fillText('gravity anomaly (mGal)',10,gTop+4);
+  ctx.strokeStyle=P.primary;ctx.lineWidth=2.5;ctx.beginPath();
   for(let i=0;i<=N;i++){const X=X0+(X1-X0)*i/N; const py=gyv(ys[i]); i?ctx.lineTo(sx(X),py):ctx.moveTo(sx(X),py);}
   ctx.stroke();
-  // peak marker
-  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(sx(p.x0),gyv(pk),4,0,7);ctx.fill();
+  ctx.fillStyle=P.accent;ctx.beginPath();ctx.arc(sx(p.x0),gyv(pk),4,0,7);ctx.fill();
   // ---- subsurface (bottom) ----
-  ctx.fillStyle='#0e1830';ctx.fillRect(0,mid,W,H-mid);
-  ctx.strokeStyle='#334155';ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(W,mid);ctx.stroke();
-  ctx.fillStyle='#94a3b8';ctx.fillText('surface',8,mid+14);
-  // depth scale: 0..150 m over (H-mid)
+  ctx.fillStyle=P.surface2;ctx.fillRect(0,mid,W,H-mid);
+  ctx.strokeStyle=P.border;ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(W,mid);ctx.stroke();
+  ctx.fillStyle=P.muted;ctx.fillText('surface',8,mid+14);
   const dz=(H-mid)/150;
   const bx=sx(p.x0), by=mid+p.z*dz, br=Math.max(3,p.r*dz);
-  const col=p.d>=0?'#ef5350':'#38bdf8';
-  ctx.fillStyle=col+'cc';ctx.strokeStyle=col;ctx.lineWidth=2;
-  if(shape==='sphere'){ctx.beginPath();ctx.arc(bx,by,br,0,7);ctx.fill();ctx.stroke();}
-  else{ctx.beginPath();ctx.ellipse(bx,by,W*0.02+br,br,0,0,7);
-       ctx.fillRect(0,by-br,W,2*br);ctx.globalAlpha=1;}
+  const col=p.d>=0?P.danger:P.primary;
+  ctx.fillStyle=col;ctx.globalAlpha=0.85;ctx.strokeStyle=col;ctx.lineWidth=2;
+  if(shape==='sphere'){ctx.beginPath();ctx.arc(bx,by,br,0,7);ctx.fill();ctx.globalAlpha=1;ctx.stroke();}
+  else{ctx.fillRect(0,by-br,W,2*br);ctx.globalAlpha=1;ctx.strokeRect(0,by-br,W,2*br);}
   ctx.globalAlpha=1;
-  ctx.fillStyle='#e2e8f0';ctx.font='12px Segoe UI';
+  ctx.fillStyle=P.text;ctx.font='12px Inter, Segoe UI';
   ctx.fillText((p.d>=0?'+':'')+p.d+' kg/m³',bx+br+6,by+4);
-  // depth ticks
-  ctx.fillStyle='#475569';for(let zt=30;zt<150;zt+=30){const yy=mid+zt*dz;ctx.fillText(zt+' m',W-46,yy);}
+  ctx.fillStyle=P.muted;for(let zt=30;zt<150;zt+=30){const yy=mid+zt*dz;ctx.fillText(zt+' m',W-46,yy);}
   // ---- readouts ----
   document.getElementById('peak').textContent=pk.toFixed(3);
-  // half width: distance where anomaly = peak/2 (for sphere x1/2 = z*sqrt(2^(2/3)-1)=0.766z; cylinder = z)
   let hw=NaN;
   for(let i=0;i<=N;i++){const X=X0+(X1-X0)*i/N; if(X>=p.x0 && Math.abs(ys[i])<=Math.abs(pk)/2){hw=X-p.x0;break;}}
   document.getElementById('half').textContent=isNaN(hw)?'–':hw.toFixed(1);
@@ -145,6 +113,7 @@ document.querySelectorAll('#shape button').forEach(b=>b.addEventListener('click'
   document.querySelectorAll('#shape button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');shape=b.dataset.s;draw();
 }));
+onThemeChange(draw);
 draw();
 </script>
 </body>

@@ -13,6 +13,9 @@ copyright: "&copy; 2026 Hang Chen · School of Earth, Environment, and Sustainab
 theme:
   name: material
   favicon: assets/favicon.svg
+  font:
+    text: Inter
+    code: JetBrains Mono
   icon:
     logo: material/earth
     repo: fontawesome/brands/github
@@ -34,10 +37,12 @@ theme:
   features:
     - navigation.tabs
     - navigation.top
+    - navigation.indexes
     - navigation.footer
     - search.suggest
     - search.highlight
     - content.code.copy
+    - content.tabs.link
 
 markdown_extensions:
   - admonition
@@ -48,6 +53,9 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.arithmatex:
       generic: true
+
+extra_css:
+  - assets/stylesheets/extra.css
 
 extra_javascript:
   - assets/javascripts/mathjax.js

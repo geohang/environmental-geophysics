@@ -1,0 +1,78 @@
+/* Site-wide polish for the SEES:4800 course site (MkDocs Material). */
+
+/* ---- Brand colors: a sky-blue identity that matches the interactive demos ---- */
+:root {
+  --md-primary-fg-color:        #134e6f;
+  --md-primary-fg-color--light: #1c6a94;
+  --md-primary-fg-color--dark:  #0d3b54;
+  --md-accent-fg-color:         #0284c7;
+  --ship-tint: #eaf3f9;
+}
+[data-md-color-scheme="slate"] {
+  --md-accent-fg-color: #38bdf8;
+  --ship-tint: #12212f;
+  --md-default-bg-color: #0f172a;
+}
+
+/* ---- Hero on the home page ---- */
+.hero {
+  margin: -1.2rem -0.8rem 2rem;
+  padding: 3.2rem 1.6rem 2.6rem;
+  text-align: center;
+  border-radius: 0 0 20px 20px;
+  background:
+    radial-gradient(900px 320px at 50% -60px, rgba(2,132,199,.18), transparent),
+    linear-gradient(180deg, var(--ship-tint), transparent);
+}
+.hero .eyebrow {
+  font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--md-accent-fg-color);
+}
+.hero h1 {
+  font-size: 2.6rem; line-height: 1.1; margin: .4rem 0 .6rem; font-weight: 800;
+  letter-spacing: -0.02em; color: var(--md-default-fg-color);
+}
+.hero p { max-width: 720px; margin: 0 auto 1.2rem; color: var(--md-default-fg-color--light); font-size: 1.05rem; }
+.hero .md-button { margin: .3rem .3rem 0; }
+
+/* ---- Card grid: lift, accent edge on hover ---- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid > .card:hover {
+  transform: translateY(-3px);
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, .10);
+}
+.md-typeset .grid.cards > ul > li > hr {
+  margin: .6rem 0; border-color: var(--md-default-fg-color--lightest);
+}
+
+/* ---- Buttons ---- */
+.md-typeset .md-button {
+  border-radius: 10px; font-weight: 600; transition: transform .12s ease;
+}
+.md-typeset .md-button:hover { transform: translateY(-1px); }
+.md-typeset .md-button--primary {
+  background: var(--md-accent-fg-color); border-color: var(--md-accent-fg-color);
+}
+
+/* ---- "Research code" tip callouts (PyHydroGeophysX) get a distinct look ---- */
+.md-typeset .admonition.tip, .md-typeset details.tip {
+  border-left-width: 4px; border-radius: 10px;
+}
+
+/* ---- Tables: lighter, roomier ---- */
+.md-typeset table:not([class]) { border-radius: 10px; overflow: hidden; font-size: .84rem; }
+.md-typeset table:not([class]) th { background: var(--ship-tint); font-weight: 700; }
+
+/* ---- Section headings a touch tighter ---- */
+.md-typeset h2 { margin-top: 2.4rem; font-weight: 700; letter-spacing: -0.01em; }
+
+/* ---- Footer accent ---- */
+.md-footer-meta { background: var(--md-primary-fg-color--dark); }

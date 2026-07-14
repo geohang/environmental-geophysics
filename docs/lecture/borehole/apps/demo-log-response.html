@@ -4,43 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wireline Log Response Explorer</title>
+<link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
+<script src="../../../assets/javascripts/demo-theme.js"></script>
 <style>
-:root{--primary:#38bdf8;--accent:#fbbf24;--danger:#ef5350;--success:#4ade80;--bg-dark:#0f172a;--card-bg:#1e293b;--text-main:#f1f5f9;--text-muted:#94a3b8;}
-*{box-sizing:border-box;}
-body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6;margin:0;}
-header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#0f172a,#1e293b);border-bottom:1px solid #334155;}
-h1{font-size:2rem;color:var(--primary);margin:0;}
-.subtitle{color:var(--text-muted);margin-top:8px;}
-.container{max-width:1100px;margin:0 auto;padding:20px;}
-.panel{background:var(--card-bg);border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,.3);}
-canvas{width:100%;display:block;background:#0b1220;border-radius:8px;}
-.legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;font-size:.85rem;}
-.legend span{display:inline-flex;align-items:center;gap:6px;}
-.sw{width:24px;height:4px;border-radius:2px;display:inline-block;}
-.builder{display:grid;gap:10px;}
-.layerrow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:#162032;border:1px solid #334155;border-radius:8px;padding:8px 12px;}
-select{background:#0b1220;color:var(--text-main);border:1px solid #334155;border-radius:6px;padding:6px;}
-input[type=range]{accent-color:var(--primary);}
-.hint{color:var(--text-muted);font-size:.85rem;margin-bottom:8px;}
+.builder { display: grid; gap: 10px; }
+.layerrow { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; }
+select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 6px; }
 </style>
 </head>
 <body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Borehole Geophysics</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+<div class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Borehole Geophysics</a>
+  <span class="spacer">SEES:4800 Environmental Geophysics</span>
 </div>
-<header>
+<header class="demo-header">
   <h1>Wireline Log Response Explorer</h1>
   <div class="subtitle">Stack lithologies in a synthetic borehole and read how the standard logs respond across the column.</div>
 </header>
 <div class="container">
   <div class="panel">
     <div class="legend">
-      <span><span class="sw" style="background:#4ade80"></span>Gamma ray (API)</span>
-      <span><span class="sw" style="background:#38bdf8"></span>Resistivity (Ω·m, log)</span>
-      <span><span class="sw" style="background:#fbbf24"></span>Neutron porosity (%)</span>
-      <span><span class="sw" style="background:#f87171"></span>Bulk density (g/cc)</span>
+      <span><span class="sw" style="background:#22c55e"></span>Gamma ray (API)</span>
+      <span><span class="sw" style="background:#0ea5e9"></span>Resistivity (Ω·m, log)</span>
+      <span><span class="sw" style="background:#f59e0b"></span>Neutron porosity (%)</span>
+      <span><span class="sw" style="background:#ef4444"></span>Bulk density (g/cc)</span>
     </div>
     <canvas id="cv" width="1040" height="520"></canvas>
   </div>
@@ -78,38 +66,39 @@ function buildUI(){
   });
 }
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+// log-curve colors chosen to read on both light and dark backgrounds
+const TRACK_COLS={gr:'#22c55e',rt:'#0ea5e9',nphi:'#f59e0b',rhob:'#ef4444'};
 function draw(){
-  const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  const P=demoPalette();
+  const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
   const totalT=layers.reduce((s,l)=>s+l.t,0);
   const top=20,bot=H-30,depthPx=(bot-top)/totalT;
-  // track layout: [lithology strip][GR][Res][NPHI/RHOB]
   const x0=60, stripW=90;
   const tracks=[
-    {x:x0+stripW+20,w:180,label:'GR (API)',min:0,max:150,col:'#4ade80',key:'gr',logv:false},
-    {x:x0+stripW+220,w:180,label:'Resistivity',min:1,max:300,col:'#38bdf8',key:'rt',logv:true},
-    {x:x0+stripW+420,w:180,label:'Neutron / Density',min:0,max:50,col:'#fbbf24',key:'nphi',logv:false},
+    {x:x0+stripW+20,w:180,label:'GR (API)',min:0,max:150,col:TRACK_COLS.gr,key:'gr',logv:false},
+    {x:x0+stripW+220,w:180,label:'Resistivity',min:1,max:300,col:TRACK_COLS.rt,key:'rt',logv:true},
+    {x:x0+stripW+420,w:180,label:'Neutron / Density',min:0,max:50,col:TRACK_COLS.nphi,key:'nphi',logv:false},
   ];
   // lithology strip
   let z=0;
   layers.forEach(L=>{
     const lit=LITH[L.l];const y0=top+z*depthPx,y1=top+(z+L.t)*depthPx;
     ctx.fillStyle=lit.col;ctx.fillRect(x0,y0,stripW,y1-y0);
-    ctx.strokeStyle='#0b1220';ctx.strokeRect(x0,y0,stripW,y1-y0);
-    ctx.fillStyle=(lit.col==='#1f2937'||lit.col==='#6b7280')?'#e2e8f0':'#0b1220';
-    ctx.font='10px Segoe UI';ctx.textAlign='center';
+    ctx.strokeStyle=P.border;ctx.strokeRect(x0,y0,stripW,y1-y0);
+    ctx.fillStyle=(lit.col==='#1f2937'||lit.col==='#6b7280')?'#f1f5f9':'#0b1220';
+    ctx.font='10px Inter, Segoe UI';ctx.textAlign='center';
     if(y1-y0>16)ctx.fillText(lit.name.split(' ')[0],x0+stripW/2,(y0+y1)/2+3);
     z+=L.t;
   });
-  ctx.fillStyle='#94a3b8';ctx.font='11px Segoe UI';ctx.textAlign='center';ctx.fillText('lithology',x0+stripW/2,H-12);
+  ctx.fillStyle=P.muted;ctx.font='11px Inter, Segoe UI';ctx.textAlign='center';ctx.fillText('lithology',x0+stripW/2,H-12);
   // depth ticks
-  ctx.fillStyle='#475569';ctx.textAlign='right';
+  ctx.fillStyle=P.muted;ctx.textAlign='right';
   for(let d=0;d<=totalT;d+=5){const y=top+d*depthPx;ctx.fillText(d+'m',x0-6,y+3);}
   // draw each track
   tracks.forEach(tk=>{
-    ctx.strokeStyle='#334155';ctx.strokeRect(tk.x,top,tk.w,bot-top);
-    ctx.fillStyle=tk.col;ctx.textAlign='center';ctx.font='12px Segoe UI';ctx.fillText(tk.label,tk.x+tk.w/2,14);
+    ctx.strokeStyle=P.border;ctx.strokeRect(tk.x,top,tk.w,bot-top);
+    ctx.fillStyle=tk.col;ctx.textAlign='center';ctx.font='12px Inter, Segoe UI';ctx.fillText(tk.label,tk.x+tk.w/2,14);
     const val2x=v=>{if(tk.logv){return tk.x+tk.w*(Math.log10(v)-Math.log10(tk.min))/(Math.log10(tk.max)-Math.log10(tk.min));}return tk.x+tk.w*(v-tk.min)/(tk.max-tk.min);};
-    // step curve
     ctx.strokeStyle=tk.col;ctx.lineWidth=2;ctx.beginPath();let zz=0,first=true;
     layers.forEach(L=>{const v=LITH[L.l][tk.key];const x=val2x(Math.max(tk.min,Math.min(tk.max,v)));
       const y0=top+zz*depthPx,y1=top+(zz+L.t)*depthPx;
@@ -117,7 +106,7 @@ function draw(){
     ctx.stroke();
     // second curve on track 3: density (red) mapped 1.3..2.8 g/cc onto same width
     if(tk.key==='nphi'){
-      ctx.strokeStyle='#f87171';ctx.lineWidth=2;ctx.beginPath();let z2=0,f2=true;
+      ctx.strokeStyle=TRACK_COLS.rhob;ctx.lineWidth=2;ctx.beginPath();let z2=0,f2=true;
       const d2x=v=>tk.x+tk.w*(v-1.3)/(2.8-1.3);
       layers.forEach(L=>{const v=LITH[L.l].rhob;const x=d2x(v);const y0=top+z2*depthPx,y1=top+(z2+L.t)*depthPx;
         if(f2){ctx.moveTo(x,y0);f2=false;}else ctx.lineTo(x,y0);ctx.lineTo(x,y1);z2+=L.t;});
@@ -125,6 +114,7 @@ function draw(){
     }
   });
 }
+onThemeChange(draw);
 buildUI();draw();
 </script>
 </body>

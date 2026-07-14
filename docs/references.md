@@ -32,6 +32,7 @@ The course notebooks use these open-source libraries. PyHydroGeophysX is develop
 
 - Chen, H., Niu, Q., & Wu, Y. (2026). PyHydroGeophysX: An extensible open-source platform for integrating hydrological models with geophysical measurements. *SoftwareX* (in press). Software archive: [doi:10.5281/zenodo.17025139](https://doi.org/10.5281/zenodo.17025139). Code: [github.com/geohang/PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX).
 - Rücker, C., Günther, T., & Wagner, F. M. (2017). pyGIMLi: An open-source library for modelling and inversion in geophysics. *Computers & Geosciences*, 109, 106-123. [doi:10.1016/j.cageo.2017.07.011](https://doi.org/10.1016/j.cageo.2017.07.011)
+- Cockett, R., Kang, S., Heagy, L. J., Pidlisecky, A., & Oldenburg, D. W. (2015). SimPEG: An open source framework for simulation and gradient based parameter estimation in geophysical applications. *Computers & Geosciences*, 85, 142-154. [doi:10.1016/j.cageo.2015.09.015](https://doi.org/10.1016/j.cageo.2015.09.015)
 
 ## BibTeX
 
@@ -136,6 +137,16 @@ Copy any entry into your `.bib` file.
   pages   = {106--123},
   year    = {2017},
   doi     = {10.1016/j.cageo.2017.07.011}
+}
+
+@article{cockett2015,
+  author  = {Cockett, Rowan and Kang, Seogi and Heagy, Lindsey J. and Pidlisecky, Adam and Oldenburg, Douglas W.},
+  title   = {SimPEG: An open source framework for simulation and gradient based parameter estimation in geophysical applications},
+  journal = {Computers \& Geosciences},
+  volume  = {85},
+  pages   = {142--154},
+  year    = {2015},
+  doi     = {10.1016/j.cageo.2015.09.015}
 }
 
 @software{chen2026_pyhydrogeophysx,

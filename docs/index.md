@@ -1,12 +1,19 @@
-# SEES:4800 · Environmental Geophysics
+<div class="hero" markdown>
 
-**University of Iowa · School of Earth, Environment, and Sustainability**
-Instructor: Dr. Hang Chen
+<p class="eyebrow">University of Iowa · SEES:4800</p>
+
+# Environmental Geophysics
+
+<p>See beneath the surface without digging. Nine near-surface methods, taught through interactive simulators, hands-on activities, and Colab notebooks.</p>
+
+[🧭 Interactive Course Guide](apps/course-guide.html){ .md-button .md-button--primary }
+[📚 Browse Modules](lecture/index.md){ .md-button }
+
+</div>
+
+Instructor: **Dr. Hang Chen** · School of Earth, Environment, and Sustainability
 
 Environmental geophysics investigates the subsurface by measuring physical fields at or near the ground surface. This course covers the theory and practice of the major near-surface methods, with applications to groundwater exploration, contamination mapping, archaeological investigation, geohazard assessment, and mineral resource exploration. Field exercises, interactive simulators, and case studies connect each method to real problems.
-
-[🧭 Open the Interactive Course Guide](apps/course-guide.html){ .md-button .md-button--primary }
-[📚 Browse All Modules](lecture/index.md){ .md-button }
 
 ## Course Modules
 

@@ -4,37 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Refraction Travel-Time Curve Builder</title>
+<link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
+<script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-:root{--primary:#38bdf8;--accent:#fbbf24;--danger:#ef5350;--success:#4ade80;--bg-dark:#0f172a;--card-bg:#1e293b;--text-main:#f1f5f9;--text-muted:#94a3b8;}
-*{box-sizing:border-box;}
-body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg-dark);color:var(--text-main);line-height:1.6;margin:0;}
-header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#0f172a,#1e293b);border-bottom:1px solid #334155;}
-h1{font-size:2rem;color:var(--primary);margin:0;}
-.subtitle{color:var(--text-muted);margin-top:8px;}
-.container{max-width:1100px;margin:0 auto;padding:20px;}
-.panel{background:var(--card-bg);border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,.3);}
-canvas{width:100%;display:block;background:#0b1220;border-radius:8px;}
-.controls{display:grid;grid-template-columns:1fr;gap:16px;}
-@media(min-width:720px){.controls{grid-template-columns:1fr 1fr 1fr;}}
-.ctrl label{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px;font-size:.85rem;}
-.ctrl label span{color:var(--accent);}
-input[type=range]{width:100%;accent-color:var(--primary);}
-.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
-.stat{background:#162032;border:1px solid #334155;border-radius:8px;padding:12px;text-align:center;}
-.stat .v{font-size:1.3rem;font-weight:bold;color:var(--primary);}
-.stat .l{font-size:.72rem;color:var(--text-muted);}
-.formula{background:rgba(56,189,248,.1);border-left:4px solid var(--primary);padding:12px 16px;margin-top:16px;border-radius:4px;font-size:.9rem;}
-</style>
 </head>
 <body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Seismic Methods</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+<div class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Seismic Methods</a>
+  <span class="spacer">SEES:4800 Environmental Geophysics</span>
 </div>
-<header>
+<header class="demo-header">
   <h1>Refraction Travel-Time Curve Builder</h1>
   <div class="subtitle">A two-layer earth. Change the velocities and layer thickness and watch the travel-time graph, crossover distance, and depth respond.</div>
 </header>
@@ -43,7 +24,7 @@ input[type=range]{width:100%;accent-color:var(--primary);}
     <canvas id="cv" width="1040" height="460"></canvas>
   </div>
   <div class="panel">
-    <div class="controls">
+    <div class="controls cols-3">
       <div class="ctrl"><label>Layer 1 velocity $V_1$ <span id="v1v">800 m/s</span></label><input id="v1" type="range" min="300" max="2000" value="800" step="10"></div>
       <div class="ctrl"><label>Layer 2 velocity $V_2$ <span id="v2v">2500 m/s</span></label><input id="v2" type="range" min="1000" max="5000" value="2500" step="10"></div>
       <div class="ctrl"><label>Layer 1 thickness $h$ <span id="hv">8 m</span></label><input id="h" type="range" min="2" max="30" value="8" step="1"></div>
@@ -61,6 +42,7 @@ input[type=range]{width:100%;accent-color:var(--primary);}
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 function draw(){
+  const P=demoPalette();
   const V1=+document.getElementById('v1').value, V2raw=+document.getElementById('v2').value, h=+document.getElementById('h').value;
   const V2=Math.max(V2raw,V1+50);
   document.getElementById('v1v').textContent=V1+' m/s';
@@ -72,51 +54,50 @@ function draw(){
   document.getElementById('xcross').textContent=xc.toFixed(1);
   document.getElementById('ti').textContent=(ti*1000).toFixed(1);
   document.getElementById('hest').textContent=hEst.toFixed(1);
-  const W=cv.width,H=cv.height,mid=H*0.60;ctx.clearRect(0,0,W,H);
-  // travel-time graph: x 0..100 m, t auto
+  const W=cv.width,H=cv.height,mid=H*0.60;ctx.clearRect(0,0,W,H);ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
   const XMAX=100;
   const tAt=x=> Math.min(x/V1, x/V2+ti);
   const tmax=Math.max(tAt(XMAX), XMAX/V1)*1.05;
   const gx0=60,gx1=W-20,gy0=20,gy1=mid-30;
   const px=x=>gx0+(gx1-gx0)*x/XMAX, py=t=>gy1-(gy1-gy0)*t/tmax;
   // axes
-  ctx.strokeStyle='#334155';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(gx0,gy0);ctx.lineTo(gx0,gy1);ctx.lineTo(gx1,gy1);ctx.stroke();
-  ctx.fillStyle='#64748b';ctx.font='11px Segoe UI';ctx.textAlign='center';
+  ctx.strokeStyle=P.border;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(gx0,gy0);ctx.lineTo(gx0,gy1);ctx.lineTo(gx1,gy1);ctx.stroke();
+  ctx.fillStyle=P.muted;ctx.font='11px Inter, Segoe UI';ctx.textAlign='center';
   for(let x=0;x<=XMAX;x+=20){ctx.fillText(x+'m',px(x),gy1+14);}
   ctx.textAlign='right';
   for(let t=0;t<=tmax;t+=0.02){ctx.fillText((t*1000).toFixed(0),gx0-6,py(t)+3);}
   ctx.save();ctx.translate(14,(gy0+gy1)/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('travel time (ms)',0,0);ctx.restore();
   // direct wave (full)
-  ctx.strokeStyle='#38bdf8';ctx.lineWidth=2;ctx.setLineDash([5,4]);
+  ctx.strokeStyle=P.primary;ctx.lineWidth=2;ctx.setLineDash([5,4]);
   ctx.beginPath();ctx.moveTo(px(0),py(0));ctx.lineTo(px(XMAX),py(XMAX/V1));ctx.stroke();ctx.setLineDash([]);
-  // head wave (from critical distance; approx draw from x where head defined ~ shortly)
-  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;
+  // head wave
+  ctx.strokeStyle=P.accent;ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(px(0),py(ti));ctx.lineTo(px(XMAX),py(XMAX/V2+ti));ctx.stroke();
   // first-arrival (thick)
-  ctx.strokeStyle='#4ade80';ctx.lineWidth=3.5;ctx.beginPath();
+  ctx.strokeStyle=P.success;ctx.lineWidth=3.5;ctx.beginPath();
   for(let k=0;k<=200;k++){const x=XMAX*k/200;const t=tAt(x);k?ctx.lineTo(px(x),py(t)):ctx.moveTo(px(x),py(t));}
   ctx.stroke();
   // crossover marker
-  if(xc<=XMAX){const cx=px(xc),cy=py(xc/V1);ctx.fillStyle='#ef5350';ctx.beginPath();ctx.arc(cx,cy,5,0,7);ctx.fill();
-    ctx.fillStyle='#fca5a5';ctx.textAlign='center';ctx.fillText('crossover',cx,cy-10);}
+  if(xc<=XMAX){const cx=px(xc),cy=py(xc/V1);ctx.fillStyle=P.danger;ctx.beginPath();ctx.arc(cx,cy,5,0,7);ctx.fill();
+    ctx.fillStyle=P.danger;ctx.textAlign='center';ctx.fillText('crossover',cx,cy-10);}
   // legend
-  ctx.textAlign='left';ctx.font='12px Segoe UI';
-  ctx.fillStyle='#38bdf8';ctx.fillText('— direct (1/V₁)',gx1-150,gy0+12);
-  ctx.fillStyle='#fbbf24';ctx.fillText('— head wave (1/V₂)',gx1-150,gy0+28);
-  ctx.fillStyle='#4ade80';ctx.fillText('— first arrival',gx1-150,gy0+44);
+  ctx.textAlign='left';ctx.font='12px Inter, Segoe UI';
+  ctx.fillStyle=P.primary;ctx.fillText('— direct (1/V₁)',gx1-150,gy0+12);
+  ctx.fillStyle=P.accent;ctx.fillText('— head wave (1/V₂)',gx1-150,gy0+28);
+  ctx.fillStyle=P.success;ctx.fillText('— first arrival',gx1-150,gy0+44);
   // model section
-  ctx.fillStyle='#1c2b45';ctx.fillRect(0,mid,W,H-mid);
+  ctx.fillStyle=P.surface2;ctx.fillRect(0,mid,W,H-mid);
   const zscale=(H-mid-20)/40;const yb=mid+h*zscale;
-  ctx.fillStyle='#16233c';ctx.fillRect(0,mid,W,h*zscale);
-  ctx.fillStyle='#243b5e';ctx.fillRect(0,yb,W,H-yb);
-  ctx.strokeStyle='#38bdf8';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,yb);ctx.lineTo(W,yb);ctx.stroke();
-  ctx.fillStyle='#cbd5e1';ctx.font='13px Segoe UI';
+  ctx.fillStyle=P.primary;ctx.globalAlpha=0.14;ctx.fillRect(0,yb,W,H-yb);ctx.globalAlpha=1;
+  ctx.strokeStyle=P.primary;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,yb);ctx.lineTo(W,yb);ctx.stroke();
+  ctx.fillStyle=P.text;ctx.font='13px Inter, Segoe UI';
   ctx.fillText('Layer 1:  V₁ = '+V1+' m/s,  h = '+h+' m',16,mid+22);
   ctx.fillText('Layer 2:  V₂ = '+V2raw+' m/s',16,yb+24);
-  ctx.fillStyle='#f87171';ctx.fillText('★ shot',8,mid-6);
+  ctx.fillStyle=P.danger;ctx.fillText('★ shot',8,mid-6);
   if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([document.getElementById('fbox')]);
 }
 ['v1','v2','h'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+onThemeChange(draw);
 draw();
 </script>
 </body>
