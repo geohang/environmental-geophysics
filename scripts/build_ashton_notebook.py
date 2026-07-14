@@ -60,6 +60,7 @@ read locally; Colab downloads only the files used in this notebook.
         code(
             r'''
 import importlib.util
+import json
 import subprocess
 import sys
 
@@ -108,6 +109,38 @@ print("PyHydroGeophysX import: OK")
         ),
         markdown(
             """
+## Public data package: start with canonical files
+
+The website catalog separates source measurements, profile geometry,
+quality-controlled products, and mapped derived products. For EM, begin with the
+averaged in-phase/quadrature table and the named Profile 01–09 location files.
+The layered inversion is a derived result, not a replacement for the measured
+I/Q responses. Redundant format mirrors remain only in the external archive.
+"""
+        ),
+        code(
+            r'''
+catalog = json.loads(data_file("web/data_catalog.json").read_text(encoding="utf-8"))
+recommended = pd.DataFrame(
+    [
+        {
+            "category": item["category"],
+            "dataset": item["display_name"],
+            "processing_level": item["processing_level"],
+            "path": item["path"],
+        }
+        for item in catalog["files"]
+        if item["recommended"]
+    ]
+)
+display(recommended.sort_values(["category", "dataset"]).reset_index(drop=True))
+display(pd.Series(catalog["publication_summary"]))
+assert catalog["publication_summary"]["published_source_files"] == 29
+assert catalog["publication_summary"]["organized_em_files"] == 13
+'''
+        ),
+        markdown(
+            """
 ## 2. Survey inventory and elevation provenance
 
 The curated table contains the 367 surveyed positions. The 13 zero elevations
@@ -131,25 +164,51 @@ assert (line4["elevation_source"] == "interpolated_from_neighboring_em_points").
         ),
         code(
             r'''
-em_lines = []
-for line_number in range(1, 10):
-    frame = pd.read_csv(data_file(f"raw/2026-05-02/em/location_line {line_number}.txt"))
-    frame["line_number"] = line_number
-    frame["line_index"] = np.arange(1, len(frame) + 1)
-    em_lines.append(frame)
-em_locations = pd.concat(em_lines, ignore_index=True)
+profile_paths = {
+    f"profile_{number:02d}": f"organized/em/profiles/profile_{number:02d}_locations.csv"
+    for number in range(1, 10)
+}
+profile_locations = pd.concat(
+    [pd.read_csv(data_file(path)) for path in profile_paths.values()], ignore_index=True
+)
+assert len(profile_locations) == 152 and profile_locations["profile_id"].nunique() == 9
+display(profile_locations.groupby("profile_id").agg(points=("point_id", "size"),
+                                                     interpolated=("elevation_source", lambda s: s.str.startswith("interpolated").sum())))
 
-valid = em_locations[em_locations["Z"] > 0].copy()
-missing_line4 = em_locations[(em_locations["line_number"] == 4) & (em_locations["Z"] == 0)].copy()
-tree = cKDTree(valid[["X", "Y"]])
-distance, neighbor = tree.query(missing_line4[["X", "Y"]], k=8)
-weights = 1.0 / np.maximum(distance, 0.25) ** 2
-idw = (weights * valid["Z"].to_numpy()[neighbor]).sum(axis=1) / weights.sum(axis=1)
+valid = profile_locations[profile_locations["source_elevation_m"] > 0].copy()
+missing_profile4 = profile_locations[
+    (profile_locations["profile_id"] == "profile_04")
+    & (profile_locations["source_elevation_m"] == 0)
+].copy()
+tree = cKDTree(valid[["x_utm_m", "y_utm_m"]])
+distance, neighbor = tree.query(missing_profile4[["x_utm_m", "y_utm_m"]], k=8)
+weights = 1.0 / np.maximum(distance, 0.5) ** 2
+idw = (weights * valid["source_elevation_m"].to_numpy()[neighbor]).sum(axis=1) / weights.sum(axis=1)
 
-published = line4[line4["elevation_source"].str.startswith("interpolated")]["elevation_m"].to_numpy()
-np.testing.assert_allclose(idw, published, rtol=0, atol=1e-6)
-print(f"Reproduced {len(idw)} interpolated elevations: {idw.min():.2f}–{idw.max():.2f} m")
+np.testing.assert_allclose(idw, missing_profile4["elevation_m"], rtol=0, atol=1e-6)
+print(f"Reproduced {len(idw)} Profile 04 elevations: {idw.min():.2f}–{idw.max():.2f} m")
 print("Independent leave-one-out check reported by the audit: RMSE 0.88 m; MAE 0.61 m.")
+'''
+        ),
+        code(
+            r'''
+fig, axes = plt.subplots(3, 3, figsize=(11, 10), constrained_layout=True)
+for ax, (profile_id, frame) in zip(axes.flat, profile_locations.groupby("profile_id", sort=True)):
+    points = ax.scatter(frame["x_utm_m"], frame["y_utm_m"], c=frame["elevation_m"],
+                        cmap="terrain", s=30, edgecolor="black", linewidth=0.3)
+    ax.plot(frame["x_utm_m"], frame["y_utm_m"], color="#52657a", linewidth=0.8, zorder=0)
+    ax.set_title(profile_id.replace("_", " ").title())
+    ax.set_aspect("equal", adjustable="datalim")
+    ax.ticklabel_format(style="plain", useOffset=False)
+    ax.tick_params(labelsize=7)
+    if profile_id == "profile_04":
+        interpolated = frame[frame["elevation_source"].str.startswith("interpolated")]
+        ax.scatter(interpolated["x_utm_m"], interpolated["y_utm_m"], marker="x", color="#b42318",
+                   s=35, label="interpolated elevation")
+        ax.legend(fontsize=7)
+fig.suptitle("Named EM profile locations (EPSG:26915)")
+fig.supxlabel("UTM easting (m)")
+fig.supylabel("UTM northing (m)")
 '''
         ),
         markdown(
@@ -194,17 +253,71 @@ fig.tight_layout()
         ),
         markdown(
             """
-## 4. Processed EM data: fit error and inversion bounds
+## 4. EM observations: retain I/Q and split by named Profile
 
-The EM file is a processed layered inversion product, so it is **derived real
-data**, not a direct resistivity measurement. Cells shown on the Web GIS require
-fit error ≤30%. Values at the 2000 Ω·m upper bound are treated as bound hits,
-not precise estimates.
+The canonical EM input is the 24,212-row `averaged_processed` table. It retains
+the original in-phase (`I`) and quadrature (`Q`) responses at 450, 1410, 4350,
+13,530, and 42,150 Hz. Profile IDs are assigned from the documented `Mark`
+ranges; the measurement values themselves are not altered. Rows with `Mark < 3`
+are setup/unassigned records and remain in the file.
 """
         ),
         code(
             r'''
-em_model = pd.read_csv(data_file("raw/2026-05-02/em/processed_valid_inversion.csv"))
+em_iq = pd.read_csv(data_file(
+    "organized/em/measurements/2026-05-02_gem2_averaged_inphase_quadrature.csv"
+))
+mark_ranges = pd.read_csv(data_file("organized/em/metadata/profile_mark_ranges.csv"))
+iq_columns = [f"{component}_{frequency}Hz" for frequency in (450, 1410, 4350, 13530, 42150)
+              for component in ("I", "Q")]
+assert len(em_iq) == 24212 and all(column in em_iq for column in iq_columns)
+
+em_iq["profile_id"] = pd.NA
+for row in mark_ranges.itertuples():
+    in_profile = em_iq["Mark"].ge(row.start_mark_inclusive)
+    if pd.notna(row.end_mark_exclusive):
+        in_profile &= em_iq["Mark"].lt(row.end_mark_exclusive)
+    em_iq.loc[in_profile, "profile_id"] = row.profile_id
+
+profile_counts = em_iq.groupby("profile_id", dropna=False).size().rename("measurement_rows")
+display(profile_counts)
+assert em_iq["profile_id"].notna().sum() == 22529
+'''
+        ),
+        code(
+            r'''
+fig, axes = plt.subplots(3, 3, figsize=(12, 10), constrained_layout=True)
+for ax, profile_id in zip(axes.flat, mark_ranges["profile_id"]):
+    frame = em_iq[em_iq["profile_id"] == profile_id].reset_index(drop=True)
+    stride = max(1, len(frame) // 600)
+    shown = frame.iloc[::stride]
+    ax.plot(shown.index * stride, shown["I_4350Hz"], color="#1565c0", linewidth=0.8, label="I 4350 Hz")
+    ax.plot(shown.index * stride, shown["Q_4350Hz"], color="#b85c00", linewidth=0.8, label="Q 4350 Hz")
+    ax.set_title(f"{profile_id.replace('_', ' ').title()} · {len(frame):,} rows")
+    ax.set_xlabel("Measurement sequence")
+    ax.set_ylabel("Instrument response")
+    ax.grid(alpha=0.18)
+axes[0, 0].legend(fontsize=8)
+fig.suptitle("Original averaged in-phase and quadrature responses by Profile")
+'''
+        ),
+        markdown(
+            """
+## 5. EM derived model: fit error and inversion bounds
+
+The valid layered inversion is supplied as a **derived real-data product** for
+comparison. It is not the processing input above. Web GIS cells require fit
+error ≤30%; values at the 2000 Ω·m upper bound are treated as bound hits, not
+precise estimates. The installed PyHydroGeophysX 0.3.0 API currently provides
+the seismic reader used below but no public GEM-2/FDEM reader, so this notebook
+keeps EM ingestion transparent with pandas rather than inventing a package API.
+"""
+        ),
+        code(
+            r'''
+em_model = pd.read_csv(data_file(
+    "organized/em/models/2026-05-02_gem2_valid_layered_inversion.csv"
+))
 em_qc = em_model[em_model["FitError(%)"] <= 30].copy()
 bound_hits = em_qc["ResLayer_1"] >= 1999.9
 display(pd.Series({
@@ -226,7 +339,7 @@ fig.tight_layout()
         ),
         markdown(
             """
-## 5. Seismic data with PyHydroGeophysX
+## 6. Seismic data with PyHydroGeophysX
 
 `read_segy` preserves the field-record structure; `normalize_traces` scales each
 trace for display only. The normalized gather must not be used to compare true
@@ -267,7 +380,7 @@ print(f"Pick table: {len(picks)} rows; plotted field record: {len(first_record)}
         ),
         markdown(
             """
-## 6. Interpretation checklist
+## 7. Interpretation checklist
 
 Before using these data in a report, answer:
 

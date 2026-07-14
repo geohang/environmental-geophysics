@@ -1,5 +1,7 @@
 # MkDocs build output
 site/
+output/
+.playwright-cli/
 
 # Python
 .venv/

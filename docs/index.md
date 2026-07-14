@@ -10,8 +10,7 @@
 [📚 Browse Modules](lecture/index.md){ .md-button }
 [🎓 Active-Learning Lessons](apps/lecture-frameworks.html){ .md-button }
 [🧪 Classroom Labs](apps/classroom-labs.html){ .md-button }
-[🗺️ Field Missions](apps/field-missions.html){ .md-button }
-[🌾 Ashton Field Data](apps/field-data.html){ .md-button }
+[🌾 Field Data: Real & Synthetic](apps/field-data.html){ .md-button }
 [✅ Practice Lab](apps/practice-lab.html){ .md-button }
 
 </div>

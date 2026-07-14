@@ -1,0 +1,107 @@
+{
+  "dataset": "Ashton Prairie GEM-2 frequency-domain EM survey",
+  "data_class": "real field data",
+  "acquisition_date": "2026-05-02",
+  "instrument": "GEM-2 FDEM",
+  "coordinate_reference_system": "EPSG:26915",
+  "measurement_input": {
+    "path": "measurements/2026-05-02_gem2_averaged_inphase_quadrature.csv",
+    "rows": 24212,
+    "role": "canonical processing input",
+    "frequencies_hz": [
+      450,
+      1410,
+      4350,
+      13530,
+      42150
+    ],
+    "response_components": [
+      "in-phase",
+      "quadrature"
+    ],
+    "source_columns_preserved": true,
+    "note": "Averaged processed observations; not an inversion result."
+  },
+  "profile_mapping": {
+    "path": "metadata/profile_mark_ranges.csv",
+    "rule": "Assign rows where start_mark_inclusive <= Mark < end_mark_exclusive; Mark values below 3 are unassigned setup records.",
+    "profiles": [
+      {
+        "profile_id": "profile_01",
+        "profile_number": 1,
+        "location_file": "profiles/profile_01_locations.csv",
+        "location_count": 15,
+        "interpolated_elevation_count": 0
+      },
+      {
+        "profile_id": "profile_02",
+        "profile_number": 2,
+        "location_file": "profiles/profile_02_locations.csv",
+        "location_count": 16,
+        "interpolated_elevation_count": 0
+      },
+      {
+        "profile_id": "profile_03",
+        "profile_number": 3,
+        "location_file": "profiles/profile_03_locations.csv",
+        "location_count": 16,
+        "interpolated_elevation_count": 0
+      },
+      {
+        "profile_id": "profile_04",
+        "profile_number": 4,
+        "location_file": "profiles/profile_04_locations.csv",
+        "location_count": 14,
+        "interpolated_elevation_count": 13
+      },
+      {
+        "profile_id": "profile_05",
+        "profile_number": 5,
+        "location_file": "profiles/profile_05_locations.csv",
+        "location_count": 15,
+        "interpolated_elevation_count": 0
+      },
+      {
+        "profile_id": "profile_06",
+        "profile_number": 6,
+        "location_file": "profiles/profile_06_locations.csv",
+        "location_count": 16,
+        "interpolated_elevation_count": 0
+      },
+      {
+        "profile_id": "profile_07",
+        "profile_number": 7,
+        "location_file": "profiles/profile_07_locations.csv",
+        "location_count": 20,
+        "interpolated_elevation_count": 0
+      },
+      {
+        "profile_id": "profile_08",
+        "profile_number": 8,
+        "location_file": "profiles/profile_08_locations.csv",
+        "location_count": 18,
+        "interpolated_elevation_count": 0
+      },
+      {
+        "profile_id": "profile_09",
+        "profile_number": 9,
+        "location_file": "profiles/profile_09_locations.csv",
+        "location_count": 22,
+        "interpolated_elevation_count": 0
+      }
+    ]
+  },
+  "derived_model": {
+    "path": "models/2026-05-02_gem2_valid_layered_inversion.csv",
+    "rows": 10538,
+    "role": "derived layered inversion result",
+    "note": "Do not substitute this model table for the original I/Q observations."
+  },
+  "elevation_processing": {
+    "method": "8-neighbor inverse-distance weighting in EPSG:26915",
+    "cross_validation_rmse_m": 0.8839433373984221,
+    "cross_validation_mae_m": 0.6117266697915965,
+    "cross_validation_abs_error_p95_m": 1.4536614403454393
+  },
+  "license": "CC BY 4.0"
+}

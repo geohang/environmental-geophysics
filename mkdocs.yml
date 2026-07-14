@@ -83,10 +83,10 @@ nav:
       - Borehole Geophysics: lecture/borehole/index.md
   - Practice:
       - Classroom Labs: apps/classroom-labs.html
-      - Field Missions: apps/field-missions.html
       - Practice Lab: apps/practice-lab.html
-  - Data:
-      - Overview: data/index.md
-      - Ashton Field Data: apps/field-data.html
+  - Field Data:
+      - Real & Synthetic Overview: apps/field-data.html
+      - Real Data Catalog: data/index.md
+      - Synthetic Field Missions: apps/field-missions.html
   - Notebooks: notebooks/index.md
   - References: references.md

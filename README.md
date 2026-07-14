@@ -10,10 +10,9 @@ Open, interactive course materials for upper-level undergraduate environmental g
 - **35 original interactive lecture and demonstration pages**, with shared navigation, responsive layouts, keyboard support, accessible controls, and explicit scientific assumptions.
 - **Classroom Lab Studio**, with six course-tested workflows, five downloadable synthetic datasets, and a public processing-pipeline review challenge.
 - **Active-Learning Lessons**, with short foundation slides, prediction, linked app exploration, formative practice, discussion, and exit tickets for every module.
-- **Field Missions**, with four lightweight, explicitly synthetic environmental case studies.
+- **Field Data module**, separating real Ashton Prairie observations and quality-controlled downloads from four explicitly synthetic Field Missions; the real-data package includes full five-frequency EM in-phase/quadrature observations, separately named Profile 01–09 geometry, derived inversion results, and a reproducible PyHydroGeophysX notebook.
 - **Practice Lab**, with 45 formative questions tagged for Undergraduate, Graduate, or Both levels and immediate explanatory feedback.
 - **5 notebooks** for gravity, seismic refraction, ERT forward modeling, and quality control of real Ashton Prairie field data.
-- **Ashton Field Data Explorer**, with 54 approved real-data downloads, mapped survey geometry, derived EM products, explicit synthetic overlays, and machine-readable quality flags.
 
 The interactive lecture apps were migrated from the original Google Sites course site; the extraction script and verbatim copies are retained in `archive/` for provenance. Public activities use synthetic or instructional data unless a source is explicitly stated.
 

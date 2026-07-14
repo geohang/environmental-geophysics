@@ -4,7 +4,7 @@
   "official_site": "https://sees.uiowa.edu/research/ashton-prairie",
   "package_repository": "https://github.com/geohang/PyHydroGeophysX",
   "license": "CC BY 4.0",
-  "generated_utc": "2026-07-14T22:44:28.338319+00:00",
+  "generated_utc": "2026-07-14T23:22:54.481894+00:00",
   "source_file_count": 60,
   "source_size_bytes": 65429989,
   "extension_counts": {
@@ -33,6 +33,7 @@
   "web_products": {
     "real_survey_points": 367,
     "real_survey_lines": 15,
+    "real_em_source_locations": 152,
     "real_em_map_cells": 540,
     "synthetic_features": 3,
     "elevation_interpolation": {

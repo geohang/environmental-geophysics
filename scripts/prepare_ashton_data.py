@@ -14,6 +14,7 @@ import json
 import math
 import os
 import re
+import shutil
 import tempfile
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
@@ -35,6 +36,34 @@ NUMBER_RE = re.compile(r"[-+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?")
 PUBLIC_ERT_DATASETS = {
     "2026-04-11/ert/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
     "2026-05-02/ert/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
+}
+EM_SOURCE_FILES = {
+    *{f"2026-05-02/em/location_line {number}.txt" for number in range(1, 10)},
+    "2026-05-02/em/location_Line_information.txt",
+    "2026-05-02/em/processed_22-xg-12se-294_gem_averaged_inverted.csv",
+    "2026-05-02/em/processed_22-xg-12se-294_gem_averaged_processed.csv",
+    "2026-05-02/em/processed_All_Lines_Corr_EM.xlsx",
+    "2026-05-02/em/processed_corr.csv",
+    "2026-05-02/em/processed_valid_inversion.csv",
+    "2026-05-02/em/raw_22-xg-12se-294_gem_averaged_original_copy.csv",
+}
+PUBLIC_EXCLUSIONS = {
+    # Subset KML files duplicate the consolidated all-date KML.
+    "2026-04-11/2026-04-11_locations.kml",
+    "2026-04-11/ert/2026-04-11_ERT_48electrodes_2m_interpolated_extrapolated.kml",
+    "2026-04-11/seismic/2026-04-11_seismic_GPS_points.kml",
+    "2026-05-02/2026-05-02_locations.kml",
+    "2026-06-25/2026-06-25_locations.kml",
+    "2026-06-25/ert/2026-06-25_ERT_electrodes_267-314.kml",
+    # The master survey table already contains these WGS84 source positions.
+    "2026-04-11/seismic/location_2026-04-11_seismic_GPS_points.csv",
+    # EM files are republished under stable, role-based names in organized/em.
+    # The averaged processed table remains the canonical I/Q input; only its
+    # confusing source filename is removed from the raw download tree.
+    *EM_SOURCE_FILES,
+    # The CSV pick tables retain more metadata than these PyGIMLi text mirrors.
+    "2026-05-02/seismic/1000_output_picks.txt",
+    "2026-05-02/seismic/2000_output_picks.txt",
 }
 
 
@@ -378,6 +407,193 @@ def write_json(path: Path, payload: Any, compact: bool = False) -> None:
         stream.write("\n")
 
 
+def build_organized_em_products(root: Path, organized_root: Path) -> list[dict[str, Any]]:
+    """Publish EM measurements, per-profile geometry, metadata, and models.
+
+    The five-frequency in-phase/quadrature table is copied without changing its
+    columns or values so it remains compatible with existing processing code.
+    Sparse acquisition geometry is published as one clearly named file per
+    profile. Zero elevation placeholders are replaced with the same audited IDW
+    estimates used by the Web GIS and remain explicitly flagged as interpolated.
+    """
+
+    source = root / "2026-05-02" / "em"
+    em_root = organized_root / "em"
+    measurement_dir = em_root / "measurements"
+    profile_dir = em_root / "profiles"
+    metadata_dir = em_root / "metadata"
+    model_dir = em_root / "models"
+    for directory in (measurement_dir, profile_dir, metadata_dir, model_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+
+    measurement_name = "2026-05-02_gem2_averaged_inphase_quadrature.csv"
+    model_name = "2026-05-02_gem2_valid_layered_inversion.csv"
+    measurement_source = source / "processed_22-xg-12se-294_gem_averaged_processed.csv"
+    model_source = source / "processed_valid_inversion.csv"
+    shutil.copyfile(measurement_source, measurement_dir / measurement_name)
+    shutil.copyfile(model_source, model_dir / model_name)
+
+    location_frames: list[pd.DataFrame] = []
+    for profile_number in range(1, 10):
+        path = source / f"location_line {profile_number}.txt"
+        frame = pd.read_csv(path)
+        frame["profile_number"] = profile_number
+        frame["point_number"] = np.arange(1, len(frame) + 1)
+        frame["source_file"] = path.name
+        location_frames.append(frame)
+    missing, interpolation = idw_interpolation(location_frames)
+    estimates = {
+        (int(row.profile_number), int(row.point_number)): float(row.Z_interpolated)
+        for row in missing.itertuples()
+    }
+
+    profile_specs: list[dict[str, Any]] = []
+    for frame in location_frames:
+        profile_number = int(frame["profile_number"].iloc[0])
+        profile_id = f"profile_{profile_number:02d}"
+        published = pd.DataFrame(
+            {
+                "profile_id": profile_id,
+                "point_id": [f"{profile_id}_point_{value:02d}" for value in frame["point_number"]],
+                "x_utm_m": frame["X"].astype(float),
+                "y_utm_m": frame["Y"].astype(float),
+                "source_elevation_m": frame["Z"].astype(float),
+            }
+        )
+        published["elevation_m"] = [
+            estimates.get((profile_number, int(point_number)), float(source_z))
+            for point_number, source_z in zip(frame["point_number"], frame["Z"])
+        ]
+        published["elevation_source"] = np.where(
+            published["source_elevation_m"] > 0,
+            "provided_in_source",
+            "interpolated_8_neighbor_idw",
+        )
+        published["crs"] = "EPSG:26915"
+        published["source_file"] = frame["source_file"].astype(str).to_numpy()
+        filename = f"{profile_id}_locations.csv"
+        published.to_csv(profile_dir / filename, index=False, float_format="%.6f")
+        profile_specs.append(
+            {
+                "profile_id": profile_id,
+                "profile_number": profile_number,
+                "location_file": f"profiles/{filename}",
+                "location_count": int(len(published)),
+                "interpolated_elevation_count": int(
+                    (published["elevation_source"] == "interpolated_8_neighbor_idw").sum()
+                ),
+            }
+        )
+
+    mark_starts = [3, 18, 34, 50, 65, 81, 98, 117, 146]
+    mark_ranges = pd.DataFrame(
+        {
+            "profile_id": [f"profile_{number:02d}" for number in range(1, 10)],
+            "profile_number": range(1, 10),
+            "start_mark_inclusive": mark_starts,
+            "end_mark_exclusive": mark_starts[1:] + [np.nan],
+        }
+    )
+    mark_ranges.to_csv(metadata_dir / "profile_mark_ranges.csv", index=False)
+
+    measurement = pd.read_csv(measurement_dir / measurement_name, skipinitialspace=True)
+    iq_columns = [column for column in measurement.columns if column.startswith(("I_", "Q_")) and column != "QSum"]
+    expected_iq = [
+        f"{component}_{frequency}Hz"
+        for frequency in (450, 1410, 4350, 13530, 42150)
+        for component in ("I", "Q")
+    ]
+    if iq_columns != expected_iq:
+        raise ValueError(f"Unexpected GEM-2 I/Q columns: {iq_columns}")
+
+    manifest = {
+        "dataset": "Ashton Prairie GEM-2 frequency-domain EM survey",
+        "data_class": "real field data",
+        "acquisition_date": "2026-05-02",
+        "instrument": "GEM-2 FDEM",
+        "coordinate_reference_system": "EPSG:26915",
+        "measurement_input": {
+            "path": f"measurements/{measurement_name}",
+            "rows": int(len(measurement)),
+            "role": "canonical processing input",
+            "frequencies_hz": [450, 1410, 4350, 13530, 42150],
+            "response_components": ["in-phase", "quadrature"],
+            "source_columns_preserved": True,
+            "note": "Averaged processed observations; not an inversion result.",
+        },
+        "profile_mapping": {
+            "path": "metadata/profile_mark_ranges.csv",
+            "rule": "Assign rows where start_mark_inclusive <= Mark < end_mark_exclusive; Mark values below 3 are unassigned setup records.",
+            "profiles": profile_specs,
+        },
+        "derived_model": {
+            "path": f"models/{model_name}",
+            "rows": int(pd.read_csv(model_dir / model_name, skipinitialspace=True).shape[0]),
+            "role": "derived layered inversion result",
+            "note": "Do not substitute this model table for the original I/Q observations.",
+        },
+        "elevation_processing": interpolation,
+        "license": "CC BY 4.0",
+    }
+    write_json(em_root / "manifest.json", manifest)
+
+    products = [
+        {
+            "path": f"organized/em/measurements/{measurement_name}",
+            "filename": measurement_dir / measurement_name,
+            "display_name": "May 2 GEM-2 — averaged in-phase and quadrature observations",
+            "processing_level": "averaged observations",
+            "description": "Canonical processing input with original I/Q responses at five frequencies (24,212 rows).",
+            "recommended": True,
+            "source_class": "source measurement",
+        },
+        {
+            "path": "organized/em/metadata/profile_mark_ranges.csv",
+            "filename": metadata_dir / "profile_mark_ranges.csv",
+            "display_name": "May 2 GEM-2 — Profile-to-Mark mapping",
+            "processing_level": "acquisition metadata",
+            "description": "Maps measurement Mark ranges to Profile 01–09 for profile-aware processing.",
+            "recommended": True,
+            "source_class": "source metadata",
+        },
+        {
+            "path": "organized/em/manifest.json",
+            "filename": em_root / "manifest.json",
+            "display_name": "May 2 GEM-2 — organized package manifest",
+            "processing_level": "package metadata",
+            "description": "Machine-readable roles, paths, frequencies, profile mapping, and elevation provenance.",
+            "recommended": True,
+            "source_class": "metadata",
+        },
+        {
+            "path": f"organized/em/models/{model_name}",
+            "filename": model_dir / model_name,
+            "display_name": "May 2 GEM-2 — valid layered inversion",
+            "processing_level": "derived inversion model",
+            "description": "A 10,538-row derived model supplied for comparison; it is not the measurement input.",
+            "recommended": False,
+            "source_class": "derived",
+        },
+    ]
+    for spec in profile_specs:
+        filename = profile_dir / Path(spec["location_file"]).name
+        products.append(
+            {
+                "path": f"organized/em/{spec['location_file']}",
+                "filename": filename,
+                "display_name": f"May 2 GEM-2 — Profile {spec['profile_number']:02d} locations",
+                "processing_level": "profile geometry",
+                "description": (
+                    f"{spec['location_count']} ordered UTM locations for Profile {spec['profile_number']:02d}; "
+                    f"{spec['interpolated_elevation_count']} interpolated elevations are flagged."
+                ),
+                "recommended": False,
+                "source_class": "quality-controlled geometry",
+            }
+        )
+    return products
+
+
 def build_web_products(root: Path, output: Path) -> dict[str, Any]:
     """Build curated real-data layers and explicitly synthetic overlays."""
 
@@ -389,7 +605,14 @@ def build_web_products(root: Path, output: Path) -> dict[str, Any]:
         line_number = int(re.search(r"(\d+)", path.stem).group(1))
         frame["line_number"] = line_number
         frame["line_index"] = np.arange(1, len(frame) + 1)
+        frame["source_file"] = path.name
         em_location_frames.append(frame)
+    em_source_locations = pd.concat(em_location_frames, ignore_index=True)
+    em_source_locations["elevation_status"] = np.where(
+        em_source_locations["Z"] > 0,
+        "provided_in_source",
+        "zero_placeholder_missing_elevation",
+    )
     missing, interpolation = idw_interpolation(em_location_frames)
     estimates = {
         (int(row.line_number), int(row.line_index)): float(row.Z_interpolated)
@@ -537,6 +760,7 @@ def build_web_products(root: Path, output: Path) -> dict[str, Any]:
     return {
         "real_survey_points": len(point_features),
         "real_survey_lines": len(line_features),
+        "real_em_source_locations": int(len(em_source_locations)),
         "real_em_map_cells": len(em_features),
         "synthetic_features": len(synthetic_features),
         "elevation_interpolation": interpolation,
@@ -648,6 +872,8 @@ def is_public_file(relative_path: str, public_root: Path) -> bool:
     """Return whether an audited source is approved and present for download."""
 
     normalized = relative_path.replace("\\", "/")
+    if normalized in PUBLIC_EXCLUSIONS:
+        return False
     parts = normalized.lower().split("/")
     is_ert_measurement = (
         "ert" in parts
@@ -659,18 +885,104 @@ def is_public_file(relative_path: str, public_root: Path) -> bool:
     return (public_root / Path(normalized)).is_file()
 
 
-def build_catalog(report: dict[str, Any], output: Path, public_root: Path) -> None:
+def describe_public_file(relative_path: str) -> dict[str, Any]:
+    """Return student-facing category, processing level, and role metadata."""
+
+    normalized = relative_path.replace("\\", "/")
+    name = Path(normalized).name
+    lower = normalized.lower()
+    category = "Survey geometry"
+    level = "source geometry"
+    recommended = False
+    display_name = name
+    description = "Survey geometry or acquisition metadata retained for provenance."
+
+    if "/ert/" in lower:
+        category = "ERT"
+        if "positive_only" in lower:
+            level = "quality-controlled"
+            recommended = True
+            array = "Wenner" if "wenner" in lower else "dipole–dipole"
+            date = "April 11" if "2026-04-11" in lower else "May 2"
+            display_name = f"{date} ERT — {array}, positive-only PyGIMLi"
+            description = "Approved 48-electrode apparent-resistivity dataset used by the notebook."
+        else:
+            display_name = f"ERT geometry — {name}"
+            description = "Electrode coordinates and elevations; no resistivity measurements."
+    elif "/em/" in lower:
+        category = "EM"
+        if name == "raw_22-xg-12se-294_gem_averaged_original_copy.csv":
+            level = "raw measurements"
+            display_name = "May 2 GEM-2 — raw averaged responses"
+            description = "Original averaged in-phase and quadrature responses at five frequencies."
+        elif name == "processed_valid_inversion.csv":
+            level = "quality-controlled model"
+            recommended = True
+            display_name = "May 2 GEM-2 — valid layered inversion"
+            description = "Canonical 10,538-row inversion table with reconstructed line and sample keys."
+        else:
+            level = "acquisition metadata"
+            display_name = "May 2 GEM-2 — line/mark metadata"
+            description = "Source notes used to reconstruct EM survey lines."
+    elif "/seismic/" in lower:
+        category = "Seismic"
+        if name.lower().endswith(".sgy"):
+            level = "raw waveforms"
+            recommended = True
+            display_name = f"May 2 seismic line {Path(name).stem} — SEG-Y"
+            description = "Raw 28-field-record seismic line read directly by PyHydroGeophysX."
+        elif name.lower().endswith("_first_break_picks.csv"):
+            level = "interpreted picks"
+            recommended = True
+            display_name = f"May 2 seismic line {name.split('_')[0]} — first-break picks"
+            description = "First-arrival picks with trace, geometry, time, and amplitude metadata."
+        elif name.lower().endswith(".dat"):
+            level = "raw waveforms"
+            display_name = f"April 11 seismic shot {Path(name).stem} — Geometrics DAT"
+            description = "One raw 24-channel Geometrics shot record."
+        elif name.lower().endswith("_28pts.txt"):
+            level = "source geometry"
+            display_name = f"May 2 seismic line {name.split('_')[0]} — source/geophone positions"
+            description = "UTM source positions, elevations, and geophone mapping for the SEG-Y line."
+        else:
+            display_name = "May 2 seismic — consolidated WGS84 geometry"
+            description = "UTM/WGS84 positions for both May 2 seismic lines."
+    elif name == "Ashton_all_dates_all_points.csv":
+        level = "source inventory"
+        recommended = True
+        display_name = "All dates and methods — source survey inventory"
+        description = "Canonical 367-row source table before derived elevation interpolation."
+    elif name == "Ashton_all_dates_all_points.kml":
+        level = "GIS geometry"
+        display_name = "All dates and methods — consolidated KML"
+        description = "GIS representation of the complete source survey inventory."
+
+    return {
+        "display_name": display_name,
+        "category": category,
+        "processing_level": level,
+        "recommended": recommended,
+        "description": description,
+        "source_class": "source",
+    }
+
+
+def build_catalog(
+    report: dict[str, Any],
+    output: Path,
+    public_root: Path,
+    organized_products: list[dict[str, Any]],
+) -> None:
     """Create the browser catalog from approved public files in the audit report."""
 
     notes_by_file: defaultdict[str, list[str]] = defaultdict(list)
     for issue in report["issues"]:
         notes_by_file[issue["file"]].append(issue["finding"])
-    catalog = {
-        "dataset": report["dataset"],
-        "data_class": "real",
-        "license": report["license"],
-        "official_site": report["official_site"],
-        "files": [
+    source_files = []
+    for item in report["files"]:
+        if not is_public_file(item["path"], public_root):
+            continue
+        source_files.append(
             {
                 "path": item["path"],
                 "url": f"../data/ashton/raw/{item['path']}",
@@ -678,10 +990,89 @@ def build_catalog(report: dict[str, Any], output: Path, public_root: Path) -> No
                 "size_bytes": item["size_bytes"],
                 "status": item["status"],
                 "quality_notes": notes_by_file[item["path"]],
+                **describe_public_file(item["path"]),
             }
-            for item in report["files"]
-            if is_public_file(item["path"], public_root)
-        ],
+        )
+
+    curated_specs = [
+        (
+            "derived/survey_locations_curated.csv",
+            "survey_locations_curated.csv",
+            "Survey geometry",
+            "quality-controlled",
+            "All dates and methods — curated survey locations",
+            "Recommended 367-row location table with elevation provenance and quality flags.",
+            True,
+        ),
+        (
+            "derived/em_shallow_resistivity.geojson",
+            "em_shallow_resistivity.geojson",
+            "EM",
+            "mapped derived product",
+            "May 2 GEM-2 — shallow-resistivity map cells",
+            "Recommended 1 m GeoJSON cells after fit-error screening and spatial aggregation.",
+            True,
+        ),
+    ]
+    curated_files = []
+    for catalog_path, filename, category, level, display_name, description, recommended in curated_specs:
+        path = output / filename
+        curated_files.append(
+            {
+                "path": catalog_path,
+                "url": f"../data/ashton/web/{filename}",
+                "extension": path.suffix.lower(),
+                "size_bytes": path.stat().st_size,
+                "status": "reviewed",
+                "quality_notes": [],
+                "display_name": display_name,
+                "category": category,
+                "processing_level": level,
+                "recommended": recommended,
+                "description": description,
+                "source_class": "derived",
+            }
+        )
+
+    organized_files = []
+    for product in organized_products:
+        path = Path(product["filename"])
+        quality_notes = []
+        if "profile_04_locations" in product["path"]:
+            quality_notes.append("13 source elevation placeholders were replaced by flagged IDW estimates.")
+        if "/models/" in product["path"]:
+            quality_notes.append("Derived inversion result; use the averaged I/Q table as the processing input.")
+        organized_files.append(
+            {
+                "path": product["path"],
+                "url": f"../data/ashton/{product['path']}",
+                "extension": path.suffix.lower(),
+                "size_bytes": path.stat().st_size,
+                "status": "reviewed",
+                "quality_notes": quality_notes,
+                "display_name": product["display_name"],
+                "category": "EM",
+                "processing_level": product["processing_level"],
+                "recommended": product["recommended"],
+                "description": product["description"],
+                "source_class": product["source_class"],
+            }
+        )
+
+    catalog = {
+        "dataset": report["dataset"],
+        "data_class": "real",
+        "license": report["license"],
+        "official_site": report["official_site"],
+        "publication_summary": {
+            "audited_source_files": report["source_file_count"],
+            "published_source_files": len(source_files),
+            "curated_products": len(curated_files),
+            "organized_em_files": len(organized_files),
+            "withheld_problem_ert_files": 6,
+            "removed_redundant_or_intermediate_files": len(PUBLIC_EXCLUSIONS),
+        },
+        "files": organized_files + curated_files + source_files,
     }
     write_json(output / "data_catalog.json", catalog)
 
@@ -698,15 +1089,23 @@ def main() -> int:
         default=None,
         help="Published raw-data directory; catalog entries are limited to approved files present here.",
     )
+    parser.add_argument(
+        "--organized-root",
+        type=Path,
+        default=None,
+        help="Published organized-data directory; defaults to a sibling of the Web output directory.",
+    )
     args = parser.parse_args()
     source = args.source.resolve()
     output = args.output.resolve()
     public_root = args.public_root.resolve() if args.public_root else source
+    organized_root = args.organized_root.resolve() if args.organized_root else output.parent / "organized"
     if not source.exists():
         parser.error(f"Source directory does not exist: {source}")
     report = build_report(source, output)
+    organized_products = build_organized_em_products(source, organized_root)
     write_json(output / "quality_report.json", report)
-    build_catalog(report, output, public_root)
+    build_catalog(report, output, public_root, organized_products)
     print(
         f"Reviewed {report['source_file_count']} Ashton files; "
         f"status={report['overall_status']}; "

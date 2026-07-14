@@ -3,22 +3,228 @@
   "data_class": "real",
   "license": "CC BY 4.0",
   "official_site": "https://sees.uiowa.edu/research/ashton-prairie",
+  "publication_summary": {
+    "audited_source_files": 60,
+    "published_source_files": 29,
+    "curated_products": 2,
+    "organized_em_files": 13,
+    "withheld_problem_ert_files": 6,
+    "removed_redundant_or_intermediate_files": 25
+  },
   "files": [
     {
-      "path": "2026-04-11/2026-04-11_locations.kml",
-      "url": "../data/ashton/raw/2026-04-11/2026-04-11_locations.kml",
-      "extension": ".kml",
-      "size_bytes": 28249,
+      "path": "organized/em/measurements/2026-05-02_gem2_averaged_inphase_quadrature.csv",
+      "url": "../data/ashton/organized/em/measurements/2026-05-02_gem2_averaged_inphase_quadrature.csv",
+      "extension": ".csv",
+      "size_bytes": 3482123,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — averaged in-phase and quadrature observations",
+      "category": "EM",
+      "processing_level": "averaged observations",
+      "recommended": true,
+      "description": "Canonical processing input with original I/Q responses at five frequencies (24,212 rows).",
+      "source_class": "source measurement"
     },
     {
-      "path": "2026-04-11/ert/2026-04-11_ERT_48electrodes_2m_interpolated_extrapolated.kml",
-      "url": "../data/ashton/raw/2026-04-11/ert/2026-04-11_ERT_48electrodes_2m_interpolated_extrapolated.kml",
-      "extension": ".kml",
-      "size_bytes": 22221,
+      "path": "organized/em/metadata/profile_mark_ranges.csv",
+      "url": "../data/ashton/organized/em/metadata/profile_mark_ranges.csv",
+      "extension": ".csv",
+      "size_bytes": 264,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile-to-Mark mapping",
+      "category": "EM",
+      "processing_level": "acquisition metadata",
+      "recommended": true,
+      "description": "Maps measurement Mark ranges to Profile 01–09 for profile-aware processing.",
+      "source_class": "source metadata"
+    },
+    {
+      "path": "organized/em/manifest.json",
+      "url": "../data/ashton/organized/em/manifest.json",
+      "extension": ".json",
+      "size_bytes": 3365,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — organized package manifest",
+      "category": "EM",
+      "processing_level": "package metadata",
+      "recommended": true,
+      "description": "Machine-readable roles, paths, frequencies, profile mapping, and elevation provenance.",
+      "source_class": "metadata"
+    },
+    {
+      "path": "organized/em/models/2026-05-02_gem2_valid_layered_inversion.csv",
+      "url": "../data/ashton/organized/em/models/2026-05-02_gem2_valid_layered_inversion.csv",
+      "extension": ".csv",
+      "size_bytes": 1542280,
+      "status": "reviewed",
+      "quality_notes": [
+        "Derived inversion result; use the averaged I/Q table as the processing input."
+      ],
+      "display_name": "May 2 GEM-2 — valid layered inversion",
+      "category": "EM",
+      "processing_level": "derived inversion model",
+      "recommended": false,
+      "description": "A 10,538-row derived model supplied for comparison; it is not the measurement input.",
+      "source_class": "derived"
+    },
+    {
+      "path": "organized/em/profiles/profile_01_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_01_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2096,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 01 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "15 ordered UTM locations for Profile 01; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_02_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_02_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2229,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 02 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "16 ordered UTM locations for Profile 02; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_03_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_03_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2229,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 03 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "16 ordered UTM locations for Profile 03; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_04_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_04_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2054,
+      "status": "reviewed",
+      "quality_notes": [
+        "13 source elevation placeholders were replaced by flagged IDW estimates."
+      ],
+      "display_name": "May 2 GEM-2 — Profile 04 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "14 ordered UTM locations for Profile 04; 13 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_05_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_05_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2096,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 05 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "15 ordered UTM locations for Profile 05; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_06_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_06_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2229,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 06 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "16 ordered UTM locations for Profile 06; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_07_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_07_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2761,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 07 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "20 ordered UTM locations for Profile 07; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_08_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_08_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 2495,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 08 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "18 ordered UTM locations for Profile 08; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "organized/em/profiles/profile_09_locations.csv",
+      "url": "../data/ashton/organized/em/profiles/profile_09_locations.csv",
+      "extension": ".csv",
+      "size_bytes": 3027,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — Profile 09 locations",
+      "category": "EM",
+      "processing_level": "profile geometry",
+      "recommended": false,
+      "description": "22 ordered UTM locations for Profile 09; 0 interpolated elevations are flagged.",
+      "source_class": "quality-controlled geometry"
+    },
+    {
+      "path": "derived/survey_locations_curated.csv",
+      "url": "../data/ashton/web/survey_locations_curated.csv",
+      "extension": ".csv",
+      "size_bytes": 41487,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "All dates and methods — curated survey locations",
+      "category": "Survey geometry",
+      "processing_level": "quality-controlled",
+      "recommended": true,
+      "description": "Recommended 367-row location table with elevation provenance and quality flags.",
+      "source_class": "derived"
+    },
+    {
+      "path": "derived/em_shallow_resistivity.geojson",
+      "url": "../data/ashton/web/em_shallow_resistivity.geojson",
+      "extension": ".geojson",
+      "size_bytes": 187627,
+      "status": "reviewed",
+      "quality_notes": [],
+      "display_name": "May 2 GEM-2 — shallow-resistivity map cells",
+      "category": "EM",
+      "processing_level": "mapped derived product",
+      "recommended": true,
+      "description": "Recommended 1 m GeoJSON cells after fit-error screening and spatial aggregation.",
+      "source_class": "derived"
     },
     {
       "path": "2026-04-11/ert/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
@@ -26,7 +232,13 @@
       "extension": ".txt",
       "size_bytes": 8208,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 ERT — Wenner, positive-only PyGIMLi",
+      "category": "ERT",
+      "processing_level": "quality-controlled",
+      "recommended": true,
+      "description": "Approved 48-electrode apparent-resistivity dataset used by the notebook.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/ert/location_2026-04-11_ERT_electrodes_2m_derived.csv",
@@ -34,7 +246,13 @@
       "extension": ".csv",
       "size_bytes": 5087,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "ERT geometry — location_2026-04-11_ERT_electrodes_2m_derived.csv",
+      "category": "ERT",
+      "processing_level": "source geometry",
+      "recommended": false,
+      "description": "Electrode coordinates and elevations; no resistivity measurements.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/1.dat",
@@ -42,7 +260,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 1 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/10.dat",
@@ -50,7 +274,13 @@
       "extension": ".dat",
       "size_bytes": 400020,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 10 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/11.dat",
@@ -58,7 +288,13 @@
       "extension": ".dat",
       "size_bytes": 400020,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 11 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/12.dat",
@@ -66,7 +302,13 @@
       "extension": ".dat",
       "size_bytes": 400020,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 12 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/13.dat",
@@ -74,7 +316,13 @@
       "extension": ".dat",
       "size_bytes": 400020,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 13 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/14.dat",
@@ -82,7 +330,13 @@
       "extension": ".dat",
       "size_bytes": 400020,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 14 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/15.dat",
@@ -90,7 +344,13 @@
       "extension": ".dat",
       "size_bytes": 400020,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 15 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/2.dat",
@@ -98,15 +358,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-04-11/seismic/2026-04-11_seismic_GPS_points.kml",
-      "url": "../data/ashton/raw/2026-04-11/seismic/2026-04-11_seismic_GPS_points.kml",
-      "extension": ".kml",
-      "size_bytes": 6475,
-      "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 2 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/3.dat",
@@ -114,7 +372,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 3 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/4.dat",
@@ -122,7 +386,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 4 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/5.dat",
@@ -130,7 +400,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 5 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/6.dat",
@@ -138,7 +414,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 6 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/7.dat",
@@ -146,7 +428,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 7 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/8.dat",
@@ -154,7 +442,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 8 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-04-11/seismic/9.dat",
@@ -162,159 +456,13 @@
       "extension": ".dat",
       "size_bytes": 400000,
       "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-04-11/seismic/location_2026-04-11_seismic_GPS_points.csv",
-      "url": "../data/ashton/raw/2026-04-11/seismic/location_2026-04-11_seismic_GPS_points.csv",
-      "extension": ".csv",
-      "size_bytes": 479,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/2026-05-02_locations.kml",
-      "url": "../data/ashton/raw/2026-05-02/2026-05-02_locations.kml",
-      "extension": ".kml",
-      "size_bytes": 111535,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 1.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 1.txt",
-      "extension": ".txt",
-      "size_bytes": 580,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 2.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 2.txt",
-      "extension": ".txt",
-      "size_bytes": 616,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 3.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 3.txt",
-      "extension": ".txt",
-      "size_bytes": 623,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 4.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 4.txt",
-      "extension": ".txt",
-      "size_bytes": 506,
-      "status": "reviewed",
-      "quality_notes": [
-        "13 of 14 elevations are stored as 0.0 m.",
-        "The one nonzero line-4 elevation differs by about 5.4 m from a neighboring-line IDW estimate."
-      ]
-    },
-    {
-      "path": "2026-05-02/em/location_line 5.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 5.txt",
-      "extension": ".txt",
-      "size_bytes": 578,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 6.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 6.txt",
-      "extension": ".txt",
-      "size_bytes": 616,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 7.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 7.txt",
-      "extension": ".txt",
-      "size_bytes": 770,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 8.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 8.txt",
-      "extension": ".txt",
-      "size_bytes": 690,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/location_line 9.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_line 9.txt",
-      "extension": ".txt",
-      "size_bytes": 844,
-      "status": "reviewed",
-      "quality_notes": [
-        "The first two records have identical X/Y/Z coordinates."
-      ]
-    },
-    {
-      "path": "2026-05-02/em/location_Line_information.txt",
-      "url": "../data/ashton/raw/2026-05-02/em/location_Line_information.txt",
-      "extension": ".txt",
-      "size_bytes": 153,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/processed_22-xg-12se-294_gem_averaged_inverted.csv",
-      "url": "../data/ashton/raw/2026-05-02/em/processed_22-xg-12se-294_gem_averaged_inverted.csv",
-      "extension": ".csv",
-      "size_bytes": 3708725,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/processed_22-xg-12se-294_gem_averaged_processed.csv",
-      "url": "../data/ashton/raw/2026-05-02/em/processed_22-xg-12se-294_gem_averaged_processed.csv",
-      "extension": ".csv",
-      "size_bytes": 3482123,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/processed_All_Lines_Corr_EM.xlsx",
-      "url": "../data/ashton/raw/2026-05-02/em/processed_All_Lines_Corr_EM.xlsx",
-      "extension": ".xlsx",
-      "size_bytes": 1396241,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/processed_corr.csv",
-      "url": "../data/ashton/raw/2026-05-02/em/processed_corr.csv",
-      "extension": ".csv",
-      "size_bytes": 1401478,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/em/processed_valid_inversion.csv",
-      "url": "../data/ashton/raw/2026-05-02/em/processed_valid_inversion.csv",
-      "extension": ".csv",
-      "size_bytes": 1542280,
-      "status": "reviewed",
-      "quality_notes": [
-        "1199 of 10538 inversions exceed 30% fit error.",
-        "Layer-1 resistivity equals the 2000 ohm m upper bound in 1810 rows."
-      ]
-    },
-    {
-      "path": "2026-05-02/em/raw_22-xg-12se-294_gem_averaged_original_copy.csv",
-      "url": "../data/ashton/raw/2026-05-02/em/raw_22-xg-12se-294_gem_averaged_original_copy.csv",
-      "extension": ".csv",
-      "size_bytes": 3899462,
-      "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "April 11 seismic shot 9 — Geometrics DAT",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": false,
+      "description": "One raw 24-channel Geometrics shot record.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/ert/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
@@ -322,7 +470,13 @@
       "extension": ".txt",
       "size_bytes": 4499,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 ERT — dipole–dipole, positive-only PyGIMLi",
+      "category": "ERT",
+      "processing_level": "quality-controlled",
+      "recommended": true,
+      "description": "Approved 48-electrode apparent-resistivity dataset used by the notebook.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/ert/location_2026-05-02_ert_electrodes_UTM_1p5m.txt",
@@ -330,7 +484,13 @@
       "extension": ".txt",
       "size_bytes": 2056,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "ERT geometry — location_2026-05-02_ert_electrodes_UTM_1p5m.txt",
+      "category": "ERT",
+      "processing_level": "source geometry",
+      "recommended": false,
+      "description": "Electrode coordinates and elevations; no resistivity measurements.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/ert/location_2026-05-02_ert_electrodes_wgs84.csv",
@@ -338,7 +498,13 @@
       "extension": ".csv",
       "size_bytes": 3738,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "ERT geometry — location_2026-05-02_ert_electrodes_wgs84.csv",
+      "category": "ERT",
+      "processing_level": "source geometry",
+      "recommended": false,
+      "description": "Electrode coordinates and elevations; no resistivity measurements.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/seismic/1000.sgy",
@@ -346,7 +512,13 @@
       "extension": ".sgy",
       "size_bytes": 21668880,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 seismic line 1000 — SEG-Y",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": true,
+      "description": "Raw 28-field-record seismic line read directly by PyHydroGeophysX.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/seismic/1000_28pts.txt",
@@ -354,7 +526,13 @@
       "extension": ".txt",
       "size_bytes": 1258,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 seismic line 1000 — source/geophone positions",
+      "category": "Seismic",
+      "processing_level": "source geometry",
+      "recommended": false,
+      "description": "UTM source positions, elevations, and geophone mapping for the SEG-Y line.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/seismic/1000_first_break_picks.csv",
@@ -362,15 +540,13 @@
       "extension": ".csv",
       "size_bytes": 32574,
       "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/seismic/1000_output_picks.txt",
-      "url": "../data/ashton/raw/2026-05-02/seismic/1000_output_picks.txt",
-      "extension": ".txt",
-      "size_bytes": 9330,
-      "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 seismic line 1000 — first-break picks",
+      "category": "Seismic",
+      "processing_level": "interpreted picks",
+      "recommended": true,
+      "description": "First-arrival picks with trace, geometry, time, and amplitude metadata.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/seismic/2000.sgy",
@@ -378,7 +554,13 @@
       "extension": ".sgy",
       "size_bytes": 21668880,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 seismic line 2000 — SEG-Y",
+      "category": "Seismic",
+      "processing_level": "raw waveforms",
+      "recommended": true,
+      "description": "Raw 28-field-record seismic line read directly by PyHydroGeophysX.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/seismic/2000_28pts.txt",
@@ -386,7 +568,13 @@
       "extension": ".txt",
       "size_bytes": 1258,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 seismic line 2000 — source/geophone positions",
+      "category": "Seismic",
+      "processing_level": "source geometry",
+      "recommended": false,
+      "description": "UTM source positions, elevations, and geophone mapping for the SEG-Y line.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/seismic/2000_first_break_picks.csv",
@@ -394,15 +582,13 @@
       "extension": ".csv",
       "size_bytes": 32870,
       "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-05-02/seismic/2000_output_picks.txt",
-      "url": "../data/ashton/raw/2026-05-02/seismic/2000_output_picks.txt",
-      "extension": ".txt",
-      "size_bytes": 9316,
-      "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 seismic line 2000 — first-break picks",
+      "category": "Seismic",
+      "processing_level": "interpreted picks",
+      "recommended": true,
+      "description": "First-arrival picks with trace, geometry, time, and amplitude metadata.",
+      "source_class": "source"
     },
     {
       "path": "2026-05-02/seismic/location_2026-05-02_seismic_positions_wgs84.csv",
@@ -410,23 +596,13 @@
       "extension": ".csv",
       "size_bytes": 4610,
       "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-06-25/2026-06-25_locations.kml",
-      "url": "../data/ashton/raw/2026-06-25/2026-06-25_locations.kml",
-      "extension": ".kml",
-      "size_bytes": 21970,
-      "status": "reviewed",
-      "quality_notes": []
-    },
-    {
-      "path": "2026-06-25/ert/2026-06-25_ERT_electrodes_267-314.kml",
-      "url": "../data/ashton/raw/2026-06-25/ert/2026-06-25_ERT_electrodes_267-314.kml",
-      "extension": ".kml",
-      "size_bytes": 21982,
-      "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "May 2 seismic — consolidated WGS84 geometry",
+      "category": "Seismic",
+      "processing_level": "source geometry",
+      "recommended": false,
+      "description": "UTM/WGS84 positions for both May 2 seismic lines.",
+      "source_class": "source"
     },
     {
       "path": "Ashton_all_dates_all_points.csv",
@@ -434,7 +610,13 @@
       "extension": ".csv",
       "size_bytes": 33568,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "All dates and methods — source survey inventory",
+      "category": "Survey geometry",
+      "processing_level": "source inventory",
+      "recommended": true,
+      "description": "Canonical 367-row source table before derived elevation interpolation.",
+      "source_class": "source"
     },
     {
       "path": "Ashton_all_dates_all_points.kml",
@@ -442,7 +624,13 @@
       "extension": ".kml",
       "size_bytes": 161947,
       "status": "reviewed",
-      "quality_notes": []
+      "quality_notes": [],
+      "display_name": "All dates and methods — consolidated KML",
+      "category": "Survey geometry",
+      "processing_level": "GIS geometry",
+      "recommended": false,
+      "description": "GIS representation of the complete source survey inventory.",
+      "source_class": "source"
     }
   ]
 }

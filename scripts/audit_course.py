@@ -384,6 +384,10 @@ def audit_ashton_field_data() -> list[str]:
         ashton / "web" / "survey_lines.geojson",
         ashton / "web" / "em_shallow_resistivity.geojson",
         ashton / "web" / "synthetic_overlays.geojson",
+        ashton / "organized" / "em" / "manifest.json",
+        ashton / "organized" / "em" / "measurements" / "2026-05-02_gem2_averaged_inphase_quadrature.csv",
+        ashton / "organized" / "em" / "metadata" / "profile_mark_ranges.csv",
+        ashton / "organized" / "em" / "models" / "2026-05-02_gem2_valid_layered_inversion.csv",
         ashton / "DATA_LICENSE.txt",
         DOCS / "apps" / "field-data.html",
         DOCS / "notebooks" / "ashton_field_data.ipynb",
@@ -404,6 +408,7 @@ def audit_ashton_field_data() -> list[str]:
     expected_products = {
         "real_survey_points": 367,
         "real_survey_lines": 15,
+        "real_em_source_locations": 152,
         "real_em_map_cells": 540,
         "synthetic_features": 3,
         "interpolated_elevation_count": 13,
@@ -416,8 +421,19 @@ def audit_ashton_field_data() -> list[str]:
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     public_files = catalog.get("files", [])
     raw_files = [path for path in (ashton / "raw").rglob("*") if path.is_file()]
-    if len(public_files) != 54 or len(raw_files) != 54:
-        errors.append(f"Ashton public archive must contain 54 files; catalog={len(public_files)}, raw={len(raw_files)}")
+    summary = catalog.get("publication_summary", {})
+    expected_summary = {
+        "audited_source_files": 60,
+        "published_source_files": 29,
+        "curated_products": 2,
+        "organized_em_files": 13,
+        "withheld_problem_ert_files": 6,
+        "removed_redundant_or_intermediate_files": 25,
+    }
+    if summary != expected_summary:
+        errors.append(f"Ashton publication summary differs from the reviewed release: {summary}")
+    if len(public_files) != 44 or len(raw_files) != 29:
+        errors.append(f"Ashton release must catalog 44 files with 29 retained raw files; catalog={len(public_files)}, raw={len(raw_files)}")
     public_ert_measurements = [
         item["path"] for item in public_files
         if "/ert/" in item["path"]
@@ -430,6 +446,58 @@ def audit_ashton_field_data() -> list[str]:
     ]
     if public_ert_measurements != expected_ert:
         errors.append(f"Ashton public ERT measurements must contain only the two approved PyGIMLi files: {public_ert_measurements}")
+
+    measurement_path = ashton / "organized" / "em" / "measurements" / "2026-05-02_gem2_averaged_inphase_quadrature.csv"
+    with measurement_path.open(encoding="utf-8-sig", newline="") as stream:
+        reader = csv.DictReader(stream)
+        measurement_rows = sum(1 for _ in reader)
+        measurement_columns = reader.fieldnames or []
+    expected_iq = [
+        f"{component}_{frequency}Hz"
+        for frequency in (450, 1410, 4350, 13530, 42150)
+        for component in ("I", "Q")
+    ]
+    if measurement_rows != 24212 or any(column not in measurement_columns for column in expected_iq):
+        errors.append("Ashton EM measurement input must retain 24,212 rows and all five-frequency I/Q columns")
+
+    profile_root = ashton / "organized" / "em" / "profiles"
+    profile_files = sorted(profile_root.glob("profile_*_locations.csv"))
+    profile_rows = []
+    profile4_interpolated = 0
+    for profile_path in profile_files:
+        with profile_path.open(encoding="utf-8-sig", newline="") as stream:
+            rows_in_profile = list(csv.DictReader(stream))
+        profile_rows.append(len(rows_in_profile))
+        if profile_path.name == "profile_04_locations.csv":
+            profile4_interpolated = sum(
+                row.get("elevation_source") == "interpolated_8_neighbor_idw"
+                and float(row.get("elevation_m", 0)) > 0
+                for row in rows_in_profile
+            )
+    if profile_rows != [15, 16, 16, 14, 15, 16, 20, 18, 22]:
+        errors.append(f"Ashton EM Profile 01–09 location counts changed: {profile_rows}")
+    if profile4_interpolated != 13:
+        errors.append("Ashton EM Profile 04 must contain 13 flagged, nonzero interpolated elevations")
+
+    model_path = ashton / "organized" / "em" / "models" / "2026-05-02_gem2_valid_layered_inversion.csv"
+    with model_path.open(encoding="utf-8-sig", newline="") as stream:
+        model_rows = sum(1 for _ in csv.DictReader(stream))
+    if model_rows != 10538:
+        errors.append(f"Ashton EM valid layered inversion must contain 10,538 rows, found {model_rows}")
+
+    forbidden_public_names = {
+        "processed_22-xg-12se-294_gem_averaged_inverted.csv",
+        "processed_22-xg-12se-294_gem_averaged_processed.csv",
+        "processed_All_Lines_Corr_EM.xlsx",
+        "processed_corr.csv",
+        "processed_valid_inversion.csv",
+        "raw_22-xg-12se-294_gem_averaged_original_copy.csv",
+        "location_Line_information.txt",
+        *{f"location_line {number}.txt" for number in range(1, 10)},
+    }
+    leaked = sorted(path.name for path in raw_files if path.name in forbidden_public_names)
+    if leaked:
+        errors.append(f"Ashton raw download tree still contains superseded EM files: {', '.join(leaked)}")
 
     points = json.loads((ashton / "web" / "survey_points.geojson").read_text(encoding="utf-8"))["features"]
     line4_interpolated = [
@@ -445,6 +513,36 @@ def audit_ashton_field_data() -> list[str]:
         errors.append("Ashton synthetic overlay contains a feature without data_class=synthetic")
     if "CC BY 4.0" not in (ashton / "DATA_LICENSE.txt").read_text(encoding="utf-8"):
         errors.append("Ashton data license must state CC BY 4.0")
+
+    field_data_page = (DOCS / "apps" / "field-data.html").read_text(encoding="utf-8")
+    for required_label in (
+        "Real Field Data: Ashton Prairie",
+        "Synthetic Field Data: Field Missions",
+        'href="field-missions.html"',
+    ):
+        if required_label not in field_data_page:
+            errors.append(f"Field Data hub is missing {required_label}")
+    for required_label in ("EM Profile", "Recommended · start here", "Profile 01–09"):
+        if required_label not in field_data_page:
+            errors.append(f"Field Data explorer is missing profile-aware catalog UI: {required_label}")
+    notebook_text = (DOCS / "notebooks" / "ashton_field_data.ipynb").read_text(encoding="utf-8")
+    for required_notebook_term in (
+        "2026-05-02_gem2_averaged_inphase_quadrature.csv",
+        "profile_{number:02d}_locations.csv",
+        "2026-05-02_gem2_valid_layered_inversion.csv",
+        "read_segy",
+    ):
+        if required_notebook_term not in notebook_text:
+            errors.append(f"Ashton notebook is missing required workflow term: {required_notebook_term}")
+    missions_page = (DOCS / "apps" / "field-missions.html").read_text(encoding="utf-8")
+    if 'href="field-data.html"' not in missions_page or "Field Data · Synthetic Missions" not in missions_page:
+        errors.append("Synthetic Field Missions must link back to the unified Field Data module")
+    navigation = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+    if "  - Field Data:" not in navigation or "      - Synthetic Field Missions: apps/field-missions.html" not in navigation:
+        errors.append("MkDocs navigation must group real and synthetic field data under Field Data")
+    practice_block = navigation.split("  - Practice:", 1)[-1].split("  - Field Data:", 1)[0]
+    if "Field Missions" in practice_block:
+        errors.append("Field Missions must not remain under the separate Practice navigation module")
     return errors
 
 

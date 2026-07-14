@@ -1,9 +1,0 @@
-Line 1: Mark 3
-Line 2: Mark 18
-Line 3：Mark 34
-Line 4: Mark 50
-Line 5: Mark 65
-Line 6: Mark 81
-Line 7: Mark 98
-Line 8: Mark 117
-Line 9: Mark 146

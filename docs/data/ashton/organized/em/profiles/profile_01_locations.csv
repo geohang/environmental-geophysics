@@ -1,0 +1,16 @@
+profile_id,point_id,x_utm_m,y_utm_m,source_elevation_m,elevation_m,elevation_source,crs,source_file
+profile_01,profile_01_point_01,617645.277000,4613599.061000,216.300000,216.300000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_02,617644.755000,4613605.494000,216.270000,216.270000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_03,617644.083000,4613610.924000,214.730000,214.730000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_04,617643.100000,4613615.017000,215.950000,215.950000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_05,617642.095000,4613620.443000,216.920000,216.920000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_06,617641.928000,4613625.549000,217.540000,217.540000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_07,617640.955000,4613628.975000,217.610000,217.610000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_08,617640.537000,4613634.188000,217.400000,217.400000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_09,617638.976000,4613637.938000,217.690000,217.690000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_10,617638.310000,4613643.036000,217.750000,217.750000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_11,617637.969000,4613648.583000,217.770000,217.770000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_12,617636.893000,4613653.230000,217.820000,217.820000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_13,617635.454000,4613659.759000,219.030000,219.030000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_14,617634.882000,4613664.192000,219.410000,219.410000,provided_in_source,EPSG:26915,location_line 1.txt
+profile_01,profile_01_point_15,617634.586000,4613666.963000,219.410000,219.410000,provided_in_source,EPSG:26915,location_line 1.txt
