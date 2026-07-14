@@ -12,7 +12,8 @@ Open, interactive course materials for upper-level undergraduate environmental g
 - **Active-Learning Lessons**, with short foundation slides, prediction, linked app exploration, formative practice, discussion, and exit tickets for every module.
 - **Field Missions**, with four lightweight, explicitly synthetic environmental case studies.
 - **Practice Lab**, with 45 formative questions tagged for Undergraduate, Graduate, or Both levels and immediate explanatory feedback.
-- **4 notebooks** for gravity processing/modeling, seismic refraction, and ERT forward modeling, plus sample datasets.
+- **5 notebooks** for gravity, seismic refraction, ERT forward modeling, and quality control of real Ashton Prairie field data.
+- **Ashton Field Data Explorer**, with 54 approved real-data downloads, mapped survey geometry, derived EM products, explicit synthetic overlays, and machine-readable quality flags.
 
 The interactive lecture apps were migrated from the original Google Sites course site; the extraction script and verbatim copies are retained in `archive/` for provenance. Public activities use synthetic or instructional data unless a source is explicitly stated.
 

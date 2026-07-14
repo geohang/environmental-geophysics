@@ -1,0 +1,3381 @@
+<?xml version='1.0' encoding='utf-8'?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Ashton - all dates - all points</name>
+    <Style id="ertPoint">
+      <IconStyle>
+        <color>ff0000ff</color>
+        <scale>0.65</scale>
+      </IconStyle>
+    </Style>
+    <Style id="seismicPoint">
+      <IconStyle>
+        <color>ffff0000</color>
+        <scale>0.65</scale>
+      </IconStyle>
+    </Style>
+    <Style id="emPoint">
+      <IconStyle>
+        <color>ff00aa00</color>
+        <scale>0.55</scale>
+      </IconStyle>
+    </Style>
+    <Folder>
+      <name>2026-04-11</name>
+      <Folder>
+        <name>ERT electrodes</name>
+        <Placemark>
+          <name>0411-E01</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 01; Original label: ERT 01; Source description: 0.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5844850000,41.6649570000,211.160</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E02</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 02; Original label: ERT 02; Source description: 2.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5844927492,41.6649740482,212.175</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E03</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 03; Original label: ERT 03; Source description: 4.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845024873,41.6649904805,211.317</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E04</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 04; Original label: ERT 04; Source description: 6.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845106457,41.6650071655,210.509</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E05</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 05; Original label: ERT 05; Source description: 8.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845128873,41.6650250982,211.719</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E06</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 06; Original label: ERT 06; Source description: 10.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845156546,41.6650429893,211.408</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E07</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 07; Original label: ERT 07; Source description: 12.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845184665,41.6650608767,211.129</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E08</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 08; Original label: ERT 08; Source description: 14.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845213659,41.6650787563,211.433</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E09</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 09; Original label: ERT 09; Source description: 16.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845242931,41.6650966333,211.686</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E10</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 10; Original label: ERT 10; Source description: 18.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845274971,41.6651144836,211.425</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E11</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 11; Original label: ERT 11; Source description: 20.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845307010,41.6651323340,211.164</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E12</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 12; Original label: ERT 12; Source description: 22.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845347534,41.6651500859,211.676</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E13</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 13; Original label: ERT 13; Source description: 24.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845394360,41.6651677337,212.030</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E14</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 14; Original label: ERT 14; Source description: 26.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845460922,41.6651850396,211.520</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E15</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 15; Original label: ERT 15; Source description: 28.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845527483,41.6652023455,211.009</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E16</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 16; Original label: ERT 16; Source description: 30.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845558004,41.6652202025,211.142</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E17</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 17; Original label: ERT 17; Source description: 32.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845587109,41.6652380811,211.300</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E18</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 18; Original label: ERT 18; Source description: 34.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845630528,41.6652557690,211.568</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E19</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 19; Original label: ERT 19; Source description: 36.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845685329,41.6652733052,211.925</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E20</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 20; Original label: ERT 20; Source description: 38.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845721813,41.6652910876,211.980</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E21</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 21; Original label: ERT 21; Source description: 40.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845751600,41.6653089598,211.925</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E22</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 22; Original label: ERT 22; Source description: 42.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845796970,41.6653266313,211.987</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E23</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 23; Original label: ERT 23; Source description: 44.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845848460,41.6653442239,212.094</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E24</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 24; Original label: ERT 24; Source description: 46.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845908214,41.6653616503,212.152</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E25</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 25; Original label: ERT 25; Source description: 48.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845981029,41.6653788141,212.131</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E26</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 26; Original label: ERT 26; Source description: 50.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846044503,41.6653961677,212.169</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E27</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 27; Original label: ERT 27; Source description: 52.0 m; interpolated_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846097220,41.6654137398,212.274</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E28</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 28; Original label: ERT 28; Source description: 54.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846149108,41.6654313254,212.304</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E29</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 29; Original label: ERT 29; Source description: 56.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846197430,41.6654489684,212.347</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E30</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 30; Original label: ERT 30; Source description: 58.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846245752,41.6654666115,212.389</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E31</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 31; Original label: ERT 31; Source description: 60.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846294074,41.6654842546,212.431</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E32</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 32; Original label: ERT 32; Source description: 62.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846342396,41.6655018976,212.474</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E33</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 33; Original label: ERT 33; Source description: 64.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846390719,41.6655195407,212.516</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E34</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 34; Original label: ERT 34; Source description: 66.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846439041,41.6655371838,212.558</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E35</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 35; Original label: ERT 35; Source description: 68.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846487363,41.6655548268,212.600</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E36</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 36; Original label: ERT 36; Source description: 70.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846535686,41.6655724699,212.643</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E37</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 37; Original label: ERT 37; Source description: 72.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846584008,41.6655901130,212.685</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E38</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 38; Original label: ERT 38; Source description: 74.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846632330,41.6656077560,212.727</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E39</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 39; Original label: ERT 39; Source description: 76.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846680653,41.6656253991,212.770</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E40</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 40; Original label: ERT 40; Source description: 78.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846728975,41.6656430421,212.812</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E41</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 41; Original label: ERT 41; Source description: 80.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846777297,41.6656606852,212.854</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E42</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 42; Original label: ERT 42; Source description: 82.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846825620,41.6656783283,212.897</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E43</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 43; Original label: ERT 43; Source description: 84.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846873942,41.6656959713,212.939</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E44</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 44; Original label: ERT 44; Source description: 86.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846922265,41.6657136144,212.981</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E45</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 45; Original label: ERT 45; Source description: 88.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846970587,41.6657312574,213.024</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E46</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 46; Original label: ERT 46; Source description: 90.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5847018910,41.6657489005,213.066</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E47</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 47; Original label: ERT 47; Source description: 92.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5847067233,41.6657665436,213.108</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-E48</name>
+          <description>Date: 2026-04-11; Instrument: ERT; Group: ERT electrodes; Point ID: 48; Original label: ERT 48; Source description: 94.0 m; extrapolated_north_from_seismic_GPS</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5847115555,41.6657841866,213.151</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>Seismic GPS</name>
+        <Placemark>
+          <name>0411-S01</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 01; Original label: Ch52</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5844850000,41.6649570000,211.160</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S02</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 02; Original label: Ch11</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5844950000,41.6649790000,212.470</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S03</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 03; Original label: 0011</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845100000,41.6650020000,210.160</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S04</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 04; Original label: 0012</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845130000,41.6650260000,211.780</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S05</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 05; Original label: 0013</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845180000,41.6650580000,211.080</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S06</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 06; Original label: 0014</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845240000,41.6650950000,211.710</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S07</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 07; Original label: 0015</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845310000,41.6651340000,211.140</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S08</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 08; Original label: 0016</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845380000,41.6651640000,212.140</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S09</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 09; Original label: 0017</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845530000,41.6652030000,210.990</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S10</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 10; Original label: 0018</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845600000,41.6652460000,211.370</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S11</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 11; Original label: 0019</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845700000,41.6652780000,212.020</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S12</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 12; Original label: 0020</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845760000,41.6653140000,211.910</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S13</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 13; Original label: 0021</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5845880000,41.6653550000,212.160</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S14</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 14; Original label: 0022</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846020000,41.6653880000,212.120</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0411-S15</name>
+          <description>Date: 2026-04-11; Instrument: Seismic GPS; Group: Seismic GPS; Point ID: 15; Original label: 0023</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5846140000,41.6654280000,212.360</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+    </Folder>
+    <Folder>
+      <name>2026-05-02</name>
+      <Folder>
+        <name>ERT electrodes</name>
+        <Placemark>
+          <name>0502-E01</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 01; Original label: ERT_000</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858996526,41.6652008298,212.250</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E02</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 02; Original label: ERT_001</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858957968,41.6652140045,212.295</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E03</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 03; Original label: ERT_002</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858919409,41.6652271881,212.339</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E04</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 04; Original label: ERT_003</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858880733,41.6652403536,212.384</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E05</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 05; Original label: ERT_004</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858842053,41.6652535371,212.429</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E06</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 06; Original label: ERT_005</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858803496,41.6652667117,212.474</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E07</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 07; Original label: ERT_006</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858764936,41.6652798954,212.518</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E08</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 08; Original label: ERT_007</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858726258,41.6652930699,212.563</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E09</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 09; Original label: ERT_008</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858687580,41.6653062444,212.608</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E10</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 10; Original label: ERT_009</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858649020,41.6653194280,212.652</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E11</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 11; Original label: ERT_010</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858610343,41.6653326025,212.697</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E12</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 12; Original label: ERT_011</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858571785,41.6653457772,212.742</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E13</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 13; Original label: ERT_012</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858533227,41.6653589518,212.786</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E14</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 14; Original label: ERT_013</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858494427,41.6653721352,212.831</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E15</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 15; Original label: ERT_014</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858455867,41.6653853188,212.876</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E16</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 16; Original label: ERT_015</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858417309,41.6653984934,212.921</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E17</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 17; Original label: ERT_016</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858378631,41.6654116679,212.965</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E18</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 18; Original label: ERT_017</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858340074,41.6654248426,213.010</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E19</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 19; Original label: ERT_018</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858301394,41.6654380261,213.055</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E20</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 20; Original label: ERT_019</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858262834,41.6654512097,213.099</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E21</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 21; Original label: ERT_020</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858224158,41.6654643752,213.144</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E22</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 22; Original label: ERT_021</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858185598,41.6654775588,213.189</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E23</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 23; Original label: ERT_022</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858146920,41.6654907333,213.234</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E24</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 24; Original label: ERT_023</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858108240,41.6655039168,213.278</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E25</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 25; Original label: ERT_024</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858069684,41.6655170825,213.323</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E26</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 26; Original label: ERT_025</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858031124,41.6655302661,213.368</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E27</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 27; Original label: ERT_026</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857992443,41.6655434496,213.412</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E28</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 28; Original label: ERT_027</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857953885,41.6655566243,213.457</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E29</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 29; Original label: ERT_028</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857915205,41.6655698077,213.502</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E30</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 30; Original label: ERT_029</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857876529,41.6655829732,213.546</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E31</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 31; Original label: ERT_030</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857837969,41.6655961569,213.591</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E32</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 32; Original label: ERT_031</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857799411,41.6656093315,213.636</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E33</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 33; Original label: ERT_032</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857760731,41.6656225150,213.681</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E34</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 34; Original label: ERT_033</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857722052,41.6656356895,213.725</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E35</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 35; Original label: ERT_034</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857683494,41.6656488641,213.770</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E36</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 36; Original label: ERT_035</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857644934,41.6656620478,213.815</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E37</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 37; Original label: ERT_036</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857606256,41.6656752223,213.859</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E38</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 38; Original label: ERT_037</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857567698,41.6656883969,213.904</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E39</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 39; Original label: ERT_038</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857529019,41.6657015714,213.949</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E40</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 40; Original label: ERT_039</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857490339,41.6657147549,213.994</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E41</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 41; Original label: ERT_040</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857451779,41.6657279385,214.038</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E42</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 42; Original label: ERT_041</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857413220,41.6657411132,214.083</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E43</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 43; Original label: ERT_042</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857374422,41.6657542875,214.128</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E44</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 44; Original label: ERT_043</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857335864,41.6657674621,214.172</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E45</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 45; Original label: ERT_044</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857297303,41.6657806458,214.217</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E46</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 46; Original label: ERT_045</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857258623,41.6657938293,214.262</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E47</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 47; Original label: ERT_046</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857220066,41.6658069949,214.306</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-E48</name>
+          <description>Date: 2026-05-02; Instrument: ERT; Group: ERT electrodes; Point ID: 48; Original label: ERT_047</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857181386,41.6658201784,214.351</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>Seismic line 1000</name>
+        <Placemark>
+          <name>0502-S1000-01</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 01; Original label: 1000_1</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858746593,41.6651458236,204.113</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-02</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 02; Original label: 1000_2</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858702479,41.6651635308,204.133</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-03</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 03; Original label: 1000_3</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858658364,41.6651812381,204.217</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-04</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 04; Original label: 1000_4</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858614252,41.6651989364,204.257</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-05</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 05; Original label: 1000_5</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858570138,41.6652166436,204.317</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-06</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 06; Original label: 1000_6</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858526024,41.6652343509,204.297</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-07</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 07; Original label: 1000_7</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858482030,41.6652520583,204.301</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-08</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 08; Original label: 1000_8</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858437918,41.6652697566,204.341</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-09</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 09; Original label: 1000_9</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858393804,41.6652874639,204.401</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-10</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 10; Original label: 1000_10</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858349689,41.6653051711,204.481</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-11</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 11; Original label: 1000_11</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858305575,41.6653228784,204.530</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-12</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 12; Original label: 1000_12</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858261463,41.6653405767,204.570</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-13</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 13; Original label: 1000_13</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858217348,41.6653582839,204.610</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-14</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 14; Original label: 1000_14</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858173234,41.6653759912,204.630</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-15</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 15; Original label: 1000_15</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858129120,41.6653936984,204.678</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-16</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 16; Original label: 1000_16</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858085007,41.6654113967,204.698</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-17</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 17; Original label: 1000_17</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858040893,41.6654291040,204.738</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-18</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 18; Original label: 1000_18</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857996899,41.6654468114,204.818</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-19</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 19; Original label: 1000_19</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857952784,41.6654645187,204.856</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-20</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 20; Original label: 1000_20</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857908672,41.6654822169,204.856</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-21</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 21; Original label: 1000_21</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857864557,41.6654999242,204.896</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-22</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 22; Original label: 1000_22</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857820443,41.6655176314,204.896</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-23</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 23; Original label: 1000_23</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857776328,41.6655353387,204.914</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-24</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 24; Original label: 1000_24</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857732215,41.6655530370,204.974</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-25</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 25; Original label: 1000_25</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857688101,41.6655707442,204.954</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-26</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 26; Original label: 1000_26</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857643986,41.6655884515,204.994</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-27</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 27; Original label: 1000_27</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857599871,41.6656061587,205.049</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S1000-28</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 1000; Point ID: 28; Original label: 1000_28</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857555757,41.6656238660,205.149</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>Seismic line 2000</name>
+        <Placemark>
+          <name>0502-S2000-01</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 01; Original label: 2000_1</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858276564,41.6653868275,212.646</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-02</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 02; Original label: 2000_2</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858510496,41.6653909162,212.114</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-03</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 03; Original label: 2000_3</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858744430,41.6653949960,212.024</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-04</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 04; Original label: 2000_4</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858978361,41.6653990847,212.752</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-05</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 05; Original label: 2000_5</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5859212293,41.6654031734,213.440</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-06</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 06; Original label: 2000_6</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5859446225,41.6654072621,213.895</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-07</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 07; Original label: 2000_7</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5859680159,41.6654113418,213.607</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-08</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 08; Original label: 2000_8</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5859914091,41.6654154306,213.320</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-09</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 09; Original label: 2000_9</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5860148023,41.6654195193,213.248</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-10</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 10; Original label: 2000_10</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5860381954,41.6654236080,213.195</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-11</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 11; Original label: 2000_11</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5860615888,41.6654276877,213.168</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-12</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 12; Original label: 2000_12</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5860849820,41.6654317764,213.141</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-13</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 13; Original label: 2000_13</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5861083752,41.6654358650,212.824</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-14</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 14; Original label: 2000_14</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5861317684,41.6654399537,212.496</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-15</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 15; Original label: 2000_15</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5861551618,41.6654440334,212.838</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-16</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 16; Original label: 2000_16</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5861785551,41.6654481221,213.264</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-17</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 17; Original label: 2000_17</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5862019483,41.6654522107,213.356</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-18</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 18; Original label: 2000_18</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5862253415,41.6654562994,213.427</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-19</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 19; Original label: 2000_19</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5862487469,41.6654603792,213.478</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-20</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 20; Original label: 2000_20</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5862721401,41.6654644679,212.845</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-21</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 21; Original label: 2000_21</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5862955334,41.6654685565,212.263</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-22</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 22; Original label: 2000_22</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5863189268,41.6654726361,212.263</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-23</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 23; Original label: 2000_23</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5863423200,41.6654767248,212.263</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-24</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 24; Original label: 2000_24</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5863657133,41.6654808134,212.263</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-25</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 25; Original label: 2000_25</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5863891065,41.6654849020,212.263</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-26</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 26; Original label: 2000_26</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5864124999,41.6654889817,212.263</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-27</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 27; Original label: 2000_27</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5864358932,41.6654930703,212.263</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-S2000-28</name>
+          <description>Date: 2026-05-02; Instrument: Seismic; Group: Seismic line 2000; Point ID: 28; Original label: 2000_28</description>
+          <styleUrl>#seismicPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5864592864,41.6654971589,212.263</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 1</name>
+        <Placemark>
+          <name>0502-EM1-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-01; Original label: line 1_1; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5868576543,41.6654668229,216.300</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-02; Original label: line 1_2; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5868626558,41.6655248256,216.270</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-03; Original label: line 1_3; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5868696561,41.6655738190,214.730</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-04; Original label: line 1_4; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5868806543,41.6656108193,215.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-05; Original label: line 1_5; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5868916542,41.6656598258,216.920</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-06; Original label: line 1_6; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5868926541,41.6657058272,217.540</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-07; Original label: line 1_7; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869036636,41.6657368201,217.610</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-08; Original label: line 1_8; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869076565,41.6657838220,217.400</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-09; Original label: line 1_9; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869256632,41.6658178192,217.690</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-10; Original label: line 1_10; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869326569,41.6658638222,217.750</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-11; Original label: line 1_11; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869356594,41.6659138202,217.770</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-12; Original label: line 1_12; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869476654,41.6659558227,217.820</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-13; Original label: line 1_13; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869636599,41.6660148252,219.030</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-14; Original label: line 1_14; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869696558,41.6660548264,219.410</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM1-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 1; Point ID: L1-15; Original label: line 1_15; Source description: line 1</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869726646,41.6660798214,219.410</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 2</name>
+        <Placemark>
+          <name>0502-EM2-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-01; Original label: line 2_1; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870296598,41.6660908260,218.690</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-02; Original label: line 2_2; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870246584,41.6660608257,218.180</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-03; Original label: line 2_3; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870036599,41.6660208202,218.520</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-04; Original label: line 2_4; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869956614,41.6659768224,218.110</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-05; Original label: line 2_5; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869946542,41.6659498254,217.910</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-06; Original label: line 2_6; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869856600,41.6659008255,217.550</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-07; Original label: line 2_7; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869756578,41.6658578209,217.150</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-08; Original label: line 2_8; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869786601,41.6658018260,216.780</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-09; Original label: line 2_9; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869716630,41.6657598220,213.670</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-10; Original label: line 2_10; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869636602,41.6657138246,216.170</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-11; Original label: line 2_11; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869506595,41.6656728187,215.520</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-12; Original label: line 2_12; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869426632,41.6656298206,215.700</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-13; Original label: line 2_13; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869396647,41.6655928196,214.620</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-14; Original label: line 2_14; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869226600,41.6655388215,214.270</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-15; Original label: line 2_15; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869146582,41.6654988226,214.710</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM2-16</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 2; Point ID: L2-16; Original label: line 2_16; Source description: line 2</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869126554,41.6654668236,214.740</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 3</name>
+        <Placemark>
+          <name>0502-EM3-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-01; Original label: line 3_1; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869836603,41.6654688225,215.230</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-02; Original label: line 3_2; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869966538,41.6655008215,215.730</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-03; Original label: line 3_3; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869916602,41.6655358239,217.280</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-04; Original label: line 3_4; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5869986614,41.6655518251,218.160</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-05; Original label: line 3_5; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870166638,41.6655838226,218.120</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-06; Original label: line 3_6; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870236551,41.6656398232,217.820</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-07; Original label: line 3_7; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870316654,41.6656948186,218.520</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-08; Original label: line 3_8; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870276579,41.6657248253,218.570</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-09; Original label: line 3_9; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870336538,41.6657648264,218.580</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-10; Original label: line 3_10; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870346562,41.6658118186,218.720</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-11; Original label: line 3_11; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870416591,41.6658398260,218.540</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-12; Original label: line 3_12; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870416656,41.6658818251,219.490</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-13; Original label: line 3_13; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870586553,41.6659288246,220.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-14; Original label: line 3_14; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870646587,41.6659778238,219.630</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-15; Original label: line 3_15; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870736650,41.6660268238,219.590</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM3-16</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 3; Point ID: L3-16; Original label: line 3_16; Source description: line 3</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5870846545,41.6660708223,219.590</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 4</name>
+        <Placemark>
+          <name>0502-EM4-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-01; Original label: line 4_1; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871526630,41.6661368231,207.560</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-02; Original label: line 4_2; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871616560,41.6660738225,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-03; Original label: line 4_3; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871606596,41.6660128247,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-04; Original label: line 4_4; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871546566,41.6659528192,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-05; Original label: line 4_5; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871496577,41.6659018239,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-06; Original label: line 4_6; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871546637,41.6658448269,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-07; Original label: line 4_7; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871526624,41.6657968227,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-08; Original label: line 4_8; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871436640,41.6657348259,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-09; Original label: line 4_9; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871376543,41.6656828184,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-10; Original label: line 4_10; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871216617,41.6656248248,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-11; Original label: line 4_11; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871216544,41.6655768180,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-12; Original label: line 4_12; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871266656,41.6655278192,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-13; Original label: line 4_13; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871276560,41.6654858234,0.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM4-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 4; Point ID: L4-14; Original label: line 4_14; Source description: line 4</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5871266644,41.6654548185,0.000</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 5</name>
+        <Placemark>
+          <name>0502-EM5-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-01; Original label: line 5_1; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872616576,41.6655248221,206.430</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-02; Original label: line 5_2; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872506594,41.6655658213,204.700</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-03; Original label: line 5_3; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872426629,41.6656118201,205.030</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-04; Original label: line 5_4; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872456640,41.6656388236,205.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-05; Original label: line 5_5; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872416658,41.6657008228,205.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-06; Original label: line 5_6; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872416585,41.6657308246,205.000</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-07; Original label: line 5_7; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872406658,41.6657828180,205.910</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-08; Original label: line 5_8; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872316567,41.6658328215,205.910</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-09; Original label: line 5_9; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872296626,41.6658828212,206.080</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-10; Original label: line 5_10; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872286611,41.6659308245,206.080</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-11; Original label: line 5_11; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872256570,41.6659748221,207.080</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-12; Original label: line 5_12; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872256593,41.6660148217,207.460</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-13; Original label: line 5_13; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872196603,41.6660458216,209.230</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-14; Original label: line 5_14; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872196539,41.6660818220,209.230</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM5-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 5; Point ID: L5-15; Original label: line 5_15; Source description: line 5</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5872206623,41.6661038202,209.230</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 6</name>
+        <Placemark>
+          <name>0502-EM6-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-01; Original label: line 6_1; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873036550,41.6661278258,209.440</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-02; Original label: line 6_2; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873026560,41.6660768257,209.790</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-03; Original label: line 6_3; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873096615,41.6660558267,209.530</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-04; Original label: line 6_4; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873156559,41.6660338246,208.970</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-05; Original label: line 6_5; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873226642,41.6659918216,208.300</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-06; Original label: line 6_6; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873346586,41.6659448181,208.490</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-07; Original label: line 6_7; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873346653,41.6658868229,208.440</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-08; Original label: line 6_8; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873406568,41.6658468250,208.130</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-09; Original label: line 6_9; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873426559,41.6658158209,207.600</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-10; Original label: line 6_10; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873506632,41.6657748210,207.560</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-11; Original label: line 6_11; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873506640,41.6657418198,207.080</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-12; Original label: line 6_12; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873506651,41.6656978213,206.700</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-13; Original label: line 6_13; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873496546,41.6656638259,206.120</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-14; Original label: line 6_14; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873486652,41.6656228235,205.960</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-15; Original label: line 6_15; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873556614,41.6655808204,205.320</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM6-16</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 6; Point ID: L6-16; Original label: line 6_16; Source description: line 6</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5873626594,41.6655508234,205.320</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 7</name>
+        <Placemark>
+          <name>0502-EM7-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-01; Original label: line 7_1; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875976663,41.6655728243,208.320</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-02; Original label: line 7_2; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875986568,41.6655698192,207.370</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-03; Original label: line 7_3; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875946609,41.6655938184,207.460</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-04; Original label: line 7_4; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876076607,41.6656508205,207.450</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-05; Original label: line 7_5; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875956648,41.6656858179,207.360</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-06; Original label: line 7_6; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875536623,41.6657868182,206.390</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-07; Original label: line 7_7; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875426621,41.6658268176,206.390</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-08; Original label: line 7_8; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875466633,41.6658608227,206.390</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-09; Original label: line 7_9; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875386616,41.6658988234,206.500</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-10; Original label: line 7_10; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875326571,41.6659438200,207.350</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-11; Original label: line 7_11; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875296545,41.6659828188,206.910</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-12; Original label: line 7_12; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875216644,41.6660318261,208.060</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-13; Original label: line 7_13; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875206654,41.6660808202,208.010</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-14; Original label: line 7_14; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875026555,41.6661288216,209.060</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-15; Original label: line 7_15; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875066609,41.6661758237,208.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-16</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-16; Original label: line 7_16; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5874996596,41.6662098196,209.200</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-17</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-17; Original label: line 7_17; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5874946574,41.6662518202,209.730</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-18</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-18; Original label: line 7_18; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5874746636,41.6662878181,209.840</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-19</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-19; Original label: line 7_19; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5874546628,41.6663428204,208.980</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM7-20</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 7; Point ID: L7-20; Original label: line 7_20; Source description: line 7</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5874496631,41.6663638261,209.160</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 8</name>
+        <Placemark>
+          <name>0502-EM8-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-01; Original label: line 8_1; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875666575,41.6663858176,208.250</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-02; Original label: line 8_2; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875766592,41.6663118230,209.150</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-03; Original label: line 8_3; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875626615,41.6662488190,210.310</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-04; Original label: line 8_4; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875706598,41.6662148173,208.720</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-05; Original label: line 8_5; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875766567,41.6661718202,208.900</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-06; Original label: line 8_6; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5875876603,41.6661278217,209.240</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-07; Original label: line 8_7; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876046577,41.6660838249,209.110</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-08; Original label: line 8_8; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876216593,41.6660528250,208.700</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-09; Original label: line 8_9; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876276614,41.6660178261,208.650</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-10; Original label: line 8_10; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876296596,41.6659698260,208.390</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-11; Original label: line 8_11; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876346660,41.6659298250,208.050</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-12; Original label: line 8_12; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876426665,41.6658968230,207.740</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-13; Original label: line 8_13; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876396552,41.6658208221,207.400</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-14; Original label: line 8_14; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876466556,41.6657808185,206.840</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-15; Original label: line 8_15; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876546584,41.6657378190,207.270</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-16</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-16; Original label: line 8_16; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876646559,41.6657008245,206.630</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-17</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-17; Original label: line 8_17; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876756616,41.6656578259,205.940</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM8-18</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 8; Point ID: L8-18; Original label: line 8_18; Source description: line 8</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876866575,41.6656158179,205.300</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+      <Folder>
+        <name>EM line 9</name>
+        <Placemark>
+          <name>0502-EM9-01</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-01; Original label: line 9_1; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877826561,41.6656498185,206.660</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-02</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-02; Original label: line 9_2; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877826561,41.6656498185,206.660</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-03</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-03; Original label: line 9_3; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877826550,41.6657048235,208.880</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-04</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-04; Original label: line 9_4; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877736598,41.6657498193,208.680</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-05</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-05; Original label: line 9_5; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877636643,41.6657878226,208.200</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-06</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-06; Original label: line 9_6; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877616565,41.6658258249,208.080</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-07</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-07; Original label: line 9_7; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877566556,41.6658738241,209.030</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-08</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-08; Original label: line 9_8; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877496566,41.6659088199,209.140</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-09</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-09; Original label: line 9_9; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877426637,41.6659688188,209.600</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-10</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-10; Original label: line 9_10; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877536599,41.6660158257,210.100</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-11</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-11; Original label: line 9_11; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877466654,41.6660418236,210.800</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-12</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-12; Original label: line 9_12; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877496599,41.6660878225,210.990</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-13</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-13; Original label: line 9_13; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877396558,41.6661218176,211.050</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-14</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-14; Original label: line 9_14; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877376600,41.6661598200,211.050</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-15</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-15; Original label: line 9_15; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877336569,41.6662138211,211.560</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-16</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-16; Original label: line 9_16; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877176597,41.6662648195,211.510</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-17</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-17; Original label: line 9_17; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877106561,41.6662978247,212.200</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-18</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-18; Original label: line 9_18; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877206635,41.6663318225,212.370</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-19</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-19; Original label: line 9_19; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877096588,41.6663808198,212.410</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-20</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-20; Original label: line 9_20; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5877016566,41.6664408243,212.320</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-21</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-21; Original label: line 9_21; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876956565,41.6664878204,212.310</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0502-EM9-22</name>
+          <description>Date: 2026-05-02; Instrument: EM; Group: EM line 9; Point ID: L9-22; Original label: line 9_22; Source description: line 9</description>
+          <styleUrl>#emPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5876876547,41.6665368186,212.410</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+    </Folder>
+    <Folder>
+      <name>2026-06-25</name>
+      <Folder>
+        <name>ERT electrodes 267-314</name>
+        <Placemark>
+          <name>0625-E267</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 267; Original label: 0267; Source description: 0267</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858520000,41.6651610000,202.220</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E268</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 268; Original label: 0268; Source description: 0268</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858560000,41.6651670000,203.190</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E269</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 269; Original label: 0269; Source description: 0269</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858530000,41.6651770000,203.190</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E270</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 270; Original label: 0270; Source description: 0270</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858510000,41.6651950000,203.190</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E271</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 271; Original label: 0271; Source description: 0271</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858460000,41.6652060000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E272</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 272; Original label: 0272; Source description: 0272</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858430000,41.6652160000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E273</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 273; Original label: 0273; Source description: 0273</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858440000,41.6652240000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E274</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 274; Original label: 0274; Source description: 0274</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858390000,41.6652320000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E275</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 275; Original label: 0275; Source description: 0275</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858410000,41.6652410000,203.250</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E276</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 276; Original label: 0276; Source description: 0276</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858450000,41.6652500000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E277</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 277; Original label: 0277; Source description: 0277</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858460000,41.6652580000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E278</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 278; Original label: 0278; Source description: 0278</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858450000,41.6652620000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E279</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 279; Original label: 0279; Source description: 0279</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858400000,41.6652780000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E280</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 280; Original label: 0280; Source description: 0280</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858350000,41.6652880000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E281</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 281; Original label: 0281; Source description: 0281</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858310000,41.6652990000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E282</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 282; Original label: 0282; Source description: 0282</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858160000,41.6653180000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E283</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 283; Original label: 0283; Source description: 0283</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858130000,41.6653270000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E284</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 284; Original label: 0284; Source description: 0284</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858120000,41.6653440000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E285</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 285; Original label: 0285; Source description: 0285</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858100000,41.6653580000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E286</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 286; Original label: 0286; Source description: 0286</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858080000,41.6653700000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E287</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 287; Original label: 0287; Source description: 0287</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858060000,41.6653740000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E288</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 288; Original label: 0288; Source description: 0288</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858030000,41.6653880000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E289</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 289; Original label: 0289; Source description: 0289</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858010000,41.6654050000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E290</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 290; Original label: 0290; Source description: 0290</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858030000,41.6654200000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E291</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 291; Original label: 0291; Source description: 0291</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857990000,41.6654270000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E292</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 292; Original label: 0292; Source description: 0292</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858020000,41.6654360000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E293</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 293; Original label: 0293; Source description: 0293</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857960000,41.6654500000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E294</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 294; Original label: 0294; Source description: 0294</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857930000,41.6654570000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E295</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 295; Original label: 0295; Source description: 0295</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857920000,41.6654670000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E296</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 296; Original label: 0296; Source description: 0296</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6654780000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E297</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 297; Original label: 0297; Source description: 0297</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857830000,41.6654950000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E298</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 298; Original label: 0298; Source description: 0298</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857850000,41.6655090000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E299</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 299; Original label: 0299; Source description: 0299</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6655290000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E300</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 300; Original label: 0300; Source description: 0300</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6655420000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E301</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 301; Original label: 0301; Source description: 0301</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6655510000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E302</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 302; Original label: 0302; Source description: 0302</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857830000,41.6655680000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E303</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 303; Original label: 0303; Source description: 0303</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857780000,41.6655820000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E304</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 304; Original label: 0304; Source description: 0304</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857770000,41.6655900000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E305</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 305; Original label: 0305; Source description: 0305</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857760000,41.6655980000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E306</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 306; Original label: 0306; Source description: 0306</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857740000,41.6656140000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E307</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 307; Original label: 0307; Source description: 0307</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857700000,41.6656220000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E308</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 308; Original label: 0308; Source description: 0308</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857730000,41.6656360000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E309</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 309; Original label: 0309; Source description: 0309</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857730000,41.6656510000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E310</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 310; Original label: 0310; Source description: 0310</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857720000,41.6656640000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E311</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 311; Original label: 0311; Source description: 0311</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857750000,41.6656740000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E312</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 312; Original label: 0312; Source description: 0312</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857740000,41.6656890000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E313</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 313; Original label: 0313; Source description: 0313</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857730000,41.6657010000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E314</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 314; Original label: 0314; Source description: 0314</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857750000,41.6657140000,201.210</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+    </Folder>
+  </Document>
+</kml>

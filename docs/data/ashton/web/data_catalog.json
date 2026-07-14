@@ -1,0 +1,448 @@
+{
+  "dataset": "Ashton Prairie Environmental Geophysics Field Data",
+  "data_class": "real",
+  "license": "CC BY 4.0",
+  "official_site": "https://sees.uiowa.edu/research/ashton-prairie",
+  "files": [
+    {
+      "path": "2026-04-11/2026-04-11_locations.kml",
+      "url": "../data/ashton/raw/2026-04-11/2026-04-11_locations.kml",
+      "extension": ".kml",
+      "size_bytes": 28249,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/ert/2026-04-11_ERT_48electrodes_2m_interpolated_extrapolated.kml",
+      "url": "../data/ashton/raw/2026-04-11/ert/2026-04-11_ERT_48electrodes_2m_interpolated_extrapolated.kml",
+      "extension": ".kml",
+      "size_bytes": 22221,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/ert/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
+      "url": "../data/ashton/raw/2026-04-11/ert/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
+      "extension": ".txt",
+      "size_bytes": 8208,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/ert/location_2026-04-11_ERT_electrodes_2m_derived.csv",
+      "url": "../data/ashton/raw/2026-04-11/ert/location_2026-04-11_ERT_electrodes_2m_derived.csv",
+      "extension": ".csv",
+      "size_bytes": 5087,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/1.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/1.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/10.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/10.dat",
+      "extension": ".dat",
+      "size_bytes": 400020,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/11.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/11.dat",
+      "extension": ".dat",
+      "size_bytes": 400020,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/12.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/12.dat",
+      "extension": ".dat",
+      "size_bytes": 400020,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/13.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/13.dat",
+      "extension": ".dat",
+      "size_bytes": 400020,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/14.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/14.dat",
+      "extension": ".dat",
+      "size_bytes": 400020,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/15.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/15.dat",
+      "extension": ".dat",
+      "size_bytes": 400020,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/2.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/2.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/2026-04-11_seismic_GPS_points.kml",
+      "url": "../data/ashton/raw/2026-04-11/seismic/2026-04-11_seismic_GPS_points.kml",
+      "extension": ".kml",
+      "size_bytes": 6475,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/3.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/3.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/4.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/4.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/5.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/5.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/6.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/6.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/7.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/7.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/8.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/8.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/9.dat",
+      "url": "../data/ashton/raw/2026-04-11/seismic/9.dat",
+      "extension": ".dat",
+      "size_bytes": 400000,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-04-11/seismic/location_2026-04-11_seismic_GPS_points.csv",
+      "url": "../data/ashton/raw/2026-04-11/seismic/location_2026-04-11_seismic_GPS_points.csv",
+      "extension": ".csv",
+      "size_bytes": 479,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/2026-05-02_locations.kml",
+      "url": "../data/ashton/raw/2026-05-02/2026-05-02_locations.kml",
+      "extension": ".kml",
+      "size_bytes": 111535,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 1.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 1.txt",
+      "extension": ".txt",
+      "size_bytes": 580,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 2.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 2.txt",
+      "extension": ".txt",
+      "size_bytes": 616,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 3.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 3.txt",
+      "extension": ".txt",
+      "size_bytes": 623,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 4.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 4.txt",
+      "extension": ".txt",
+      "size_bytes": 506,
+      "status": "reviewed",
+      "quality_notes": [
+        "13 of 14 elevations are stored as 0.0 m.",
+        "The one nonzero line-4 elevation differs by about 5.4 m from a neighboring-line IDW estimate."
+      ]
+    },
+    {
+      "path": "2026-05-02/em/location_line 5.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 5.txt",
+      "extension": ".txt",
+      "size_bytes": 578,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 6.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 6.txt",
+      "extension": ".txt",
+      "size_bytes": 616,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 7.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 7.txt",
+      "extension": ".txt",
+      "size_bytes": 770,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 8.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 8.txt",
+      "extension": ".txt",
+      "size_bytes": 690,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/location_line 9.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_line 9.txt",
+      "extension": ".txt",
+      "size_bytes": 844,
+      "status": "reviewed",
+      "quality_notes": [
+        "The first two records have identical X/Y/Z coordinates."
+      ]
+    },
+    {
+      "path": "2026-05-02/em/location_Line_information.txt",
+      "url": "../data/ashton/raw/2026-05-02/em/location_Line_information.txt",
+      "extension": ".txt",
+      "size_bytes": 153,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/processed_22-xg-12se-294_gem_averaged_inverted.csv",
+      "url": "../data/ashton/raw/2026-05-02/em/processed_22-xg-12se-294_gem_averaged_inverted.csv",
+      "extension": ".csv",
+      "size_bytes": 3708725,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/processed_22-xg-12se-294_gem_averaged_processed.csv",
+      "url": "../data/ashton/raw/2026-05-02/em/processed_22-xg-12se-294_gem_averaged_processed.csv",
+      "extension": ".csv",
+      "size_bytes": 3482123,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/processed_All_Lines_Corr_EM.xlsx",
+      "url": "../data/ashton/raw/2026-05-02/em/processed_All_Lines_Corr_EM.xlsx",
+      "extension": ".xlsx",
+      "size_bytes": 1396241,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/processed_corr.csv",
+      "url": "../data/ashton/raw/2026-05-02/em/processed_corr.csv",
+      "extension": ".csv",
+      "size_bytes": 1401478,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/em/processed_valid_inversion.csv",
+      "url": "../data/ashton/raw/2026-05-02/em/processed_valid_inversion.csv",
+      "extension": ".csv",
+      "size_bytes": 1542280,
+      "status": "reviewed",
+      "quality_notes": [
+        "1199 of 10538 inversions exceed 30% fit error.",
+        "Layer-1 resistivity equals the 2000 ohm m upper bound in 1810 rows."
+      ]
+    },
+    {
+      "path": "2026-05-02/em/raw_22-xg-12se-294_gem_averaged_original_copy.csv",
+      "url": "../data/ashton/raw/2026-05-02/em/raw_22-xg-12se-294_gem_averaged_original_copy.csv",
+      "extension": ".csv",
+      "size_bytes": 3899462,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/ert/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
+      "url": "../data/ashton/raw/2026-05-02/ert/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
+      "extension": ".txt",
+      "size_bytes": 4499,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/ert/location_2026-05-02_ert_electrodes_UTM_1p5m.txt",
+      "url": "../data/ashton/raw/2026-05-02/ert/location_2026-05-02_ert_electrodes_UTM_1p5m.txt",
+      "extension": ".txt",
+      "size_bytes": 2056,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/ert/location_2026-05-02_ert_electrodes_wgs84.csv",
+      "url": "../data/ashton/raw/2026-05-02/ert/location_2026-05-02_ert_electrodes_wgs84.csv",
+      "extension": ".csv",
+      "size_bytes": 3738,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/1000.sgy",
+      "url": "../data/ashton/raw/2026-05-02/seismic/1000.sgy",
+      "extension": ".sgy",
+      "size_bytes": 21668880,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/1000_28pts.txt",
+      "url": "../data/ashton/raw/2026-05-02/seismic/1000_28pts.txt",
+      "extension": ".txt",
+      "size_bytes": 1258,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/1000_first_break_picks.csv",
+      "url": "../data/ashton/raw/2026-05-02/seismic/1000_first_break_picks.csv",
+      "extension": ".csv",
+      "size_bytes": 32574,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/1000_output_picks.txt",
+      "url": "../data/ashton/raw/2026-05-02/seismic/1000_output_picks.txt",
+      "extension": ".txt",
+      "size_bytes": 9330,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/2000.sgy",
+      "url": "../data/ashton/raw/2026-05-02/seismic/2000.sgy",
+      "extension": ".sgy",
+      "size_bytes": 21668880,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/2000_28pts.txt",
+      "url": "../data/ashton/raw/2026-05-02/seismic/2000_28pts.txt",
+      "extension": ".txt",
+      "size_bytes": 1258,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/2000_first_break_picks.csv",
+      "url": "../data/ashton/raw/2026-05-02/seismic/2000_first_break_picks.csv",
+      "extension": ".csv",
+      "size_bytes": 32870,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/2000_output_picks.txt",
+      "url": "../data/ashton/raw/2026-05-02/seismic/2000_output_picks.txt",
+      "extension": ".txt",
+      "size_bytes": 9316,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-05-02/seismic/location_2026-05-02_seismic_positions_wgs84.csv",
+      "url": "../data/ashton/raw/2026-05-02/seismic/location_2026-05-02_seismic_positions_wgs84.csv",
+      "extension": ".csv",
+      "size_bytes": 4610,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-06-25/2026-06-25_locations.kml",
+      "url": "../data/ashton/raw/2026-06-25/2026-06-25_locations.kml",
+      "extension": ".kml",
+      "size_bytes": 21970,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "2026-06-25/ert/2026-06-25_ERT_electrodes_267-314.kml",
+      "url": "../data/ashton/raw/2026-06-25/ert/2026-06-25_ERT_electrodes_267-314.kml",
+      "extension": ".kml",
+      "size_bytes": 21982,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "Ashton_all_dates_all_points.csv",
+      "url": "../data/ashton/raw/Ashton_all_dates_all_points.csv",
+      "extension": ".csv",
+      "size_bytes": 33568,
+      "status": "reviewed",
+      "quality_notes": []
+    },
+    {
+      "path": "Ashton_all_dates_all_points.kml",
+      "url": "../data/ashton/raw/Ashton_all_dates_all_points.kml",
+      "extension": ".kml",
+      "size_bytes": 161947,
+      "status": "reviewed",
+      "quality_notes": []
+    }
+  ]
+}

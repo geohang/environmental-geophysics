@@ -13,6 +13,7 @@ These Python notebooks run in [Google Colab](https://colab.research.google.com/)
 | `gravity_forward_model.ipynb` | Forward-model the anomaly of a buried sphere | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/environmental-geophysics/blob/main/docs/notebooks/gravity_forward_model.ipynb) |
 | `seismic_refraction.ipynb` | Pick first breaks and invert a two-layer model | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/environmental-geophysics/blob/main/docs/notebooks/seismic_refraction.ipynb) |
 | `ert_forward_model.ipynb` | Forward-model an ERT pseudosection with pyGIMLi | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/environmental-geophysics/blob/main/docs/notebooks/ert_forward_model.ipynb) |
+| `ashton_field_data.ipynb` | Quality-control real Ashton Prairie ERT, EM, elevation, and seismic data with PyHydroGeophysX | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/geohang/environmental-geophysics/blob/main/docs/notebooks/ashton_field_data.ipynb) |
 
 !!! note "More notebooks are on the way"
     Additional exercises for magnetics, EM, GPR, MT, and borehole logs are being added. The badges above will go live as each notebook lands in the repository.

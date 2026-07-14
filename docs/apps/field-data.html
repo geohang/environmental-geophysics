@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Interactive Web GIS for real and synthetic Environmental Geophysics teaching data at Ashton Prairie.">
+<title>Ashton Field Data Explorer | Environmental Geophysics</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../assets/stylesheets/course-app.css">
+<style>
+:root{--navy:#14213d;--blue:#1565c0;--blue-soft:#eaf3ff;--green:#087f5b;--green-soft:#e9f8f2;--gold:#b85c00;--gold-soft:#fff5e6;--magenta:#b42375;--magenta-soft:#fff0f7;--ink:#182235;--muted:#5d6d83;--line:#d7e0eb;--paper:#fff;--page:#f3f6fa;--shadow:0 14px 38px rgba(20,33,61,.1)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;max-width:100%;overflow-x:hidden}body{background:var(--page);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.45}button,input,select,a{font:inherit}a{color:var(--blue)}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:4px solid rgba(21,101,192,.2);outline-offset:2px}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.course-nav{display:flex;align-items:center;gap:20px;min-height:54px;padding:6px max(16px,calc((100vw - 1380px)/2));background:#fff;border-bottom:1px solid var(--line)}.course-nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--blue);font-weight:750;text-decoration:none}.course-nav .spacer{margin-left:auto;color:var(--muted);font-size:.86rem}
+.hero{padding:28px max(18px,calc((100vw - 1380px)/2)) 22px;background:linear-gradient(120deg,#fff 0%,#fff 68%,#eaf3ff 100%);border-bottom:1px solid var(--line)}.eyebrow{color:var(--gold);font-size:.76rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.hero h1{margin:6px 0 8px;color:var(--navy);font-size:clamp(2rem,4vw,3.6rem);line-height:1.05;letter-spacing:-.03em}.hero p{max-width:940px;margin:0;color:var(--muted);font-size:clamp(.95rem,1.5vw,1.12rem)}.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.badge{display:inline-flex;align-items:center;min-height:34px;border-radius:999px;padding:5px 11px;font-size:.76rem;font-weight:850}.badge.real{background:var(--green-soft);color:var(--green)}.badge.synthetic{background:var(--magenta-soft);color:var(--magenta)}.badge.derived{background:var(--gold-soft);color:var(--gold)}
+.shell{width:min(1380px,calc(100% - 28px));margin:18px auto 46px}.map-app{display:grid;grid-template-columns:330px minmax(0,1fr);min-height:650px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--shadow);overflow:hidden}.sidebar{padding:18px;border-right:1px solid var(--line);overflow-y:auto;background:#fbfcfe}.sidebar h2{margin:0 0 4px;color:var(--navy);font-size:1.15rem}.sidebar-intro{margin:0 0 15px;color:var(--muted);font-size:.84rem}.control-section{margin:14px 0;padding-top:14px;border-top:1px solid var(--line)}.control-section h3{margin:0 0 9px;color:var(--navy);font-size:.92rem}.control-section h3.real-title{color:var(--green)}.control-section h3.synthetic-title{color:var(--magenta)}.field{display:grid;gap:4px;margin-bottom:10px}.field label{color:var(--muted);font-size:.74rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}.field select{width:100%;min-height:44px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);padding:8px 10px}
+.layer-toggle{display:grid;grid-template-columns:22px 1fr;gap:9px;align-items:start;min-height:44px;padding:8px 7px;border-radius:9px;cursor:pointer}.layer-toggle:hover{background:#f2f6fb}.layer-toggle input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--blue)}.layer-toggle b{display:block;color:var(--ink);font-size:.86rem}.layer-toggle small{display:block;color:var(--muted);font-size:.72rem}.synthetic-box{padding:10px;border:1px solid #f0b8d4;border-radius:11px;background:var(--magenta-soft)}.synthetic-box .layer-toggle:hover{background:#ffe6f2}.synthetic-box input{accent-color:var(--magenta)}
+.quality-box{border-left:5px solid var(--gold);border-radius:10px;background:var(--gold-soft);padding:11px 12px;color:var(--muted);font-size:.76rem}.quality-box b{color:var(--gold)}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.stat{border:1px solid var(--line);border-radius:9px;background:#fff;padding:8px}.stat b{display:block;color:var(--navy);font-size:1.05rem}.stat span{color:var(--muted);font-size:.67rem}
+.map-wrap{position:relative;min-width:0}.map-status{position:absolute;z-index:900;top:12px;left:50%;transform:translateX(-50%);max-width:90%;border-radius:999px;background:rgba(20,33,61,.9);color:#fff;padding:7px 13px;font-size:.78rem;box-shadow:0 5px 18px rgba(0,0,0,.18)}#map{width:100%;height:100%;min-height:650px;background:#e8eef5}.coordinate-readout{min-width:154px;border:1px solid rgba(20,33,61,.18);border-radius:7px;background:rgba(255,255,255,.94);padding:6px 8px;color:var(--navy);font:700 .72rem/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;box-shadow:0 2px 10px rgba(20,33,61,.12)}.legend{border:1px solid rgba(20,33,61,.15);border-radius:9px;background:rgba(255,255,255,.95);padding:9px 11px;color:var(--ink);font-size:.72rem;box-shadow:0 3px 14px rgba(20,33,61,.12)}.legend b{display:block;margin-bottom:5px;color:var(--navy)}.legend-row{display:flex;align-items:center;gap:7px;margin:4px 0}.swatch{width:15px;height:5px;border-radius:999px}.swatch.point{height:11px;width:11px;border-radius:50%}.swatch.synthetic{height:11px;border:2px dashed var(--magenta);background:var(--magenta-soft)}.leaflet-popup-content{line-height:1.45}.popup-title{font-weight:850;color:var(--navy);font-size:.94rem}.popup-class{display:inline-block;margin:3px 0 7px;border-radius:999px;padding:2px 7px;background:var(--green-soft);color:var(--green);font-size:.66rem;font-weight:850;text-transform:uppercase}.popup-class.synthetic{background:var(--magenta-soft);color:var(--magenta)}.popup-grid{display:grid;grid-template-columns:auto 1fr;gap:3px 9px;font-size:.76rem}.popup-grid b{color:var(--muted)}
+.catalog{margin-top:20px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 8px 26px rgba(20,33,61,.06);overflow:hidden}.catalog-head{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:20px 22px;border-bottom:1px solid var(--line)}.catalog-head h2{margin:0;color:var(--navy);font-size:1.35rem}.catalog-head p{margin:4px 0 0;color:var(--muted);font-size:.84rem}.catalog-tools{display:flex;gap:8px;flex-wrap:wrap}.catalog-tools input,.catalog-tools select{min-height:44px;border:1px solid var(--line);border-radius:9px;background:#fff;padding:8px 10px;color:var(--ink)}.catalog-tools input{width:min(260px,65vw)}.table-wrap{overflow:auto;max-height:540px}.catalog table{width:100%;border-collapse:collapse;font-size:.8rem}.catalog th,.catalog td{padding:10px 13px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.catalog th{position:sticky;top:0;z-index:2;background:var(--navy);color:#fff}.catalog tr:nth-child(even){background:#f8fafc}.file-path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.72rem;overflow-wrap:anywhere}.file-meta{white-space:nowrap;color:var(--muted)}.qa-note{max-width:390px;color:var(--gold);font-size:.72rem}.download{display:inline-flex;align-items:center;min-height:38px;border-radius:8px;background:var(--blue-soft);color:var(--blue);padding:6px 10px;text-decoration:none;font-weight:800}.catalog-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding:13px 20px;color:var(--muted);font-size:.75rem}.catalog-foot a{font-weight:750}.error{color:#b42318}
+@media(max-width:920px){.map-app{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line);overflow:visible}.sidebar-controls{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}.control-section{margin-top:8px}#map{min-height:62vh}.map-app{min-height:0}.catalog-head{align-items:start;flex-direction:column}}
+@media(max-width:560px){.course-nav{gap:12px;flex-wrap:wrap}.course-nav .spacer{display:none}.hero{padding-top:20px}.shell{width:min(100% - 16px,1380px);margin-top:10px}.map-app,.catalog{border-radius:12px}.sidebar{padding:14px}.sidebar-controls{grid-template-columns:1fr}#map{min-height:58vh}.catalog-head{padding:16px}.catalog-tools{width:100%}.catalog-tools input,.catalog-tools select{width:100%}.catalog th,.catalog td{padding:8px 9px}.catalog th:nth-child(3),.catalog td:nth-child(3){display:none}}
+</style>
+</head>
+<body>
+<nav class="course-nav" aria-label="Course navigation">
+  <a href="../">&#8592; Course Home</a>
+  <a href="course-guide.html">Course Guide</a>
+  <a href="../data/">Data</a>
+  <a href="../notebooks/">Notebooks</a>
+  <span class="spacer">Ashton Prairie Living Laboratory</span>
+</nav>
+<header class="hero">
+  <div class="eyebrow">Field Data Explorer</div>
+  <h1>Ashton Prairie</h1>
+  <p>Explore acquisition geometry and processed geophysical observations collected by the University of Iowa course/research team. The map separates real field data, derived products, and synthetic teaching overlays at every step.</p>
+  <div class="badges"><span class="badge real">Real field data · default</span><span class="badge derived">Derived products · documented</span><span class="badge synthetic">Synthetic overlays · off by default</span></div>
+</header>
+
+<main class="shell">
+  <section class="map-app" aria-label="Ashton Prairie interactive field data map">
+    <aside class="sidebar">
+      <h2>Map layers</h2>
+      <p class="sidebar-intro">Filter the acquisition map, then click a point, line, or area to inspect its provenance and quality flags.</p>
+      <div class="sidebar-controls">
+        <div>
+          <div class="field"><label for="date-filter">Field date</label><select id="date-filter"><option value="all">All dates</option><option value="2026-04-11">April 11, 2026</option><option value="2026-05-02">May 2, 2026</option><option value="2026-06-25">June 25, 2026</option></select></div>
+          <div class="field"><label for="method-filter">Method</label><select id="method-filter"><option value="all">All methods</option><option value="ERT">ERT</option><option value="Seismic">Seismic</option><option value="EM">EM</option></select></div>
+          <div class="control-section">
+            <h3 class="real-title">Real field data</h3>
+            <label class="layer-toggle"><input type="checkbox" data-layer="surveyPoints" checked><span><b>Survey points</b><small>367 positions with date, method, and elevation source</small></span></label>
+            <label class="layer-toggle"><input type="checkbox" data-layer="surveyLines" checked><span><b>Survey lines</b><small>15 lines connecting points in source order</small></span></label>
+            <label class="layer-toggle"><input type="checkbox" data-layer="emResistivity"><span><b>EM shallow resistivity</b><small>540 processed 1 m cells; fit error ≤ 30%</small></span></label>
+            <label class="layer-toggle"><input type="checkbox" data-layer="surveyExtent"><span><b>Derived survey footprint</b><small>Convex hull, not the official prairie boundary</small></span></label>
+          </div>
+        </div>
+        <div>
+          <div class="control-section">
+            <h3 class="synthetic-title">Synthetic teaching data</h3>
+            <div class="synthetic-box"><label class="layer-toggle"><input type="checkbox" data-layer="synthetic"><span><b>Show synthetic overlays</b><small>Hypothetical target, utility, and seepage zone—not observations</small></span></label></div>
+          </div>
+          <div class="control-section">
+            <h3>Current view</h3>
+            <div class="stats"><div class="stat"><b id="point-count">—</b><span>survey points</span></div><div class="stat"><b id="line-count">—</b><span>survey lines</span></div><div class="stat"><b id="em-count">—</b><span>EM cells</span></div><div class="stat"><b id="synthetic-count">0</b><span>synthetic features</span></div></div>
+          </div>
+          <div class="control-section"><div class="quality-box"><b>Elevation QA</b><br>EM line 4 contains 13 interpolated elevations. IDW cross-validation RMSE = 0.88 m. Its one original nonzero elevation is retained but flagged for review.</div></div>
+          <div class="control-section"><a href="../data/ashton/web/quality_report.json">Open complete quality report</a><br><a href="https://sees.uiowa.edu/research/ashton-prairie" target="_blank" rel="noopener">Official Ashton Prairie site</a></div>
+        </div>
+      </div>
+    </aside>
+    <div class="map-wrap">
+      <div class="map-status" id="map-status" role="status" aria-live="polite">Loading field data…</div>
+      <div id="map" role="application" aria-label="Interactive map of Ashton Prairie geophysical field data"></div>
+    </div>
+  </section>
+
+  <section class="catalog" aria-labelledby="catalog-heading">
+    <div class="catalog-head">
+      <div><h2 id="catalog-heading">Real field-data catalog</h2><p>All 60 source files were audited. The 54 approved public files are downloadable here; six problematic ERT measurement files remain outside the public repository.</p></div>
+      <div class="catalog-tools"><label><span class="sr-only">Filter by method</span><select id="catalog-method"><option value="all">All files</option><option value="ert">ERT</option><option value="em">EM</option><option value="seismic">Seismic</option><option value="location">Locations &amp; KML</option></select></label><label><span class="sr-only">Search files</span><input id="catalog-search" type="search" placeholder="Search file names"></label></div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>File</th><th>Type / size</th><th>Quality note</th><th>Download</th></tr></thead><tbody id="catalog-body"><tr><td colspan="4">Loading catalog…</td></tr></tbody></table></div>
+    <div class="catalog-foot"><span id="catalog-count">Loading…</span><span><a href="../notebooks/ashton_field_data.ipynb">Download processing notebook</a> · <a href="https://colab.research.google.com/github/geohang/environmental-geophysics/blob/main/docs/notebooks/ashton_field_data.ipynb" target="_blank" rel="noopener">Open in Colab</a> · Data licensed <a href="../data/ashton/DATA_LICENSE.txt">CC BY 4.0</a></span></div>
+  </section>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const DATA_ROOT='../data/ashton/web/';
+const COLORS={ERT:'#2563eb',Seismic:'#dc2626','Seismic GPS':'#dc2626',EM:'#059669',synthetic:'#b42375'};
+const state={date:'all',method:'all',data:{},catalog:[],layers:{}};
+const map=L.map('map',{zoomControl:true,minZoom:13,maxZoom:21}).setView([41.66575,-91.5862],18);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+L.control.scale({imperial:true,metric:true}).addTo(map);
+const statusEl=document.getElementById('map-status');
+const esc=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const formatSize=bytes=>bytes<1024?`${bytes} B`:bytes<1048576?`${(bytes/1024).toFixed(1)} KB`:`${(bytes/1048576).toFixed(1)} MB`;
+function methodColor(instrument){if(instrument==='ERT')return COLORS.ERT;if(String(instrument).startsWith('Seismic'))return COLORS.Seismic;return COLORS.EM;}
+function popupRows(rows){return `<div class="popup-grid">${rows.map(([key,value])=>`<b>${esc(key)}</b><span>${esc(value)}</span>`).join('')}</div>`;}
+function realPointPopup(p){return `<div class="popup-title">${esc(p.display_name)}</div><span class="popup-class">Real field data</span>${popupRows([['Date',p.date],['Method',p.instrument],['Group',p.group],['Elevation',`${Number(p.elevation_m).toFixed(2)} m`],['Elevation source',p.elevation_source],['Quality',p.quality_flags||'No flag']])}`;}
+function linePopup(p){return `<div class="popup-title">${esc(p.group)}</div><span class="popup-class">Real acquisition line</span>${popupRows([['Date',p.date],['Method',p.instrument],['Points',p.point_count],['Geometry',p.geometry_note]])}`;}
+function emPopup(p){return `<div class="popup-title">EM shallow resistivity</div><span class="popup-class">Real processed data</span>${popupRows([['Date',p.date],['Line',p.line],['Layer 1',`${p.shallow_resistivity_ohm_m} Ω·m`],['Fit error',`${p.fit_error_percent}%`],['Samples / cell',p.sample_count],['Processing',p.processing_note]])}`;}
+function syntheticPopup(p){return `<div class="popup-title">${esc(p.name)}</div><span class="popup-class synthetic">Synthetic—not observed</span>${popupRows([['Teaching goal',p.teaching_goal]])}`;}
+function resistivityColor(value){const v=Math.max(30,Math.min(2000,Number(value)));const t=(Math.log10(v)-Math.log10(30))/(Math.log10(2000)-Math.log10(30));const hue=225-225*t;return `hsl(${hue} 78% 48%)`;}
+function matches(feature){const p=feature.properties||{};const dateOK=state.date==='all'||p.date===state.date;let methodOK=true;if(state.method!=='all'){if(state.method==='Seismic')methodOK=String(p.instrument).startsWith('Seismic');else if(state.method==='EM')methodOK=p.instrument==='EM'||p.instrument==='GEM-2 FDEM';else methodOK=p.instrument===state.method;}return dateOK&&methodOK;}
+function addGeoJson(target,collection,options){L.geoJSON(collection,{...options,filter:feature=>matches(feature)}).eachLayer(layer=>target.addLayer(layer));}
+function rebuildRealLayers(){
+  state.layers.surveyPoints.clearLayers();state.layers.surveyLines.clearLayers();state.layers.emResistivity.clearLayers();
+  addGeoJson(state.layers.surveyPoints,state.data.points,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:4.5,color:'#fff',weight:1.3,fillColor:methodColor(f.properties.instrument),fillOpacity:.9}),onEachFeature:(f,l)=>l.bindPopup(realPointPopup(f.properties))});
+  addGeoJson(state.layers.surveyLines,state.data.lines,{style:f=>({color:methodColor(f.properties.instrument),weight:3,opacity:.78}),onEachFeature:(f,l)=>l.bindPopup(linePopup(f.properties))});
+  addGeoJson(state.layers.emResistivity,state.data.em,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:5,color:'rgba(255,255,255,.7)',weight:1,fillColor:resistivityColor(f.properties.shallow_resistivity_ohm_m),fillOpacity:.82}),onEachFeature:(f,l)=>l.bindPopup(emPopup(f.properties))});
+  updateCounts();
+}
+function layerVisible(name){return document.querySelector(`[data-layer="${name}"]`).checked;}
+function syncLayer(name){const layer=state.layers[name];if(layerVisible(name)){if(!map.hasLayer(layer))layer.addTo(map);}else if(map.hasLayer(layer))map.removeLayer(layer);updateCounts();}
+function updateCounts(){document.getElementById('point-count').textContent=layerVisible('surveyPoints')?state.layers.surveyPoints.getLayers().length:0;document.getElementById('line-count').textContent=layerVisible('surveyLines')?state.layers.surveyLines.getLayers().length:0;document.getElementById('em-count').textContent=layerVisible('emResistivity')?state.layers.emResistivity.getLayers().length:0;document.getElementById('synthetic-count').textContent=layerVisible('synthetic')?state.layers.synthetic.getLayers().length:0;}
+const coordControl=L.control({position:'bottomleft'});coordControl.onAdd=()=>{const div=L.DomUtil.create('div','coordinate-readout');div.id='coordinate-readout';div.textContent='Move over map';return div;};coordControl.addTo(map);map.on('mousemove',event=>{document.getElementById('coordinate-readout').textContent=`${event.latlng.lat.toFixed(6)}, ${event.latlng.lng.toFixed(6)}`;});
+const legend=L.control({position:'bottomright'});legend.onAdd=()=>{const div=L.DomUtil.create('div','legend');div.innerHTML='<b>Map legend</b><div class="legend-row"><span class="swatch point" style="background:#2563eb"></span>ERT point / line</div><div class="legend-row"><span class="swatch point" style="background:#dc2626"></span>Seismic point / line</div><div class="legend-row"><span class="swatch point" style="background:#059669"></span>EM point / line</div><div class="legend-row"><span class="swatch" style="background:linear-gradient(90deg,#3455db,#2fb344,#f59f00,#dc2626)"></span>EM resistivity: 30–2000 Ω·m</div><div class="legend-row"><span class="swatch synthetic"></span>Synthetic overlay</div>';return div;};legend.addTo(map);
+function classifyFile(path){const lower=path.toLowerCase();if(lower.includes('/ert/'))return'ert';if(lower.includes('/em/'))return'em';if(lower.includes('/seismic/'))return'seismic';return'location';}
+function renderCatalog(){const method=document.getElementById('catalog-method').value;const query=document.getElementById('catalog-search').value.trim().toLowerCase();const rows=state.catalog.filter(item=>(method==='all'||classifyFile(item.path)===method)&&(!query||item.path.toLowerCase().includes(query)));const body=document.getElementById('catalog-body');body.innerHTML=rows.map(item=>`<tr><td class="file-path">${esc(item.path)}</td><td class="file-meta">${esc(item.extension.replace('.','').toUpperCase())}<br>${formatSize(item.size_bytes)}</td><td class="qa-note">${item.quality_notes.length?item.quality_notes.map(esc).join('<br>'):'Reviewed · no file-specific warning'}</td><td><a class="download" href="${encodeURI(item.url)}" download>Download</a></td></tr>`).join('')||'<tr><td colspan="4">No matching files.</td></tr>';document.getElementById('catalog-count').textContent=`Showing ${rows.length} of ${state.catalog.length} real source files`;}
+async function loadData(){
+  try{
+    const [points,lines,extent,em,synthetic,catalog]=await Promise.all(['survey_points.geojson','survey_lines.geojson','survey_extent.geojson','em_shallow_resistivity.geojson','synthetic_overlays.geojson','data_catalog.json'].map(name=>fetch(DATA_ROOT+name).then(response=>{if(!response.ok)throw new Error(`${name}: HTTP ${response.status}`);return response.json();})));
+    state.data={points,lines,extent,em,synthetic};state.catalog=catalog.files;
+    state.layers={surveyPoints:L.layerGroup(),surveyLines:L.layerGroup(),emResistivity:L.layerGroup(),surveyExtent:L.geoJSON(extent,{style:{color:'#b85c00',weight:2,dashArray:'7 6',fillColor:'#f59f00',fillOpacity:.06},onEachFeature:(f,l)=>l.bindPopup(`<div class="popup-title">${esc(f.properties.name)}</div><span class="popup-class">Derived from real data</span>${popupRows([['Geometry',f.properties.geometry_note]])}`)}),synthetic:L.geoJSON(synthetic,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:8,color:COLORS.synthetic,weight:3,fillColor:'#fff0f7',fillOpacity:.8}),style:{color:COLORS.synthetic,weight:3,dashArray:'7 5',fillColor:'#f7b2d2',fillOpacity:.22},onEachFeature:(f,l)=>l.bindPopup(syntheticPopup(f.properties))})};
+    rebuildRealLayers();['surveyPoints','surveyLines','emResistivity','surveyExtent','synthetic'].forEach(syncLayer);
+    const bounds=L.geoJSON(points).getBounds();if(bounds.isValid())map.fitBounds(bounds.pad(.12));
+    renderCatalog();statusEl.textContent='Real field data loaded';setTimeout(()=>statusEl.hidden=true,1300);
+  }catch(error){statusEl.hidden=false;statusEl.innerHTML=`<span class="error">Could not load map data: ${esc(error.message)}</span>`;document.getElementById('catalog-body').innerHTML='<tr><td colspan="4" class="error">Catalog failed to load.</td></tr>';}
+}
+document.getElementById('date-filter').addEventListener('change',event=>{state.date=event.target.value;rebuildRealLayers();});document.getElementById('method-filter').addEventListener('change',event=>{state.method=event.target.value;rebuildRealLayers();});document.querySelectorAll('[data-layer]').forEach(input=>input.addEventListener('change',()=>syncLayer(input.dataset.layer)));document.getElementById('catalog-method').addEventListener('change',renderCatalog);document.getElementById('catalog-search').addEventListener('input',renderCatalog);loadData();
+</script>
+<script src="../assets/javascripts/course-app.js"></script>
+</body>
+</html>

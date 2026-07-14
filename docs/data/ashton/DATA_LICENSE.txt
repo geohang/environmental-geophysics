@@ -1,0 +1,21 @@
+Ashton Prairie Environmental Geophysics Field Data
+
+Copyright (c) 2026 Hang Chen and the University of Iowa course/research team.
+
+The original field data and the curated data products in this directory are
+licensed under the Creative Commons Attribution 4.0 International License
+(CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+
+Suggested attribution:
+Chen, H., and the University of Iowa Environmental Geophysics course/research
+team (2026), Ashton Prairie Environmental Geophysics Field Data, University of
+Iowa, https://github.com/geohang/environmental-geophysics
+
+The files under raw/ are preserved as collected or supplied. Browser-ready
+products under web/ include documented quality filters, derived geometries, and
+interpolated elevations. Synthetic teaching overlays are explicitly labeled
+"synthetic" and are not field observations.
+
+Site context is cited from the University of Iowa School of Earth, Environment,
+and Sustainability:
+https://sees.uiowa.edu/research/ashton-prairie

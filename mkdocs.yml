@@ -85,6 +85,8 @@ nav:
       - Classroom Labs: apps/classroom-labs.html
       - Field Missions: apps/field-missions.html
       - Practice Lab: apps/practice-lab.html
-  - Data: data/index.md
+  - Data:
+      - Overview: data/index.md
+      - Ashton Field Data: apps/field-data.html
   - Notebooks: notebooks/index.md
   - References: references.md

@@ -1,0 +1,462 @@
+<?xml version='1.0' encoding='utf-8'?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Ashton 2026-06-25 ERT electrodes 267-314</name>
+    <Style id="ertPoint">
+      <IconStyle>
+        <color>ff0000ff</color>
+        <scale>0.65</scale>
+      </IconStyle>
+    </Style>
+    <Style id="seismicPoint">
+      <IconStyle>
+        <color>ffff0000</color>
+        <scale>0.65</scale>
+      </IconStyle>
+    </Style>
+    <Style id="emPoint">
+      <IconStyle>
+        <color>ff00aa00</color>
+        <scale>0.55</scale>
+      </IconStyle>
+    </Style>
+    <Folder>
+      <name>2026-06-25</name>
+      <Folder>
+        <name>ERT electrodes 267-314</name>
+        <Placemark>
+          <name>0625-E267</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 267; Original label: 0267; Source description: 0267</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858520000,41.6651610000,202.220</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E268</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 268; Original label: 0268; Source description: 0268</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858560000,41.6651670000,203.190</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E269</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 269; Original label: 0269; Source description: 0269</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858530000,41.6651770000,203.190</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E270</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 270; Original label: 0270; Source description: 0270</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858510000,41.6651950000,203.190</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E271</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 271; Original label: 0271; Source description: 0271</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858460000,41.6652060000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E272</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 272; Original label: 0272; Source description: 0272</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858430000,41.6652160000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E273</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 273; Original label: 0273; Source description: 0273</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858440000,41.6652240000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E274</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 274; Original label: 0274; Source description: 0274</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858390000,41.6652320000,203.290</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E275</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 275; Original label: 0275; Source description: 0275</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858410000,41.6652410000,203.250</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E276</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 276; Original label: 0276; Source description: 0276</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858450000,41.6652500000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E277</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 277; Original label: 0277; Source description: 0277</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858460000,41.6652580000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E278</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 278; Original label: 0278; Source description: 0278</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858450000,41.6652620000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E279</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 279; Original label: 0279; Source description: 0279</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858400000,41.6652780000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E280</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 280; Original label: 0280; Source description: 0280</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858350000,41.6652880000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E281</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 281; Original label: 0281; Source description: 0281</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858310000,41.6652990000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E282</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 282; Original label: 0282; Source description: 0282</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858160000,41.6653180000,202.950</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E283</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 283; Original label: 0283; Source description: 0283</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858130000,41.6653270000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E284</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 284; Original label: 0284; Source description: 0284</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858120000,41.6653440000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E285</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 285; Original label: 0285; Source description: 0285</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858100000,41.6653580000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E286</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 286; Original label: 0286; Source description: 0286</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858080000,41.6653700000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E287</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 287; Original label: 0287; Source description: 0287</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858060000,41.6653740000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E288</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 288; Original label: 0288; Source description: 0288</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858030000,41.6653880000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E289</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 289; Original label: 0289; Source description: 0289</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858010000,41.6654050000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E290</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 290; Original label: 0290; Source description: 0290</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858030000,41.6654200000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E291</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 291; Original label: 0291; Source description: 0291</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857990000,41.6654270000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E292</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 292; Original label: 0292; Source description: 0292</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5858020000,41.6654360000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E293</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 293; Original label: 0293; Source description: 0293</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857960000,41.6654500000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E294</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 294; Original label: 0294; Source description: 0294</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857930000,41.6654570000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E295</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 295; Original label: 0295; Source description: 0295</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857920000,41.6654670000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E296</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 296; Original label: 0296; Source description: 0296</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6654780000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E297</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 297; Original label: 0297; Source description: 0297</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857830000,41.6654950000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E298</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 298; Original label: 0298; Source description: 0298</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857850000,41.6655090000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E299</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 299; Original label: 0299; Source description: 0299</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6655290000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E300</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 300; Original label: 0300; Source description: 0300</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6655420000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E301</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 301; Original label: 0301; Source description: 0301</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857870000,41.6655510000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E302</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 302; Original label: 0302; Source description: 0302</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857830000,41.6655680000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E303</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 303; Original label: 0303; Source description: 0303</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857780000,41.6655820000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E304</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 304; Original label: 0304; Source description: 0304</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857770000,41.6655900000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E305</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 305; Original label: 0305; Source description: 0305</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857760000,41.6655980000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E306</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 306; Original label: 0306; Source description: 0306</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857740000,41.6656140000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E307</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 307; Original label: 0307; Source description: 0307</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857700000,41.6656220000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E308</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 308; Original label: 0308; Source description: 0308</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857730000,41.6656360000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E309</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 309; Original label: 0309; Source description: 0309</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857730000,41.6656510000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E310</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 310; Original label: 0310; Source description: 0310</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857720000,41.6656640000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E311</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 311; Original label: 0311; Source description: 0311</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857750000,41.6656740000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E312</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 312; Original label: 0312; Source description: 0312</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857740000,41.6656890000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E313</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 313; Original label: 0313; Source description: 0313</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857730000,41.6657010000,201.210</coordinates>
+          </Point>
+        </Placemark>
+        <Placemark>
+          <name>0625-E314</name>
+          <description>Date: 2026-06-25; Instrument: ERT; Group: ERT electrodes 267-314; Point ID: 314; Original label: 0314; Source description: 0314</description>
+          <styleUrl>#ertPoint</styleUrl>
+          <Point>
+            <altitudeMode>absolute</altitudeMode>
+            <coordinates>-91.5857750000,41.6657140000,201.210</coordinates>
+          </Point>
+        </Placemark>
+      </Folder>
+    </Folder>
+  </Document>
+</kml>

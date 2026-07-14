@@ -1,11 +1,21 @@
 # Data
 
-Datasets for the course activities and notebooks are collected here. Each file is small enough to download directly or load straight into a Colab notebook.
+Course datasets are separated by provenance so students can see what was measured, what was derived, and what was generated for teaching.
 
-!!! note "These are synthetic teaching datasets"
-    The files below are clean synthetic examples that match the activities and notebooks, so every exercise works out of the box. Field datasets from the course will replace them as they are prepared.
+## Real Field Data: Ashton Prairie
 
-## By Module
+The **[Ashton Field Data Explorer](../apps/field-data.html)** maps survey points and lines from the University of Iowa's [Ashton Prairie Living Laboratory](https://sees.uiowa.edu/research/ashton-prairie). It includes layer controls, popups, a downloadable file catalog, and a companion [PyHydroGeophysX processing notebook](../notebooks/ashton_field_data.ipynb).
+
+The public archive contains 54 approved files. All 60 source files were checked, but six problematic ERT measurement files are not published. The ERT teaching workflow uses only the positive-only April 11 Wenner and May 2 dipole–dipole PyGIMLi datasets. Thirteen zero-placeholder elevations on EM line 4 are replaced in **derived products only** by IDW interpolation and retain an `interpolated_elevation` flag; raw source files are unchanged.
+
+!!! info "Real, derived, and synthetic remain distinct"
+    Green layers are real field observations, amber layers are derived from real data, and magenta overlays are explicitly synthetic and hidden by default. See the [data license](ashton/DATA_LICENSE.txt) and [machine-readable quality report](ashton/web/quality_report.json).
+
+## Synthetic Teaching Data
+
+The files below are clean synthetic examples that match the activities and notebooks, so every exercise works out of the box. They are not observations from Ashton Prairie.
+
+### By Module
 
 | Module | Dataset | Download | Used In |
 |---|---|---|---|
@@ -19,7 +29,7 @@ Datasets for the course activities and notebooks are collected here. Each file i
 | Seismic | Three-layer first arrivals | [`three_layer_first_arrivals.csv`](seismic/three_layer_first_arrivals.csv) | [Classroom Labs · Seismic](../apps/classroom-labs.html#seismic) |
 | Electrical | VES Schlumberger sounding | [`ves_sounding.csv`](electrical/ves_sounding.csv) | [3-Layer VES Forward Modeling](../lecture/electrical/apps/ert-2.html) |
 
-## Using a Dataset
+### Using a Synthetic Dataset
 
 === "Download directly"
 

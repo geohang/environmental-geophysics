@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import math
 import re
 import sys
@@ -369,6 +370,84 @@ def audit_classroom_datasets() -> list[str]:
     return errors
 
 
+def audit_ashton_field_data() -> list[str]:
+    """Verify Ashton provenance, publication policy, and Web GIS products."""
+
+    errors: list[str] = []
+    ashton = DOCS / "data" / "ashton"
+    report_path = ashton / "web" / "quality_report.json"
+    catalog_path = ashton / "web" / "data_catalog.json"
+    required = [
+        report_path,
+        catalog_path,
+        ashton / "web" / "survey_points.geojson",
+        ashton / "web" / "survey_lines.geojson",
+        ashton / "web" / "em_shallow_resistivity.geojson",
+        ashton / "web" / "synthetic_overlays.geojson",
+        ashton / "DATA_LICENSE.txt",
+        DOCS / "apps" / "field-data.html",
+        DOCS / "notebooks" / "ashton_field_data.ipynb",
+    ]
+    missing = [path.relative_to(ROOT).as_posix() for path in required if not path.exists()]
+    if missing:
+        return [f"Ashton field data missing required artifact: {path}" for path in missing]
+
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    if report.get("source_file_count") != 60:
+        errors.append(f"Ashton audit must cover 60 source files, found {report.get('source_file_count')}")
+    if report.get("overall_status") != "pass_with_warnings":
+        errors.append(f"Ashton audit status is {report.get('overall_status')}")
+    failed = [item.get("path", "unknown") for item in report.get("files", []) if item.get("status") == "error"]
+    if failed:
+        errors.append(f"Ashton audit contains unreadable sources: {', '.join(failed)}")
+
+    expected_products = {
+        "real_survey_points": 367,
+        "real_survey_lines": 15,
+        "real_em_map_cells": 540,
+        "synthetic_features": 3,
+        "interpolated_elevation_count": 13,
+    }
+    products = report.get("web_products", {})
+    for key, expected in expected_products.items():
+        if products.get(key) != expected:
+            errors.append(f"Ashton {key}: expected {expected}, found {products.get(key)}")
+
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    public_files = catalog.get("files", [])
+    raw_files = [path for path in (ashton / "raw").rglob("*") if path.is_file()]
+    if len(public_files) != 54 or len(raw_files) != 54:
+        errors.append(f"Ashton public archive must contain 54 files; catalog={len(public_files)}, raw={len(raw_files)}")
+    public_ert_measurements = [
+        item["path"] for item in public_files
+        if "/ert/" in item["path"]
+        and not Path(item["path"]).name.startswith("location_")
+        and Path(item["path"]).suffix.lower() != ".kml"
+    ]
+    expected_ert = [
+        "2026-04-11/ert/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
+        "2026-05-02/ert/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt"
+    ]
+    if public_ert_measurements != expected_ert:
+        errors.append(f"Ashton public ERT measurements must contain only the two approved PyGIMLi files: {public_ert_measurements}")
+
+    points = json.loads((ashton / "web" / "survey_points.geojson").read_text(encoding="utf-8"))["features"]
+    line4_interpolated = [
+        feature for feature in points
+        if feature["properties"].get("group") == "EM line 4"
+        and feature["properties"].get("elevation_source") == "interpolated_from_neighboring_em_points"
+    ]
+    if len(line4_interpolated) != 13 or any(feature["properties"]["elevation_m"] == 0 for feature in line4_interpolated):
+        errors.append("Ashton EM line 4 must contain 13 flagged, nonzero interpolated elevations")
+
+    synthetic = json.loads((ashton / "web" / "synthetic_overlays.geojson").read_text(encoding="utf-8"))["features"]
+    if any(feature.get("properties", {}).get("data_class") != "synthetic" for feature in synthetic):
+        errors.append("Ashton synthetic overlay contains a feature without data_class=synthetic")
+    if "CC BY 4.0" not in (ashton / "DATA_LICENSE.txt").read_text(encoding="utf-8"):
+        errors.append("Ashton data license must state CC BY 4.0")
+    return errors
+
+
 def main() -> int:
     """Run all checks and return a process exit status."""
     errors = (
@@ -376,6 +455,7 @@ def main() -> int:
         + audit_assessments()
         + audit_numerical_benchmarks()
         + audit_classroom_datasets()
+        + audit_ashton_field_data()
     )
     if errors:
         print(f"Course audit failed with {len(errors)} issue(s):")
@@ -385,7 +465,8 @@ def main() -> int:
     html_count = sum(1 for _ in DOCS.rglob("*.html"))
     print(
         f"Course audit passed: {html_count} source HTML apps/pages, 45 practice questions, "
-        "9 active-learning lessons, 7 numerical benchmarks, and 5 classroom dataset suites."
+        "9 active-learning lessons, 7 numerical benchmarks, 5 classroom dataset suites, "
+        "and the Ashton field-data release."
     )
     return 0
 
