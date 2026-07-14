@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Gravity Lab: The Cross-Section Challenge</title>
     <script>
@@ -8,7 +9,7 @@
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } 
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
             --bg: #0f172a;
@@ -54,12 +55,13 @@
         .hidden-feedback { display: none; margin-top: 15px; padding: 15px; border-radius: 8px; font-weight: bold; }
         .geology-select { background: #0f172a; color: white; border: 1px solid var(--primary); padding: 8px; border-radius: 4px; width: 100%; }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -241,5 +243,6 @@
     }
 </script>
 
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

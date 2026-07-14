@@ -6,12 +6,13 @@
 <title>Apparent-Resistivity Pseudosection Builder</title>
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div class="course-nav-bar">
   <a href="../../../">&#8592; Course Home</a>
   <a href="../">Electrical Methods</a>
-  <span class="spacer">SEES:4800 Environmental Geophysics</span>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 <header class="demo-header">
   <h1>Apparent-Resistivity Pseudosection Builder</h1>
@@ -29,7 +30,7 @@
   </div>
   <div class="panel">
     <div class="controls cols-3">
-      <div class="ctrl"><label>Target position x₀ <span id="xv">50 m</span></label><input id="x" type="range" min="10" max="90" value="50" step="1"></div>
+        <div class="ctrl"><label>Target position x₀ <span id="xv">50 m</span></label><input id="x" type="range" min="10" max="90" value="50" step="1"></div>
       <div class="ctrl"><label>Target depth <span id="dv">8 m</span></label><input id="d" type="range" min="2" max="22" value="8" step="1"></div>
       <div class="ctrl"><label>Target resistivity <span id="rv">10 Ω·m</span></label><input id="r" type="range" min="0.7" max="3.3" value="1" step="0.05"></div>
     </div>
@@ -133,5 +134,6 @@ document.querySelectorAll('#array button').forEach(b=>b.addEventListener('click'
 onThemeChange(draw);
 draw();
 </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

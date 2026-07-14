@@ -12,7 +12,7 @@
             }
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
 
     <style>
         :root {
@@ -209,13 +209,23 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #475569; padding: 10px; text-align: left; }
         th { background-color: #334155; color: var(--accent); }
+        @media (max-width: 640px) {
+            body { padding: 0; }
+            .container { padding: 14px 12px; }
+            .grid[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+            .grid, .grid > *, .card { min-width: 0; max-width: 100%; }
+            .demo-container { flex-direction: column; }
+            .readout { grid-template-columns: 1fr; }
+            nav { flex-wrap: wrap; }
+        }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -605,5 +615,6 @@
     };
 </script>
 
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

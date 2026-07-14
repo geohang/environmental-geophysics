@@ -2,6 +2,20 @@
 
 Electromagnetic induction lets us sense subsurface conductivity without ground contact: a transmitter coil drives currents in the earth, and a receiver measures the secondary field those currents produce. Frequency-domain (FDEM) and time-domain (TEM) systems trade depth, resolution, and productivity in different ways.
 
+## Learning Objectives
+
+**Undergraduate Core:** By the end of this module, you will be able to:
+
+- Explain primary-field induction, secondary currents, and receiver response.
+- Relate frequency, conductivity, time gate, and skin or diffusion depth qualitatively.
+- Compare FDEM and TEM acquisition and select an appropriate system for a target.
+- Identify coupling, cultural noise, and limits of apparent-conductivity interpretation.
+
+??? abstract "Graduate Extension"
+    Distinguish qualitative diffusion-depth proxies from Maxwell-equation forward models and evaluate sensitivity, equivalence, and inversion regularization.
+
+[Practice this module](../../apps/practice-lab.html#em){ .md-button }
+
 ## Interactive Lecture
 
 <div class="grid cards" markdown>

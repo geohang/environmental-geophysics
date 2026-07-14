@@ -16,12 +16,13 @@
 .tag.on { background: color-mix(in srgb, var(--c-success) 16%, transparent); color: var(--c-success); }
 .tag.off { background: var(--surface-2); color: var(--text-muted); }
 </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div class="course-nav-bar">
   <a href="../../../">&#8592; Course Home</a>
   <a href="../">Introduction</a>
-  <span class="spacer">SEES:4800 Environmental Geophysics</span>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 <header class="demo-header">
   <h1>Depth of Investigation vs. Resolution</h1>
@@ -91,5 +92,6 @@ document.getElementById('td').addEventListener('input',draw);
 onThemeChange(draw);
 draw();
 </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

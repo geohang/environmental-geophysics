@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electromagnetic Physics: Conduction vs Displacement</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        body { display: grid !important; grid-template-columns: minmax(0, 1fr); align-items: start !important; justify-items: center; }
+        #course-nav-bar { grid-column: 1; }
+        body > div:not(#course-nav-bar) { min-width: 0; max-width: 100%; }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
         
         body {
@@ -60,12 +63,13 @@
             margin-bottom: 1rem;
         }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body class="p-4 md:p-8 min-h-screen flex items-center justify-center">
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -455,5 +459,6 @@
         }, 100);
 
     </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

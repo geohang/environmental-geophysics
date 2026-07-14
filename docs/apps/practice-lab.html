@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Practice Lab | Environmental Geophysics</title>
+  <link rel="stylesheet" href="../assets/stylesheets/demo.css">
+  <link rel="stylesheet" href="../assets/stylesheets/course-app.css">
+  <style>
+    body { margin: 0; background: var(--bg, #f5f7fb); color: var(--text, #172033); }
+    .shell { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: 1.25rem 0 3rem; }
+    .hero, .question, .score-panel { background: var(--surface, #fff); border: 1px solid var(--border, #dbe1ea); border-radius: 16px; box-shadow: 0 8px 24px rgb(20 36 60 / .08); }
+    .hero { padding: clamp(1.25rem, 4vw, 2.5rem); margin-bottom: 1rem; }
+    .eyebrow { color: #146c60; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: .35rem 0 .65rem; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.05; }
+    .filters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: 1rem 0; }
+    label { font-weight: 700; }
+    select { width: 100%; margin-top: .35rem; }
+    .score-panel { display: flex; gap: 1rem; align-items: center; justify-content: space-between; padding: .8rem 1rem; position: sticky; top: .5rem; z-index: 5; }
+    .progress { flex: 1; height: 10px; background: #e6ebf2; border-radius: 999px; overflow: hidden; }
+    .progress > span { display: block; height: 100%; width: 0; background: #168777; transition: width .2s ease; }
+    .question { padding: 1.15rem; margin: 1rem 0; }
+    .question h2 { font-size: 1.12rem; margin: .45rem 0 .75rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .tag { display: inline-block; padding: .2rem .55rem; border-radius: 999px; background: #e7f4f1; color: #075f55; font-size: .78rem; font-weight: 800; }
+    .tag.graduate { background: #efe9ff; color: #51359b; }
+    .tag.both { background: #e8efff; color: #2455a4; }
+    fieldset { border: 0; padding: 0; margin: 0; }
+    .choice { display: flex; gap: .65rem; align-items: flex-start; padding: .7rem; border: 1px solid var(--border, #dbe1ea); border-radius: 10px; margin: .45rem 0; cursor: pointer; font-weight: 500; }
+    .choice:hover { background: rgb(20 135 119 / .06); }
+    .choice input { margin-top: .18rem; flex: 0 0 auto; }
+    .actions { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .8rem; }
+    button { border: 0; border-radius: 9px; padding: .65rem .9rem; background: #116f64; color: #fff; font-weight: 800; cursor: pointer; }
+    button.secondary { color: #145e56; background: #dcefeb; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .feedback { margin-top: .8rem; padding: .8rem; border-left: 4px solid #65758b; background: #f0f3f7; border-radius: 6px; }
+    .feedback.correct { border-color: #168777; background: #e8f7f2; }
+    .feedback.incorrect { border-color: #b94b48; background: #fff0ef; }
+    .empty { padding: 2rem; text-align: center; }
+    @media (max-width: 700px) { .filters { grid-template-columns: 1fr; } .score-panel { position: static; flex-wrap: wrap; } .progress { flex-basis: 100%; } }
+  </style>
+</head>
+<body>
+  <nav class="course-nav-bar" aria-label="Course application navigation">
+    <a href="../index.html">Course home</a>
+    <a href="course-guide.html">Course guide</a>
+    <a href="field-missions.html">Field Missions</a>
+    <span class="spacer">Environmental Geophysics · Practice Lab</span>
+  </nav>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Formative assessment</div>
+      <h1>Practice Lab</h1>
+      <p>Work through 45 questions across the nine modules. Each item identifies its student level and gives immediate, explanatory feedback. These are study questions—not the private course exams.</p>
+      <div class="science-caveat"><strong>How to use this lab:</strong> select a module and level, answer before checking the explanation, and revisit the stated assumptions whenever a numerical answer looks more precise than the underlying Earth model.</div>
+    </section>
+
+    <section class="filters" aria-label="Question filters">
+      <label for="module-filter">Module
+        <select id="module-filter"></select>
+      </label>
+      <label for="level-filter">Student level
+        <select id="level-filter">
+          <option value="All">All levels</option>
+          <option value="Undergraduate">Undergraduate</option>
+          <option value="Graduate">Graduate</option>
+          <option value="Both">Both</option>
+        </select>
+      </label>
+      <label for="status-filter">Attempt status
+        <select id="status-filter">
+          <option value="All">All questions</option>
+          <option value="Unanswered">Unanswered</option>
+          <option value="Answered">Answered</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="score-panel" aria-live="polite">
+      <strong id="score">0 correct / 0 checked</strong>
+      <div class="progress" aria-label="Overall checked-question progress"><span id="progress-bar"></span></div>
+      <button class="secondary" id="reset" type="button">Reset attempts</button>
+    </section>
+    <div id="questions"></div>
+  </main>
+
+  <script>
+    const modules = [
+      ['intro', 'Foundations'], ['gravity', 'Gravity'], ['magnetic', 'Magnetics'],
+      ['seismic', 'Seismic'], ['electrical', 'Electrical / SP / IP'], ['em', 'EM'],
+      ['gpr', 'GPR'], ['mt', 'MT / CSEM'], ['borehole', 'Borehole']
+    ];
+
+    const questions = [
+      {id:'I1',m:'intro',l:'Undergraduate',b:'Understand',q:'Which pairing connects a method to the physical property that most directly controls its response?',c:['Gravity — density contrast','GPR — magnetic susceptibility','Magnetics — seismic velocity'],a:0,e:'Gravity anomalies arise from subsurface density contrasts. GPR responds mainly to dielectric permittivity and electrical losses; magnetics responds to magnetization.'},
+      {id:'I2',m:'intro',l:'Undergraduate',b:'Apply',q:'A survey must distinguish two objects only 0.3 m apart at 1 m depth. What should be evaluated first?',c:['Whether the method and acquisition geometry can provide the needed spatial resolution','Whether the map uses a rainbow color scale','Whether the instrument displays six decimal places'],a:0,e:'Resolution depends on wavelength or sensitivity footprint, sampling, geometry, noise, and processing—not display precision.'},
+      {id:'I3',m:'intro',l:'Both',b:'Analyze',q:'Which statement correctly distinguishes measured data from an inversion model?',c:['The model is one property distribution consistent with data, assumptions, and regularization','The model is a direct photograph of the subsurface','Measured data are created only after inversion'],a:0,e:'An inverse model is conditional on parameterization, regularization, noise assumptions, and prior information; it is not a unique image.'},
+      {id:'I4',m:'intro',l:'Graduate',b:'Evaluate',q:'Two very different Earth models fit the observations within estimated noise. What is the scientifically defensible conclusion?',c:['The data are non-unique at that noise level and additional constraints are needed','Average the models and call the average true','Choose the model with the largest anomaly'],a:0,e:'Equivalent data fits demonstrate non-uniqueness. Resolution analysis, independent data, priors, or redesigned acquisition may reduce the ambiguity.'},
+      {id:'I5',m:'intro',l:'Both',b:'Create',q:'Which survey-design decision most improves the ability to test an interpretation?',c:['Collect a reciprocal or crossing line and document independent site observations','Use only the profile that produced the strongest anomaly','Remove measurements that disagree with the expected answer'],a:0,e:'Redundancy and independent observations test reproducibility and spatial continuity; selecting only agreeable data biases interpretation.'},
+
+      {id:'GV1',m:'gravity',l:'Undergraduate',b:'Understand',q:'A compact body is denser than its host. Ignoring regional trends, what anomaly sign is expected directly above it?',c:['Positive','Negative','Always zero'],a:0,e:'A positive density contrast adds gravitational attraction and normally produces a positive residual anomaly.'},
+      {id:'GV2',m:'gravity',l:'Undergraduate',b:'Apply',q:'A free-air gradient of about 0.3086 mGal/m is used. Moving a station 10 m upward changes the elevation correction magnitude by approximately:',c:['3.086 mGal','0.03086 mGal','30.86 mGal'],a:0,e:'0.3086 mGal/m × 10 m = 3.086 mGal. Sign depends on the stated correction convention, so always document whether a correction is added or subtracted.'},
+      {id:'GV3',m:'gravity',l:'Graduate',b:'Apply',q:'For an ideal buried sphere, the anomaly half-width x½ and center depth z satisfy z ≈ 1.305x½. If x½ = 20 m, z is:',c:['26.1 m','15.3 m','40.0 m'],a:0,e:'z ≈ 1.305 × 20 = 26.1 m. The relation assumes an isolated sphere and adequate regional removal; real geometries can violate it.'},
+      {id:'GV4',m:'gravity',l:'Both',b:'Analyze',q:'Why can terrain correction matter even when all stations have accurate elevations?',c:['Nearby hills and valleys exert gravitational attraction not represented by a simple slab','Terrain changes the value of the gravitational constant','Accurate GPS automatically removes terrain mass'],a:0,e:'Station elevation and terrain mass are different effects. Local topography must be modeled or corrected when its attraction is significant.'},
+      {id:'GV5',m:'gravity',l:'Graduate',b:'Evaluate',q:'Which constraint most directly reduces ambiguity between a shallow small body and a deeper larger body?',c:['Independent geometry or density information','More digits in the gravity meter display','Changing the anomaly color map'],a:0,e:'Gravity inversion is non-unique. Geological contacts, boreholes, density samples, or other geophysics constrain geometry and contrast.'},
+
+      {id:'MG1',m:'magnetic',l:'Undergraduate',b:'Understand',q:'For weak, linear induced magnetization, which expression is appropriate?',c:['M = χH','M = ρgV','M = Vp/Vs'],a:0,e:'Induced magnetization M equals susceptibility χ times the magnetizing field H under a linear isotropic approximation.'},
+      {id:'MG2',m:'magnetic',l:'Undergraduate',b:'Analyze',q:'Why can the same compact target produce differently shaped anomalies at different magnetic latitudes?',c:['The inducing-field inclination and declination change anomaly asymmetry','Magnetic susceptibility changes with map projection','Latitude changes the target depth'],a:0,e:'A magnetic anomaly is directional: its shape depends on source magnetization and the observation-field direction.'},
+      {id:'MG3',m:'magnetic',l:'Both',b:'Apply',q:'What is the usual effect of upward continuation?',c:['Suppress short-wavelength shallow features and smooth the field','Create new high-frequency anomalies','Uniquely recover source depth'],a:0,e:'Upward continuation predicts the smoother field at greater observation height; it is stable but loses shallow detail.'},
+      {id:'MG4',m:'magnetic',l:'Graduate',b:'Evaluate',q:'When is reduction to the pole (RTP) especially unreliable?',c:['At low magnetic inclination or when remanent magnetization is important','Only at high elevation','Whenever data are collected on a grid'],a:0,e:'RTP filters can be unstable near the magnetic equator, and induced-field assumptions fail when remanence changes the magnetization direction.'},
+      {id:'MG5',m:'magnetic',l:'Graduate',b:'Analyze',q:'A Peters half-slope estimate is best treated as:',c:['An empirical, geometry-dependent depth-to-top approximation','An exact depth formula for every 3-D body','A measurement of magnetic susceptibility'],a:0,e:'Peters-type rules depend on source geometry, magnetization, sampling, and regional removal; they provide reconnaissance estimates, not universal depths.'},
+
+      {id:'S1',m:'seismic',l:'Undergraduate',b:'Apply',q:'On a straight travel-time segment, slope is 0.002 s/m. The apparent velocity is:',c:['500 m/s','0.002 m/s','2,000 m/s'],a:0,e:'Velocity is the reciprocal of slope: 1/0.002 = 500 m/s.'},
+      {id:'S2',m:'seismic',l:'Undergraduate',b:'Analyze',q:'Across many unconsolidated sites, crossing from unsaturated sediment into saturated sediment commonly causes P-wave velocity to:',c:['Increase, although the magnitude is material dependent','Always decrease','Remain exactly unchanged'],a:0,e:'Water increases the effective bulk modulus and commonly raises Vp sharply. The response depends on frame stiffness, porosity, gas, wave type, and frequency.'},
+      {id:'S3',m:'seismic',l:'Both',b:'Understand',q:'Why can a low-velocity layer beneath a faster layer be missed by first-arrival refraction?',c:['It may not generate a critically refracted first arrival observable at the surface','Low velocity produces no seismic waves','Geophones cannot record low frequencies'],a:0,e:'A velocity inversion creates a classic refraction blind zone. Reflection, surface waves, boreholes, or other constraints may be needed.'},
+      {id:'S4',m:'seismic',l:'Graduate',b:'Evaluate',q:'Forward and reverse shots give inconsistent apparent layer dips. What should be checked first?',c:['Pick uncertainty, timing/geometry, reciprocity, and lateral heterogeneity','Force both lines to the same velocity','Discard the reverse shot'],a:0,e:'Reciprocal acquisition is a diagnostic. Timing errors, geometry, picking, topography, and lateral structure should be evaluated before interpretation.'},
+      {id:'S5',m:'seismic',l:'Graduate',b:'Analyze',q:'Why should a refraction-tomography image not be interpreted cell by cell as lithology?',c:['Velocity is non-unique and resolution is spatially variable','Tomography contains no measured data','Rock types each have exactly one velocity'],a:0,e:'Velocity depends on porosity, saturation, stress, weathering, anisotropy, and scale; regularization also spreads structure according to ray coverage.'},
+
+      {id:'E1',m:'electrical',l:'Undergraduate',b:'Understand',q:'In most near-surface soils, bulk electrical conduction is strongly influenced by:',c:['Pore-fluid conductivity, saturation, connectivity, and surface conduction','Only grain color','Only magnetic inclination'],a:0,e:'Electrolytic pore conduction and clay-surface conduction commonly dominate; temperature and pore geometry also matter.'},
+      {id:'E2',m:'electrical',l:'Both',b:'Analyze',q:'Which statement is correct?',c:['Apparent resistivity is an array-dependent datum; an inversion model estimates spatial resistivity','Apparent resistivity is always the true resistivity at one point','An inversion model is directly measured by the voltmeter'],a:0,e:'Voltage/current and geometric factor give apparent resistivity. Spatial resistivity is inferred through a forward model and regularized inversion.'},
+      {id:'E3',m:'electrical',l:'Undergraduate',b:'Apply',q:'For a Wenner array in a homogeneous half-space, K = 2πa. With a = 5 m, K is approximately:',c:['31.4 m','10.0 m','78.5 m'],a:0,e:'K = 2π(5) ≈ 31.4 m; apparent resistivity is KΔV/I.'},
+      {id:'E4',m:'electrical',l:'Graduate',b:'Evaluate',q:'Why can an uncalibrated Archie conversion from resistivity to water content fail in clay-rich soil?',c:['Surface conduction violates the clean-granular Archie assumptions','Clay eliminates all pore water','Archie law directly measures porosity'],a:0,e:'Archie-type relations require calibration and assumptions about saturation exponent, cementation, pore-water resistivity, temperature, and negligible surface conduction.'},
+      {id:'E5',m:'electrical',l:'Both',b:'Understand',q:'Which interpretation is defensible?',c:['SP and IP respond to coupled electrochemical/flow and polarization processes; neither directly measures water content','Every SP anomaly is a leaking pipe','Chargeability uniquely identifies clay percentage'],a:0,e:'SP and IP are process-sensitive but non-unique. Electrodes, cultural noise, mineralogy, salinity, flow, and acquisition convention must be considered.'},
+
+      {id:'EM1',m:'em',l:'Undergraduate',b:'Understand',q:'Near-surface EM induction methods measure a response produced primarily by:',c:['Secondary currents induced in the ground by a time-varying primary field','A direct seismic reflection','Changes in gravitational attraction'],a:0,e:'A transmitter creates a time-varying magnetic field, which induces eddy currents whose secondary field is measured.'},
+      {id:'EM2',m:'em',l:'Undergraduate',b:'Apply',q:'Using skin depth δ ≈ 503√(ρ/f) m, what is δ for ρ = 100 Ωm and f = 1,000 Hz?',c:['About 159 m','About 5 m','About 1,590 m'],a:0,e:'503√(100/1000) ≈ 159 m. Skin depth is an attenuation scale, not a guaranteed investigation depth.'},
+      {id:'EM3',m:'em',l:'Both',b:'Analyze',q:'Which distinction is correct?',c:['FDEM varies frequency in a steady sinusoidal field; TEM observes transient decay after switching','TEM measures only gravity','FDEM requires ground-contact electrodes'],a:0,e:'FDEM measures amplitude/phase or quadrature/in-phase response; TEM samples the time-domain decay of induced currents.'},
+      {id:'EM4',m:'em',l:'Graduate',b:'Evaluate',q:'A simple skin-depth weighting plot should be labeled:',c:['A teaching proxy, not a full Maxwell forward response or inversion-ready datum','An exact instrument voltage prediction','A unique conductivity model'],a:0,e:'Skin depth is useful intuition, but coil geometry, coupling, layering, displacement currents, waveform, and instrument response require a complete forward model.'},
+      {id:'EM5',m:'em',l:'Both',b:'Create',q:'What is the best field response to a strong EM anomaly beside a fence and buried power line?',c:['Repeat with geometry/orientation changes and map cultural infrastructure','Immediately interpret it as a saline plume','Increase the color contrast'],a:0,e:'Metal and active infrastructure can dominate EM data. Repeatability, orientation tests, offsets, and utility records help diagnose coupling.'},
+
+      {id:'G1',m:'gpr',l:'Undergraduate',b:'Understand',q:'In a low-loss nonmagnetic material, radar velocity is approximately:',c:['c/√εr','cεr','√(ρg)'],a:0,e:'The common approximation v ≈ c/√εr links velocity to relative dielectric permittivity when electrical loss and magnetic effects are small.'},
+      {id:'G2',m:'gpr',l:'Undergraduate',b:'Apply',q:'A horizontal reflector has two-way travel time 40 ns and velocity 0.10 m/ns. Its depth is:',c:['2.0 m','4.0 m','0.4 m'],a:0,e:'Depth z = vt/2 = 0.10×40/2 = 2.0 m. The factor of two accounts for down-and-back travel.'},
+      {id:'G3',m:'gpr',l:'Graduate',b:'Evaluate',q:'A fitted diffraction hyperbola gives a single velocity. Which assumption most limits direct depth conversion?',c:['The medium is treated as laterally homogeneous with a representative velocity','The target must be magnetic','Gravity must be constant'],a:0,e:'Velocity heterogeneity, anisotropy, antenna separation, zero-time error, and non-point geometry can bias hyperbola-derived velocity and depth.'},
+      {id:'G4',m:'gpr',l:'Both',b:'Analyze',q:'Why does GPR often have poor penetration in clay-rich or saline ground?',c:['High electrical conductivity attenuates electromagnetic energy','Clay makes the speed of light zero','The antenna stops transmitting seismic energy'],a:0,e:'Conductive losses dissipate radar energy, limiting depth even when dielectric contrasts are present.'},
+      {id:'G5',m:'gpr',l:'Graduate',b:'Analyze',q:'What does migration principally attempt to do?',c:['Collapse diffraction energy toward its true position using an assumed velocity model','Convert radar data to density','Remove all non-uniqueness'],a:0,e:'Migration geometrically repositions dipping reflections and diffractions. Incorrect velocity or complex 3-D structure can cause under- or over-migration.'},
+
+      {id:'MT1',m:'mt',l:'Undergraduate',b:'Understand',q:'Magnetotellurics estimates Earth impedance from which field ratio?',c:['Horizontal electric field to horizontal magnetic field','Gravity to elevation','Seismic displacement to density'],a:0,e:'The impedance tensor relates horizontal electric and magnetic field components in the frequency domain.'},
+      {id:'MT2',m:'mt',l:'Undergraduate',b:'Apply',q:'The apparent resistivity magnitude is commonly computed as:',c:['ρa = |Z|²/(μ0ω)','ρa = μ0ω|Z|','ρa = Z/temperature'],a:0,e:'For SI units, ρa = |Z|²/(μ0ω). Tensor component, coordinate convention, and processing must be stated.'},
+      {id:'MT3',m:'mt',l:'Both',b:'Analyze',q:'Why do longer MT periods generally sample greater depths?',c:['Lower-frequency diffusive fields attenuate more slowly in the Earth','Long-period waves always travel faster and reflect','The electrodes physically become longer'],a:0,e:'EM diffusion length increases as frequency decreases and resistivity increases. Sensitivity remains broad rather than confined to one depth.'},
+      {id:'MT4',m:'mt',l:'Graduate',b:'Evaluate',q:'The rule "phase above 45° means conductivity increases with depth" is safest under:',c:['An approximately 1-D isotropic Earth with a clearly stated impedance/sign convention','Any 3-D coastal setting','Only data with zero noise'],a:0,e:'In 2-D/3-D settings, galvanic distortion, mode mixing, coordinate choice, and sign convention complicate phase interpretation.'},
+      {id:'MT5',m:'mt',l:'Both',b:'Understand',q:'Marine CSEM anomalies are most accurately described as:',c:['Low-frequency diffusive amplitude-and-phase responses to resistivity structure','Fast rays reflecting from every resistive layer','Direct measurements of hydrocarbon saturation'],a:0,e:'CSEM fields diffuse through conductive media. Resistive bodies perturb amplitude and phase, but interpretation requires forward modeling/inversion and is not uniquely hydrocarbon-specific.'},
+
+      {id:'B1',m:'borehole',l:'Undergraduate',b:'Understand',q:'A high natural gamma response in a sedimentary sequence commonly suggests:',c:['Greater clay/shale or radioactive-mineral content','A guaranteed freshwater aquifer','Exact porosity'],a:0,e:'Natural gamma often tracks K, U, and Th associated with shale or certain minerals, but local mineralogy and calibration matter.'},
+      {id:'B2',m:'borehole',l:'Undergraduate',b:'Analyze',q:'Why should a caliper log be reviewed before interpreting other logs?',c:['Borehole enlargement can change tool coupling and apparent log response','Caliper directly measures pore-water salinity','Caliper removes casing'],a:0,e:'Washouts, rugosity, and tool decentralization can create artifacts or degrade contact, especially for pad and acoustic tools.'},
+      {id:'B3',m:'borehole',l:'Graduate',b:'Evaluate',q:'A short NMR T2 component is most defensibly interpreted as:',c:['More restricted or surface-associated water, conditional on lithology and calibration','Exact hydraulic conductivity without calibration','Proof that the borehole is dry'],a:0,e:'T2 distributions reflect pore-scale relaxation and fluids. Surface relaxivity, mineralogy, field strength, and acquisition parameters control petrophysical conversion.'},
+      {id:'B4',m:'borehole',l:'Both',b:'Analyze',q:'Which factor can strongly alter resistivity-log interpretation near a borehole?',c:['Mud properties, invasion, casing, and radial depth of investigation','Map north arrow','Surface gravity latitude correction'],a:0,e:'The borehole environment and invasion zone can differ from the formation; different tools sample different radial volumes and respond differently to casing.'},
+      {id:'B5',m:'borehole',l:'Graduate',b:'Create',q:'What is the strongest workflow for converting logs into formation properties?',c:['Jointly calibrate multiple logs to core, fluid, and borehole-condition data while honoring vertical resolution','Apply one universal cutoff to every well','Interpret each sample independently of tool response'],a:0,e:'Calibration and joint interpretation reduce ambiguity. Tool response, support volume, environmental corrections, uncertainty, and depth matching must be documented.'}
+    ];
+
+    const moduleFilter = document.querySelector('#module-filter');
+    const levelFilter = document.querySelector('#level-filter');
+    const statusFilter = document.querySelector('#status-filter');
+    const container = document.querySelector('#questions');
+    const attempts = new Map();
+
+    moduleFilter.innerHTML = '<option value="All">All modules (45 questions)</option>' +
+      modules.map(([id, name]) => `<option value="${id}">${name}</option>`).join('');
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    }
+
+    function levelMatches(questionLevel, filter) {
+      if (filter === 'All') return true;
+      if (filter === 'Both') return questionLevel === 'Both';
+      return questionLevel === filter || questionLevel === 'Both';
+    }
+
+    function filteredQuestions() {
+      return questions.filter(question => {
+        const moduleOk = moduleFilter.value === 'All' || question.m === moduleFilter.value;
+        const levelOk = levelMatches(question.l, levelFilter.value);
+        const answered = attempts.has(question.id);
+        const statusOk = statusFilter.value === 'All' || (statusFilter.value === 'Answered' ? answered : !answered);
+        return moduleOk && levelOk && statusOk;
+      });
+    }
+
+    function render() {
+      const visible = filteredQuestions();
+      if (!visible.length) {
+        container.innerHTML = '<div class="question empty">No questions match these filters.</div>';
+        updateScore();
+        return;
+      }
+      container.innerHTML = visible.map(question => {
+        const attempt = attempts.get(question.id);
+        const levelClass = question.l === 'Graduate' ? 'graduate' : question.l === 'Both' ? 'both' : '';
+        const options = question.c.map((choice, index) => `
+          <label class="choice" for="${question.id}-${index}">
+            <input type="radio" id="${question.id}-${index}" name="${question.id}" value="${index}" ${attempt?.choice === index ? 'checked' : ''} ${attempt ? 'disabled' : ''}>
+            <span>${escapeHtml(choice)}</span>
+          </label>`).join('');
+        const feedback = attempt ? `<div class="feedback ${attempt.correct ? 'correct' : 'incorrect'}" role="status">
+          <strong>${attempt.correct ? 'Correct.' : 'Not quite.'}</strong> ${escapeHtml(question.e)}
+        </div>` : '';
+        return `<article class="question" id="${question.m}-${question.id.toLowerCase()}">
+          <div class="meta"><span class="tag ${levelClass}">${question.l}</span><span class="tag">Bloom: ${question.b}</span><span class="tag">${question.id}</span></div>
+          <h2>${escapeHtml(question.q)}</h2>
+          <fieldset><legend class="sr-only">Choose one answer for question ${question.id}</legend>${options}</fieldset>
+          <div class="actions"><button type="button" data-check="${question.id}" ${attempt ? 'disabled' : ''}>Check answer</button></div>
+          ${feedback}
+        </article>`;
+      }).join('');
+      updateScore();
+    }
+
+    function updateScore() {
+      const correct = [...attempts.values()].filter(attempt => attempt.correct).length;
+      document.querySelector('#score').textContent = `${correct} correct / ${attempts.size} checked`;
+      document.querySelector('#progress-bar').style.width = `${attempts.size / questions.length * 100}%`;
+    }
+
+    container.addEventListener('click', event => {
+      const button = event.target.closest('[data-check]');
+      if (!button) return;
+      const id = button.dataset.check;
+      const selected = container.querySelector(`input[name="${id}"]:checked`);
+      if (!selected) {
+        button.insertAdjacentHTML('afterend', '<span class="feedback incorrect" role="alert">Choose an answer first.</span>');
+        return;
+      }
+      const question = questions.find(item => item.id === id);
+      const choice = Number(selected.value);
+      attempts.set(id, {choice, correct: choice === question.a});
+      render();
+      document.querySelector(`#${question.m}-${question.id.toLowerCase()}`)?.scrollIntoView({block:'nearest'});
+    });
+
+    [moduleFilter, levelFilter, statusFilter].forEach(control => control.addEventListener('change', render));
+    document.querySelector('#reset').addEventListener('click', () => { attempts.clear(); render(); });
+
+    const hashModule = location.hash.slice(1);
+    if (modules.some(([id]) => id === hashModule)) moduleFilter.value = hashModule;
+    render();
+  </script>
+  <script src="../assets/javascripts/course-app.js"></script>
+</body>
+</html>

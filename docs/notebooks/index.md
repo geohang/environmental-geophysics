@@ -3,7 +3,7 @@
 These Python notebooks run in [Google Colab](https://colab.research.google.com/) with no local installation. Click a **Open in Colab** badge to launch, then run the cells top to bottom. Each notebook mirrors an interactive activity on the site and lets you take the analysis further with real code.
 
 !!! tip "Getting started with Colab"
-    A free Google account is all you need. Colab gives you a Python environment in the browser; the first cell of each notebook installs any geophysics packages it needs (for example `pygimli` or `pyhydrogeophysX`).
+    A free Google account is all you need. Colab gives you a Python environment in the browser. Lightweight notebooks use the libraries already available in Colab; the ERT notebook detects Colab and installs `pygimli` automatically when needed.
 
 ## Available Notebooks
 

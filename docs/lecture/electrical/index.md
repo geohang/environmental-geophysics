@@ -2,6 +2,20 @@
 
 Electrical resistivity spans more orders of magnitude than any other rock property, which makes current-based methods the workhorses of environmental geophysics. This module covers galvanic resistivity surveying (VES and ERT), the passive self-potential (SP) method, and induced polarization (IP).
 
+## Learning Objectives
+
+**Undergraduate Core:** By the end of this module, you will be able to:
+
+- Explain electrolytic conduction and the roles of saturation, salinity, porosity, clay, and temperature.
+- Calculate geometric factors and distinguish true, apparent, and inverted resistivity.
+- Compare Wenner, Schlumberger, and dipole–dipole survey behavior.
+- Distinguish ERT, SP, and IP mechanisms and avoid treating any response as a unique hydrologic property.
+
+??? abstract "Graduate Extension"
+    Examine sensitivity functions, regularization, equivalence, Cole–Cole conventions, and uncertainty in petrophysical conversion from resistivity to water content.
+
+[Practice this module](../../apps/practice-lab.html#electrical){ .md-button }
+
 ## Interactive Lecture
 
 <div class="grid cards" markdown>

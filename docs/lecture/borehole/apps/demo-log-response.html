@@ -11,12 +11,13 @@
 .layerrow { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; }
 select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 6px; }
 </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div class="course-nav-bar">
   <a href="../../../">&#8592; Course Home</a>
   <a href="../">Borehole Geophysics</a>
-  <span class="spacer">SEES:4800 Environmental Geophysics</span>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 <header class="demo-header">
   <h1>Wireline Log Response Explorer</h1>
@@ -117,5 +118,6 @@ function draw(){
 onThemeChange(draw);
 buildUI();draw();
 </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

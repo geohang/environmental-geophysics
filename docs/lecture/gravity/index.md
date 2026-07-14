@@ -2,6 +2,20 @@
 
 Lateral density contrasts in the subsurface produce tiny variations in gravitational acceleration, on the order of parts per million of \(g\). Gravity surveying measures those variations, strips away every predictable effect (instrument drift, tides, latitude, elevation, terrain), and interprets what remains as geology.
 
+## Learning Objectives
+
+**Undergraduate Core:** By the end of this module, you will be able to:
+
+- Relate anomaly sign and amplitude to density contrast and source geometry.
+- Apply drift, latitude, free-air, Bouguer, and terrain corrections with consistent units and signs.
+- Estimate idealized source depth from a half-width measurement.
+- Explain why multiple density models can fit the same gravity anomaly.
+
+??? abstract "Graduate Extension"
+    Evaluate regional–residual separation, parameter trade-offs, equivalent-source behavior, and uncertainty in density-contrast inversion.
+
+[Practice this module](../../apps/practice-lab.html#gravity){ .md-button }
+
 ## Interactive Lecture
 
 <div class="grid cards" markdown>

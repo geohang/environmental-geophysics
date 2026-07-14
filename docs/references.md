@@ -1,6 +1,6 @@
 # References and Further Reading
 
-The course text is Reynolds (2011). The books and papers below extend it: general method references, the electrical and hydrogeophysical literature that several modules draw on, and the open-source software used in the notebooks. Every entry has a DOI or ISBN so you can find it directly. A BibTeX block for all entries is at the bottom of the page.
+The course text is Reynolds (2011). The books, papers, and government reports below extend it: general method references, the electrical and hydrogeophysical literature that several modules draw on, and the open-source software used in the notebooks. Each entry provides a DOI, ISBN, or stable report URL. A BibTeX block for the principal books and papers is at the bottom of the page.
 
 ## Course Textbook
 
@@ -25,6 +25,12 @@ These references connect the geophysical methods to subsurface hydrology, the th
 - Rubin, Y., & Hubbard, S. S. (Eds.). (2005). *Hydrogeophysics*. Springer (Water Science and Technology Library, Vol. 50). ISBN 978-1-4020-3101-4.
 - Binley, A., Hubbard, S. S., Huisman, J. A., Revil, A., Robinson, D. A., Singha, K., & Slater, L. D. (2015). The emergence of hydrogeophysics for improved understanding of subsurface processes over multiple scales. *Water Resources Research*, 51(6), 3837-3866. [doi:10.1002/2015WR017016](https://doi.org/10.1002/2015WR017016)
 - Parsekian, A. D., Singha, K., Minsley, B. J., Holbrook, W. S., & Slater, L. (2015). Multiscale geophysical imaging of the critical zone. *Reviews of Geophysics*, 53(1), 1-26. [doi:10.1002/2014RG000465](https://doi.org/10.1002/2014RG000465)
+
+## Method-Specific Scientific Notes
+
+- Chave, A. D. (2009). On the electromagnetic fields produced by marine frequency domain controlled sources. *Geophysical Journal International*, 179(3), 1429-1457. [doi:10.1111/j.1365-246X.2009.04367.x](https://doi.org/10.1111/j.1365-246X.2009.04367.x)
+- Berger, D. L., Ponce, D. A., & Ross, W. C. (2001). *Hydrogeologic Framework of Antelope Valley and Bedell Flat, Washoe County, West-Central Nevada*. U.S. Geological Survey Water-Resources Investigations Report 01-4220. [doi:10.3133/wri014220](https://doi.org/10.3133/wri014220) ([geophysical-methods section](https://pubs.usgs.gov/wri/wri014220/text/05_geophysical.htm))
+- Hays, W. W. (1976). *Interpretation of Gravity Data*. U.S. Geological Survey Open-File Report 76-479. [doi:10.3133/ofr76479](https://doi.org/10.3133/ofr76479)
 
 ## Software and Computational Tools
 
@@ -127,6 +133,17 @@ Copy any entry into your `.bib` file.
   pages   = {1--26},
   year    = {2015},
   doi     = {10.1002/2014RG000465}
+}
+
+@article{chave2009,
+  author  = {Chave, Alan D.},
+  title   = {On the electromagnetic fields produced by marine frequency domain controlled sources},
+  journal = {Geophysical Journal International},
+  volume  = {179},
+  number  = {3},
+  pages   = {1429--1457},
+  year    = {2009},
+  doi     = {10.1111/j.1365-246X.2009.04367.x}
 }
 
 @article{ruecker2017,

@@ -134,3 +134,97 @@ h3 { color: var(--c-accent); margin: 6px 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; font-size: .85rem; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend .sw { width: 24px; height: 4px; border-radius: 2px; display: inline-block; }
+
+/* Course-wide usability and accessibility helpers. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--c-accent-bright, #f59e0b);
+  outline-offset: 3px;
+}
+
+:where(button, select, input[type="number"], input[type="text"]) {
+  min-height: 44px;
+}
+
+button { touch-action: manipulation; }
+
+table {
+  max-width: 100%;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.learning-objectives,
+.level-card,
+.science-caveat {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 16px 0;
+  background: var(--surface-2);
+}
+
+.learning-objectives h2,
+.level-card h3,
+.science-caveat h3 {
+  margin-top: 0;
+}
+
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  color: var(--c-primary);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.level-badge.graduate { color: var(--c-accent); }
+
+.science-caveat {
+  border-left: 4px solid var(--c-accent);
+  color: var(--text-muted);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 640px) {
+  .course-nav-bar {
+    position: relative;
+    flex-wrap: wrap;
+    gap: .25rem .8rem;
+    padding: .35rem .7rem;
+  }
+
+  .course-nav-bar a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .course-nav-bar .spacer { width: 100%; margin-left: 0; }
+  header.demo-header { padding: 1.6rem .85rem 1.1rem; }
+  header.demo-header h1 { font-size: 1.55rem; }
+  .container { padding: 14px 12px 42px; }
+  .panel { padding: 15px; }
+  .readout { grid-template-columns: 1fr; }
+  .formula { overflow-x: auto; }
+}

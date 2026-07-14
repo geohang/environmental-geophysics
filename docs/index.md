@@ -8,6 +8,8 @@
 
 [🧭 Interactive Course Guide](apps/course-guide.html){ .md-button .md-button--primary }
 [📚 Browse Modules](lecture/index.md){ .md-button }
+[🗺️ Field Missions](apps/field-missions.html){ .md-button }
+[✅ Practice Lab](apps/practice-lab.html){ .md-button }
 
 </div>
 
@@ -95,5 +97,6 @@ Every module page offers four kinds of material:
 | 🧪 Activities | Hands-on exercises with data reduction and interpretation tasks |
 | ⚡ Demos | Quick single-concept tools for building intuition |
 | 🚀 Notebooks and data | Downloadable datasets and Colab-ready Python notebooks |
+| ✅ Practice | Field missions and feedback-rich concept checks for undergraduate and graduate learners |
 
 No installation is needed for the lectures, activities, and demos. The [notebooks](notebooks/index.md) run in Google Colab from any browser.

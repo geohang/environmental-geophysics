@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cole-Cole Model Interactive</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -60,12 +59,13 @@
             border: 1px solid #334155;
         }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 md:p-8">
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -117,7 +117,7 @@
                 <div class="param-card p-4 rounded-lg">
                     <div class="flex justify-between items-start mb-2">
                         <div>
-                            <h2 class="text-lg font-bold text-sky-400">τ (time constant)</h2>
+                            <h2 class="text-lg font-bold text-sky-400">Ï" (time constant)</h2>
                             <p class="text-sm text-slate-300">How fast charge releases (related to grain size)</p>
                         </div>
                         <span class="slider-val-badge" id="val-tau">0.10 s</span>
@@ -171,7 +171,7 @@
                         <svg class="w-4 h-4 mr-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
                         Simulated Rock Fabric
                     </h3>
-                    <p class="text-xs text-slate-500 mb-2">Grains dynamically respond: <strong class="text-sky-400">τ</strong> controls average size. <strong class="text-sky-400">c</strong> controls uniformity.</p>
+                    <p class="text-xs text-slate-500 mb-2">Grains dynamically respond: <strong class="text-sky-400">Ï"</strong> controls average size. <strong class="text-sky-400">c</strong> controls uniformity.</p>
                     <canvas id="rock-canvas" class="absolute bottom-0 right-0 w-full h-[140px] opacity-80"></canvas>
                 </div>
 
@@ -549,5 +549,6 @@
         }, 100);
 
     </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

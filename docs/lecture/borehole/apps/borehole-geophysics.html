@@ -28,14 +28,20 @@
             font-family: 'Public Sans', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            display: flex;
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            grid-template-rows: auto minmax(0, 1fr);
             height: 100vh;
             overflow: hidden;
         }
 
+        #course-nav-bar { grid-column: 1 / -1; grid-row: 1; }
+
         /* Sidebar */
         .sidebar {
             width: 280px;
+            grid-column: 1;
+            grid-row: 2;
             background-color: #0b1121;
             padding: 20px;
             display: flex;
@@ -75,7 +81,11 @@
 
         /* Main Content */
         .main-content {
+            grid-column: 2;
+            grid-row: 2;
             flex-grow: 1;
+            min-width: 0;
+            overflow: auto;
             display: flex;
             flex-direction: column;
             padding: 20px;
@@ -284,13 +294,53 @@
             width: 80px; height: 20px; background: radial-gradient(ellipse at center, rgba(239, 68, 68, 0.8) 0%, rgba(239, 68, 68, 0) 70%);
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0; z-index: 2;
         }
+
+        @media (max-width: 760px) {
+            body {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto auto minmax(0, 1fr);
+                height: auto;
+                min-height: 100vh;
+                overflow: auto;
+            }
+            #course-nav-bar { grid-column: 1; grid-row: 1; }
+            .sidebar {
+                grid-column: 1;
+                grid-row: 2;
+                width: 100%;
+                padding: 12px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+                border-right: 0;
+                border-bottom: 1px solid #334155;
+            }
+            .sidebar h1 { width: 100%; margin: 0 0 6px; padding-bottom: 8px; }
+            .nav-btn { flex: 1 1 145px; margin: 0; padding: 9px 10px; }
+            .main-content {
+                grid-column: 1;
+                grid-row: 3;
+                min-height: 980px;
+                padding: 14px 12px;
+            }
+            .visualization-area {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: repeat(2, minmax(330px, auto));
+                margin-bottom: 82px;
+            }
+            .scene-header h2 { font-size: 24px; }
+            .controls-area { flex-wrap: wrap; }
+            .stage { min-height: 330px; }
+            .explainer-box { width: min(250px, calc(100% - 24px)); }
+        }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -308,6 +358,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
+        <div class="science-caveat"><strong>Interpretation note:</strong> Borehole diameter, fluid or mud properties, casing, invasion, tool centralization, and vertical resolution can alter every response shown here. Logs require calibration and should be interpreted jointly rather than as direct formation-property measurements.</div>
         
         <!-- SCENE 1: Natural Gamma -->
         <div id="scene-gamma" class="scene-container active">
@@ -407,10 +458,10 @@
                             <div class="coil" style="top:20px; background-color:var(--accent-amber);">Source</div>
                             <div class="coil" style="bottom:20px; background-color:var(--accent-blue);">Det.</div>
                         </div>
-                        <div class="water-pore" style="top: 20%; left: 15%;">H₂O</div>
-                        <div class="water-pore" style="top: 60%; left: 25%;">H₂O</div>
-                        <div class="water-pore" style="top: 35%; left: 75%;">H₂O</div>
-                        <div class="water-pore" style="top: 70%; left: 80%;">H₂O</div>
+                    <div class="water-pore" style="top: 20%; left: 15%;">H₂O</div>
+                    <div class="water-pore" style="top: 60%; left: 25%;">H₂O</div>
+                    <div class="water-pore" style="top: 35%; left: 75%;">H₂O</div>
+                    <div class="water-pore" style="top: 70%; left: 80%;">H₂O</div>
                     </div>
                 </div>
                 <div class="stage data-stage">
@@ -467,7 +518,7 @@
         <div id="scene-nmr" class="scene-container">
             <div class="scene-header">
                 <h2>Nuclear Magnetic Resonance (NMR)</h2>
-                <p>Polarizes Hydrogen protons to measure T₂ relaxation, differentiating bound vs. mobile water.</p>
+                <p>Polarizes hydrogen protons to measure T₂ relaxation, differentiating bound vs. mobile water.</p>
             </div>
             <div class="visualization-area">
                 <div class="stage anim-stage">
@@ -486,16 +537,16 @@
                     </div>
                 </div>
                 <div class="stage data-stage">
-                    <div class="stage-title">Example Data: T₂ Distribution</div>
+                        <div class="stage-title">Example Data: T₂ Distribution</div>
                     <div class="stage-content">
                         <canvas id="nmrCanvas"></canvas>
                     </div>
                 </div>
             </div>
             <div class="controls-area">
-                <button class="control-btn secondary" onclick="nmrStep1()"><i class="fa-solid fa-magnet"></i> 1. B₀ Field (Align)</button>
+                        <button class="control-btn secondary" onclick="nmrStep1()"><i class="fa-solid fa-magnet"></i> 1. B₀ Field (Align)</button>
                 <button class="control-btn" style="background-color: var(--accent-red);" onclick="nmrStep2()"><i class="fa-solid fa-wave-square"></i> 2. RF Pulse (90° Tip)</button>
-                <button class="control-btn accent" onclick="nmrStep3()"><i class="fa-solid fa-stopwatch"></i> 3. Measure T₂ Relaxation</button>
+                        <button class="control-btn accent" onclick="nmrStep3()"><i class="fa-solid fa-stopwatch"></i> 3. Measure T₂ Relaxation</button>
             </div>
         </div>
 
@@ -597,7 +648,8 @@
         // === Navigation & Init ===
         function switchScene(sceneId) {
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            const activeButton = document.querySelector(`.nav-btn[onclick*="'${sceneId}'"]`);
+            if (activeButton) activeButton.classList.add('active');
             
             document.querySelectorAll('.scene-container').forEach(scene => scene.classList.remove('active'));
             document.getElementById('scene-' + sceneId).classList.add('active');
@@ -617,7 +669,6 @@
         window.onload = () => {
             initNMRGrid();
             switchScene('gamma');
-            document.querySelector('.nav-btn').classList.add('active');
         };
 
         // === 1. Gamma Logic ===
@@ -978,5 +1029,6 @@
         }
 
     </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

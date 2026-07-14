@@ -313,13 +313,25 @@
         .step-3 .dynamic-eddy-arrow { opacity: 1; transition-delay: 0s; }
         .step-3 .reveal-rect { width: 1200px; }
         .step-3 .label-s { opacity: 1; transition-delay: 1.5s; }
+        @media (max-width: 760px) {
+            body { padding: 12px; align-items: stretch; }
+            .header { align-items: flex-start; }
+            .header h1 { font-size: 24px; }
+            .main-container { flex-direction: column; height: auto; min-height: 0; }
+            .animation-panel, .sidebar { width: 100%; flex: none; }
+            .stepper { overflow-x: auto; }
+            .step-tab { min-width: 130px; }
+            .animation-board { min-height: 430px; }
+            .panel { padding: 18px; }
+        }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -577,5 +589,6 @@
         updateUI();
         updatePhysics();
     </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

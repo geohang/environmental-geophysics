@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive 1D EM Forward Modeling</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; }
         .slider-label { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 1.1rem; font-weight: 500; color: #cbd5e1; }
@@ -51,20 +51,21 @@
         .panel { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; padding: 1.25rem; }
         .control-card { background-color: rgba(15, 23, 42, 0.4); border: 1px solid #475569; padding: 1.25rem; border-radius: 0.5rem; margin-bottom: 1.5rem; }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body class="p-4 md:p-6 h-screen flex flex-col gap-4">
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
     <!-- Header -->
     <header class="flex justify-between items-center mb-2">
         <div>
-            <h1 class="text-2xl font-bold text-blue-400">1D Electromagnetic (EM) Forward Modeler</h1>
-            <p class="text-sm text-slate-400">Educational simulator for Time Domain (TEM) & Frequency Domain (FDEM) over a 2-Layer Earth</p>
+            <h1 class="text-2xl font-bold text-blue-400">1D Electromagnetic (EM) Response Explorer</h1>
+            <p class="text-sm text-slate-400">Qualitative Time Domain (TEM) and Frequency Domain (FDEM) trends over a two-layer Earth</p>
         </div>
         <div class="flex gap-2">
             <div class="flex items-center gap-2 text-xs">
@@ -75,6 +76,8 @@
             </div>
         </div>
     </header>
+
+    <div class="science-caveat"><strong>Teaching proxy:</strong> The curves use skin-depth weighting and half-space decay approximations, not a full Maxwell-equation layered-earth solver. Use them to study trends, not to predict instrument voltages or inversion-ready apparent resistivity.</div>
 
     <!-- Main Content -->
     <div class="flex-grow grid grid-cols-1 lg:grid-cols-4 gap-4 overflow-hidden">
@@ -126,7 +129,7 @@
             <div class="control-card bg-slate-800/80 border-orange-700/50">
                 <h3 class="text-lg font-semibold text-orange-400 mb-4 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-orange-500"></div> TEM Settings</h3>
                 <button id="play-tem" class="w-full bg-orange-600 hover:bg-orange-500 text-white text-lg font-bold py-4 px-4 rounded-xl shadow-lg transition-all transform active:scale-95 mb-3">
-                    ▶ Play "Smoke Ring"
+                        ▶ Play "Smoke Ring"
                 </button>
                 <p class="text-sm text-slate-400">Watch the diffusion of the EM field over time.</p>
             </div>
@@ -552,5 +555,6 @@
     }, 100);
 
 </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

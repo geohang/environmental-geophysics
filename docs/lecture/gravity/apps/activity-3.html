@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Gravity Geometry: Subsurface Depth Detective</title>
     <script>
@@ -8,7 +9,7 @@
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } 
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
             --bg: #0f172a;
@@ -70,12 +71,13 @@
             margin-left: 10px;
         }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -133,10 +135,10 @@
                 <text x="115" y="60" fill="#94a3b8" font-size="10">Plug</text>
             </svg>
             <div class="formula-box">
-                <strong>Anomaly (Finite Rod):</strong>
-                $$ 2 \pi G \delta \rho (L + s_1 - s_2) $$
+                <strong>Model requirement:</strong><br>
+                A finite vertical cylinder response depends on radius and the depths to both its top and base. Use a complete forward model when amplitude matters.
             </div>
-            <p style="text-align:center; font-weight:bold; margin-top:10px;">Depth Rule:<br> $z \approx 1.732 \cdot x_{1/2}$</p>
+            <p style="text-align:center; font-weight:bold; margin-top:10px;">Teaching approximation:<br> $z_{top} \approx 1.732\,x_{1/2}$ for an idealized semi-infinite vertical cylinder.</p>
         </div>
 
     </div>
@@ -180,7 +182,7 @@
             <select id="inpShape">
                 <option value="1.0">Horizontal Cylinder (Multiplier: 1.0)</option>
                 <option value="1.305">Sphere (Multiplier: 1.305)</option>
-                <option value="1.732">Vertical Cylinder (Multiplier: 1.732)</option>
+                <option value="1.732">Idealized Vertical Cylinder (depth to top; ×1.732)</option>
             </select>
         </div>
         <div class="input-group" style="border: 1px solid var(--accent);">
@@ -406,5 +408,6 @@
 
 </script>
 
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

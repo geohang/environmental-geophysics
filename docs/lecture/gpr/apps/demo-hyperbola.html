@@ -7,13 +7,14 @@
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div class="course-nav-bar">
   <a href="../../../">&#8592; Course Home</a>
   <a href="../">Ground-Penetrating Radar</a>
-  <span class="spacer">SEES:4800 Environmental Geophysics</span>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 <header class="demo-header">
   <h1>GPR Hyperbola Velocity Estimator</h1>
@@ -35,7 +36,7 @@
       <div class="stat" id="s3"><div class="v" id="depthout">–</div><div class="l">target depth (m)</div></div>
     </div>
     <div class="formula" id="fbox">
-      Two-way time along the hyperbola: $t(x)=\dfrac{2\sqrt{d^2+(x-x_0)^2}}{v}$. Relative permittivity from velocity: $\varepsilon_r=\left(\dfrac{c}{v}\right)^2$ with $c=0.30$ m/ns. A good fit means your curve matches the recorded hyperbola.
+      Two-way time along the hyperbola: $t(x)=\dfrac{2\sqrt{d^2+(x-x_0)^2}}{v}$. Relative permittivity from velocity: $\varepsilon_r=\left(\dfrac{c}{v}\right)^2$ with $c=0.30$ m/ns. This fit assumes constant velocity, a point-like target, zero time offset, and negligible antenna separation.
     </div>
     <button id="reveal" class="btn" style="margin-top:14px;">Reveal true velocity</button>
     <span id="truth" style="margin-left:12px;color:var(--text-muted);"></span>
@@ -103,5 +104,6 @@ document.getElementById('reveal').addEventListener('click',()=>{
 onThemeChange(drawGPR);
 drawGPR();
 </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

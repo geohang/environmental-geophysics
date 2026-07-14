@@ -2,6 +2,20 @@
 
 Geophysics lets us image the subsurface without digging: every method measures a physical field at the surface and infers what property contrasts below could produce it. The central skill of this module is matching the right method to the right problem, because target depth, target size, and property contrast decide what is detectable.
 
+## Learning Objectives
+
+**Undergraduate Core:** By the end of this module, you will be able to:
+
+- Match a subsurface target to the physical property contrast a method senses.
+- Explain the trade-off among depth of investigation, resolution, and signal-to-noise ratio.
+- Propose a defensible first-pass survey method and spacing for a stated target.
+- Distinguish measured data, an inverted physical-property model, and a geological interpretation.
+
+??? abstract "Graduate Extension"
+    Analyze method selection as a non-unique decision problem: compare sensitivity, expected data error, prior information, and the value of collecting complementary data.
+
+[Practice this module](../../apps/practice-lab.html#intro){ .md-button }
+
 ## Interactive Lecture
 
 <div class="grid cards" markdown>

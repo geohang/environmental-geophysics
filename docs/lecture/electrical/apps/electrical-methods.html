@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How Do Rocks Conduct Electricity?</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
@@ -41,12 +41,13 @@
             border-color: white;
         }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body class="text-slate-300 antialiased min-h-screen p-6 md:p-12">
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -72,7 +73,7 @@
                             <!-- Toggle -->
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
                                 <input type="checkbox" id="toggle-elec" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
-                                <label for="toggle-elec" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                                <label for="toggle-elec" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
                             </div>
                         </div>
                         <p class="text-sm text-slate-400">Notice how the large, slow <span class="text-red-400 font-bold">positive (+)</span> and <span class="text-blue-400 font-bold">negative (-)</span> ions migrate through the fluid-filled pores.</p>
@@ -96,7 +97,7 @@
                             <span class="font-semibold text-white">Apply Electric Field</span>
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
                                 <input type="checkbox" id="toggle-electronic" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
-                                <label for="toggle-electronic" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                                <label for="toggle-electronic" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
                             </div>
                         </div>
                         <p class="text-sm text-slate-400">Tiny <span class="text-yellow-400 font-bold">electrons (e⁻)</span> zip rapidly through a continuous solid vein of conductive mineral.</p>
@@ -120,7 +121,7 @@
                             <span class="font-semibold text-white">Apply Electric Field</span>
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
                                 <input type="checkbox" id="toggle-dielectric" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
-                                <label for="toggle-dielectric" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                                <label for="toggle-dielectric" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
                             </div>
                         </div>
                         <p class="text-sm text-slate-400">Charges do not flow continuously. Instead, molecules <span class="text-[#38bdf8] font-bold">polarize</span> (stretch and align) in response to the field.</p>
@@ -163,7 +164,7 @@
             ctx.font = 'bold 32px Inter, sans-serif';
             ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
             ctx.textAlign = 'center';
-            ctx.fillText('Electric Field (E) ➔', CANVAS_WIDTH / 2, 40);
+                ctx.fillText('Electric Field (E) →', CANVAS_WIDTH / 2, 40);
             ctx.restore();
         }
 
@@ -423,5 +424,6 @@
         };
 
     </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

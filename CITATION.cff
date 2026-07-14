@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use these course materials or interactive tools, please cite them as below."
+title: "Environmental Geophysics: Open Course Materials and Interactive Labs"
+type: software
+authors:
+  - family-names: Chen
+    given-names: Hang
+    affiliation: "University of Iowa"
+repository-code: "https://github.com/geohang/environmental-geophysics"
+url: "https://geohang.github.io/environmental-geophysics/"
+license: MIT
+version: 1.0.0
+date-released: 2026-07-14
+keywords:
+  - environmental geophysics
+  - near-surface geophysics
+  - hydrogeophysics
+  - open educational resources
+  - interactive learning

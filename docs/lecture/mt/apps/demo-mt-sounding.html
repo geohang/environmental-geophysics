@@ -7,13 +7,14 @@
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div class="course-nav-bar">
   <a href="../../../">&#8592; Course Home</a>
   <a href="../">Magnetotellurics</a>
-  <span class="spacer">SEES:4800 Environmental Geophysics</span>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 <header class="demo-header">
   <h1>1D Magnetotelluric Sounding Explorer</h1>
@@ -37,7 +38,7 @@
       <div class="ctrl"><label style="visibility:hidden">.</label></div>
     </div>
     <div class="formula">
-      Apparent resistivity $\rho_a=\dfrac{1}{\omega\mu_0}|Z|^2$ and phase $\phi=\arg Z$, where the surface impedance $Z$ comes from the layered-earth recursion. A phase above 45° means resistivity decreasing with depth; below 45° means increasing.
+      Apparent resistivity $\rho_a=\dfrac{1}{\omega\mu_0}|Z|^2$ and phase $\phi=\arg Z$, where the surface impedance $Z$ comes from the layered-earth recursion. For a 1D, isotropic Earth with this sign convention, phase above 45° commonly indicates decreasing resistivity with depth over the sampled interval; below 45° commonly indicates increasing resistivity.
     </div>
   </div>
 </div>
@@ -120,5 +121,6 @@ onThemeChange(draw);
 draw();
 if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();
 </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

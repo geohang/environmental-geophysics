@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Environmental Geophysics Field Missions</title>
+<link rel="stylesheet" href="../assets/stylesheets/demo.css">
+<link rel="stylesheet" href="../assets/stylesheets/course-app.css">
+<style>
+.mission-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.mission-card { text-align:left; border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:12px; padding:16px; cursor:pointer; }
+.mission-card:hover,.mission-card.active { border-color:var(--c-primary); transform:translateY(-2px); }
+.mission-card strong { display:block; color:var(--c-primary); font-size:1rem; }
+.mission-card span { display:block; color:var(--text-muted); margin-top:4px; font-size:.85rem; }
+.brief { display:grid; grid-template-columns:1.2fr .8fr; gap:18px; }
+.brief dl { display:grid; grid-template-columns:max-content 1fr; gap:6px 12px; margin:0; }
+.brief dt { color:var(--text-muted); font-weight:700; }
+.brief dd { margin:0; }
+.synthetic { display:inline-flex; padding:4px 9px; border-radius:999px; background:var(--c-accent); color:#111827; font-weight:800; font-size:.72rem; letter-spacing:.05em; }
+.step { border-top:1px solid var(--border); padding-top:18px; margin-top:18px; }
+.choices { display:grid; gap:9px; margin-top:10px; }
+.choice { display:flex; align-items:flex-start; gap:9px; border:1px solid var(--border); border-radius:9px; padding:10px 12px; background:var(--surface-2); }
+.choice input { margin-top:5px; }
+.feedback { min-height:28px; margin-top:10px; font-weight:650; }
+.feedback.good { color:var(--c-success); }.feedback.bad { color:var(--c-danger); }
+.data-view { min-height:230px; border:1px solid var(--border); border-radius:12px; padding:16px; background:var(--canvas-bg); }
+.profile { position:relative; height:150px; margin-top:16px; border-left:2px solid var(--text-muted); border-bottom:2px solid var(--text-muted); overflow:hidden; }
+.profile svg { width:100%; height:100%; }
+.score { font-size:1.2rem; font-weight:800; color:var(--c-primary); }
+@media(max-width:720px){.mission-grid,.brief{grid-template-columns:1fr}.mission-card{min-height:88px}}
+</style>
+</head>
+<body>
+<div class="course-nav-bar">
+  <a href="../">← Course Home</a><a href="../lecture/">Modules</a><a href="practice-lab.html">Practice Lab</a>
+  <span class="spacer">Environmental Geophysics · Field Missions</span>
+</div>
+<header class="demo-header">
+  <span class="synthetic">SYNTHETIC TEACHING CASES</span>
+  <h1>Field Missions</h1>
+  <div class="subtitle">Choose methods, predict signals, inspect simplified data, and defend an interpretation. Every case is fictional but physically plausible.</div>
+</header>
+<main class="container">
+  <section class="panel" aria-labelledby="choose-title">
+    <h2 id="choose-title">Choose an investigation</h2>
+    <div class="mission-grid" id="mission-grid"></div>
+  </section>
+
+  <section class="panel" id="workspace" aria-live="polite">
+    <div class="brief">
+      <div><span class="synthetic">SYNTHETIC</span><h2 id="mission-title"></h2><p id="mission-story"></p></div>
+      <dl><dt>Target</dt><dd id="mission-target"></dd><dt>Constraint</dt><dd id="mission-constraint"></dd><dt>Deliverable</dt><dd id="mission-deliverable"></dd></dl>
+    </div>
+
+    <div class="step"><h3>1 · Choose the method pair</h3><div class="choices" id="method-choices"></div><button class="btn" data-check="method">Check choice</button><div class="feedback" id="method-feedback"></div></div>
+    <div class="step"><h3>2 · Predict the diagnostic response</h3><div class="choices" id="signal-choices"></div><button class="btn" data-check="signal">Check prediction</button><div class="feedback" id="signal-feedback"></div></div>
+    <div class="step"><h3>3 · Inspect the simplified data</h3><div class="data-view"><strong id="data-title"></strong><p id="data-note"></p><div class="profile" id="profile" role="img"></div></div></div>
+    <div class="step"><h3>4 · Select the defensible conclusion</h3><div class="choices" id="interpretation-choices"></div><button class="btn" data-check="interpretation">Check interpretation</button><div class="feedback" id="interpretation-feedback"></div></div>
+    <div class="step"><span class="score" id="score">Mission score: 0 / 3</span><p class="hint">A strong interpretation states both what the data support and what remains ambiguous.</p></div>
+  </section>
+</main>
+
+<script>
+const missions=[
+ {id:'valley',title:'Iowa Buried-Valley Aquifer',tag:'Map bedrock relief beneath till',story:'A county needs a reconnaissance map of a sediment-filled valley before siting monitoring wells. Existing wells are sparse and the water chemistry is spatially variable.',target:'Depth to competent bedrock and valley geometry',constraint:'Fast coverage first; electrical properties may vary with clay and water quality',deliverable:'A valley-axis map and ranked drilling targets',methods:['Seismic refraction + TEM','Microgravity + GPR','SP + borehole NMR'],method:0,signals:['A deeper bedrock refractor together with a changing late-time TEM response','A single universal resistivity value that proves clean sand','No lateral change because saturated sediment is invisible'],signal:0,interpretations:['The coincident anomalies support a buried valley, but lithology and water quality still require calibration wells.','The TEM response alone proves potable groundwater.','The seismic velocity uniquely identifies hydraulic conductivity.'],interpretation:0,dataTitle:'Coincident profile',dataNote:'The bedrock refractor deepens between 200 and 520 m. Late-time TEM response also changes across that interval, but the sign is not converted directly to lithology.',path:'M10,115 C120,110 180,108 240,70 C320,35 410,40 500,78 C570,108 650,112 760,115',color:'#0ea5e9'},
+ {id:'dam',title:'Dam Seepage Triage',tag:'Locate active flow paths',story:'Wet spots appeared downstream of an earth dam after a high-water season. The team must distinguish focused seepage from shallow surface drainage.',target:'Active seepage pathway and conductive alteration zone',constraint:'Noninvasive survey; metallic infrastructure near the crest',deliverable:'Priority zones for piezometers and repair',methods:['SP + ERT','Gravity + MT','GPR + regional magnetics'],method:0,signals:['A repeatable SP anomaly aligned with a resistivity feature and hydraulic gradient','Any negative SP value proves a leak','A gravity high that moves when reservoir level changes'],signal:0,interpretations:['The aligned, repeatable anomalies identify a seepage candidate; polarity, rainfall, electrodes, and infrastructure must be checked.','SP alone gives the seepage discharge rate.','A conductive ERT zone can only be flowing water.'],interpretation:0,dataTitle:'Downstream profile',dataNote:'A localized SP minimum coincides with a low-resistivity zone. Repeat lines reproduce the location, while amplitude varies with reservoir level.',path:'M10,105 C130,104 210,101 285,92 C335,55 385,55 435,92 C520,103 650,105 760,104',color:'#f59e0b'},
+ {id:'critical',title:'Critical-Zone Bedrock',tag:'Image weathering architecture',story:'A hillslope observatory needs the depth and continuity of weathered bedrock before installing sensors for a recharge experiment.',target:'Soil–saprolite–fractured-rock architecture',constraint:'Strong topography and laterally variable saturation',deliverable:'A conceptual model with uncertainty bounds',methods:['Seismic refraction + ERT','Borehole gamma only','Marine CSEM + gravity'],method:0,signals:['A velocity increase with depth plus complementary resistivity structure','One sharp boundary in every method at exactly the same depth','Low resistivity that uniquely measures porosity'],signal:0,interpretations:['Joint structure supports weathering zones, but velocity and resistivity must be calibrated and may not share identical boundaries.','The two inversions prove a unique three-layer geology.','The deepest colored pixels are fully resolved.'],interpretation:0,dataTitle:'Hillslope section',dataNote:'Velocity gradients and resistivity contrasts broadly agree on a thick midslope weathered zone; resolution decreases with depth and at profile ends.',path:'M10,90 C120,82 220,70 320,45 C420,52 520,82 620,100 C680,105 720,108 760,110',color:'#10b981'},
+ {id:'plume',title:'Plume and Utility Corridor',tag:'Separate environmental and cultural targets',story:'A former maintenance yard may contain a conductive plume, but maps also show uncertain steel and plastic utility lines.',target:'Plume footprint plus utility locations',constraint:'Strong cultural noise and uncertain fluid conductivity',deliverable:'Safe drilling map and follow-up sampling plan',methods:['Magnetics + ERT','MT + gravity','SP + seismic reflection only'],method:0,signals:['Narrow magnetic lineaments for steel utilities and a broader resistivity anomaly for the plume candidate','Every conductive anomaly is contamination','Plastic pipe produces a strong magnetic dipole'],signal:0,interpretations:['Use magnetics to flag steel infrastructure and ERT to map a plume candidate; confirm chemistry with samples and utility records.','The ERT image identifies contaminant concentration without calibration.','No magnetic anomaly means no utility is present.'],interpretation:0,dataTitle:'Yard transect',dataNote:'Two narrow magnetic peaks mark likely ferrous utilities. A broader low-resistivity zone extends between them but remains non-unique without groundwater sampling.',path:'M10,112 L160,110 L190,30 L218,112 L470,106 L505,42 L535,110 L760,112',color:'#ef4444'}
+];
+let current=missions[0],answered={};
+const grid=document.getElementById('mission-grid');
+function choiceMarkup(kind,items){return items.map((x,i)=>`<label class="choice"><input type="radio" name="${kind}" value="${i}"><span>${x}</span></label>`).join('');}
+function renderMission(id){current=missions.find(m=>m.id===id);answered={};document.querySelectorAll('.mission-card').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+ document.getElementById('mission-title').textContent=current.title;document.getElementById('mission-story').textContent=current.story;document.getElementById('mission-target').textContent=current.target;document.getElementById('mission-constraint').textContent=current.constraint;document.getElementById('mission-deliverable').textContent=current.deliverable;
+ ['method','signal','interpretation'].forEach(k=>{document.getElementById(`${k}-choices`).innerHTML=choiceMarkup(k,current[k+'s']);document.getElementById(`${k}-feedback`).textContent='';document.getElementById(`${k}-feedback`).className='feedback';});
+ document.getElementById('data-title').textContent=current.dataTitle;document.getElementById('data-note').textContent=current.dataNote;const profile=document.getElementById('profile');profile.setAttribute('aria-label',current.dataNote);profile.innerHTML=`<svg viewBox="0 0 770 140" preserveAspectRatio="none" aria-hidden="true"><path d="${current.path}" fill="none" stroke="${current.color}" stroke-width="5"/><path d="M10 118 L760 118" stroke="currentColor" opacity=".25"/></svg>`;updateScore();location.hash=id;
+}
+function check(kind){const selected=document.querySelector(`input[name="${kind}"]:checked`);const fb=document.getElementById(`${kind}-feedback`);if(!selected){fb.textContent='Choose an answer first.';fb.className='feedback bad';return;}const ok=Number(selected.value)===current[kind];answered[kind]=ok;fb.textContent=ok?'Good decision. The response is diagnostic only when its assumptions and alternative causes are stated.':`Reconsider the target property and non-uniqueness. Best answer: ${current[kind+'s'][current[kind]]}`;fb.className=`feedback ${ok?'good':'bad'}`;updateScore();}
+function updateScore(){document.getElementById('score').textContent=`Mission score: ${Object.values(answered).filter(Boolean).length} / 3`;}
+missions.forEach(m=>{const b=document.createElement('button');b.className='mission-card';b.dataset.id=m.id;b.innerHTML=`<strong>${m.title}</strong><span>${m.tag}</span>`;b.addEventListener('click',()=>renderMission(m.id));grid.appendChild(b);});
+document.querySelectorAll('[data-check]').forEach(b=>b.addEventListener('click',()=>check(b.dataset.check)));
+renderMission(missions.some(m=>m.id===location.hash.slice(1))?location.hash.slice(1):missions[0].id);
+</script>
+<script src="../assets/javascripts/course-app.js"></script>
+</body>
+</html>

@@ -2,6 +2,20 @@
 
 Seismic waves travel at speeds set by the elastic moduli and density of the material they cross, so travel times carry structural information. Near-surface work leans on the refraction method: head waves from faster layers below overtake direct arrivals and reveal layer depths and velocities.
 
+## Learning Objectives
+
+**Undergraduate Core:** By the end of this module, you will be able to:
+
+- Relate stress, strain, elastic moduli, density, and P- and S-wave velocity.
+- Read slopes, intercept time, and crossover distance from a refraction travel-time plot.
+- Recover a two-layer velocity model and interface depth under the planar-layer assumption.
+- Recognize low-velocity-layer blindness, lateral variation, and first-break picking uncertainty.
+
+??? abstract "Graduate Extension"
+    Compare intercept-time interpretation with refraction tomography, reciprocal acquisition, regularization, resolution, and uncertainty analysis.
+
+[Practice this module](../../apps/practice-lab.html#seismic){ .md-button }
+
 ## Topic Apps
 
 <div class="grid cards" markdown>

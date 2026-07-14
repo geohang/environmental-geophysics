@@ -7,12 +7,12 @@
 <link rel="stylesheet" href="../assets/stylesheets/demo.css">
 <script src="../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
 <style>
 .lead { max-width: 820px; margin: 0 auto 8px; }
 .section-tag { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-accent); }
 .cards3 { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 14px; }
-@media(min-width: 760px){ .cards3 { grid-template-columns: repeat(3, 1fr); } }
+@media(min-width: 760px){ .cards3 { grid-template-columns: repeat(2, 1fr); } }
 .mini { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
 .mini h4 { margin: 0 0 6px; color: var(--c-primary); font-size: 1.05rem; }
 .mini p { margin: 0; color: var(--text-muted); font-size: .92rem; }
@@ -33,7 +33,17 @@
 .step.hydro { border-top: 3px solid #0284c7; } .step.petro { border-top: 3px solid #d97706; }
 .step.fwd { border-top: 3px solid #0d9488; } .step.inv { border-top: 3px solid #7c3aed; }
 .step.out { border-top: 3px solid #059669; }
+.step.data { border-top: 3px solid #db2777; } .step.property { border-top: 3px solid #475569; }
 .flow .arrow { align-self: center; color: var(--text-muted); font-size: 1.4rem; flex: 0 0 auto; }
+.workflow-lane { margin-top: 18px; }
+.workflow-lane h3 { margin: 0 0 8px; font-size: 1rem; color: var(--text); }
+.workflow-lane h3 span { color: var(--text-muted); font-weight: 500; }
+.workflow-check { margin: 12px 0 2px; padding: 11px 14px; border: 1px dashed var(--c-primary); border-radius: 10px; background: var(--c-primary-soft); color: var(--text); font-size: .88rem; }
+.workflow-check strong { color: var(--c-primary); }
+@media(max-width: 620px){
+  .workflow-lane .flow { display: grid; grid-template-columns: 1fr; }
+  .workflow-lane .flow .arrow { justify-self: center; transform: rotate(90deg); line-height: 1; }
+}
 .explore { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 6px; }
 @media(min-width: 720px){ .explore { grid-template-columns: repeat(2, 1fr); } }
 .xcard { display: block; text-decoration: none; color: inherit; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; transition: transform .15s, border-color .15s; }
@@ -42,11 +52,12 @@
 .xcard span { color: var(--text-muted); font-size: .88rem; }
 h2.sec { font-size: 1.6rem; margin: 6px 0 4px; }
 </style>
+<link rel="stylesheet" href="../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div class="course-nav-bar">
   <a href="../">&#8592; Course Home</a>
-  <span class="spacer">SEES:4800 Environmental Geophysics</span>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 <header class="demo-header">
   <div class="section-tag">SEES:4800 · Interactive Guide</div>
@@ -64,7 +75,7 @@ h2.sec { font-size: 1.6rem; margin: 6px 0 4px; }
     <div class="cards3">
       <div class="mini"><h4>Density &amp; magnetism</h4><p>Gravity and magnetic surveys map mass and magnetic mineral contrasts: basins, bedrock, buried structure.</p></div>
       <div class="mini"><h4>Seismic velocity</h4><p>Refraction and surface waves track stiffness, which rises from loose soil to weathered rock to fresh bedrock.</p></div>
-      <div class="mini"><h4>Electrical resistivity</h4><p>ERT, SP, and IP respond to pore water and clay: the most direct window on subsurface moisture.</p></div>
+      <div class="mini"><h4>Electrical properties</h4><p>ERT, SP, and IP respond to pore fluids, clay, salinity, and interfaces. They are powerful but non-unique indicators of hydrologic conditions.</p></div>
       <div class="mini"><h4>Electromagnetic fields</h4><p>GPR, FDEM, TEM, and MT sense conductivity and dielectric contrasts from centimetres to kilometres deep.</p></div>
     </div>
   </div>
@@ -73,7 +84,7 @@ h2.sec { font-size: 1.6rem; margin: 6px 0 4px; }
   <div class="panel">
     <div class="section-tag">The bridge</div>
     <h2 class="sec">From resistivity to water content</h2>
-    <p style="color:var(--text-muted);max-width:820px;">Geophysics measures a physical property; hydrology wants water. Archie's law is the bridge that connects them, and it is the heart of the petrophysics in <a href="https://github.com/geohang/PyHydroGeophysX">PyHydroGeophysX</a>. Move the sliders and watch how drier ground becomes more resistive, exactly the signal a time-lapse ERT survey tracks.</p>
+    <p style="color:var(--text-muted);max-width:820px;">Geophysics measures a physical property; hydrology wants water. Archie's law is one bridge between them and is implemented in <a href="https://github.com/geohang/PyHydroGeophysX">PyHydroGeophysX</a>. Move the sliders to isolate the modeled saturation effect.</p>
     <div class="split">
       <div><canvas id="archie" width="640" height="360"></canvas></div>
       <div>
@@ -86,7 +97,7 @@ h2.sec { font-size: 1.6rem; margin: 6px 0 4px; }
           <div class="stat"><div class="v" id="rho">–</div><div class="l">bulk resistivity (Ω·m)</div></div>
           <div class="stat"><div class="v" id="ff">–</div><div class="l">formation factor F</div></div>
         </div>
-        <div class="formula" id="fbox">Archie's law: $\rho = a\,\rho_w\,\phi^{-m}\,S_w^{-n}$ &nbsp;(here $a=1,\ m=2,\ n=2$). PyHydroGeophysX inverts field ERT and runs this in reverse to estimate $S_w$.</div>
+        <div class="formula" id="fbox">Archie's law: $\rho = a\,\rho_w\,\phi^{-m}\,S_w^{-n}$ &nbsp;(here $a=1,\ m=2,\ n=2$). Estimating $S_w$ from field ERT requires site calibration and independent constraints on porosity, pore-water resistivity, temperature, and clay effects.</div>
       </div>
     </div>
   </div>
@@ -104,20 +115,39 @@ h2.sec { font-size: 1.6rem; margin: 6px 0 4px; }
   <!-- WORKFLOW -->
   <div class="panel">
     <div class="section-tag">The computational spine</div>
-    <h2 class="sec">The PyHydroGeophysX workflow</h2>
-    <p style="color:var(--text-muted);max-width:820px;">The through-line of this course is not one method, it is the chain that turns hydrology into geophysics and back. <a href="https://github.com/geohang/PyHydroGeophysX">PyHydroGeophysX</a> automates every box below.</p>
-    <div class="flow">
-      <div class="step hydro"><div class="k">Input</div><div class="t">Hydrological model</div><div class="d">MODFLOW / ParFlow water content and saturation</div></div>
-      <div class="arrow">→</div>
-      <div class="step petro"><div class="k">Bridge</div><div class="t">Petrophysics</div><div class="d">Archie, Waxman-Smits, rock-physics velocity</div></div>
-      <div class="arrow">→</div>
-      <div class="step fwd"><div class="k">Simulate</div><div class="t">Forward modeling</div><div class="d">ERT · seismic · EM synthetic response</div></div>
-      <div class="arrow">→</div>
-      <div class="step inv"><div class="k">Recover</div><div class="t">Inversion</div><div class="d">single, time-lapse, structure-constrained, joint</div></div>
-      <div class="arrow">→</div>
-      <div class="step out"><div class="k">Output</div><div class="t">Water content</div><div class="d">estimated moisture, compared with field data</div></div>
+    <h2 class="sec">Two linked PyHydroGeophysX pathways</h2>
+    <p style="color:var(--text-muted);max-width:900px;">Hydrology-to-geophysics prediction and data-to-model estimation answer different questions. <a href="https://github.com/geohang/PyHydroGeophysX">PyHydroGeophysX</a> provides components for both pathways; site calibration, uncertainty analysis, and independent validation remain essential.</p>
+
+    <div class="workflow-lane" aria-label="Forward prediction pathway">
+      <h3>Prediction <span>— What geophysical data should this hydrologic state produce?</span></h3>
+      <div class="flow">
+        <div class="step hydro"><div class="k">State or prior</div><div class="t">Hydrologic model</div><div class="d">MODFLOW / ParFlow saturation, water content, and supporting site information</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step petro"><div class="k">Calibrated bridge</div><div class="t">Petrophysics</div><div class="d">Map hydrologic variables to resistivity, conductivity, or seismic velocity</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step property"><div class="k">Subsurface model</div><div class="t">Geophysical properties</div><div class="d">Spatial property model on a survey-compatible mesh</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step fwd"><div class="k">Prediction</div><div class="t">Forward modeling</div><div class="d">Synthetic ERT, SRT, TDEM, or FDEM observables</div></div>
+      </div>
     </div>
-    <div class="note">This is real research code, used for watershed monitoring and critical-zone studies. The <a href="../notebooks/">Notebooks</a> page runs these steps in Google Colab.</div>
+
+    <div class="workflow-check"><strong>Model–data check:</strong> Compare predicted observables with field measurements and their errors. Misfit can reflect the hydrologic state, petrophysical parameters, survey physics, or model structure—not just water content.</div>
+
+    <div class="workflow-lane" aria-label="Inverse estimation pathway">
+      <h3>Estimation <span>— Which property models are consistent with the observations?</span></h3>
+      <div class="flow">
+        <div class="step data"><div class="k">Input</div><div class="t">Observed geophysical data</div><div class="d">Quality-controlled measurements, geometry, errors, and prior constraints</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step inv"><div class="k">Estimation</div><div class="t">Geophysical inversion</div><div class="d">Single, time-lapse, structure-constrained, or joint inversion</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step property"><div class="k">Primary result</div><div class="t">Property model</div><div class="d">Estimated resistivity, conductivity, or velocity with resolution limits</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step petro"><div class="k">Interpretation</div><div class="t">Petrophysical conversion</div><div class="d">Calibrated hydrologic estimate with propagated uncertainty</div></div>
+        <div class="arrow" aria-hidden="true">&rarr;</div>
+        <div class="step out"><div class="k">Validation</div><div class="t">Independent hydrologic data</div><div class="d">Compare with moisture, head, core, or borehole observations; revise assumptions</div></div>
+      </div>
+    </div>
+    <div class="note">The inverse result is a non-unique geophysical property model—not a direct water-content measurement. The <a href="../notebooks/">Notebooks</a> page demonstrates selected components of these pathways in Google Colab.</div>
   </div>
 
   <!-- EXPLORE -->
@@ -129,6 +159,8 @@ h2.sec { font-size: 1.6rem; margin: 6px 0 4px; }
       <a class="xcard" href="../lecture/electrical/"><b>Electrical methods →</b><br><span>ERT, SP, IP, and the resistivity-to-moisture bridge above.</span></a>
       <a class="xcard" href="../notebooks/"><b>Colab notebooks →</b><br><span>Run drift correction, forward modeling, and PyHydroGeophysX in the browser.</span></a>
       <a class="xcard" href="../references/"><b>References →</b><br><span>Books, papers, and software, with copy-paste BibTeX.</span></a>
+      <a class="xcard" href="field-missions.html"><b>Field missions →</b><br><span>Solve four synthetic environmental investigations by choosing and combining methods.</span></a>
+      <a class="xcard" href="practice-lab.html"><b>Practice lab →</b><br><span>Check each module with feedback-rich undergraduate and graduate questions.</span></a>
     </div>
   </div>
 
@@ -191,7 +223,7 @@ function archie(){
 
 // ---------- Method selector ----------
 const GOALS=[
-  {label:'Map the water table', why:'The saturated zone is more conductive and seismically slower; GPR often reflects off the table in sandy ground.',
+  {label:'Map the water table', why:'Saturation commonly lowers bulk resistivity and can sharply increase P-wave velocity in unconsolidated sediment; GPR may reflect from the capillary or water-table transition in resistive ground.',
    methods:[['ERT','../lecture/electrical/'],['Seismic refraction','../lecture/seismic/'],['GPR','../lecture/gpr/']]},
   {label:'Monitor soil moisture over time', why:'Repeat the same survey and image the change; wetting lowers resistivity and can be inverted to water content.',
    methods:[['Time-lapse ERT','../lecture/electrical/'],['FDEM','../lecture/em/']]},
@@ -219,5 +251,6 @@ onThemeChange(archie);
 archie();
 selectGoal(0);
 </script>
+<script src="../assets/javascripts/course-app.js"></script>
 </body>
 </html>

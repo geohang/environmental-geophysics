@@ -39,11 +39,14 @@
             color: var(--text-main);
             margin: 0;
             padding: 2vh 2vw;
-            display: flex;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
+
+        #course-nav-bar { grid-column: 1; }
 
         .dashboard {
             display: grid;
@@ -55,6 +58,8 @@
             border-radius: 20px;
             padding: 24px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            min-width: 0;
+            margin: 0 auto;
         }
 
         /* --- SIDEBAR --- */
@@ -62,6 +67,7 @@
             display: flex;
             flex-direction: column;
             gap: 24px;
+            min-width: 0;
         }
 
         .header h1 {
@@ -165,6 +171,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            min-width: 0;
         }
 
         .canvas-container {
@@ -288,13 +295,26 @@
             .btn-method { flex: 1; min-width: 200px; }
             .canvas-container { min-height: 400px; }
         }
+        @media (max-width: 520px) {
+            body { padding: 10px; }
+            .dashboard { gap: 12px; }
+            .sidebar { padding: 14px; }
+            .method-selector { display: grid; grid-template-columns: 1fr; }
+            .btn-method { min-width: 0; width: 100%; }
+            .canvas-container { min-height: 360px; }
+            .playback-controls, .control-group, .slider-container { flex-wrap: wrap; }
+            .playback-controls { gap: 12px; padding: 14px; }
+            .slider-container { width: 100%; min-width: 0; }
+            .slider-container input[type="range"] { width: min(100%, 190px); }
+        }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -393,13 +413,13 @@
             },
             'CSEM': {
                 title: 'Controlled-Source EM',
-                desc: 'A ship tows a massive transmitter emitting continuous EM waves. Because oil is highly resistive compared to seawater, the waves propagate faster and with less decay through the oil, reflecting back to seafloor receivers.',
+                desc: 'A ship tows a low-frequency electric dipole transmitter above seafloor receivers. At these frequencies the field is diffusive: a resistive reservoir changes the received amplitude and phase relative to a conductive background. Interpretation requires forward modeling and inversion.',
                 tags: ['Active Source', 'Frequency Domain', 'Depth: 1-5 km'],
                 scaleScale: '3 km',
                 colorTop: '#38bdf8', colorAcc: '#f59e0b',
                 legend: [
                     { color: 'rgba(56, 189, 248, 0.8)', label: 'Primary Field' },
-                    { color: 'rgba(245, 158, 11, 0.8)', label: 'Refracted Field' },
+                    { color: 'rgba(245, 158, 11, 0.8)', label: 'Reservoir-perturbed Field' },
                     { color: '#f59e0b', label: 'Resistive Oil' }
                 ]
             },
@@ -1055,5 +1075,6 @@
         animate();
 
     </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

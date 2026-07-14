@@ -59,7 +59,7 @@ extra_css:
 
 extra_javascript:
   - assets/javascripts/mathjax.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
 
 extra:
   social:
@@ -79,6 +79,9 @@ nav:
       - Ground-Penetrating Radar: lecture/gpr/index.md
       - Magnetotellurics: lecture/mt/index.md
       - Borehole Geophysics: lecture/borehole/index.md
+  - Practice:
+      - Field Missions: apps/field-missions.html
+      - Practice Lab: apps/practice-lab.html
   - Data: data/index.md
   - Notebooks: notebooks/index.md
   - References: references.md

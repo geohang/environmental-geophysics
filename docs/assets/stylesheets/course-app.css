@@ -1,0 +1,230 @@
+/* Shared safety layer for all standalone course applications. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+ * Dark topic apps originally used almost-black page and card surfaces. Keep the
+ * high-contrast teaching aesthetic, but move those pages to a softer slate-blue
+ * hierarchy. Canvas and data-display regions remain darker for plot legibility.
+ */
+body.course-soft-dark {
+  --bg: #26394d;
+  --bg-dark: #26394d;
+  --bg-main: #26394d;
+  --bg-color: #26394d;
+  --bg-panel: #30475d;
+  --bg-panel-light: #3b566e;
+  --card: #30475d;
+  --card-bg: #30475d;
+  --card-color: #30475d;
+  --panel: #30475d;
+  --surface: #30475d;
+  --surface-2: #3a5269;
+  --canvas-bg: #172638;
+  --text: #f8fafc;
+  --text-main: #f8fafc;
+  --text-muted: #c2cfdb;
+  --border: #567087;
+  --border-color: #567087;
+  color-scheme: dark;
+  background:
+    radial-gradient(circle at 75% 0%, rgb(56 189 248 / .11), transparent 34rem),
+    linear-gradient(145deg, #2b4055 0%, #223447 58%, #293e52 100%) !important;
+  background-color: #26394d !important;
+  color: var(--text-main) !important;
+}
+
+body.course-soft-dark #course-nav-bar,
+body.course-soft-dark > .course-nav-bar {
+  background: #17283a !important;
+  border-color: #496277 !important;
+}
+
+body.course-soft-dark > header {
+  background: linear-gradient(180deg, #30485f 0%, #293e53 100%) !important;
+}
+
+body.course-soft-dark > nav:not(.course-nav-bar) {
+  background-color: #30475d !important;
+  border-color: #5c7890 !important;
+}
+
+body.course-soft-dark :is(
+  .card,
+  .panel,
+  .tool-box,
+  .control-card,
+  .controls-card,
+  .info-card,
+  .method-card,
+  .educational-card,
+  .module-header,
+  .input-panel,
+  .sidebar
+) {
+  background-color: #30475d !important;
+  border-color: #567087 !important;
+  box-shadow: 0 12px 28px rgb(8 18 30 / .2) !important;
+}
+
+body.course-soft-dark :is(
+  .canvas-container,
+  .data-view,
+  .chart-area,
+  .visualization,
+  .stage
+) {
+  background-color: #172638 !important;
+  border-color: #49677e !important;
+}
+
+body.course-soft-dark :is(.bg-slate-950, .bg-gray-950, .bg-black) {
+  background-color: #1d3043 !important;
+}
+
+body.course-soft-dark :is(.bg-slate-900, .bg-gray-900) {
+  background-color: #263d52 !important;
+}
+
+body.course-soft-dark :is(.bg-slate-800, .bg-gray-800) {
+  background-color: #344f67 !important;
+}
+
+body.course-soft-dark [class*="bg-[#0"] {
+  background-color: #20364a !important;
+}
+
+body.course-soft-dark [class*="bg-[#1"] {
+  background-color: #2d455c !important;
+}
+
+#course-nav-bar,
+.course-nav-bar {
+  width: 100%;
+  min-height: 45px;
+  flex: 0 0 auto;
+}
+
+#course-nav-bar a,
+.course-nav-bar a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #fbbf24 !important;
+  outline-offset: 3px !important;
+}
+
+button,
+select,
+input[type="number"],
+input[type="text"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+input[type="range"] { min-height: 44px; }
+
+label:has(input[type="radio"]),
+label:has(input[type="checkbox"]) {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  min-width: 24px;
+  min-height: 24px;
+}
+
+/* Expand the hit area of compact switch/checkbox labels without resizing the visual track. */
+.touch-label { position: relative; }
+.touch-label::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
+
+button { touch-action: manipulation; }
+
+canvas,
+svg,
+img {
+  max-width: 100%;
+}
+
+/* Keep display equations readable without letting MathJax widen the page. */
+mjx-container,
+.formula-box {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+}
+
+.table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  contain: layout paint;
+  overscroll-behavior-inline: contain;
+}
+
+.science-caveat {
+  margin: 1rem 0;
+  padding: .85rem 1rem;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  background: rgba(245, 158, 11, .12);
+  line-height: 1.55;
+}
+
+.science-caveat strong { color: #fbbf24; }
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 640px) {
+  #course-nav-bar,
+  .course-nav-bar {
+    position: relative !important;
+    flex-wrap: wrap !important;
+    gap: .2rem .75rem !important;
+    padding: .35rem .65rem !important;
+  }
+
+  #course-nav-bar span,
+  .course-nav-bar .spacer {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  table { font-size: .84rem; }
+}

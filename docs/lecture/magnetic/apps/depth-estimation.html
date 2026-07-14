@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magnetic Anomaly Interpretation Methods</title>
     <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <!-- Chart.js for graphs -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -18,12 +18,13 @@
         input[type=range] { flex-grow: 1; cursor: pointer; }
         canvas { display: block; width: 100%; height: 100%; }
     </style>
+<link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body class="bg-gray-50 text-gray-800">
 <div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
   <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
   <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">SEES:4800 Environmental Geophysics</span>
+  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
 </div>
 
 
@@ -43,10 +44,10 @@
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="text-2xl font-bold text-teal-800">1. Simple Depth Rules (Half-Width)</h2>
-                    <p class="text-gray-600 mt-2">The shape of an anomaly relates directly to the depth of the source.</p>
+                    <p class="text-gray-600 mt-2">Anomaly width contains depth information, but the coefficient depends on source geometry and magnetization.</p>
                 </div>
                 <div class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg font-mono text-sm">
-                    Depth (Z) ≈ Width at Half-Max Amplitude
+                    First-pass estimate only
                 </div>
             </div>
 
@@ -99,6 +100,7 @@
                         <li>Measure the horizontal distance <strong>'d'</strong> between these two points.</li>
                         <li>Apply the formula: <span class="bg-indigo-100 px-2 py-1 rounded font-mono">Z = d / 1.6</span></li>
                     </ol>
+                    <p class="text-sm text-gray-600 mt-4">The factor 1.6 is empirical and best suited to thin, steeply dipping, strike-extended sources; treat the result as approximate depth to the top.</p>
                     <button id="toggleLinesBtn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition shadow">
                         Toggle Construction Lines
                     </button>
@@ -129,7 +131,8 @@
                         <h3 class="font-bold mb-2 text-lg">Problem & Solution</h3>
                         <p class="text-sm mb-2"><strong>Problem:</strong> At mid-latitudes, induction causes dipoles. The peak is <span class="italic text-red-600">shifted</span> away from the actual source.</p>
                         <p class="text-sm"><strong>Solution (RTP):</strong> A mathematical filter simulates measuring the data at the magnetic pole.</p>
-                        <p class="text-sm mt-2 font-bold text-green-700">Result: Anomalies become symmetric and centered.</p>
+                        <p class="text-sm mt-2 font-bold text-green-700">Ideal induced-only result: anomalies become more symmetric and centered.</p>
+                        <p class="text-xs mt-2 text-gray-600">RTP can be unstable at low magnetic inclination and can misplace sources when remanent magnetization is important.</p>
                     </div>
                     
                     <div class="p-4 border rounded-lg bg-green-50">
@@ -507,5 +510,6 @@
         });
 
     </script>
+<script src="../../../assets/javascripts/course-app.js"></script>
 </body>
 </html>

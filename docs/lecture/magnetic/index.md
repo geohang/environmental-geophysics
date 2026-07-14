@@ -2,6 +2,20 @@
 
 Rocks acquire magnetization from magnetic minerals, magnetite above all, and that magnetization perturbs the geomagnetic field measured at the surface. Because the inducing field is inclined, magnetic anomalies change shape with latitude, which makes interpretation richer than gravity even though the survey practice is faster.
 
+## Learning Objectives
+
+**Undergraduate Core:** By the end of this module, you will be able to:
+
+- Distinguish induced magnetization, remanent magnetization, and magnetic susceptibility.
+- Predict how inclination, source depth, and observation height affect anomaly shape.
+- Explain upward continuation, simple depth rules, and reduction to the pole (RTP).
+- Identify when cultural noise or remanence makes a simple interpretation unreliable.
+
+??? abstract "Graduate Extension"
+    Assess the assumptions and instability of continuation, RTP, and source-depth estimators, especially at low inclination and for remanently magnetized bodies.
+
+[Practice this module](../../apps/practice-lab.html#magnetic){ .md-button }
+
 ## Interactive Lecture
 
 <div class="grid cards" markdown>
