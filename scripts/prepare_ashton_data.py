@@ -1,8 +1,8 @@
 """Audit Ashton Prairie field files and build browser-ready teaching products.
 
-The source directory is never modified. Real observations remain distinct from
-derived and synthetic products through explicit ``data_class`` and quality
-fields in every exported feature.
+The source directory is never modified. Published map products distinguish
+real acquisition lines from derived geophysical products through explicit
+``data_class`` and quality fields.
 """
 
 from __future__ import annotations
@@ -595,7 +595,7 @@ def build_organized_em_products(root: Path, organized_root: Path) -> list[dict[s
 
 
 def build_web_products(root: Path, output: Path) -> dict[str, Any]:
-    """Build curated real-data layers and explicitly synthetic overlays."""
+    """Build curated survey-line and processed-data layers for the Web GIS."""
 
     master_path = root / "Ashton_all_dates_all_points.csv"
     master = pd.read_csv(master_path, dtype={"point_id": str})
@@ -647,28 +647,14 @@ def build_web_products(root: Path, output: Path) -> dict[str, Any]:
 
     output.mkdir(parents=True, exist_ok=True)
     master.to_csv(output / "survey_locations_curated.csv", index=False, float_format="%.10g")
-    point_features = []
-    for row in master.itertuples(index=False):
-        point_features.append(
-            geojson_feature(
-                {"type": "Point", "coordinates": [float(row.longitude_WGS84), float(row.latitude_WGS84)]},
-                {
-                    "data_class": "real",
-                    "date": row.date,
-                    "instrument": row.instrument,
-                    "group": row.group,
-                    "point_id": row.point_id,
-                    "display_name": row.display_name,
-                    "elevation_m": round(float(row.elevation_m), 3),
-                    "elevation_source": row.elevation_source,
-                    "quality_flags": row.quality_flags,
-                },
-            )
-        )
-    write_json(output / "survey_points.geojson", {"type": "FeatureCollection", "features": point_features}, True)
 
     line_features = []
+    excluded_preprocessing_lines = {
+        ("2026-06-25", "ERT", "ERT electrodes 267-314"),
+    }
     for (date, instrument, group), frame in master.groupby(["date", "instrument", "group"], sort=False):
+        if (date, instrument, group) in excluded_preprocessing_lines:
+            continue
         coordinates = frame[["longitude_WGS84", "latitude_WGS84"]].astype(float).values.tolist()
         line_features.append(
             geojson_feature(
@@ -694,7 +680,7 @@ def build_web_products(root: Path, output: Path) -> dict[str, Any]:
         {
             "data_class": "derived_from_real",
             "name": "Survey footprint",
-            "geometry_note": "Convex hull of published survey points; not the official prairie boundary.",
+            "geometry_note": "Convex hull of the curated survey-location table; not the official prairie boundary.",
         },
     )
     write_json(output / "survey_extent.geojson", {"type": "FeatureCollection", "features": [extent_feature]}, True)
@@ -733,36 +719,11 @@ def build_web_products(root: Path, output: Path) -> dict[str, Any]:
         )
     write_json(output / "em_shallow_resistivity.geojson", {"type": "FeatureCollection", "features": em_features}, True)
 
-    center_lon = float(master["longitude_WGS84"].mean())
-    center_lat = float(master["latitude_WGS84"].mean())
-    synthetic_features = [
-        geojson_feature(
-            {"type": "Point", "coordinates": [center_lon + 0.00018, center_lat + 0.00008]},
-            {"data_class": "synthetic", "name": "Hypothetical conductive hotspot", "teaching_goal": "Compare a target hypothesis with real survey coverage."},
-        ),
-        geojson_feature(
-            {"type": "LineString", "coordinates": [[center_lon - 0.00028, center_lat - 0.00010], [center_lon + 0.00030, center_lat + 0.00012]]},
-            {"data_class": "synthetic", "name": "Hypothetical buried utility", "teaching_goal": "Predict which real survey lines should intersect the target."},
-        ),
-        geojson_feature(
-            {"type": "Polygon", "coordinates": [[
-                [center_lon - 0.00022, center_lat + 0.00022],
-                [center_lon + 0.00002, center_lat + 0.00026],
-                [center_lon + 0.00012, center_lat + 0.00008],
-                [center_lon - 0.00014, center_lat + 0.00004],
-                [center_lon - 0.00022, center_lat + 0.00022],
-            ]]},
-            {"data_class": "synthetic", "name": "Hypothetical seepage zone", "teaching_goal": "Design a follow-up survey; this is not a measured site feature."},
-        ),
-    ]
-    write_json(output / "synthetic_overlays.geojson", {"type": "FeatureCollection", "features": synthetic_features}, True)
-
     return {
-        "real_survey_points": len(point_features),
         "real_survey_lines": len(line_features),
+        "excluded_preprocessing_survey_lines": len(excluded_preprocessing_lines),
         "real_em_source_locations": int(len(em_source_locations)),
         "real_em_map_cells": len(em_features),
-        "synthetic_features": len(synthetic_features),
         "elevation_interpolation": interpolation,
         "interpolated_elevation_count": int(len(missing)),
     }
@@ -850,7 +811,7 @@ def build_report(root: Path, output: Path) -> dict[str, Any]:
             package_versions[package] = "not installed"
     report = {
         "dataset": "Ashton Prairie Environmental Geophysics Field Data",
-        "data_class": "real field data except files explicitly labeled synthetic",
+        "data_class": "real field data and derived products",
         "official_site": OFFICIAL_SITE,
         "package_repository": PACKAGE_REPOSITORY,
         "license": "CC BY 4.0",
@@ -1109,7 +1070,7 @@ def main() -> int:
     print(
         f"Reviewed {report['source_file_count']} Ashton files; "
         f"status={report['overall_status']}; "
-        f"points={report['web_products']['real_survey_points']}; "
+        f"lines={report['web_products']['real_survey_lines']}; "
         f"EM cells={report['web_products']['real_em_map_cells']}."
     )
     return 1 if report["overall_status"] == "error" else 0

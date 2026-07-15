@@ -43,8 +43,8 @@ It uses the public `PyHydroGeophysX` API for seismic reading and preprocessing,
 and PyGIMLi for the two approved positive-only ERT teaching datasets.
 
 **Data boundary.** Raw files are unchanged. Derived values carry provenance and
-quality flags. The optional synthetic overlays are teaching hypotheses, never
-observations. Data are released under CC BY 4.0; cite *Chen, Hang, and the
+quality flags. Synthetic cases remain in the separate Field Missions activity
+and do not overlap this real-data map. Data are released under CC BY 4.0; cite *Chen, Hang, and the
 University of Iowa Environmental Geophysics course/research team (2026).*
 """
         ),

@@ -380,10 +380,8 @@ def audit_ashton_field_data() -> list[str]:
     required = [
         report_path,
         catalog_path,
-        ashton / "web" / "survey_points.geojson",
         ashton / "web" / "survey_lines.geojson",
         ashton / "web" / "em_shallow_resistivity.geojson",
-        ashton / "web" / "synthetic_overlays.geojson",
         ashton / "organized" / "em" / "manifest.json",
         ashton / "organized" / "em" / "measurements" / "2026-05-02_gem2_averaged_inphase_quadrature.csv",
         ashton / "organized" / "em" / "metadata" / "profile_mark_ranges.csv",
@@ -406,11 +404,10 @@ def audit_ashton_field_data() -> list[str]:
         errors.append(f"Ashton audit contains unreadable sources: {', '.join(failed)}")
 
     expected_products = {
-        "real_survey_points": 367,
-        "real_survey_lines": 15,
+        "real_survey_lines": 14,
+        "excluded_preprocessing_survey_lines": 1,
         "real_em_source_locations": 152,
         "real_em_map_cells": 540,
-        "synthetic_features": 3,
         "interpolated_elevation_count": 13,
     }
     products = report.get("web_products", {})
@@ -499,18 +496,19 @@ def audit_ashton_field_data() -> list[str]:
     if leaked:
         errors.append(f"Ashton raw download tree still contains superseded EM files: {', '.join(leaked)}")
 
-    points = json.loads((ashton / "web" / "survey_points.geojson").read_text(encoding="utf-8"))["features"]
-    line4_interpolated = [
-        feature for feature in points
-        if feature["properties"].get("group") == "EM line 4"
-        and feature["properties"].get("elevation_source") == "interpolated_from_neighboring_em_points"
+    lines = json.loads((ashton / "web" / "survey_lines.geojson").read_text(encoding="utf-8"))["features"]
+    excluded_ert = [
+        feature for feature in lines
+        if feature["properties"].get("date") == "2026-06-25"
+        and feature["properties"].get("instrument") == "ERT"
     ]
-    if len(line4_interpolated) != 13 or any(feature["properties"]["elevation_m"] == 0 for feature in line4_interpolated):
-        errors.append("Ashton EM line 4 must contain 13 flagged, nonzero interpolated elevations")
-
-    synthetic = json.loads((ashton / "web" / "synthetic_overlays.geojson").read_text(encoding="utf-8"))["features"]
-    if any(feature.get("properties", {}).get("data_class") != "synthetic" for feature in synthetic):
-        errors.append("Ashton synthetic overlay contains a feature without data_class=synthetic")
+    if excluded_ert:
+        errors.append("Ashton map must exclude the non-straight June 25 pre-processing ERT track")
+    if any(feature.get("geometry", {}).get("type") != "LineString" for feature in lines):
+        errors.append("Ashton survey geometry layer must contain survey lines only")
+    for removed_map_product in ("survey_points.geojson", "synthetic_overlays.geojson"):
+        if (ashton / "web" / removed_map_product).exists():
+            errors.append(f"Ashton Web GIS must not publish removed map product: {removed_map_product}")
     if "CC BY 4.0" not in (ashton / "DATA_LICENSE.txt").read_text(encoding="utf-8"):
         errors.append("Ashton data license must state CC BY 4.0")
 
@@ -525,6 +523,9 @@ def audit_ashton_field_data() -> list[str]:
     for required_label in ("EM Profile", "Recommended · start here", "Profile 01–09"):
         if required_label not in field_data_page:
             errors.append(f"Field Data explorer is missing profile-aware catalog UI: {required_label}")
+    for removed_ui_term in ('data-layer="surveyPoints"', 'data-layer="synthetic"', "synthetic_overlays.geojson"):
+        if removed_ui_term in field_data_page:
+            errors.append(f"Field Data explorer still includes removed point/overlay UI: {removed_ui_term}")
     notebook_text = (DOCS / "notebooks" / "ashton_field_data.ipynb").read_text(encoding="utf-8")
     for required_notebook_term in (
         "2026-05-02_gem2_averaged_inphase_quadrature.csv",

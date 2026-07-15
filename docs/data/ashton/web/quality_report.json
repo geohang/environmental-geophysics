@@ -1,10 +1,10 @@
 {
   "dataset": "Ashton Prairie Environmental Geophysics Field Data",
-  "data_class": "real field data except files explicitly labeled synthetic",
+  "data_class": "real field data and derived products",
   "official_site": "https://sees.uiowa.edu/research/ashton-prairie",
   "package_repository": "https://github.com/geohang/PyHydroGeophysX",
   "license": "CC BY 4.0",
-  "generated_utc": "2026-07-14T23:22:54.481894+00:00",
+  "generated_utc": "2026-07-15T03:33:38.269598+00:00",
   "source_file_count": 60,
   "source_size_bytes": 65429989,
   "extension_counts": {
@@ -31,11 +31,10 @@
     "master_kml_points": 367
   },
   "web_products": {
-    "real_survey_points": 367,
-    "real_survey_lines": 15,
+    "real_survey_lines": 14,
+    "excluded_preprocessing_survey_lines": 1,
     "real_em_source_locations": 152,
     "real_em_map_cells": 540,
-    "synthetic_features": 3,
     "elevation_interpolation": {
       "method": "8-neighbor inverse-distance weighting in EPSG:26915",
       "cross_validation_rmse_m": 0.8839433373984221,

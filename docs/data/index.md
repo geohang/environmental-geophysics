@@ -4,12 +4,12 @@ Course datasets are separated by provenance so students can see what was measure
 
 ## Real Field Data: Ashton Prairie
 
-The **[Ashton Field Data Explorer](../apps/field-data.html)** maps survey points and lines from the University of Iowa's [Ashton Prairie Living Laboratory](https://sees.uiowa.edu/research/ashton-prairie). It includes layer controls, popups, a downloadable file catalog, and a companion [PyHydroGeophysX processing notebook](../notebooks/ashton_field_data.ipynb).
+The **[Ashton Field Data Explorer](../apps/field-data.html)** maps retained survey lines from the University of Iowa's [Ashton Prairie Living Laboratory](https://sees.uiowa.edu/research/ashton-prairie). Individual survey points, synthetic map overlays, and the non-straight June 25 pre-processing ERT track are omitted. It includes layer controls, popups, a downloadable file catalog, and a companion [PyHydroGeophysX processing notebook](../notebooks/ashton_field_data.ipynb).
 
 All 60 source files were checked. The public catalog contains 29 retained source files, 13 organized EM files, and 2 curated map products; redundant EM mirrors/intermediates and six problematic ERT measurement files are not published. The EM package keeps the full 24,212-row averaged in-phase/quadrature table as its processing input, provides separately named location tables for Profile 01–09, and places the valid layered inversion under `models/` as a derived result. The ERT teaching workflow uses only the positive-only April 11 Wenner and May 2 dipole–dipole PyGIMLi datasets. Thirteen zero-placeholder elevations on EM Profile 04 are replaced in the organized profile geometry and Web GIS by flagged IDW estimates; the external source archive remains unchanged.
 
-!!! info "Real, derived, and synthetic remain distinct"
-    Green layers are real field observations, amber layers are derived from real data, and magenta overlays are explicitly synthetic and hidden by default. See the [data license](ashton/DATA_LICENSE.txt) and [machine-readable quality report](ashton/web/quality_report.json).
+!!! info "Map layers remain explicit"
+    Survey lines show retained acquisition geometry, while processed EM resistivity and the survey footprint are labeled as derived products. Synthetic cases remain in the separate Field Missions activity rather than overlapping the real-data map. See the [data license](ashton/DATA_LICENSE.txt) and [machine-readable quality report](ashton/web/quality_report.json).
 
 ## Synthetic Field Data: Field Missions
 

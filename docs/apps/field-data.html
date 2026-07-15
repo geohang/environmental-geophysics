@@ -53,12 +53,12 @@
   <div class="section-intro" id="ashton-explorer">
     <span class="section-label">Real Field Data</span>
     <h2>Ashton Prairie Field Data Explorer</h2>
-    <p>University of Iowa measurements and derived products. Synthetic map overlays remain optional and are off by default.</p>
+    <p>University of Iowa acquisition lines and derived products. Individual survey points and synthetic overlays are intentionally omitted for a cleaner field-layout view.</p>
   </div>
   <section class="map-app" aria-label="Ashton Prairie interactive field data map">
     <aside class="sidebar">
       <h2>Map layers</h2>
-      <p class="sidebar-intro">Filter the acquisition map, then click a point, line, or area to inspect its provenance and quality flags.</p>
+      <p class="sidebar-intro">Filter the acquisition map, then click a survey line or derived layer to inspect its provenance and processing notes.</p>
       <div class="sidebar-controls">
         <div>
           <div class="field"><label for="date-filter">Field date</label><select id="date-filter"><option value="all">All dates</option><option value="2026-04-11">April 11, 2026</option><option value="2026-05-02">May 2, 2026</option><option value="2026-06-25">June 25, 2026</option></select></div>
@@ -66,20 +66,15 @@
           <div class="field"><label for="profile-filter">EM Profile</label><select id="profile-filter"><option value="all">All Profiles</option><option value="1">Profile 01</option><option value="2">Profile 02</option><option value="3">Profile 03</option><option value="4">Profile 04</option><option value="5">Profile 05</option><option value="6">Profile 06</option><option value="7">Profile 07</option><option value="8">Profile 08</option><option value="9">Profile 09</option></select></div>
           <div class="control-section">
             <h3 class="real-title">Real field data</h3>
-            <label class="layer-toggle"><input type="checkbox" data-layer="surveyPoints" checked><span><b>Survey points</b><small>367 positions with date, method, and elevation source</small></span></label>
-            <label class="layer-toggle"><input type="checkbox" data-layer="surveyLines" checked><span><b>Survey lines</b><small>15 lines connecting points in source order</small></span></label>
+            <label class="layer-toggle"><input type="checkbox" data-layer="surveyLines" checked><span><b>Survey lines</b><small>14 retained acquisition profiles; the pre-processing June 25 ERT track is excluded</small></span></label>
             <label class="layer-toggle"><input type="checkbox" data-layer="emResistivity"><span><b>EM shallow resistivity</b><small>540 processed 1 m cells; fit error ≤ 30%</small></span></label>
             <label class="layer-toggle"><input type="checkbox" data-layer="surveyExtent"><span><b>Derived survey footprint</b><small>Convex hull, not the official prairie boundary</small></span></label>
           </div>
         </div>
         <div>
           <div class="control-section">
-            <h3 class="synthetic-title">Synthetic teaching data</h3>
-            <div class="synthetic-box"><label class="layer-toggle"><input type="checkbox" data-layer="synthetic"><span><b>Show synthetic overlays</b><small>Hypothetical target, utility, and seepage zone—not observations</small></span></label></div>
-          </div>
-          <div class="control-section">
             <h3>Current view</h3>
-            <div class="stats"><div class="stat"><b id="point-count">—</b><span>survey points</span></div><div class="stat"><b id="line-count">—</b><span>survey lines</span></div><div class="stat"><b id="em-count">—</b><span>EM cells</span></div><div class="stat"><b id="synthetic-count">0</b><span>synthetic features</span></div></div>
+            <div class="stats"><div class="stat"><b id="line-count">—</b><span>survey lines</span></div><div class="stat"><b id="em-count">—</b><span>EM cells</span></div></div>
           </div>
           <div class="control-section"><div class="quality-box"><b>Elevation QA</b><br>EM line 4 contains 13 interpolated elevations. IDW cross-validation RMSE = 0.88 m. Its one original nonzero elevation is retained but flagged for review.</div></div>
           <div class="control-section"><a href="../data/ashton/web/quality_report.json">Open complete quality report</a><br><a href="https://sees.uiowa.edu/research/ashton-prairie" target="_blank" rel="noopener">Official Ashton Prairie site</a></div>
@@ -105,7 +100,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const DATA_ROOT='../data/ashton/web/';
-const COLORS={ERT:'#2563eb',Seismic:'#dc2626','Seismic GPS':'#dc2626',EM:'#059669',synthetic:'#b42375'};
+const COLORS={ERT:'#2563eb',Seismic:'#dc2626','Seismic GPS':'#dc2626',EM:'#059669'};
 const state={date:'all',method:'all',profile:'all',data:{},catalog:[],summary:{},layers:{}};
 const map=L.map('map',{zoomControl:true,minZoom:13,maxZoom:21}).setView([41.66575,-91.5862],18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
@@ -116,34 +111,31 @@ const formatSize=bytes=>bytes<1024?`${bytes} B`:bytes<1048576?`${(bytes/1024).to
 function methodColor(instrument){if(instrument==='ERT')return COLORS.ERT;if(String(instrument).startsWith('Seismic'))return COLORS.Seismic;return COLORS.EM;}
 function popupRows(rows){return `<div class="popup-grid">${rows.map(([key,value])=>`<b>${esc(key)}</b><span>${esc(value)}</span>`).join('')}</div>`;}
 function displayGroup(value){const match=String(value||'').match(/^EM line (\d+)$/i);return match?`EM Profile ${String(match[1]).padStart(2,'0')}`:value;}
-function realPointPopup(p){return `<div class="popup-title">${esc(p.display_name)}</div><span class="popup-class">Real field data</span>${popupRows([['Date',p.date],['Method',p.instrument],['Group',displayGroup(p.group)],['Elevation',`${Number(p.elevation_m).toFixed(2)} m`],['Elevation source',p.elevation_source],['Quality',p.quality_flags||'No flag']])}`;}
 function linePopup(p){return `<div class="popup-title">${esc(displayGroup(p.group))}</div><span class="popup-class">Real acquisition line</span>${popupRows([['Date',p.date],['Method',p.instrument],['Points',p.point_count],['Geometry',p.geometry_note]])}`;}
 function emPopup(p){return `<div class="popup-title">EM Profile ${String(p.line).padStart(2,'0')} · shallow resistivity</div><span class="popup-class">Real processed data</span>${popupRows([['Date',p.date],['Profile',String(p.line).padStart(2,'0')],['Layer 1',`${p.shallow_resistivity_ohm_m} Ω·m`],['Fit error',`${p.fit_error_percent}%`],['Samples / cell',p.sample_count],['Processing',p.processing_note]])}`;}
-function syntheticPopup(p){return `<div class="popup-title">${esc(p.name)}</div><span class="popup-class synthetic">Synthetic—not observed</span>${popupRows([['Teaching goal',p.teaching_goal]])}`;}
 function resistivityColor(value){const v=Math.max(30,Math.min(2000,Number(value)));const t=(Math.log10(v)-Math.log10(30))/(Math.log10(2000)-Math.log10(30));const hue=225-225*t;return `hsl(${hue} 78% 48%)`;}
 function featureProfile(p){if(Number.isFinite(Number(p.line)))return Number(p.line);const match=String(p.group||'').match(/EM line\s+(\d+)/i);return match?Number(match[1]):null;}
 function matches(feature){const p=feature.properties||{};const dateOK=state.date==='all'||p.date===state.date;let methodOK=true;if(state.method!=='all'){if(state.method==='Seismic')methodOK=String(p.instrument).startsWith('Seismic');else if(state.method==='EM')methodOK=p.instrument==='EM'||p.instrument==='GEM-2 FDEM';else methodOK=p.instrument===state.method;}const profileOK=state.profile==='all'||featureProfile(p)===Number(state.profile);return dateOK&&methodOK&&profileOK;}
 function addGeoJson(target,collection,options){L.geoJSON(collection,{...options,filter:feature=>matches(feature)}).eachLayer(layer=>target.addLayer(layer));}
 function rebuildRealLayers(){
-  state.layers.surveyPoints.clearLayers();state.layers.surveyLines.clearLayers();state.layers.emResistivity.clearLayers();
-  addGeoJson(state.layers.surveyPoints,state.data.points,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:4.5,color:'#fff',weight:1.3,fillColor:methodColor(f.properties.instrument),fillOpacity:.9}),onEachFeature:(f,l)=>l.bindPopup(realPointPopup(f.properties))});
+  state.layers.surveyLines.clearLayers();state.layers.emResistivity.clearLayers();
   addGeoJson(state.layers.surveyLines,state.data.lines,{style:f=>({color:methodColor(f.properties.instrument),weight:3,opacity:.78}),onEachFeature:(f,l)=>l.bindPopup(linePopup(f.properties))});
   addGeoJson(state.layers.emResistivity,state.data.em,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:5,color:'rgba(255,255,255,.7)',weight:1,fillColor:resistivityColor(f.properties.shallow_resistivity_ohm_m),fillOpacity:.82}),onEachFeature:(f,l)=>l.bindPopup(emPopup(f.properties))});
   updateCounts();
 }
 function layerVisible(name){return document.querySelector(`[data-layer="${name}"]`).checked;}
 function syncLayer(name){const layer=state.layers[name];if(layerVisible(name)){if(!map.hasLayer(layer))layer.addTo(map);}else if(map.hasLayer(layer))map.removeLayer(layer);updateCounts();}
-function updateCounts(){document.getElementById('point-count').textContent=layerVisible('surveyPoints')?state.layers.surveyPoints.getLayers().length:0;document.getElementById('line-count').textContent=layerVisible('surveyLines')?state.layers.surveyLines.getLayers().length:0;document.getElementById('em-count').textContent=layerVisible('emResistivity')?state.layers.emResistivity.getLayers().length:0;document.getElementById('synthetic-count').textContent=layerVisible('synthetic')?state.layers.synthetic.getLayers().length:0;}
+function updateCounts(){document.getElementById('line-count').textContent=layerVisible('surveyLines')?state.layers.surveyLines.getLayers().length:0;document.getElementById('em-count').textContent=layerVisible('emResistivity')?state.layers.emResistivity.getLayers().length:0;}
 const coordControl=L.control({position:'bottomleft'});coordControl.onAdd=()=>{const div=L.DomUtil.create('div','coordinate-readout');div.id='coordinate-readout';div.textContent='Move over map';return div;};coordControl.addTo(map);map.on('mousemove',event=>{document.getElementById('coordinate-readout').textContent=`${event.latlng.lat.toFixed(6)}, ${event.latlng.lng.toFixed(6)}`;});
-const legend=L.control({position:'bottomright'});legend.onAdd=()=>{const div=L.DomUtil.create('div','legend');div.innerHTML='<b>Map legend</b><div class="legend-row"><span class="swatch point" style="background:#2563eb"></span>ERT point / line</div><div class="legend-row"><span class="swatch point" style="background:#dc2626"></span>Seismic point / line</div><div class="legend-row"><span class="swatch point" style="background:#059669"></span>EM point / line</div><div class="legend-row"><span class="swatch" style="background:linear-gradient(90deg,#3455db,#2fb344,#f59f00,#dc2626)"></span>EM resistivity: 30–2000 Ω·m</div><div class="legend-row"><span class="swatch synthetic"></span>Synthetic overlay</div>';return div;};legend.addTo(map);
+const legend=L.control({position:'bottomright'});legend.onAdd=()=>{const div=L.DomUtil.create('div','legend');div.innerHTML='<b>Map legend</b><div class="legend-row"><span class="swatch" style="background:#2563eb"></span>ERT survey line</div><div class="legend-row"><span class="swatch" style="background:#dc2626"></span>Seismic survey line</div><div class="legend-row"><span class="swatch" style="background:#059669"></span>EM survey line</div><div class="legend-row"><span class="swatch" style="background:linear-gradient(90deg,#3455db,#2fb344,#f59f00,#dc2626)"></span>EM resistivity: 30–2000 Ω·m</div>';return div;};legend.addTo(map);
 function renderCatalog(){const filter=document.getElementById('catalog-method').value;const query=document.getElementById('catalog-search').value.trim().toLowerCase();const rows=state.catalog.filter(item=>(filter==='all'||(filter==='recommended'&&item.recommended)||item.category===filter)&&(!query||[item.path,item.display_name,item.description,item.processing_level].join(' ').toLowerCase().includes(query)));const body=document.getElementById('catalog-body');body.innerHTML=rows.map(item=>`<tr><td><strong class="dataset-name">${esc(item.display_name)}</strong><span class="file-path">${esc(item.path)}</span></td><td class="file-meta"><span class="role-badge">${esc(item.processing_level)}</span><br>${esc(item.extension.replace('.','').toUpperCase())} · ${formatSize(item.size_bytes)}</td><td class="description">${esc(item.description)}${item.quality_notes.length?`<span class="qa-note">${item.quality_notes.map(esc).join('<br>')}</span>`:''}</td><td><a class="download" href="${encodeURI(item.url)}" download>Download</a></td></tr>`).join('')||'<tr><td colspan="4">No matching files.</td></tr>';const s=state.summary;document.getElementById('catalog-count').textContent=`Showing ${rows.length} of ${state.catalog.length} published files · ${s.audited_source_files||0} audited · ${s.removed_redundant_or_intermediate_files||0} redundant/intermediate files omitted`;}
 async function loadData(){
   try{
-    const [points,lines,extent,em,synthetic,catalog]=await Promise.all(['survey_points.geojson','survey_lines.geojson','survey_extent.geojson','em_shallow_resistivity.geojson','synthetic_overlays.geojson','data_catalog.json'].map(name=>fetch(DATA_ROOT+name).then(response=>{if(!response.ok)throw new Error(`${name}: HTTP ${response.status}`);return response.json();})));
-    state.data={points,lines,extent,em,synthetic};state.catalog=catalog.files;state.summary=catalog.publication_summary||{};
-    state.layers={surveyPoints:L.layerGroup(),surveyLines:L.layerGroup(),emResistivity:L.layerGroup(),surveyExtent:L.geoJSON(extent,{style:{color:'#b85c00',weight:2,dashArray:'7 6',fillColor:'#f59f00',fillOpacity:.06},onEachFeature:(f,l)=>l.bindPopup(`<div class="popup-title">${esc(f.properties.name)}</div><span class="popup-class">Derived from real data</span>${popupRows([['Geometry',f.properties.geometry_note]])}`)}),synthetic:L.geoJSON(synthetic,{pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:8,color:COLORS.synthetic,weight:3,fillColor:'#fff0f7',fillOpacity:.8}),style:{color:COLORS.synthetic,weight:3,dashArray:'7 5',fillColor:'#f7b2d2',fillOpacity:.22},onEachFeature:(f,l)=>l.bindPopup(syntheticPopup(f.properties))})};
-    rebuildRealLayers();['surveyPoints','surveyLines','emResistivity','surveyExtent','synthetic'].forEach(syncLayer);
-    const bounds=L.geoJSON(points).getBounds();if(bounds.isValid())map.fitBounds(bounds.pad(.12));
+    const [lines,extent,em,catalog]=await Promise.all(['survey_lines.geojson','survey_extent.geojson','em_shallow_resistivity.geojson','data_catalog.json'].map(name=>fetch(DATA_ROOT+name).then(response=>{if(!response.ok)throw new Error(`${name}: HTTP ${response.status}`);return response.json();})));
+    state.data={lines,extent,em};state.catalog=catalog.files;state.summary=catalog.publication_summary||{};
+    state.layers={surveyLines:L.layerGroup(),emResistivity:L.layerGroup(),surveyExtent:L.geoJSON(extent,{style:{color:'#b85c00',weight:2,dashArray:'7 6',fillColor:'#f59f00',fillOpacity:.06},onEachFeature:(f,l)=>l.bindPopup(`<div class="popup-title">${esc(f.properties.name)}</div><span class="popup-class">Derived from real data</span>${popupRows([['Geometry',f.properties.geometry_note]])}`)})};
+    rebuildRealLayers();['surveyLines','emResistivity','surveyExtent'].forEach(syncLayer);
+    const bounds=L.geoJSON(lines).getBounds();if(bounds.isValid())map.fitBounds(bounds.pad(.12));
     renderCatalog();statusEl.textContent='Real field data loaded';setTimeout(()=>statusEl.hidden=true,1300);
   }catch(error){statusEl.hidden=false;statusEl.innerHTML=`<span class="error">Could not load map data: ${esc(error.message)}</span>`;document.getElementById('catalog-body').innerHTML='<tr><td colspan="4" class="error">Catalog failed to load.</td></tr>';}
 }
