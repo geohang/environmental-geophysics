@@ -1,0 +1,110 @@
+{
+  "dataset": "Ashton Prairie GEM-2 frequency-domain EM survey",
+  "data_class": "real field data",
+  "acquisition_date": "2026-05-02",
+  "instrument": "Geophex GEM-2 Ski",
+  "frequencies_hz": [
+    450,
+    1410,
+    4350,
+    13530,
+    42150
+  ],
+  "response_components": [
+    "in-phase",
+    "quadrature"
+  ],
+  "coordinate_reference_system": "EPSG:26915",
+  "profiles": [
+    "profile_01",
+    "profile_02",
+    "profile_03",
+    "profile_04",
+    "profile_05",
+    "profile_06",
+    "profile_07",
+    "profile_08",
+    "profile_09"
+  ],
+  "files": [
+    {
+      "path": "raw/2026-05-02_gem2_raw_averaged_instrument_export.csv",
+      "role": "raw averaged instrument export",
+      "size_bytes": 3899462,
+      "sha256": "d8908716f239a1f1053fc822dd544865af2adccc560bf6df69b8faa0b6c13483"
+    },
+    {
+      "path": "processed/2026-05-02_gem2_averaged_inphase_quadrature.csv",
+      "role": "processed averaged I/Q observations",
+      "size_bytes": 3482123,
+      "sha256": "7c1c4f7ec066f98130a11d44f48ba72308b1b20ba44e6cb5903a3ffe3ee3a234"
+    },
+    {
+      "path": "metadata/profile_mark_ranges.csv",
+      "role": "profile-to-Mark mapping",
+      "size_bytes": 264,
+      "sha256": "19fb9a04b2c0c1bba92d0ec5b6f5fce8fb881633fd1a2a814125b9a30617b201"
+    },
+    {
+      "path": "inversion/2026-05-02_gem2_valid_layered_inversion.csv",
+      "role": "derived layered inversion",
+      "size_bytes": 1542280,
+      "sha256": "97c51a9a31dd693d5f6c442426befab0a7ee56283af4816cf05aab173f4d1c7b"
+    },
+    {
+      "path": "location/profile_01_locations.csv",
+      "role": "Profile 01 locations",
+      "size_bytes": 2096,
+      "sha256": "bd26f2378ff510c92b739fde764113d918d74e358e663a6d0882cf1781ee9fd2"
+    },
+    {
+      "path": "location/profile_02_locations.csv",
+      "role": "Profile 02 locations",
+      "size_bytes": 2229,
+      "sha256": "8713edb288670fa0ee7a478bc6e34bd554145da61608ffde36b877e0ac686ffb"
+    },
+    {
+      "path": "location/profile_03_locations.csv",
+      "role": "Profile 03 locations",
+      "size_bytes": 2229,
+      "sha256": "fc68b4c6ab08f39bac93d0ad70b623ca8bee52dbbe77cb8976416479998c392e"
+    },
+    {
+      "path": "location/profile_04_locations.csv",
+      "role": "Profile 04 locations",
+      "size_bytes": 2054,
+      "sha256": "3fd48358ea1d62671dff7484c51eaad051ed40ea85fcdada4dc854f3db2e9b77"
+    },
+    {
+      "path": "location/profile_05_locations.csv",
+      "role": "Profile 05 locations",
+      "size_bytes": 2096,
+      "sha256": "fcd5cb04fbaea6262926e69a747d111833e1929648892a170f6df09f663c8fb9"
+    },
+    {
+      "path": "location/profile_06_locations.csv",
+      "role": "Profile 06 locations",
+      "size_bytes": 2229,
+      "sha256": "e7214f49c32dd8c4cccae97393df4dbd85cafc4d8ed6181a0fcbc1cfd0ef35ec"
+    },
+    {
+      "path": "location/profile_07_locations.csv",
+      "role": "Profile 07 locations",
+      "size_bytes": 2761,
+      "sha256": "2eb6be18f809eb1332f656fe17c38204ab6add6940d584576cdc9a5362a2f23f"
+    },
+    {
+      "path": "location/profile_08_locations.csv",
+      "role": "Profile 08 locations",
+      "size_bytes": 2495,
+      "sha256": "20a4ba32e971e5a93e223c3de00571c206a64ae14b3646e158039b3db02522f1"
+    },
+    {
+      "path": "location/profile_09_locations.csv",
+      "role": "Profile 09 locations",
+      "size_bytes": 3027,
+      "sha256": "dff1340a57ca7e05feb552e00a578f681fd616d4bccc69e44ba0b8faffe6b840"
+    }
+  ],
+  "license": "CC BY 4.0"
+}

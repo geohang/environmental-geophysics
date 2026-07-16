@@ -7,6 +7,7 @@ import json
 import math
 import re
 import sys
+import zipfile
 from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
@@ -382,10 +383,11 @@ def audit_ashton_field_data() -> list[str]:
         catalog_path,
         ashton / "web" / "survey_lines.geojson",
         ashton / "web" / "em_shallow_resistivity.geojson",
-        ashton / "organized" / "em" / "manifest.json",
-        ashton / "organized" / "em" / "measurements" / "2026-05-02_gem2_averaged_inphase_quadrature.csv",
-        ashton / "organized" / "em" / "metadata" / "profile_mark_ranges.csv",
-        ashton / "organized" / "em" / "models" / "2026-05-02_gem2_valid_layered_inversion.csv",
+        ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "manifest.json",
+        ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "raw" / "2026-05-02_gem2_raw_averaged_instrument_export.csv",
+        ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "processed" / "2026-05-02_gem2_averaged_inphase_quadrature.csv",
+        ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "metadata" / "profile_mark_ranges.csv",
+        ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "inversion" / "2026-05-02_gem2_valid_layered_inversion.csv",
         ashton / "DATA_LICENSE.txt",
         DOCS / "apps" / "field-data.html",
         DOCS / "notebooks" / "ashton_field_data.ipynb",
@@ -417,34 +419,39 @@ def audit_ashton_field_data() -> list[str]:
 
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     public_files = catalog.get("files", [])
-    raw_files = [path for path in (ashton / "raw").rglob("*") if path.is_file()]
+    public_packages = catalog.get("packages", [])
+    package_files = [path for path in (ashton / "packages").rglob("*") if path.is_file()]
+    download_archives = sorted((ashton / "downloads").glob("*.zip"))
     summary = catalog.get("publication_summary", {})
     expected_summary = {
         "audited_source_files": 60,
-        "published_source_files": 29,
-        "curated_products": 2,
-        "organized_em_files": 13,
+        "published_packages": 6,
+        "published_package_files": 49,
+        "download_archives": 6,
         "withheld_problem_ert_files": 6,
         "removed_redundant_or_intermediate_files": 25,
     }
     if summary != expected_summary:
         errors.append(f"Ashton publication summary differs from the reviewed release: {summary}")
-    if len(public_files) != 44 or len(raw_files) != 29:
-        errors.append(f"Ashton release must catalog 44 files with 29 retained raw files; catalog={len(public_files)}, raw={len(raw_files)}")
+    if len(public_packages) != 6 or len(public_files) != 49 or len(package_files) != 49 or len(download_archives) != 6:
+        errors.append(
+            "Ashton release must contain 6 acquisition packages, 49 package files, and 6 ZIP archives; "
+            f"packages={len(public_packages)}, catalog={len(public_files)}, "
+            f"disk={len(package_files)}, archives={len(download_archives)}"
+        )
     public_ert_measurements = [
         item["path"] for item in public_files
-        if "/ert/" in item["path"]
-        and not Path(item["path"]).name.startswith("location_")
-        and Path(item["path"]).suffix.lower() != ".kml"
+        if item.get("category") == "ERT"
+        and item.get("processing_level") == "quality-controlled PyGIMLi data"
     ]
     expected_ert = [
-        "2026-04-11/ert/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
-        "2026-05-02/ert/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt"
+        "ert/2026-04-11_wenner_2m/data/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
+        "ert/2026-05-02_dipole_dipole_1p5m/data/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt"
     ]
     if public_ert_measurements != expected_ert:
         errors.append(f"Ashton public ERT measurements must contain only the two approved PyGIMLi files: {public_ert_measurements}")
 
-    measurement_path = ashton / "organized" / "em" / "measurements" / "2026-05-02_gem2_averaged_inphase_quadrature.csv"
+    measurement_path = ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "processed" / "2026-05-02_gem2_averaged_inphase_quadrature.csv"
     with measurement_path.open(encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
         measurement_rows = sum(1 for _ in reader)
@@ -457,7 +464,7 @@ def audit_ashton_field_data() -> list[str]:
     if measurement_rows != 24212 or any(column not in measurement_columns for column in expected_iq):
         errors.append("Ashton EM measurement input must retain 24,212 rows and all five-frequency I/Q columns")
 
-    profile_root = ashton / "organized" / "em" / "profiles"
+    profile_root = ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "location"
     profile_files = sorted(profile_root.glob("profile_*_locations.csv"))
     profile_rows = []
     profile4_interpolated = 0
@@ -476,7 +483,7 @@ def audit_ashton_field_data() -> list[str]:
     if profile4_interpolated != 13:
         errors.append("Ashton EM Profile 04 must contain 13 flagged, nonzero interpolated elevations")
 
-    model_path = ashton / "organized" / "em" / "models" / "2026-05-02_gem2_valid_layered_inversion.csv"
+    model_path = ashton / "packages" / "em" / "2026-05-02_gem2_survey" / "inversion" / "2026-05-02_gem2_valid_layered_inversion.csv"
     with model_path.open(encoding="utf-8-sig", newline="") as stream:
         model_rows = sum(1 for _ in csv.DictReader(stream))
     if model_rows != 10538:
@@ -492,9 +499,22 @@ def audit_ashton_field_data() -> list[str]:
         "location_Line_information.txt",
         *{f"location_line {number}.txt" for number in range(1, 10)},
     }
-    leaked = sorted(path.name for path in raw_files if path.name in forbidden_public_names)
+    leaked = sorted(path.name for path in package_files if path.name in forbidden_public_names)
     if leaked:
-        errors.append(f"Ashton raw download tree still contains superseded EM files: {', '.join(leaked)}")
+        errors.append(f"Ashton package tree still contains superseded EM filenames: {', '.join(leaked)}")
+    for archive_path in download_archives:
+        with zipfile.ZipFile(archive_path) as archive:
+            names = archive.namelist()
+            if archive.testzip() is not None:
+                errors.append(f"Ashton download archive is corrupt: {archive_path.name}")
+            if not any(name.endswith("/README.txt") for name in names):
+                errors.append(f"Ashton download archive lacks README.txt: {archive_path.name}")
+            leaked_names = sorted(Path(name).name for name in names if Path(name).name in forbidden_public_names)
+            if leaked_names:
+                errors.append(f"Ashton download archive contains excluded files: {archive_path.name}: {leaked_names}")
+    for obsolete_tree in (ashton / "raw", ashton / "organized"):
+        if obsolete_tree.exists() and any(path.is_file() for path in obsolete_tree.rglob("*")):
+            errors.append(f"Ashton release still contains obsolete duplicate tree: {obsolete_tree.name}")
 
     lines = json.loads((ashton / "web" / "survey_lines.geojson").read_text(encoding="utf-8"))["features"]
     excluded_ert = [
@@ -517,11 +537,11 @@ def audit_ashton_field_data() -> list[str]:
         "Ashton Prairie Living Laboratory",
         "A growing archive for teaching and research",
         "Explore the survey layout",
-        "Field-data catalog",
+        "Survey data packages",
     ):
         if required_label not in field_data_page:
             errors.append(f"APLL data hub is missing {required_label}")
-    for required_label in ("EM Profile", "Recommended · start here", "Profile 01–09"):
+    for required_label in ("EM Profile", "All packages", "Profiles 01–09"):
         if required_label not in field_data_page:
             errors.append(f"Field Data explorer is missing profile-aware catalog UI: {required_label}")
     for removed_ui_term in ('data-layer="surveyPoints"', 'data-layer="synthetic"', "synthetic_overlays.geojson"):

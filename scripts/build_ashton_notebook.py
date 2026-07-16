@@ -111,11 +111,9 @@ print("PyHydroGeophysX import: OK")
             """
 ## Public data package: start with canonical files
 
-The website catalog separates source measurements, profile geometry,
-quality-controlled products, and mapped derived products. For EM, begin with the
-averaged in-phase/quadrature table and the named Profile 01–09 location files.
-The layered inversion is a derived result, not a replacement for the measured
-I/Q responses. Redundant format mirrors remain only in the external archive.
+The website catalog is organized by acquisition unit: one package for each ERT
+or SRT line and one package for the complete May 2 GEM-2 survey. Each package
+contains its data, matching locations, and a README that defines file roles.
 """
         ),
         code(
@@ -135,8 +133,8 @@ recommended = pd.DataFrame(
 )
 display(recommended.sort_values(["category", "dataset"]).reset_index(drop=True))
 display(pd.Series(catalog["publication_summary"]))
-assert catalog["publication_summary"]["published_source_files"] == 29
-assert catalog["publication_summary"]["organized_em_files"] == 13
+assert catalog["publication_summary"]["published_packages"] == 6
+assert catalog["publication_summary"]["published_package_files"] == 49
 '''
         ),
         markdown(
@@ -165,7 +163,7 @@ assert (line4["elevation_source"] == "interpolated_from_neighboring_em_points").
         code(
             r'''
 profile_paths = {
-    f"profile_{number:02d}": f"organized/em/profiles/profile_{number:02d}_locations.csv"
+    f"profile_{number:02d}": f"packages/em/2026-05-02_gem2_survey/location/profile_{number:02d}_locations.csv"
     for number in range(1, 10)
 }
 profile_locations = pd.concat(
@@ -227,8 +225,8 @@ notebook**. Apparent resistivity is not true resistivity or an inversion model.
 from pygimli.physics import ert
 
 ert_files = {
-    "2026-04-11 Wenner": "raw/2026-04-11/ert/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
-    "2026-05-02 dipole–dipole": "raw/2026-05-02/ert/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
+    "2026-04-11 Wenner": "packages/ert/2026-04-11_wenner_2m/data/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
+    "2026-05-02 dipole–dipole": "packages/ert/2026-05-02_dipole_dipole_1p5m/data/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
 }
 ert_datasets = {name: ert.load(str(data_file(relative))) for name, relative in ert_files.items()}
 summary_rows = []
@@ -265,9 +263,9 @@ are setup/unassigned records and remain in the file.
         code(
             r'''
 em_iq = pd.read_csv(data_file(
-    "organized/em/measurements/2026-05-02_gem2_averaged_inphase_quadrature.csv"
+    "packages/em/2026-05-02_gem2_survey/processed/2026-05-02_gem2_averaged_inphase_quadrature.csv"
 ))
-mark_ranges = pd.read_csv(data_file("organized/em/metadata/profile_mark_ranges.csv"))
+mark_ranges = pd.read_csv(data_file("packages/em/2026-05-02_gem2_survey/metadata/profile_mark_ranges.csv"))
 iq_columns = [f"{component}_{frequency}Hz" for frequency in (450, 1410, 4350, 13530, 42150)
               for component in ("I", "Q")]
 assert len(em_iq) == 24212 and all(column in em_iq for column in iq_columns)
@@ -316,7 +314,7 @@ keeps EM ingestion transparent with pandas rather than inventing a package API.
         code(
             r'''
 em_model = pd.read_csv(data_file(
-    "organized/em/models/2026-05-02_gem2_valid_layered_inversion.csv"
+    "packages/em/2026-05-02_gem2_survey/inversion/2026-05-02_gem2_valid_layered_inversion.csv"
 ))
 em_qc = em_model[em_model["FitError(%)"] <= 30].copy()
 bound_hits = em_qc["ResLayer_1"] >= 1999.9
@@ -349,7 +347,7 @@ determine a velocity model when low-velocity layers or reversals are present.
         ),
         code(
             r'''
-segy_path = data_file("raw/2026-05-02/seismic/1000.sgy")
+segy_path = data_file("packages/srt/2026-05-02_line_1000/data/line_1000.sgy")
 seismic = read_segy(str(segy_path))
 traces = np.asarray(seismic.traces)
 dt_s = seismic.metadata.sample_interval_us * 1e-6
@@ -367,7 +365,7 @@ ax.set(xlabel="Trace in first field record", ylabel="Time (ms)", title="Normaliz
         ),
         code(
             r'''
-picks = pd.read_csv(data_file("raw/2026-05-02/seismic/1000_first_break_picks.csv"))
+picks = pd.read_csv(data_file("packages/srt/2026-05-02_line_1000/processed/line_1000_first_break_picks.csv"))
 first_record = picks[picks["field_record"] == picks["field_record"].min()].copy()
 offset = np.abs(first_record["receiver_x"] - first_record["source_x"])
 fig, ax = plt.subplots(figsize=(7, 4))

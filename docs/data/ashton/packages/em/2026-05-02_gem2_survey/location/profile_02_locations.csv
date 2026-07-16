@@ -1,0 +1,17 @@
+profile_id,point_id,x_utm_m,y_utm_m,source_elevation_m,elevation_m,elevation_source,crs,source_file
+profile_02,profile_02_point_01,617629.821000,4613668.107000,218.690000,218.690000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_02,617630.292000,4613664.783000,218.180000,218.180000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_03,617632.113000,4613660.370000,218.520000,218.520000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_04,617632.859000,4613655.496000,218.110000,218.110000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_05,617632.992000,4613652.500000,217.910000,217.910000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_06,617633.830000,4613647.072000,217.550000,217.550000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_07,617634.741000,4613642.311000,217.150000,217.150000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_08,617634.593000,4613636.090000,216.780000,216.780000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_09,617635.252000,4613631.436000,213.670000,213.670000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_10,617636.002000,4613626.340000,216.170000,216.170000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_11,617637.159000,4613621.805000,215.520000,215.520000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_12,617637.903000,4613617.042000,215.700000,215.700000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_13,617638.220000,4613612.938000,214.620000,214.620000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_14,617639.734000,4613606.966000,214.270000,214.270000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_15,617640.473000,4613602.536000,214.710000,214.710000,provided_in_source,EPSG:26915,location_line 2.txt
+profile_02,profile_02_point_16,617640.698000,4613598.986000,214.740000,214.740000,provided_in_source,EPSG:26915,location_line 2.txt

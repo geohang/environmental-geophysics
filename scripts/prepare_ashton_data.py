@@ -17,6 +17,7 @@ import re
 import shutil
 import tempfile
 import xml.etree.ElementTree as ET
+import zipfile
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from importlib import metadata
@@ -594,6 +595,429 @@ def build_organized_em_products(root: Path, organized_root: Path) -> list[dict[s
     return products
 
 
+def _copy_package_file(source: Path, destination: Path) -> dict[str, Any]:
+    """Copy one approved source into a package and return file metadata."""
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, destination)
+    return {
+        "path": destination.as_posix(),
+        "extension": destination.suffix.lower(),
+        "size_bytes": destination.stat().st_size,
+        "sha256": sha256(destination),
+    }
+
+
+def _write_package_readme(path: Path, text: str) -> dict[str, Any]:
+    """Write a plain-text package guide and return file metadata."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.strip() + "\n", encoding="utf-8", newline="\n")
+    return {
+        "path": path.as_posix(),
+        "extension": path.suffix.lower(),
+        "size_bytes": path.stat().st_size,
+        "sha256": sha256(path),
+    }
+
+
+def build_data_packages(root: Path, packages_root: Path) -> list[dict[str, Any]]:
+    """Build acquisition-unit packages for the approved APLL release."""
+
+    # Overwrite the deterministic package paths in place. Recursive deletion is
+    # unreliable in synced OneDrive workspaces where a recently read directory
+    # may remain briefly locked by the sync client.
+    packages_root.mkdir(parents=True, exist_ok=True)
+    packages: list[dict[str, Any]] = []
+
+    def add_package(
+        package_id: str,
+        method: str,
+        date: str,
+        display_name: str,
+        instrument: str,
+        summary: str,
+        readme: str,
+        copies: list[tuple[Path, str, str]],
+    ) -> None:
+        package_dir = packages_root / Path(package_id)
+        files: list[dict[str, Any]] = []
+        for source, relative_destination, role in copies:
+            metadata_item = _copy_package_file(source, package_dir / relative_destination)
+            metadata_item["role"] = role
+            files.append(metadata_item)
+        readme_item = _write_package_readme(package_dir / "README.txt", readme)
+        readme_item["role"] = "package guide"
+        files.insert(0, readme_item)
+        packages.append(
+            {
+                "id": package_id.replace("/", "__"),
+                "directory": package_id,
+                "method": method,
+                "date": date,
+                "display_name": display_name,
+                "instrument": instrument,
+                "summary": summary,
+                "readme": f"{package_id}/README.txt",
+                "files": files,
+            }
+        )
+
+    april_ert = root / "2026-04-11" / "ert"
+    add_package(
+        "ert/2026-04-11_wenner_2m",
+        "ERT",
+        "2026-04-11",
+        "ERT | 2026-04-11 Wenner line",
+        "Not recorded in the retained files",
+        "One 48-electrode Wenner profile with 2 m electrode spacing.",
+        """
+APLL ERT PACKAGE: 2026-04-11 WENNER LINE
+
+Data class: Real field data
+Acquisition date: 2026-04-11
+Method: Electrical resistivity tomography (ERT)
+Array: Wenner
+Instrument: Not recorded in the retained files
+Geometry: 48 electrodes at 2 m spacing; profile coordinates run from 0 to 94 m.
+
+CONTENTS
+data/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt
+  Approved PyGIMLi-format apparent-resistivity dataset. Only positive apparent
+  resistivity values are retained. The inversion geometry is flat.
+location/location_2026-04-11_ERT_electrodes_2m_derived.csv
+  Electrode distance, UTM/WGS84 coordinates, and estimated elevations. The
+  location_basis field records that positions were derived from seismic GPS.
+
+USE NOTES
+Use the data and location files together. The location elevations are derived,
+whereas the PyGIMLi data file uses flat z coordinates. Do not substitute the
+withheld unfiltered or estimated-topography ERT files for this reviewed release.
+
+License: CC BY 4.0. See ../../../DATA_LICENSE.txt.
+""",
+        [
+            (
+                april_ert / "inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
+                "data/inversion_2026-04-11_Wenner_48elec_2m_flat_positive_only_pygimli.txt",
+                "quality-controlled PyGIMLi data",
+            ),
+            (
+                april_ert / "location_2026-04-11_ERT_electrodes_2m_derived.csv",
+                "location/location_2026-04-11_ERT_electrodes_2m_derived.csv",
+                "electrode locations",
+            ),
+        ],
+    )
+
+    may_ert = root / "2026-05-02" / "ert"
+    add_package(
+        "ert/2026-05-02_dipole_dipole_1p5m",
+        "ERT",
+        "2026-05-02",
+        "ERT | 2026-05-02 dipole-dipole line",
+        "IRIS SYSCAL Pro",
+        "One 48-electrode dipole-dipole profile with nominal 1.5 m spacing.",
+        """
+APLL ERT PACKAGE: 2026-05-02 DIPOLE-DIPOLE LINE
+
+Data class: Real field data
+Acquisition date: 2026-05-02
+Method: Electrical resistivity tomography (ERT)
+Array: Dipole-dipole
+Instrument: IRIS SYSCAL Pro
+Geometry: 48 stainless-steel electrodes at nominal 1.5 m spacing. Field notes
+report an approximately 72 m survey line and approximately 0.30 m electrode
+insertion depth. The coordinate files span 0 to 70.5 m between end electrodes.
+
+CONTENTS
+data/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt
+  Approved topographic PyGIMLi-format apparent-resistivity dataset. Only
+  positive apparent resistivity values are retained.
+location/location_2026-05-02_ert_electrodes_UTM_1p5m.txt
+  Electrode distance, UTM coordinates, and elevation.
+location/location_2026-05-02_ert_electrodes_wgs84.csv
+  Matching UTM and WGS84 electrode coordinates.
+
+USE NOTES
+Use one of the two location files according to the required coordinate system.
+Do not use the withheld unfiltered version of this ERT dataset.
+
+License: CC BY 4.0. See ../../../DATA_LICENSE.txt.
+""",
+        [
+            (
+                may_ert / "inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
+                "data/inversion_2026-05-02_May2_dipole_dipole_positive_only_pygimli.txt",
+                "quality-controlled PyGIMLi data",
+            ),
+            (
+                may_ert / "location_2026-05-02_ert_electrodes_UTM_1p5m.txt",
+                "location/location_2026-05-02_ert_electrodes_UTM_1p5m.txt",
+                "electrode locations (UTM)",
+            ),
+            (
+                may_ert / "location_2026-05-02_ert_electrodes_wgs84.csv",
+                "location/location_2026-05-02_ert_electrodes_wgs84.csv",
+                "electrode locations (UTM and WGS84)",
+            ),
+        ],
+    )
+
+    april_seismic = root / "2026-04-11" / "seismic"
+    april_shots = sorted(april_seismic.glob("*.dat"), key=lambda path: int(path.stem))
+    add_package(
+        "srt/2026-04-11_line",
+        "SRT",
+        "2026-04-11",
+        "SRT | 2026-04-11 line",
+        "Geometrics acquisition system (model not recorded)",
+        "One seismic-refraction line with 15 Geometrics DAT shot records.",
+        """
+APLL SRT PACKAGE: 2026-04-11 LINE
+
+Data class: Real field data
+Acquisition date: 2026-04-11
+Method: Seismic refraction tomography (SRT)
+Instrument: Geometrics acquisition system; model not recorded in retained files
+Acquisition unit: One line with 15 raw DAT shot records and 15 GPS positions.
+
+CONTENTS
+data/shot_01.dat through data/shot_15.dat
+  Raw Geometrics shot records, renamed only to preserve numeric sort order.
+location/location_2026-04-11_seismic_GPS_points.csv
+  WGS84 longitude, latitude, and elevation for the 15 recorded positions.
+
+USE NOTES
+The supplied metadata do not document receiver spacing, source offsets, or the
+mapping between every DAT record and every GPS row. Preserve record order and
+verify geometry before inversion.
+
+License: CC BY 4.0. See ../../../DATA_LICENSE.txt.
+""",
+        [
+            *[(path, f"data/shot_{int(path.stem):02d}.dat", "raw shot record") for path in april_shots],
+            (
+                april_seismic / "location_2026-04-11_seismic_GPS_points.csv",
+                "location/location_2026-04-11_seismic_GPS_points.csv",
+                "line locations",
+            ),
+        ],
+    )
+
+    may_seismic = root / "2026-05-02" / "seismic"
+    may_locations = pd.read_csv(may_seismic / "location_2026-05-02_seismic_positions_wgs84.csv")
+    for line_number in (1000, 2000):
+        package_id = f"srt/2026-05-02_line_{line_number}"
+        package_dir = packages_root / package_id
+        line_locations = may_locations.loc[may_locations["line"] == line_number].copy()
+        line_location_path = package_dir / "location" / f"line_{line_number}_positions_wgs84.csv"
+        line_location_path.parent.mkdir(parents=True, exist_ok=True)
+        line_locations.to_csv(line_location_path, index=False, float_format="%.6f")
+        copies = [
+            (may_seismic / f"{line_number}.sgy", f"data/line_{line_number}.sgy", "raw SEG-Y waveforms"),
+            (
+                may_seismic / f"{line_number}_28pts.txt",
+                f"location/line_{line_number}_positions_utm.txt",
+                "source/receiver positions (UTM)",
+            ),
+            (
+                may_seismic / f"{line_number}_first_break_picks.csv",
+                f"processed/line_{line_number}_first_break_picks.csv",
+                "interpreted first-break picks",
+            ),
+        ]
+        add_package(
+            package_id,
+            "SRT",
+            "2026-05-02",
+            f"SRT | 2026-05-02 line {line_number}",
+            "24-channel seismic acquisition system; sledgehammer source",
+            f"One 24-channel seismic-refraction line with 28 source positions and first-break picks.",
+            f"""
+APLL SRT PACKAGE: 2026-05-02 LINE {line_number}
+
+Data class: Real field data
+Acquisition date: 2026-05-02
+Method: Seismic refraction tomography (SRT)
+Receiver setup: 24 geophones at nominal 2 m spacing
+Source: Sledgehammer impact on an aluminum plate
+Acquisition: Three impacts were collected at each source station for stacking
+and noise reduction. Source stations extend 4 m beyond both ends of the receiver
+spread. The supplied geometry contains 28 positions at 2 m spacing (0 to 54 m).
+
+CONTENTS
+data/line_{line_number}.sgy
+  Raw SEG-Y waveform data for this line.
+location/line_{line_number}_positions_utm.txt
+  Ordered source/receiver geometry in UTM coordinates with elevations.
+location/line_{line_number}_positions_wgs84.csv
+  The same 28 positions with UTM and WGS84 coordinates.
+processed/line_{line_number}_first_break_picks.csv
+  Interpreted first-arrival picks with trace and geometry metadata.
+
+USE NOTES
+The first-break table is interpreted data, not raw acquisition. Keep it separate
+from the SEG-Y waveforms when testing picking or uncertainty workflows.
+
+License: CC BY 4.0. See ../../../DATA_LICENSE.txt.
+""",
+            copies,
+        )
+        package = packages[-1]
+        generated_item = {
+            "path": line_location_path.as_posix(),
+            "extension": line_location_path.suffix.lower(),
+            "size_bytes": line_location_path.stat().st_size,
+            "sha256": sha256(line_location_path),
+            "role": "line locations (UTM and WGS84)",
+        }
+        package["files"].insert(-1, generated_item)
+
+    # Reuse the audited profile/elevation workflow, then place all EM products
+    # in one acquisition package with clear raw/processed/inversion roles.
+    with tempfile.TemporaryDirectory() as temporary_directory:
+        stage_root = Path(temporary_directory)
+        build_organized_em_products(root, stage_root)
+        staged_em = stage_root / "em"
+        em_source = root / "2026-05-02" / "em"
+        em_package_id = "em/2026-05-02_gem2_survey"
+        em_dir = packages_root / em_package_id
+        em_copies: list[tuple[Path, str, str]] = [
+            (
+                em_source / "raw_22-xg-12se-294_gem_averaged_original_copy.csv",
+                "raw/2026-05-02_gem2_raw_averaged_instrument_export.csv",
+                "raw averaged instrument export",
+            ),
+            (
+                staged_em / "measurements" / "2026-05-02_gem2_averaged_inphase_quadrature.csv",
+                "processed/2026-05-02_gem2_averaged_inphase_quadrature.csv",
+                "processed averaged I/Q observations",
+            ),
+            (
+                staged_em / "metadata" / "profile_mark_ranges.csv",
+                "metadata/profile_mark_ranges.csv",
+                "profile-to-Mark mapping",
+            ),
+            (
+                staged_em / "models" / "2026-05-02_gem2_valid_layered_inversion.csv",
+                "inversion/2026-05-02_gem2_valid_layered_inversion.csv",
+                "derived layered inversion",
+            ),
+            *[
+                (
+                    staged_em / "profiles" / f"profile_{number:02d}_locations.csv",
+                    f"location/profile_{number:02d}_locations.csv",
+                    f"Profile {number:02d} locations",
+                )
+                for number in range(1, 10)
+            ],
+        ]
+        add_package(
+            em_package_id,
+            "EM",
+            "2026-05-02",
+            "EM | 2026-05-02 GEM-2 survey (Profiles 01-09)",
+            "Geophex GEM-2 Ski, hand-held frequency-domain EM system",
+            "One GEM-2 acquisition containing Profiles 01-09, raw averaged I/Q, processed I/Q, locations, and inversion results.",
+            """
+APLL EM PACKAGE: 2026-05-02 GEM-2 SURVEY
+
+Data class: Real field data
+Acquisition date: 2026-05-02
+Method: Frequency-domain electromagnetic induction (FDEM)
+Instrument: Geophex GEM-2 Ski, hand-held system
+Survey organization: Nine survey profiles acquired in one field campaign
+Frequencies: 450, 1410, 4350, 13530, and 42150 Hz
+Response components: In-phase (I) and quadrature (Q)
+Coordinate reference system: NAD83 / UTM zone 15N (EPSG:26915)
+
+CONTENTS
+raw/2026-05-02_gem2_raw_averaged_instrument_export.csv
+  Original-copy averaged instrument export. This is the earliest retained GEM-2
+  table, but it is already averaged and must not be described as unaveraged raw
+  time-series data.
+processed/2026-05-02_gem2_averaged_inphase_quadrature.csv
+  Canonical processed input with the original five-frequency I/Q columns.
+location/profile_01_locations.csv through profile_09_locations.csv
+  Ordered profile-specific UTM coordinates and elevations. Estimated elevations
+  are explicitly identified by the elevation_source field.
+metadata/profile_mark_ranges.csv
+  Mapping from measurement Mark ranges to Profiles 01-09.
+inversion/2026-05-02_gem2_valid_layered_inversion.csv
+  Quality-screened layered inversion results. This is a derived product and must
+  not be substituted for the I/Q observations in processing workflows.
+manifest.json
+  Machine-readable package structure, roles, checksums, and acquisition metadata.
+
+USE NOTES
+Use metadata/profile_mark_ranges.csv to assign observations to profiles. Join a
+profile to its matching location file; do not apply one shared position file to
+all profiles. Start processing from the processed I/Q table when reproducing the
+PyHydroGeophysX workflow, and use the raw averaged export for lower-level QA.
+
+License: CC BY 4.0. See ../../../DATA_LICENSE.txt.
+""",
+            em_copies,
+        )
+        em_package = packages[-1]
+        manifest = {
+            "dataset": "Ashton Prairie GEM-2 frequency-domain EM survey",
+            "data_class": "real field data",
+            "acquisition_date": "2026-05-02",
+            "instrument": "Geophex GEM-2 Ski",
+            "frequencies_hz": [450, 1410, 4350, 13530, 42150],
+            "response_components": ["in-phase", "quadrature"],
+            "coordinate_reference_system": "EPSG:26915",
+            "profiles": [f"profile_{number:02d}" for number in range(1, 10)],
+            "files": [
+                {
+                    "path": Path(item["path"]).relative_to(em_dir).as_posix(),
+                    "role": item["role"],
+                    "size_bytes": item["size_bytes"],
+                    "sha256": item["sha256"],
+                }
+                for item in em_package["files"]
+                if item["role"] != "package guide"
+            ],
+            "license": "CC BY 4.0",
+        }
+        manifest_path = em_dir / "manifest.json"
+        write_json(manifest_path, manifest)
+        em_package["files"].append(
+            {
+                "path": manifest_path.as_posix(),
+                "extension": ".json",
+                "size_bytes": manifest_path.stat().st_size,
+                "sha256": sha256(manifest_path),
+                "role": "machine-readable package manifest",
+            }
+        )
+
+    # Store catalog-facing paths relative to the package root.
+    for package in packages:
+        for item in package["files"]:
+            item["path"] = Path(item["path"]).relative_to(packages_root).as_posix()
+            item["url"] = f"../data/ashton/packages/{item['path']}"
+
+    downloads_root = packages_root.parent / "downloads"
+    downloads_root.mkdir(parents=True, exist_ok=True)
+    for package in packages:
+        archive_name = f"apll_{package['id'].replace('__', '_')}.zip"
+        archive_path = downloads_root / archive_name
+        top_level = f"apll_{Path(package['directory']).name}"
+        with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for item in package["files"]:
+                source_path = packages_root / item["path"]
+                within_package = Path(item["path"]).relative_to(package["directory"])
+                archive.write(source_path, (Path(top_level) / within_package).as_posix())
+        package["archive"] = archive_name
+        package["archive_url"] = f"../data/ashton/downloads/{archive_name}"
+        package["archive_size_bytes"] = archive_path.stat().st_size
+        package["archive_sha256"] = sha256(archive_path)
+    return packages
+
+
 def build_web_products(root: Path, output: Path) -> dict[str, Any]:
     """Build curated survey-line and processed-data layers for the Web GIS."""
 
@@ -1038,6 +1462,84 @@ def build_catalog(
     write_json(output / "data_catalog.json", catalog)
 
 
+def build_package_catalog(
+    report: dict[str, Any],
+    output: Path,
+    packages: list[dict[str, Any]],
+) -> None:
+    """Create a package-level browser catalog and a flat notebook index."""
+
+    public_packages: list[dict[str, Any]] = []
+    flat_files: list[dict[str, Any]] = []
+    for package in packages:
+        package_files = []
+        for item in package["files"]:
+            file_item = {
+                **item,
+                "package_id": package["id"],
+                "category": package["method"],
+                "dataset": package["display_name"],
+                "display_name": Path(item["path"]).name,
+                "processing_level": item["role"],
+                "description": package["summary"],
+                "status": "reviewed",
+                "quality_notes": [],
+                "recommended": item["role"] in {
+                    "package guide",
+                    "quality-controlled PyGIMLi data",
+                    "raw SEG-Y waveforms",
+                    "processed averaged I/Q observations",
+                },
+                "source_class": "real field data",
+            }
+            package_files.append(file_item)
+            flat_files.append(file_item)
+        package_summary = {
+            key: package[key]
+            for key in (
+                "id",
+                "directory",
+                "method",
+                "date",
+                "display_name",
+                "instrument",
+                "summary",
+                "readme",
+            )
+        }
+        package_summary.update(
+            {
+                "readme_url": f"../data/ashton/packages/{package['readme']}",
+                "archive": package["archive"],
+                "archive_url": package["archive_url"],
+                "archive_size_bytes": package["archive_size_bytes"],
+                "archive_sha256": package["archive_sha256"],
+                "file_count": len(package_files),
+                "size_bytes": sum(item["size_bytes"] for item in package_files),
+                "files": package_files,
+            }
+        )
+        public_packages.append(package_summary)
+
+    catalog = {
+        "dataset": report["dataset"],
+        "data_class": "real",
+        "license": report["license"],
+        "official_site": report["official_site"],
+        "publication_summary": {
+            "audited_source_files": report["source_file_count"],
+            "published_packages": len(public_packages),
+            "published_package_files": len(flat_files),
+            "download_archives": len(public_packages),
+            "withheld_problem_ert_files": 6,
+            "removed_redundant_or_intermediate_files": len(PUBLIC_EXCLUSIONS),
+        },
+        "packages": public_packages,
+        "files": flat_files,
+    }
+    write_json(output / "data_catalog.json", catalog)
+
+
 def main() -> int:
     """Run the complete audit and Web GIS preparation workflow."""
 
@@ -1045,28 +1547,21 @@ def main() -> int:
     parser.add_argument("source", type=Path, help="Root directory containing the Ashton source files.")
     parser.add_argument("output", type=Path, help="Directory for curated Web GIS products and reports.")
     parser.add_argument(
-        "--public-root",
+        "--packages-root",
         type=Path,
         default=None,
-        help="Published raw-data directory; catalog entries are limited to approved files present here.",
-    )
-    parser.add_argument(
-        "--organized-root",
-        type=Path,
-        default=None,
-        help="Published organized-data directory; defaults to a sibling of the Web output directory.",
+        help="Published acquisition-package directory; defaults to a sibling of the Web output directory.",
     )
     args = parser.parse_args()
     source = args.source.resolve()
     output = args.output.resolve()
-    public_root = args.public_root.resolve() if args.public_root else source
-    organized_root = args.organized_root.resolve() if args.organized_root else output.parent / "organized"
+    packages_root = args.packages_root.resolve() if args.packages_root else output.parent / "packages"
     if not source.exists():
         parser.error(f"Source directory does not exist: {source}")
     report = build_report(source, output)
-    organized_products = build_organized_em_products(source, organized_root)
+    packages = build_data_packages(source, packages_root)
     write_json(output / "quality_report.json", report)
-    build_catalog(report, output, public_root, organized_products)
+    build_package_catalog(report, output, packages)
     print(
         f"Reviewed {report['source_file_count']} Ashton files; "
         f"status={report['overall_status']}; "
