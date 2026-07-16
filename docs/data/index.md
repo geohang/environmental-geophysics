@@ -1,10 +1,10 @@
 # Field Data and Teaching Datasets
 
-Course datasets are separated by provenance so students can see what was measured, what was derived, and what was generated for teaching. Start from the unified **[Field Data module](../apps/field-data.html)** to choose a real or synthetic path.
+Course datasets are separated by provenance so students can see what was measured, what was derived, and what was generated for teaching. Two paths are kept distinct: real observations from the **[Ashton Prairie Living Laboratory (APLL)](../apps/field-data.html)** data hub and the explicitly synthetic **[Field Missions](../apps/field-missions.html)** and teaching CSVs below.
 
-## Real Field Data: Ashton Prairie
+## Ashton Prairie Living Laboratory (APLL)
 
-The **[Ashton Field Data Explorer](../apps/field-data.html)** maps retained survey lines from the University of Iowa's [Ashton Prairie Living Laboratory](https://sees.uiowa.edu/research/ashton-prairie). Individual survey points, synthetic map overlays, and the non-straight June 25 pre-processing ERT track are omitted. It includes layer controls, popups, a downloadable file catalog, and a companion [PyHydroGeophysX processing notebook](../notebooks/ashton_field_data.ipynb).
+The **[Ashton Prairie Living Laboratory (APLL)](../apps/field-data.html)** data hub maps retained survey lines from the University of Iowa's [field site](https://sees.uiowa.edu/research/ashton-prairie). Individual survey points, synthetic map overlays, and the non-straight June 25 pre-processing ERT track are omitted. It includes layer controls, popups, a downloadable file catalog, and a companion [PyHydroGeophysX processing notebook](../notebooks/ashton_field_data.ipynb).
 
 All 60 source files were checked. The public catalog contains 29 retained source files, 13 organized EM files, and 2 curated map products; redundant EM mirrors/intermediates and six problematic ERT measurement files are not published. The EM package keeps the full 24,212-row averaged in-phase/quadrature table as its processing input, provides separately named location tables for Profile 01–09, and places the valid layered inversion under `models/` as a derived result. The ERT teaching workflow uses only the positive-only April 11 Wenner and May 2 dipole–dipole PyGIMLi datasets. Thirteen zero-placeholder elevations on EM Profile 04 are replaced in the organized profile geometry and Web GIS by flagged IDW estimates; the external source archive remains unchanged.
 

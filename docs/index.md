@@ -10,7 +10,7 @@
 [📚 Browse Modules](lecture/index.md){ .md-button }
 [🎓 Active-Learning Lessons](apps/lecture-frameworks.html){ .md-button }
 [🧪 Classroom Labs](apps/classroom-labs.html){ .md-button }
-[🌾 Field Data: Real & Synthetic](apps/field-data.html){ .md-button }
+[🌾 APLL Field Data](apps/field-data.html){ .md-button }
 [✅ Practice Lab](apps/practice-lab.html){ .md-button }
 
 </div>
@@ -81,7 +81,7 @@ Environmental geophysics investigates the subsurface by measuring physical field
 
 ## From Classroom to Research
 
-The methods in this course are the same ones used to monitor groundwater and image the critical zone in current research. Explore real course/research observations in the [Ashton Prairie Field Data Explorer](apps/field-data.html), then reproduce the quality-control workflow in its Colab notebook. Several modules also link to [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX), an open-source Python package developed in Dr. Chen's group that connects hydrological models to ERT, seismic, and electromagnetic measurements.
+The methods in this course are the same ones used to monitor groundwater and image the critical zone in current research. Explore real course and research observations at the [Ashton Prairie Living Laboratory (APLL)](apps/field-data.html) data hub, then reproduce the quality-control workflow in its Colab notebook. Several modules also link to [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX), an open-source Python package developed in Dr. Chen's group that connects hydrological models to ERT, seismic, and electromagnetic measurements.
 
 ## How This Site Works
 
