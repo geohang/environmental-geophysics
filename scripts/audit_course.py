@@ -530,6 +530,14 @@ def audit_ashton_field_data() -> list[str]:
     for synthetic_term in ("field-missions.html", "Field Missions", "Synthetic Field Data"):
         if synthetic_term in field_data_page:
             errors.append(f"APLL data hub must not include synthetic-data content: {synthetic_term}")
+    for removed_apll_content in (
+        "At a glance",
+        "Elevation QA",
+        "The shallow subsurface beneath the prairie",
+        "The first release is a near-surface geophysical survey campaign",
+    ):
+        if removed_apll_content in field_data_page:
+            errors.append(f"APLL data hub still contains removed explanatory content: {removed_apll_content}")
     notebook_text = (DOCS / "notebooks" / "ashton_field_data.ipynb").read_text(encoding="utf-8")
     for required_notebook_term in (
         "2026-05-02_gem2_averaged_inphase_quadrature.csv",
