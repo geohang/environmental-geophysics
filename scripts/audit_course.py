@@ -555,9 +555,15 @@ def audit_ashton_field_data() -> list[str]:
         "Elevation QA",
         "The shallow subsurface beneath the prairie",
         "The first release is a near-surface geophysical survey campaign",
+        "14 retained acquisition profiles; the pre-processing June 25 ERT track is excluded",
+        "540 processed 1 m cells; fit error ≤ 30%",
+        "Catalog failed to load.",
     ):
         if removed_apll_content in field_data_page:
             errors.append(f"APLL data hub still contains removed explanatory content: {removed_apll_content}")
+    for resilient_loader_term in ("Promise.allSettled", "Array.isArray(state.catalog)", "cache:'no-store'"):
+        if resilient_loader_term not in field_data_page:
+            errors.append(f"APLL data hub is missing resilient catalog loading: {resilient_loader_term}")
     notebook_text = (DOCS / "notebooks" / "ashton_field_data.ipynb").read_text(encoding="utf-8")
     for required_notebook_term in (
         "2026-05-02_gem2_averaged_inphase_quadrature.csv",
