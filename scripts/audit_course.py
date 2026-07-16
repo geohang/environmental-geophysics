@@ -514,18 +514,22 @@ def audit_ashton_field_data() -> list[str]:
 
     field_data_page = (DOCS / "apps" / "field-data.html").read_text(encoding="utf-8")
     for required_label in (
-        "Real Field Data: Ashton Prairie",
-        "Synthetic Field Data: Field Missions",
-        'href="field-missions.html"',
+        "Ashton Prairie Living Laboratory",
+        "A growing archive for teaching and research",
+        "Explore the survey layout",
+        "Field-data catalog",
     ):
         if required_label not in field_data_page:
-            errors.append(f"Field Data hub is missing {required_label}")
+            errors.append(f"APLL data hub is missing {required_label}")
     for required_label in ("EM Profile", "Recommended · start here", "Profile 01–09"):
         if required_label not in field_data_page:
             errors.append(f"Field Data explorer is missing profile-aware catalog UI: {required_label}")
     for removed_ui_term in ('data-layer="surveyPoints"', 'data-layer="synthetic"', "synthetic_overlays.geojson"):
         if removed_ui_term in field_data_page:
             errors.append(f"Field Data explorer still includes removed point/overlay UI: {removed_ui_term}")
+    for synthetic_term in ("field-missions.html", "Field Missions", "Synthetic Field Data"):
+        if synthetic_term in field_data_page:
+            errors.append(f"APLL data hub must not include synthetic-data content: {synthetic_term}")
     notebook_text = (DOCS / "notebooks" / "ashton_field_data.ipynb").read_text(encoding="utf-8")
     for required_notebook_term in (
         "2026-05-02_gem2_averaged_inphase_quadrature.csv",
