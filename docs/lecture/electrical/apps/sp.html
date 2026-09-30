@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SP Signal Mechanisms</title>
+    <title>SP · Signal Mechanisms</title>
     <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
 
     <style>
@@ -133,6 +133,7 @@
         let particles = [];
         let grains = [];
         let electrons = [];
+        let diffuse = []; // tab 1: extra cations of the diffuse layer
         let sliderValue = 50; // New state for the interactive slider
 
         document.getElementById('interactive-slider').addEventListener('input', (e) => {
@@ -155,12 +156,12 @@
                 sub: "Drag of the electrical double layer", 
                 left: "Low Voltage (-)", 
                 right: "High Voltage (+)", 
-                legend: `<li><span class="inline-block w-4 h-4 rounded-full border-2 border-red-600 bg-[#d6c09a] mr-2 align-middle"></span>Rock Grain w/ Negative Layer</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-600 mr-2 align-middle"></span>Positive Ion (Mobile)</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-600 mr-2 align-middle"></span>Negative Ion (Diffuse)</li>`,
-                concept: "<strong>How it works:</strong> Groundwater flowing through rock pores naturally drags 'loose' positive ions with it. Meanwhile, the rock surfaces hold tightly onto a fixed layer of negative charge (the <strong>Electrical Double Layer</strong>, shown as the red ring). This physical pulling apart of charges creates a voltage difference across the aquifer.<br><br><em>Drag the slider to increase the fluid flow speed. Notice how faster flow forces more positive charge to build up on the right side.</em>",
+                legend: `<li><span class="inline-block w-4 h-4 rounded-full border-2 border-red-600 bg-[#d6c09a] mr-2 align-middle"></span>Rock grain with fixed negative surface charge</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-600 mr-2 align-middle"></span>Positive ion</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-600 mr-2 align-middle"></span>Negative ion</li><li><span class="inline-block w-3 h-3 rounded-full bg-white border-2 border-sky-600 mr-2 align-middle"></span>Extra positive ions of the diffuse layer</li>`,
+                concept: "<strong>How it works:</strong> Grain surfaces hold a fixed layer of negative charge. A diffuse cloud of extra positive ions in the water next to each grain balances it; together they form the <strong>Electrical Double Layer</strong>. Flowing groundwater carries all dissolved ions, but it also drags this excess positive charge downstream, so charge separates along the flow path and a voltage builds, positive downstream.<br><br><em>Drag the slider to increase the fluid flow speed. Notice how faster flow forces more positive charge to build up on the right side.</em>",
                 sliderLabel: "Fluid Flow Speed"
             },
             { 
-                title: "Redox Diffusion Potential", 
+                title: "Mineralization (Redox) Potential",
                 sub: "Self-potential over a sulfide ore body", 
                 left: "Surface (-)",
                 right: "Depth (+)",
@@ -214,32 +215,51 @@
             particles = [];
             grains = [];
             electrons = [];
-            
+            diffuse = [];
+
             const w = canvas.width;
             const h = canvas.height;
 
             if (tabId === 1) { // Electrokinetic
-                // Create rock grains
+                // Create rock grains (try to keep them from overlapping, clear of the
+                // title and bottom readout, and clear of the downstream strip where
+                // excess charge collects)
+                const yTop = 90, yBot = h - 130;
+                const gScale = Math.min(1, w / 700);  // smaller grains on narrow screens
                 for(let i=0; i<8; i++) {
-                    grains.push({
-                        x: w * (0.1 + Math.random() * 0.8),
-                        y: h * (0.1 + Math.random() * 0.8),
-                        r: 30 + Math.random() * 40
-                    });
+                    let g;
+                    for(let tries=0; tries<200; tries++) {
+                        const r = gScale * (30 + Math.random() * 40);
+                        g = {
+                            x: w * 0.06 + r + Math.random() * Math.max(1, w * 0.94 - 90 - 2 * r),
+                            y: yTop + r + Math.random() * Math.max(1, yBot - yTop - 2 * r),
+                            r: r
+                        };
+                        if(grains.every(o => Math.hypot(o.x - g.x, o.y - g.y) > o.r + g.r + 40 * gScale)) break;
+                    }
+                    grains.push(g);
                 }
-                
-                // Create ions
-                for(let i=0; i<150; i++) {
-                    let isPositive = Math.random() > 0.5;
+
+                // Bulk pore water: equal numbers of cations and anions (net neutral).
+                // Both are carried by the flow at the same speed.
+                for(let i=0; i<120; i++) {
                     particles.push({
                         x: Math.random() * w,
                         y: Math.random() * h,
-                        charge: isPositive ? 1 : -1,
-                        speed: isPositive ? 2 + Math.random()*2 : 0.2 + Math.random()*0.5, // Positives move with flow, negatives stick to grains
-                        radius: isPositive ? 4 : 3
+                        charge: i % 2 === 0 ? 1 : -1,
+                        phase: Math.random() * Math.PI * 2,
+                        radius: 5
                     });
                 }
-            } 
+
+                // Diffuse layer: extra cations in a thin shell around each grain,
+                // balancing the grain's fixed negative surface charge.
+                grains.forEach((g, gi) => {
+                    for(let k=0; k<10; k++) {
+                        diffuse.push({ state: 'shell', g: gi, th: Math.random() * 2 * Math.PI - Math.PI, dr: Math.random() * 4, x: 0, y: 0 });
+                    }
+                });
+            }
             else if (tabId === 2) { // Electrochemical
                 // Create electrons moving up the ore body
                 for(let i=0; i<40; i++) {
@@ -282,6 +302,65 @@
             ctx.fillText(text, x, y);
         }
 
+        // --- TAB 1 PHYSICS STEP (streaming potential) ---
+        // Bulk ions (both signs) move with the water. The diffuse-layer excess
+        // cations creep along each grain surface toward its downstream side, where
+        // the flow pulls them off (more often when the flow is faster). They drift
+        // downstream and collect at the right edge. A conduction current through
+        // the pore water carries charge back, modeled by returning collected ions
+        // to the upstream side of a grain at a fixed rate, so the collected excess
+        // charge reaches a steady amount that grows with flow speed.
+        const BULK_SPEED = 2.0;  // px per frame at intensity 1
+        function avoidGrains(p, u) {
+            grains.forEach(g => {
+                const dx = p.x - g.x, dy = p.y - g.y;
+                const dist = Math.hypot(dx, dy) || 1;
+                const rmin = g.r + 12;
+                if(dist < rmin) {  // the water flows around the grain
+                    p.x += dx / dist * (rmin - dist);
+                    p.y += dy / dist * (rmin - dist) + (dy >= 0 ? 1 : -1) * 0.8 * u;
+                }
+            });
+        }
+        function updateStreaming(w, h, intensity) {
+            const u = BULK_SPEED * intensity;
+            particles.forEach(p => {
+                p.x += u + (Math.random() - 0.5) * 0.6;
+                p.y += Math.sin(time * 0.05 + p.phase) * 0.4 + (Math.random() - 0.5) * 0.6;
+                avoidGrains(p, u);
+                if(p.x > w + 10) { p.x = -10; p.y = Math.random() * h; }
+                if(p.y > h) p.y = 0;
+                if(p.y < 0) p.y = h;
+            });
+            diffuse.forEach(d => {
+                if(d.state === 'shell') {
+                    const g = grains[d.g];
+                    const R = g.r + 26 + d.dr;
+                    const s = d.th >= 0 ? 1 : -1;
+                    // dragged along the surface toward the downstream side (angle 0), far slower than the bulk water
+                    d.th -= 0.015 * intensity * (Math.sin(d.th) + 0.25 * s) * (50 / g.r) - (Math.random() - 0.5) * 0.01;
+                    if((d.th >= 0 ? 1 : -1) !== s) d.th = 0.02 * s;  // do not overshoot the downstream point
+                    d.x = g.x + Math.cos(d.th) * R;
+                    d.y = g.y + Math.sin(d.th) * R;
+                    if(Math.abs(d.th) < 0.2 && Math.random() < 0.02 * intensity) d.state = 'drift';
+                } else if(d.state === 'drift') {
+                    d.x += 0.6 * u;
+                    d.y += (Math.random() - 0.5) * 0.8;
+                    avoidGrains(d, u);
+                    d.y = Math.min(h - 12, Math.max(12, d.y));
+                    if(d.x > w - 55) d.state = 'acc';
+                } else {  // 'acc': excess positive charge collected downstream
+                    d.x = Math.min(w - 12, Math.max(w - 55, d.x + (Math.random() - 0.5)));
+                    d.y = Math.min(h - 12, Math.max(12, d.y + (Math.random() - 0.5)));
+                    if(Math.random() < 0.005) {  // returned by the conduction current
+                        d.state = 'shell';
+                        d.g = Math.floor(Math.random() * grains.length);
+                        d.th = (Math.random() < 0.5 ? -1 : 1) * (Math.PI - Math.random() * 0.8);
+                    }
+                }
+            });
+        }
+
         // --- DRAWING LOOPS ---
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -303,6 +382,11 @@
                     let flowX = ((time * 2 * intensity) + i * (w/5)) % w;
                     ctx.fillRect(flowX, 0, 50, h);
                 }
+
+                // Downstream strip tinted by the excess positive charge collected there
+                const nAcc = diffuse.filter(d => d.state === 'acc').length;
+                ctx.fillStyle = `rgba(2, 132, 199, ${0.35 * nAcc / Math.max(1, diffuse.length)})`;
+                ctx.fillRect(w - 60, 0, 60, h);
 
                 // Draw Grains
                 grains.forEach(g => {
@@ -341,43 +425,33 @@
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'alphabetic';
 
-                // Draw and move particles
+                // Move all ions, then draw bulk ions and the diffuse-layer excess cations
+                updateStreaming(w, h, intensity);
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = 'bold 10px Inter, system-ui, sans-serif';
                 particles.forEach(p => {
-                    // Apply user-controlled intensity to flow speed
-                    let currentSpeed = p.charge === 1 ? p.speed * intensity : p.speed;
-                    p.x += currentSpeed;
-                    
-                    // Collision avoidance for flowing particles (positive)
-                    if(p.charge === 1) {
-                        grains.forEach(g => {
-                            let dx = p.x - g.x;
-                            let dy = p.y - g.y;
-                            let dist = Math.sqrt(dx*dx + dy*dy);
-                            if(dist < g.r + 15) {
-                                p.y += (dy > 0 ? 1 : -1) * (2 * intensity); // push away harder if flowing faster
-                            }
-                        });
-                    } else {
-                        // Negative particles drift slowly and stick to grains roughly
-                        p.y += Math.sin(time*0.05 + p.x) * 0.5;
-                    }
-
-                    if(p.x > w + 10) p.x = -10;
-                    if(p.y > h) p.y = 0;
-                    if(p.y < 0) p.y = h;
-
                     ctx.fillStyle = p.charge === 1 ? '#0284c7' : '#dc2626';
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                     ctx.fill();
-
-                    // Add tiny + sign to mobile ions for clarity
-                    if(p.charge === 1 && p.radius >= 4) {
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = '10px Inter, system-ui, sans-serif';
-                        ctx.fillText('+', p.x - 3, p.y + 3);
-                    }
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText(p.charge === 1 ? '+' : '−', p.x, p.y + 0.5);
                 });
+                // Excess cations are drawn as rings so the separated charge stands out
+                diffuse.forEach(d => {
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, 6, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                    ctx.strokeStyle = '#0284c7';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.fillStyle = '#0369a1';
+                    ctx.fillText('+', d.x, d.y + 0.5);
+                });
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'alphabetic';
 
                 // Labels
                 ctx.fillStyle = '#334155';

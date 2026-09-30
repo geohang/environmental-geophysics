@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GPR Hyperbola Velocity Estimator</title>
+<title>Hyperbola Velocity Estimator</title>
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
@@ -28,15 +28,15 @@
   <div class="panel">
     <div class="controls cols-2">
       <div class="ctrl"><label>Your fit velocity $v$ <span id="vv">0.10 m/ns</span></label><input id="v" type="range" min="0.033" max="0.30" value="0.10" step="0.001"></div>
-      <div class="ctrl"><label>Apex position (locked to target)</label><input id="dummy" type="range" min="0" max="1" value="0.5" step="0.01" disabled></div>
+      <div class="ctrl"><label>Apex position (locked to the observed apex) <span id="apexv">x₀ = 5.0 m, t₀ = 30.0 ns</span></label><input id="dummy" type="range" min="0" max="10" value="5" step="0.1" disabled></div>
     </div>
     <div class="readout">
       <div class="stat" id="s1"><div class="v" id="vout">0.10</div><div class="l">fit velocity (m/ns)</div></div>
       <div class="stat"><div class="v" id="epsout">–</div><div class="l">implied εᵣ</div></div>
-      <div class="stat" id="s3"><div class="v" id="depthout">–</div><div class="l">target depth (m)</div></div>
+      <div class="stat" id="s3"><div class="v" id="depthout">–</div><div class="l">implied depth d = v·t₀/2 (m)</div></div>
     </div>
     <div class="formula" id="fbox">
-      Two-way time along the hyperbola: $t(x)=\dfrac{2\sqrt{d^2+(x-x_0)^2}}{v}$. Relative permittivity from velocity: $\varepsilon_r=\left(\dfrac{c}{v}\right)^2$ with $c=0.30$ m/ns. This fit assumes constant velocity, a point-like target, zero time offset, and negligible antenna separation.
+      Fit curve with its apex locked to the observed apex $(x_0, t_0)$: $t(x)=\sqrt{t_0^2+\left(\dfrac{2(x-x_0)}{v}\right)^2}$. Only the limbs change with $v$: too slow a velocity makes them too steep, too fast makes them too flat. Implied depth $d=v\,t_0/2$. Relative permittivity from velocity: $\varepsilon_r=\left(\dfrac{c}{v}\right)^2$ with $c=0.30$ m/ns. This fit assumes constant velocity, a point-like target, zero time offset, and negligible antenna separation.
     </div>
     <button id="reveal" class="btn" style="margin-top:14px;">Reveal true velocity</button>
     <span id="truth" style="margin-left:12px;color:var(--text-muted);"></span>
@@ -44,25 +44,29 @@
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
-const TRUE_V=0.12, X0=52, D=1.8;   // m/ns, m, m
-const XMAX=100, TMAX=60;           // survey metres (position), ns (two-way time)
+const TRUE_V=0.12, X0=5, D=1.8;    // m/ns, m, m
+const XMAX=10, TMAX=60;            // survey metres (position), ns (two-way time)
 const px=x=>60+(cv.width-80)*x/XMAX, py=t=>30+(cv.height-60)*t/TMAX;
 function tHyp(xpos, v, x0m, dm){ const dx=(xpos-x0m); return 2*Math.sqrt(dm*dm+dx*dx)/v; }
+// Observed apex (x0, t0) read off the radargram; the fit curve is locked to it.
+const T0=tHyp(X0,TRUE_V,X0,D);
+// Fit hyperbola through the observed apex: t(x) = sqrt(t0^2 + (2(x - x0)/v)^2)
+function tFitCurve(xpos, v){ const dx=xpos-X0; return Math.sqrt(T0*T0+Math.pow(2*dx/v,2)); }
+document.getElementById('apexv').textContent=`x₀ = ${X0.toFixed(1)} m, t₀ = ${T0.toFixed(1)} ns`;
 function drawGPR(){
   const P=demoPalette();
   const v=+document.getElementById('v').value;
   document.getElementById('vv').textContent=v.toFixed(3)+' m/ns';
   document.getElementById('vout').textContent=v.toFixed(3);
   const eps=Math.pow(0.30/v,2);
-  document.getElementById('epsout').textContent=eps.toFixed(1);
-  const tApex=tHyp(X0,TRUE_V,X0,D);
-  const depth=v*tApex/2;
+  document.getElementById('epsout').textContent=(eps+1e-9).toFixed(1);   // nudge so 2.25 rounds to 2.3, not 2.2
+  const depth=v*T0/2;   // implied depth d_fit = v_fit * t0 / 2
   document.getElementById('depthout').textContent=depth.toFixed(2);
   const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
   ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
   // synthetic radargram: reflections drawn in the theme's text color (dark on light, light on dark)
   ctx.fillStyle=P.text;
-  for(let sx=0;sx<=XMAX;sx+=0.5){
+  for(let sx=0;sx<=XMAX+1e-9;sx+=0.02){
     const tt=tHyp(sx,TRUE_V,X0,D);
     if(tt>TMAX)continue;
     for(let dt=-3;dt<=3;dt+=0.5){
@@ -76,21 +80,21 @@ function drawGPR(){
   // axes
   ctx.strokeStyle=P.border;ctx.lineWidth=1;ctx.strokeRect(60,30,W-80,H-60);
   ctx.fillStyle=P.muted;ctx.font='11px Inter, Segoe UI';ctx.textAlign='center';
-  for(let x=0;x<=XMAX;x+=20)ctx.fillText(x+' m',px(x),H-14);
+  for(let x=0;x<=XMAX;x+=1)ctx.fillText(x+' m',px(x),H-14);
   ctx.textAlign='right';
   for(let t=0;t<=TMAX;t+=10)ctx.fillText(t+' ns',54,py(t)+3);
   ctx.save();ctx.translate(16,H/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle=P.muted;ctx.fillText('two-way time (ns)',0,0);ctx.restore();
   ctx.fillStyle=P.muted;ctx.textAlign='center';ctx.fillText('antenna position (m)',W/2,H-2);
   // fit hyperbola
   ctx.strokeStyle=P.accent;ctx.lineWidth=2.5;ctx.beginPath();let started=false;
-  for(let sx=0;sx<=XMAX;sx+=0.5){
-    const tFit=2*Math.sqrt(D*D+(sx-X0)*(sx-X0))/v;
+  for(let sx=0;sx<=XMAX+1e-9;sx+=0.02){
+    const tFit=tFitCurve(sx,v);
     if(tFit>TMAX){started=false;continue;}
     const X=px(sx),Y=py(tFit);started?ctx.lineTo(X,Y):ctx.moveTo(X,Y);started=true;
   }
   ctx.stroke();
-  // apex marker
-  ctx.fillStyle=P.danger;ctx.beginPath();ctx.arc(px(X0),py(tHyp(X0,TRUE_V,X0,D)),4,0,7);ctx.fill();
+  // apex marker (observed apex, shared by the data and the fit)
+  ctx.fillStyle=P.danger;ctx.beginPath();ctx.arc(px(X0),py(T0),4,0,7);ctx.fill();
   // closeness feedback
   const err=Math.abs(v-TRUE_V)/TRUE_V;
   document.getElementById('s1').classList.toggle('match',err<0.06);

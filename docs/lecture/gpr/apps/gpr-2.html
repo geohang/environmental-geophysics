@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPR Interactive Simulator</title>
+    <title>GPR Simulator</title>
     <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
@@ -54,13 +54,14 @@
                 
                 <!-- Material Dropdown -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Soil Material (Dielectric &epsilon;<sub>r</sub>)</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Soil Material (Dielectric &epsilon;<sub>r</sub> and conductivity &sigma;)</label>
                     <select id="materialSelect" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                         <option value="1">Air (&epsilon;r = 1, V = 0.30 m/ns)</option>
                         <option value="4" selected>Dry Sand (&epsilon;r = 4, V = 0.15 m/ns)</option>
                         <option value="9">Dry Concrete (&epsilon;r = 9, V = 0.10 m/ns)</option>
                         <option value="16">Wet Sand (&epsilon;r = 16, V = 0.075 m/ns)</option>
                         <option value="25">Wet Soil (&epsilon;r = 25, V = 0.06 m/ns)</option>
+                        <option value="25clay">Wet Clay (&epsilon;r = 25, V = 0.06 m/ns)</option>
                         <option value="80">Fresh Water (&epsilon;r = 80, V = 0.03 m/ns)</option>
                     </select>
                 </div>
@@ -95,6 +96,14 @@
                         <span id="velDisplay" class="text-emerald-700 font-semibold">0.150 m/ns</span>
                     </div>
                     <div class="flex justify-between">
+                        <span class="text-slate-600">Conductivity (&sigma;):</span>
+                        <span id="sigDisplay" class="text-emerald-700 font-semibold">0.01 mS/m</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-600">Attenuation (&alpha;):</span>
+                        <span id="alphaDisplay" class="text-emerald-700 font-semibold">0.0082 dB/m</span>
+                    </div>
+                    <div class="flex justify-between">
                         <span class="text-slate-600">Cart Dist (x):</span>
                         <span id="xDisplay" class="text-amber-700 font-semibold">0.00 m</span>
                     </div>
@@ -106,6 +115,10 @@
                         <span class="text-slate-600">Nearest TWT:</span>
                         <span id="twtDisplay" class="text-slate-900 font-bold">0.0 ns</span>
                     </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-600">Nearest amp. (A):</span>
+                        <span id="ampDisplay" class="text-slate-900 font-bold">N/A</span>
+                    </div>
                 </div>
             </div>
 
@@ -115,6 +128,7 @@
                 <p class="mb-2">1. Note the shape of the hyperbola.</p>
                 <p class="mb-2">2. Change the soil to <strong>Wet Soil</strong>. Run the scan again. Why is the hyperbola steeper and deeper?</p>
                 <p><em>(Hint: Look at the velocity and TWT!)</em></p>
+                <p class="mt-2">3. Now try <strong>Wet Clay</strong>. Why do the deeper targets disappear?</p>
             </div>
         </div>
 
@@ -137,6 +151,7 @@
                     <canvas id="radargramCanvas" class="radargram-canvas"></canvas>
                     <div class="absolute top-2 left-2 bg-white/85 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-slate-600 border border-slate-200">Time (0ns to 100ns)</div>
                 </div>
+                <p class="text-xs text-slate-600 mt-2">Reflections fade with depth because the wave spreads out and conductive ground absorbs it; wet clay can limit GPR to well under a metre. (Gray level shows amplitude over a fixed 40 dB display range, the same for every material.)</p>
             </div>
 
         </div>
@@ -164,8 +179,48 @@
             { x: 5.0, z: 2.5 },
             { x: 7.0, z: 1.0 }
         ];
-        let dielectric = 4.0;
+        // Media: relative permittivity and conductivity (mS/m). Representative values after
+        // Davis and Annan (1989): dry sand 4 / 0.01, saturated sand 25 / 0.1-1 (0.5 used),
+        // fresh water 80 / 0.5, silt 15 / 10, clay 25 / 100, limestone 6 / 1, granite 5 / 0.1.
+        // The page keeps its own eps_r where it already matches v = 0.3/sqrt(eps_r) and takes
+        // sigma from the closest entry: concrete -> limestone, wet sand -> saturated sand,
+        // wet soil -> silt, wet clay -> clay. Keys are the dropdown option values.
+        const MEDIA = {
+            '1':      { epsR: 1,  sigma_mS: 0,    color: '#f8fafc' },
+            '4':      { epsR: 4,  sigma_mS: 0.01, color: '#efe4cf' },
+            '9':      { epsR: 9,  sigma_mS: 1,    color: '#d6d3d1' },
+            '16':     { epsR: 16, sigma_mS: 0.5,  color: '#e3d3b3' },
+            '25':     { epsR: 25, sigma_mS: 10,   color: '#d6c09a' },
+            '25clay': { epsR: 25, sigma_mS: 100,  color: '#a8a29e' },
+            '80':     { epsR: 80, sigma_mS: 0.5,  color: '#bfdbfe' }
+        };
+        let medium = MEDIA['4'];
+        let dielectric = medium.epsR;
         let velocity = c / Math.sqrt(dielectric);
+
+        // --- AMPLITUDE MODEL ---
+        // Low-loss attenuation alpha_dB = 1636 * sigma / sqrt(eps_r) (sigma in S/m), in dB/m.
+        function alphaDb(m) { return 1636 * (m.sigma_mS * 1e-3) / Math.sqrt(m.epsR); }
+        // Two-way amplitude factor for path length d (antenna to target):
+        // A(d) = exp(-2 alpha_Np d) / max(d, d_min), alpha_Np = alpha_dB / 8.686,
+        // normalized so the shallowest possible target (d = 0.3 m) in dry sand has A = 1.
+        const D_MIN = 0.3;   // m, same as the shallowest target a click can bury
+        function rawAmp(d, m) { return Math.exp(-2 * (alphaDb(m) / 8.686) * d) / Math.max(d, D_MIN); }
+        const A_REF = rawAmp(D_MIN, MEDIA['4']);
+        function ampFactor(d, m) { return rawAmp(d, m) / A_REF; }
+        // Display: gray level spans a fixed 40 dB range (A = 1 is full black, A = 0.01 is blank),
+        // the same for every medium, like a radargram plotted with one constant gain.
+        const DISPLAY_DB = 40;
+        function displayLevel(A) {
+            if (A <= 0) return 0;
+            return Math.min(1, Math.max(0, 1 + 20 * Math.log10(A) / DISPLAY_DB));
+        }
+        function fmtAlpha(a) {
+            if (a === 0) return '0 dB/m';
+            if (a >= 10) return a.toFixed(1) + ' dB/m';
+            if (a >= 0.1) return a.toFixed(2) + ' dB/m';
+            return a.toPrecision(2) + ' dB/m';
+        }
 
         // Animation State
         let isPlaying = false;
@@ -207,16 +262,8 @@
         function drawPhysicalWorld() {
             pCtx.clearRect(0, 0, physicalCanvas.width, physicalCanvas.height);
 
-            // 1. Draw Soil Background (color based on dielectric)
-            let soilColor = '#e2e8f0';
-            if(dielectric == 4) soilColor = '#efe4cf'; // Sand
-            if(dielectric == 9) soilColor = '#d6d3d1'; // Concrete
-            if(dielectric == 16) soilColor = '#d6c09a'; // Wet sand
-            if(dielectric == 25) soilColor = '#a8a29e'; // Wet Soil
-            if(dielectric == 80) soilColor = '#bfdbfe'; // Water
-            if(dielectric == 1) soilColor = '#f8fafc'; // Air
-
-            pCtx.fillStyle = soilColor;
+            // 1. Draw Soil Background (color from the selected medium)
+            pCtx.fillStyle = medium.color;
             pCtx.fillRect(0, mToPxY(0, physicalCanvas), physicalCanvas.width, physicalCanvas.height);
             
             // Draw surface line
@@ -361,15 +408,19 @@
                 let reflections = [];
                 let minTwt = 0;
                 let minDist = Infinity;
+                let minAmp = 0;
 
                 // Calculate Physics for all targets
                 targets.forEach(t => {
                     const distToTarget = getDistance(cartX, 0, t.x, t.z);
                     const twt = (2 * distToTarget) / velocity;
-                    
-                    // Calculate intensity (stronger when cart is directly over target)
+
+                    // Antenna footprint: stronger when cart is directly over target, fades out at 3 m away
                     const horizontalDist = Math.abs(cartX - t.x);
-                    const intensity = Math.max(0, 1 - (horizontalDist / 3)); // Fades out at 3m away
+                    const footprint = Math.max(0, 1 - (horizontalDist / 3));
+                    // Spreading and absorption along the two-way path
+                    const amp = ampFactor(distToTarget, medium);
+                    const intensity = footprint * displayLevel(amp);
 
                     // Save reflection if within time window
                     if (twt <= maxTimeNs) {
@@ -382,6 +433,7 @@
                     if (distToTarget < minDist) {
                         minDist = distToTarget;
                         minTwt = twt;
+                        minAmp = amp;
                     }
                 });
 
@@ -395,9 +447,11 @@
                 if(targets.length > 0) {
                     document.getElementById('dDisplay').textContent = minDist.toFixed(2) + ' m';
                     document.getElementById('twtDisplay').textContent = minTwt.toFixed(1) + ' ns';
+                    document.getElementById('ampDisplay').textContent = minAmp < 1e-4 ? '< 0.0001' : (minAmp.toPrecision(2) + ' (' + (20 * Math.log10(minAmp)).toFixed(0) + ' dB)');
                 } else {
                     document.getElementById('dDisplay').textContent = 'N/A';
                     document.getElementById('twtDisplay').textContent = 'N/A';
+                    document.getElementById('ampDisplay').textContent = 'N/A';
                 }
             }
 
@@ -446,14 +500,22 @@
             document.getElementById('xDisplay').textContent = '0.00 m';
             document.getElementById('dDisplay').textContent = '0.00 m';
             document.getElementById('twtDisplay').textContent = '0.0 ns';
-            
+            document.getElementById('ampDisplay').textContent = 'N/A';
+
             draw();
         });
 
-        document.getElementById('materialSelect').addEventListener('change', (e) => {
-            dielectric = parseFloat(e.target.value);
-            velocity = c / Math.sqrt(dielectric);
+        function showMedium() {
             document.getElementById('velDisplay').textContent = velocity.toFixed(3) + ' m/ns';
+            document.getElementById('sigDisplay').textContent = medium.sigma_mS + ' mS/m';
+            document.getElementById('alphaDisplay').textContent = fmtAlpha(alphaDb(medium));
+        }
+
+        document.getElementById('materialSelect').addEventListener('change', (e) => {
+            medium = MEDIA[e.target.value] || MEDIA['4'];
+            dielectric = medium.epsR;
+            velocity = c / Math.sqrt(dielectric);
+            showMedium();
             
             // Visual feedback - auto reset to show change
             if(radargramData.length > 0 && !isPlaying) {
@@ -490,6 +552,7 @@
         });
 
         // --- INITIALIZATION ---
+        showMedium();
         setTimeout(() => {
             resizeCanvases();
         }, 100);

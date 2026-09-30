@@ -17,29 +17,23 @@ Geophysics lets us image the subsurface without digging: every method measures a
 [Practice this module](../../apps/practice-lab.html#intro){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#intro){ .md-button }
 
-## Interactive Lecture
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[Geophysical Method & Spacing Simulator](apps/introduction.html)**
+<div class="learning-path" markdown>
 
-    ---
-
-    Explore how survey geometry and method choice control what you can resolve at depth.
-
-</div>
-
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Depth of Investigation vs. Resolution Explorer](apps/demo-depth-resolution.html)**
-
-    ---
+1.  **[Depth of Investigation vs. Resolution](apps/demo-depth-resolution.html)** <span class="lp-type">Demo</span>
 
     Compare the depth ranges and resolving power of gravity, magnetics, seismic, ERT, EM, and GPR side by side.
 
+2.  **[Survey Spacing & Noise Simulator](apps/introduction.html)** <span class="lp-type">Interactive lecture</span>
+
+    See how station spacing and noise decide whether a survey resolves a small target, for four methods at once.
+
 </div>
+
+**After the path:** [practice questions](../../apps/practice-lab.html#intro).
 
 ## Why This Matters: Hydrogeophysics
 

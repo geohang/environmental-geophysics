@@ -6,12 +6,11 @@
 
 <p>See beneath the surface without digging. Nine near-surface methods, taught through interactive simulators, hands-on activities, and Colab notebooks.</p>
 
-[🧭 Interactive Course Guide](apps/course-guide.html){ .md-button .md-button--primary }
-[📚 Browse Modules](lecture/index.md){ .md-button }
-[🎓 Active-Learning Lessons](apps/lecture-frameworks.html){ .md-button }
-[🧪 Classroom Labs](apps/classroom-labs.html){ .md-button }
-[🌾 APLL Field Data](apps/field-data.html){ .md-button }
-[✅ Practice Lab](apps/practice-lab.html){ .md-button }
+[Start with Introduction →](lecture/intro/index.md){ .md-button .md-button--primary }
+[Browse all modules](lecture/index.md){ .md-button }
+
+Also: [Course guide](apps/course-guide.html) · [Active-learning lessons](apps/lecture-frameworks.html) · [Classroom labs](apps/classroom-labs.html) · [APLL field data](apps/field-data.html) · [Practice lab](apps/practice-lab.html)
+{ .hero-links }
 
 </div>
 

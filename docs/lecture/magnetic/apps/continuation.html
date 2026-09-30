@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geomagnetic Exploration: Continuation Simulator</title>
+    <title>Continuation Simulator</title>
     <style>
         :root {
             --primary: #0f172a;
@@ -199,12 +199,15 @@
                         Observation Height (h)
                         <span id="val-height" class="status-display">0 m</span>
                     </label>
-                    <!-- Range from -80 (downward) to +200 (upward) -->
-                    <input type="range" id="heightSlider" min="-100" max="400" value="0" step="5" class="lab-range">
+                    <!-- Range from -100 (downward) to +400 (upward); 1 m steps show how fast downward continuation amplifies noise -->
+                    <input type="range" id="heightSlider" min="-100" max="400" value="0" step="1" class="lab-range">
                 </div>
 
                 <div class="info-text" id="continuation-status" style="margin-top: 5px; font-weight: bold; color: #0f172a; font-size: 0.9em;">
                     Status: Ground Level Observation
+                </div>
+                <div id="continuation-note" style="display: none; margin-top: 2px; color: #b91c1c; font-size: 0.85em; line-height: 1.4;">
+                    Downward continuation amplifies short-wavelength noise exponentially; the result becomes unstable.
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:5px; margin-top:5px;">
@@ -246,6 +249,7 @@
                 <li><strong>Ground Level (h=0):</strong> You see a small "bump" or spike riding on top of a broad hill.</li>
                 <li><strong>Upward Continuation (h > 0):</strong> As you move the sensor up (drag right), the local spike vanishes rapidly. The curve becomes smooth, representing only the Regional Trend. This is how geophysicists separate deep basement structures from surface noise.</li>
                 <li><strong>Downward Continuation (h < 0):</strong> As you move closer to the source (drag left), the local spike grows taller and sharper, separating from the background. This enhances resolution but is mathematically unstable (see what happens with noise!).</li>
+                <li><strong>How it is computed:</strong> The ground profile (with its noise, if switched on) is continued in the wavenumber domain: each wavelength component is multiplied by exp(-|k|h), where k is the wavenumber. Upward (h &gt; 0) this damps short wavelengths; downward (h &lt; 0) it amplifies them exponentially, and it only works above the shallowest source.</li>
             </ul>
         </div>
     </div>
@@ -274,8 +278,7 @@
         M_base: 2000, 
         
         noise: false,
-        showComponents: true,
-        noiseData: [] // Cache noise to keep it static while moving slider
+        showComponents: true
     };
 
     // UI Elements
@@ -289,16 +292,122 @@
     const valDepth2 = document.getElementById('val-depth2');
     const valHeight = document.getElementById('val-height');
     const statusText = document.getElementById('continuation-status');
+    const noteText = document.getElementById('continuation-note');
 
-    // Generate static noise array
-    function generateNoise() {
-        state.noiseData = [];
-        for(let i=0; i<=state.width; i++) {
-            // Higher frequency noise for realism
-            state.noiseData.push((Math.random() - 0.5) * 25); 
+    // --- Sampled survey line for FFT continuation ---
+    // The ground (h = 0) profile is sampled every DX m on a line 8 times longer than the
+    // 900 m window drawn on screen, so the FFT's periodic wrap-around sits far from the window.
+    // A smooth taper brings the line to zero at its far ends; inside the window the data are untouched.
+    const DX = 3.5;               // m, sample spacing (canvas: 1 px = 1 m)
+    const NFFT = 2048;            // samples on the line (a power of two), 7168 m
+    const J0 = 896;               // index of x = 0 m, the left edge of the window
+    const NWIN = 258;             // samples inside the window, x = 0 ... 899.5 m
+    const TAPER_LEN = 2500;       // m, taper length measured inward from each far end
+    const lineX = new Float64Array(NFFT);
+    const lineTaper = new Float64Array(NFFT);
+    const absK = new Float64Array(NFFT);   // |k| in rad/m for each FFT bin
+    for (let j = 0; j < NFFT; j++) {
+        lineX[j] = (j - J0) * DX;
+        const s = Math.min(j, NFFT - 1 - j) * DX / TAPER_LEN;
+        // Planck taper: 0 at the end, 1 beyond TAPER_LEN, infinitely smooth in between
+        lineTaper[j] = s >= 1 ? 1 : (s <= 0 ? 0 : 1 / (1 + Math.exp(1 / s - 1 / (1 - s))));
+        const m = j <= NFFT / 2 ? j : j - NFFT;
+        absK[j] = Math.abs(2 * Math.PI * m / (NFFT * DX));
+    }
+
+    // Radix-2 Cooley-Tukey FFT, in place on separate real/imaginary arrays (length NFFT).
+    // Twiddle factors come from a table so round-off stays near machine precision; this matters
+    // because downward continuation multiplies the shortest wavelengths by up to exp(|k||h|).
+    const twCos = new Float64Array(NFFT / 2);
+    const twSin = new Float64Array(NFFT / 2);
+    for (let i = 0; i < NFFT / 2; i++) {
+        twCos[i] = Math.cos(2 * Math.PI * i / NFFT);
+        twSin[i] = -Math.sin(2 * Math.PI * i / NFFT);
+    }
+    function fft(re, im, inverse) {
+        const n = NFFT;
+        for (let i = 1, j = 0; i < n; i++) {
+            let bit = n >> 1;
+            for (; j & bit; bit >>= 1) j ^= bit;
+            j ^= bit;
+            if (i < j) {
+                let t = re[i]; re[i] = re[j]; re[j] = t;
+                t = im[i]; im[i] = im[j]; im[j] = t;
+            }
+        }
+        const sgn = inverse ? -1 : 1;
+        for (let len = 2; len <= n; len <<= 1) {
+            const half = len >> 1, step = n / len;
+            for (let i = 0; i < n; i += len) {
+                for (let k = 0; k < half; k++) {
+                    const cr = twCos[k * step], ci = sgn * twSin[k * step];
+                    const a = i + k, b = a + half;
+                    const xr = re[b] * cr - im[b] * ci;
+                    const xi = re[b] * ci + im[b] * cr;
+                    re[b] = re[a] - xr; im[b] = im[a] - xi;
+                    re[a] += xr; im[a] += xi;
+                }
+            }
+        }
+        if (inverse) {
+            for (let i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
         }
     }
-    generateNoise();
+
+    // Fixed-seed random noise (mulberry32), added once to the ground profile so it never changes
+    function mulberry32(seed) {
+        return function () {
+            seed = (seed + 0x6D2B79F5) | 0;
+            let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+    }
+    const groundNoise = new Float64Array(NFFT);
+    const noiseRe = new Float64Array(NFFT);
+    const noiseIm = new Float64Array(NFFT);
+    {
+        const rand = mulberry32(4800);
+        for (let j = 0; j < NFFT; j++) {
+            groundNoise[j] = (rand() - 0.5) * 25;   // uniform, +/- 12.5 relative units
+            noiseRe[j] = groundNoise[j] * lineTaper[j];
+        }
+        fft(noiseRe, noiseIm, false);
+    }
+
+    // Spectrum of the noise-free ground profile; recomputed only when a depth changes
+    const sigRe = new Float64Array(NFFT);
+    const sigIm = new Float64Array(NFFT);
+    const groundWin = new Float64Array(NWIN);   // noise-free ground profile inside the window
+    let sigKey = '';
+    function updateGroundSpectrum() {
+        const key = state.body1.depth + '/' + state.body2.depth;
+        if (key === sigKey) return;
+        for (let j = 0; j < NFFT; j++) {
+            sigRe[j] = getAnomalies(lineX[j], 0).total * lineTaper[j];
+            sigIm[j] = 0;
+        }
+        for (let i = 0; i < NWIN; i++) groundWin[i] = sigRe[J0 + i];
+        fft(sigRe, sigIm, false);
+        sigKey = key;
+    }
+
+    // Continue a ground-level spectrum to height h (m, positive up): multiply by exp(-|k| h),
+    // which damps short wavelengths for h > 0 and amplifies them as exp(+|k||h|) for h < 0.
+    const workRe = new Float64Array(NFFT);
+    const workIm = new Float64Array(NFFT);
+    function continueToHeight(specRe, specIm, h, out) {
+        for (let j = 0; j < NFFT; j++) {
+            const g = Math.exp(-absK[j] * h);
+            workRe[j] = specRe[j] * g;
+            workIm[j] = specIm[j] * g;
+        }
+        fft(workRe, workIm, true);
+        for (let i = 0; i < NWIN; i++) out[i] = workRe[J0 + i];
+        return out;
+    }
+    const contSig = new Float64Array(NWIN);     // continued noise-free field in the window
+    const contNoise = new Float64Array(NWIN);   // continued noise in the window
 
     // Event Listeners
     depthSlider1.addEventListener('input', update);
@@ -306,7 +415,6 @@
     heightSlider.addEventListener('input', update);
     noiseToggle.addEventListener('change', () => {
         state.noise = noiseToggle.checked;
-        if(state.noise) generateNoise();
         draw();
     });
     componentsToggle.addEventListener('change', () => {
@@ -336,9 +444,12 @@
             statusText.style.color = "#0f172a";
         }
 
-        // Limit downward continuation physically
+        // Limit downward continuation physically: the field can only be continued through
+        // source-free ground, so the FFT result diverges at and below the shallow source.
         const minDepth = Math.min(state.body1.depth, state.body2.depth);
-        if (state.obsHeight <= -minDepth + 10) {
+        if (state.obsHeight <= -minDepth) {
+            statusText.textContent += " [Warning: At or below the shallow source; continuation only works above all sources]";
+        } else if (state.obsHeight <= -minDepth + 10) {
             statusText.textContent += " [Warning: Near Source Singularity!]";
         }
 
@@ -474,44 +585,55 @@
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.fillStyle = "#64748b";
-        ctx.fillText("0 nT", 5, zeroY - 2);
+        ctx.fillText("0", 5, zeroY - 2);
+        ctx.fillStyle = "#334155";
+        ctx.textAlign = "right";
+        ctx.fillText("Magnetic anomaly (relative units)", state.width - 10, 16);
+        ctx.textAlign = "left";
 
-        // 1. Draw Ground Reference (Faint Black)
+        // FFT continuation of the sampled ground profile to the observation height
+        updateGroundSpectrum();
+        const h = state.obsHeight;
+        continueToHeight(sigRe, sigIm, h, contSig);
+        if (state.noise) continueToHeight(noiseRe, noiseIm, h, contNoise);
+        else contNoise.fill(0);
+
+        // Downward continuation with noise: flag it once the continued noise (its largest
+        // absolute value in the window) exceeds 3 times the peak of the noise-free signal
+        let sigPeak = 0, noiseAmp = 0;
+        for (let i = 0; i < NWIN; i++) {
+            sigPeak = Math.max(sigPeak, Math.abs(contSig[i]));
+            noiseAmp = Math.max(noiseAmp, Math.abs(contNoise[i]));
+        }
+        noteText.style.display = (state.noise && h < 0 && noiseAmp > 3 * sigPeak) ? 'block' : 'none';
+
+        // 1. Draw Ground Reference (the measured profile at z = 0, noise included)
         ctx.beginPath();
         ctx.strokeStyle = "#94a3b8";
         ctx.lineWidth = 2;
-        for (let x = 0; x < state.width; x+=3) {
-            let vals = getAnomalies(x, 0); 
-            let val = vals.total;
-            if (state.noise) val += state.noiseData[x] || 0;
+        for (let i = 0; i < NWIN; i++) {
+            let val = groundWin[i];
+            if (state.noise) val += groundNoise[J0 + i];
             const plotY = zeroY - val * scaleY;
-            if (x===0) ctx.moveTo(x, plotY); else ctx.lineTo(x, plotY);
+            if (i === 0) ctx.moveTo(lineX[J0 + i], plotY); else ctx.lineTo(lineX[J0 + i], plotY);
         }
         ctx.stroke();
 
         // 2. Draw Continued Fields
-        
+
         // Prepare arrays for paths
         const pathTotal = [];
         const path1 = [];
         const path2 = [];
 
-        // Noise Factor Calculation
-        let noiseFactor = 1.0;
-        if (state.obsHeight < 0) {
-            // Downward: Amplify significantly
-            noiseFactor = 1.0 + (Math.abs(state.obsHeight) / 5); 
-        } else {
-            // Upward: Attenuate
-            noiseFactor = 1.0 / (1.0 + state.obsHeight / 20);
+        // Total field at z = h: FFT continuation of the ground profile (noise included)
+        for (let i = 0; i < NWIN; i++) {
+            pathTotal.push({x: lineX[J0 + i], y: zeroY - (contSig[i] + contNoise[i]) * scaleY});
         }
 
+        // Components: the true field of each body at z = h, from the forward formula
         for (let x = 0; x < state.width; x+=3) {
-            let vals = getAnomalies(x, state.obsHeight);
-            
-            let noiseVal = (state.noise ? (state.noiseData[x]||0)*noiseFactor : 0);
-            
-            pathTotal.push({x:x, y: zeroY - (vals.total + noiseVal) * scaleY});
+            let vals = getAnomalies(x, h);
             path1.push({x:x, y: zeroY - vals.v1 * scaleY});
             path2.push({x:x, y: zeroY - vals.v2 * scaleY});
         }

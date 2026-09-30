@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magnetic Anomaly Interpretation Methods</title>
+    <title>Magnetic Interpretation Methods</title>
     <!-- Tailwind CSS for styling -->
     <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <!-- Chart.js for graphs -->
@@ -121,7 +121,7 @@
                     <p class="text-slate-600 mt-2">Correcting the latitude effect to center anomalies over their sources.</p>
                 </div>
                 <div class="lab-chip whitespace-nowrap">
-                    Filter: Lat → 90° (Pole)
+                    Filter: I → 90° (Pole)
                 </div>
             </div>
 
@@ -137,12 +137,12 @@
 
                     <div class="p-4 border border-slate-200 rounded-lg bg-slate-50">
                         <label class="block font-bold text-slate-800 mb-2">Apply RTP Filter:</label>
-                        <div class="slider-container">
-                            <span class="text-xs font-bold text-slate-600">Raw (Asymmetric)</span>
-                            <input type="range" id="rtpSlider" min="0" max="100" value="0" step="1" class="lab-range">
-                            <span class="text-xs font-bold text-slate-600">RTP (Symmetric)</span>
+                        <div class="flex flex-wrap gap-2" role="tablist">
+                            <button type="button" id="rtpRawBtn" class="lab-tab is-active" role="tab" aria-selected="true">Raw data (I = 45°)</button>
+                            <button type="button" id="rtpPoleBtn" class="lab-tab" role="tab" aria-selected="false">Reduced to pole (I = 90°)</button>
                         </div>
-                        <p class="text-center mt-2 font-mono text-sky-700">Status: <span id="rtpStatus">Raw Data</span></p>
+                        <p class="text-center mt-2 font-mono text-sky-700">Status: <span id="rtpStatus">Raw Data (Asymmetric)</span></p>
+                        <p class="text-xs mt-2 text-slate-600">Both curves come from the same induced dipole at 10 m depth. For a purely induced source, the RTP result is the anomaly the same body would produce at I = 90°.</p>
                     </div>
                 </div>
 
@@ -198,7 +198,7 @@
             data: {
                 labels: initialDepthData.labels,
                 datasets: [{
-                    label: 'Magnetic Anomaly (nT)',
+                    label: 'ΔT (relative units)',
                     data: initialDepthData.data,
                     borderColor: '#0284c7', // Sky-600 (course primary)
                     backgroundColor: 'rgba(2, 132, 199, 0.12)',
@@ -458,38 +458,69 @@
         });
 
 
-        // === CHART 3: RTP Animation ===
+        // === CHART 3: Reduction to the Pole ===
+        // Both curves come from the same induced dipole (sphere) at depth RTP_Z0 below the profile.
+        // x is horizontal toward magnetic north, z positive down, r = (x, 0, -z0) from source to
+        // station, field direction f = (cos I, 0, sin I), induced magnetization parallel to f:
+        //   dT ∝ (3 (f·r)^2 - r^2) / r^5
+        // At I = 90° this reduces to (2 z0^2 - x^2) / r^5, which is what RTP returns for a purely
+        // induced body. RTP is a wavenumber-domain filter, so there are no intermediate states.
         const ctxRtp = document.getElementById('rtpChart').getContext('2d');
+        const RTP_Z0 = 10;      // m, depth of the dipole
+        const RAW_INC = 45;     // degrees, mid-latitude inclination of the raw data
 
-        function generateRTPData(factor) { 
+        function dipoleDT(x, incDeg) {
+            const I = incDeg * Math.PI / 180;
+            const fr = x * Math.cos(I) - RTP_Z0 * Math.sin(I);   // f·r
+            const r2 = x * x + RTP_Z0 * RTP_Z0;
+            return (3 * fr * fr - r2) / Math.pow(r2, 2.5);
+        }
+        const rtpNorm = 100 / dipoleDT(0, 90);   // RTP peak = 100 relative units; same scale for both
+
+        function generateRTPData(incDeg) {
             const data = [];
             const labels = [];
             for (let x = -50; x <= 50; x += 1) {
                 labels.push(x);
-                const sym = 100 / (1 + 0.05 * x * x);
-                const asym = -1 * (x * 100) / Math.pow(1 + 0.05 * x * x, 1.5);
-                const dipole = sym + 0.8 * asym; 
-                const val = (1 - factor) * dipole + factor * sym;
-                data.push(val);
+                data.push(dipoleDT(x, incDeg) * rtpNorm);
             }
             return { labels, data };
         }
 
-        const initialRTP = generateRTPData(0);
+        const rawRTP = generateRTPData(RAW_INC);
+        const poleRTP = generateRTPData(90);
+
+        // S and N at the ends of the profile (x increases toward magnetic north)
+        const profileEnds = {
+            id: 'profileEnds',
+            afterDraw(chart) {
+                const c = chart.ctx, a = chart.chartArea;
+                c.save();
+                c.fillStyle = '#334155';
+                c.font = 'bold 14px sans-serif';
+                c.textBaseline = 'bottom';
+                c.textAlign = 'left';
+                c.fillText('S', a.left + 6, a.bottom - 4);
+                c.textAlign = 'right';
+                c.fillText('N', a.right - 6, a.bottom - 4);
+                c.restore();
+            }
+        };
 
         const rtpChart = new Chart(ctxRtp, {
             type: 'line',
             data: {
-                labels: initialRTP.labels,
+                labels: rawRTP.labels,
                 datasets: [{
-                    label: 'Magnetic Anomaly',
-                    data: initialRTP.data,
-                    borderColor: '#0284c7', // Sky-600 (course primary)
-                    backgroundColor: 'rgba(2, 132, 199, 0.12)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0
+                    label: 'Raw data (I = 45°)',
+                    data: rawRTP.data,
+                    pointRadius: 0,
+                    tension: 0
+                }, {
+                    label: 'Reduced to pole (I = 90°)',
+                    data: poleRTP.data,
+                    pointRadius: 0,
+                    tension: 0
                 }]
             },
             options: {
@@ -499,26 +530,44 @@
                 layout: { padding: { bottom: 28 } },
                 scales: {
                     y: { display: false },
-                    x: { display: true, grid: {display:false}, ticks: { color: '#64748b' } }
+                    x: { display: true, grid: {display:false},
+                         ticks: { color: '#64748b', autoSkip: false, maxRotation: 0,
+                                  callback: (v, i) => (rawRTP.labels[i] % 10 === 0 ? rawRTP.labels[i] : '') },
+                         title: { display: true, text: 'Distance along profile (m), south to north', color: '#334155' } }
                 },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: true, labels: { color: '#334155', boxHeight: 3, sort: (a, b) => a.datasetIndex - b.datasetIndex } },
+                    tooltip: { callbacks: { label: (item) => item.dataset.label + ': ' + item.parsed.y.toFixed(1) + ' (relative units)' } }
                 }
-            }
+            },
+            plugins: [profileEnds]
         });
 
-        document.getElementById('rtpSlider').addEventListener('input', function(e) {
-            const val = parseInt(e.target.value);
-            const factor = val / 100;
-            const statusLabel = document.getElementById('rtpStatus');
-            if(val < 20) statusLabel.innerText = "Raw Data (Asymmetric)";
-            else if(val > 80) statusLabel.innerText = "Reduced to Pole (Symmetric)";
-            else statusLabel.innerText = "Processing...";
-
-            const newData = generateRTPData(factor);
-            rtpChart.data.datasets[0].data = newData.data;
-            rtpChart.update('none'); 
-        });
+        // Two-state toggle: the chosen curve is drawn solid and filled, the other thin and dashed
+        function styleRtpDataset(ds, active, color, fillColor) {
+            ds.borderColor = color;
+            ds.backgroundColor = active ? fillColor : color;
+            ds.borderWidth = active ? 3 : 1.5;
+            ds.borderDash = active ? [] : [6, 4];
+            ds.fill = active;
+            ds.order = active ? 0 : 1;
+        }
+        function setRtpView(pole) {
+            const [rawDs, poleDs] = rtpChart.data.datasets;
+            styleRtpDataset(rawDs, !pole, '#2563eb', 'rgba(37, 99, 235, 0.12)');
+            styleRtpDataset(poleDs, pole, '#059669', 'rgba(5, 150, 105, 0.12)');
+            const rawBtn = document.getElementById('rtpRawBtn');
+            const poleBtn = document.getElementById('rtpPoleBtn');
+            rawBtn.classList.toggle('is-active', !pole);
+            poleBtn.classList.toggle('is-active', pole);
+            rawBtn.setAttribute('aria-selected', String(!pole));
+            poleBtn.setAttribute('aria-selected', String(pole));
+            document.getElementById('rtpStatus').innerText = pole ? "Reduced to Pole (Symmetric)" : "Raw Data (Asymmetric)";
+            rtpChart.update();
+        }
+        document.getElementById('rtpRawBtn').addEventListener('click', () => setRtpView(false));
+        document.getElementById('rtpPoleBtn').addEventListener('click', () => setRtpView(true));
+        setRtpView(false);
 
     </script>
 <script src="../../../assets/javascripts/course-app.js"></script>

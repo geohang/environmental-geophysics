@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geophysical Method & Spacing Simulator</title>
+    <title>Survey Spacing &amp; Noise Simulator</title>
     <script src="../../../assets/vendor/chartjs/chart.min.js"></script>
     <style>
         body { font-family: var(--lab-font); margin: 0; }
@@ -51,7 +51,7 @@
 
 <div class="container">
     <div class="lesson lab-note">
-        <strong class="lab-note-title">The Spacing Lesson:</strong> The target is <strong>5m wide</strong>. If your spacing is > 2.5m, you risk "Aliasing" (misrepresenting the shape). If spacing is <strong>10m</strong>, you might miss it entirely!
+        <strong class="lab-note-title">The Spacing Lesson:</strong> The target is <strong>5m wide</strong>. If your spacing is > 2.5m, you risk "Aliasing" (misrepresenting the shape). If spacing is <strong>10m</strong>, you might miss it entirely! Slide the Grid Offset to see how the position of the samples decides whether one lands on the tank.
     </div>
 
     <div class="controls lab-card">
@@ -59,6 +59,12 @@
             <label for="spacingSlider">Grid Spacing (Resolution)</label>
             <input type="range" id="spacingSlider" class="lab-range" min="1" max="20" value="1">
             <span class="val-display lab-chip" id="spacingVal">0.5 m</span>
+        </div>
+
+        <div class="control-group">
+            <label for="offsetSlider">Grid Offset (shifts all samples)</label>
+            <input type="range" id="offsetSlider" class="lab-range" min="0" max="0.5" step="0.1" value="0.3">
+            <span class="val-display lab-chip" id="offsetVal">0.3 m</span>
         </div>
 
         <div class="control-group">
@@ -133,7 +139,15 @@
     };
 
     // We use scatter plots connected by lines to show the "dots" clearly
-    function createChart(ctx, color) {
+    // Each chart keeps at least the full range of its noise-free anomaly, so a coarse or
+    // misaligned grid that misses the target shows a small residual instead of an
+    // auto-scaled bump that fills the plot.
+    function createChart(ctx, color, yMin, yMax) {
+        const options = Object.assign({}, commonOptions, {
+            scales: Object.assign({}, commonOptions.scales, {
+                y: { display: false, suggestedMin: yMin, suggestedMax: yMax }
+            })
+        });
         return new Chart(ctx, {
             type: 'line',
             data: {
@@ -148,22 +162,45 @@
                     data: []
                 }]
             },
-            options: commonOptions
+            options: options
         });
     }
 
     // Series colors match the method swatches in the card titles.
-    let chartGrav = createChart(ctxGrav, '#7c3aed');
-    let chartMag = createChart(ctxMag, '#dc2626');
-    let chartRes = createChart(ctxRes, '#d97706');
-    let chartSeis = createChart(ctxSeis, '#059669');
+    let chartGrav = createChart(ctxGrav, '#7c3aed', -55, 5);
+    let chartMag = createChart(ctxMag, '#dc2626', -40, 40);
+    let chartRes = createChart(ctxRes, '#d97706', -5, 85);
+    let chartSeis = createChart(ctxSeis, '#059669', -5, 45);
 
-    function updateCharts() {
+    // Grid offset as a fraction of the spacing (default: half a spacing). Keeping the
+    // fraction when the spacing changes keeps the default at spacing/2 and never lets
+    // the offset exceed the new spacing.
+    let offsetFrac = 0.5;
+
+    function syncOffsetSlider(spacing) {
+        const s = document.getElementById('offsetSlider');
+        s.max = spacing;
+        s.value = offsetFrac * spacing; // the browser snaps this to the 0.1 m step
+        return parseFloat(s.value);
+    }
+
+    function updateCharts(evt) {
         // Get Slider Values
         // Slider value 1 = 0.5m, 20 = 10m spacing
         let spacingInput = parseInt(document.getElementById('spacingSlider').value);
-        let spacing = spacingInput * 0.5; 
+        let spacing = spacingInput * 0.5;
         document.getElementById('spacingVal').innerText = spacing + " m";
+
+        // Grid offset: shifts the whole sampling grid by 0 to one spacing
+        const offsetSlider = document.getElementById('offsetSlider');
+        let offset;
+        if (evt && evt.target === offsetSlider) {
+            offset = parseFloat(offsetSlider.value);
+            offsetFrac = offset / spacing;
+        } else {
+            offset = syncOffsetSlider(spacing);
+        }
+        document.getElementById('offsetVal').innerText = offset.toFixed(1) + " m";
 
         let noiseLvl = parseInt(document.getElementById('noiseSlider').value);
         document.getElementById('noiseVal').innerText = noiseLvl === 0 ? "None" : (noiseLvl < 5 ? "Low" : "High");
@@ -177,10 +214,12 @@
         const dataRes = [];
         const dataSeis = [];
 
-        // Loop from -20 to +20 stepping by "Spacing"
-        // We add a small offset (0.1) to avoid hitting exactly 0 sometimes, simulating real world grid misalignment
-        for(let x = -20; x <= 20.1; x += spacing) {
-            
+        // Samples at x = -20 + offset + k * spacing, kept inside the -20 to +20 m line.
+        // The offset models how the survey grid happens to line up with the buried target.
+        for(let k = 0; ; k++) {
+            let x = Math.round((-20 + offset + k * spacing) * 1000) / 1000;
+            if (x > 20 + 1e-9) break;
+
             // Re-calculate noise for each distinct point
             let r = (Math.random() - 0.5) * noiseLvl * 5; 
 
@@ -228,6 +267,7 @@
 
     // Event Listeners
     document.getElementById('spacingSlider').addEventListener('input', updateCharts);
+    document.getElementById('offsetSlider').addEventListener('input', updateCharts);
     document.getElementById('noiseSlider').addEventListener('input', updateCharts);
     document.getElementById('powerSlider').addEventListener('input', updateCharts);
 

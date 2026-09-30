@@ -36,6 +36,44 @@
 }
 .hero p { max-width: 720px; margin: 0 auto 1.2rem; color: var(--md-default-fg-color--light); font-size: 1.05rem; }
 .hero .md-button { margin: .3rem .3rem 0; }
+.md-typeset .hero .hero-links {
+  margin: 1.1rem auto 0; font-size: .85rem; color: var(--md-default-fg-color--light);
+}
+.md-typeset .hero .hero-links a { font-weight: 600; }
+
+/* ---- Module learning path: numbered steps in recommended order ---- */
+.md-typeset .learning-path > ol {
+  list-style: none; margin: 1rem 0 1.2rem; padding: 0; counter-reset: lp;
+}
+.md-typeset .learning-path > ol > li {
+  counter-increment: lp; position: relative;
+  margin: 0 0 .7rem; padding: .85rem 1rem .85rem 3.4rem;
+  border: 1px solid var(--md-default-fg-color--lightest); border-radius: 14px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.md-typeset .learning-path > ol > li:hover {
+  border-color: var(--md-accent-fg-color); box-shadow: 0 8px 22px rgba(15, 23, 42, .08);
+}
+.md-typeset .learning-path > ol > li::before {
+  content: counter(lp); position: absolute; left: 1rem; top: .9rem;
+  display: flex; align-items: center; justify-content: center;
+  width: 1.7rem; height: 1.7rem; border-radius: 50%;
+  background: var(--md-accent-fg-color); color: #fff; font-size: .8rem; font-weight: 700;
+}
+/* The dark scheme's accent is a light sky blue, so its step numbers need dark ink. */
+[data-md-color-scheme="slate"] .md-typeset .learning-path > ol > li::before { color: #0f172a; }
+/* A thin rail joins consecutive steps. */
+.md-typeset .learning-path > ol > li:not(:last-child)::after {
+  content: ""; position: absolute; left: 1.83rem; top: 2.75rem; bottom: -.75rem;
+  border-left: 2px solid var(--md-default-fg-color--lightest);
+}
+.md-typeset .learning-path > ol > li > p { margin: .1rem 0; }
+.md-typeset .learning-path > ol > li > p:first-child a { font-size: .95rem; }
+.md-typeset .lp-type {
+  display: inline-block; margin-left: .45rem; padding: .05rem .55rem; border-radius: 999px;
+  background: var(--ship-tint); color: var(--md-default-fg-color--light);
+  font-size: .68rem; font-weight: 600; vertical-align: .1em; white-space: nowrap;
+}
 
 /* ---- Card grid: lift, accent edge on hover ---- */
 .md-typeset .grid.cards > ul > li,

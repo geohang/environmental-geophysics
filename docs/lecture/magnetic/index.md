@@ -17,53 +17,35 @@ Rocks acquire magnetization from magnetic minerals, magnetite above all, and tha
 [Practice this module](../../apps/practice-lab.html#magnetic){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#magnetic){ .md-button }
 
-## Interactive Lecture
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[Virtual Rock Magnetism Lab & Activity](apps/magnetic-methods.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[GeoMag Lab: Rock Magnetism](apps/magnetic-methods.html)** <span class="lp-type">Activity</span>
 
-    Susceptibility, remanence, and how rock types differ as magnetic sources.
+    Induced and remanent magnetization as vectors, the Königsberger ratio, and five guided tasks.
 
-</div>
-
-## Topic Apps
-
-<div class="grid cards" markdown>
-
--   🖥️ **[Interactive Geomagnetic Anomaly Simulator](apps/magnetic-signal.html)**
-
-    ---
-
-    How buried magnetic bodies express themselves in total-field data.
-
--   🖥️ **[Continuation Simulator](apps/continuation.html)**
-
-    ---
-
-    Upward and downward continuation as wavelength filtering of a field map.
-
--   🖥️ **[Magnetic Anomaly Interpretation Methods](apps/depth-estimation.html)**
-
-    ---
-
-    Depth rules and shape analysis for practical anomaly interpretation.
-
-</div>
-
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Dipole Anomaly vs. Inclination Explorer](apps/demo-dipole-inclination.html)**
-
-    ---
+2.  **[Dipole Anomaly vs. Inclination](apps/demo-dipole-inclination.html)** <span class="lp-type">Demo</span>
 
     Move the same buried dipole from the magnetic equator to the pole and watch the anomaly change from asymmetric to symmetric.
 
+3.  **[Geomagnetic Anomaly Simulator](apps/magnetic-signal.html)** <span class="lp-type">Interactive lecture</span>
+
+    How buried magnetic bodies express themselves in total-field data.
+
+4.  **[Continuation Simulator](apps/continuation.html)** <span class="lp-type">Interactive lecture</span>
+
+    Upward and downward continuation as wavelength filtering of a magnetic profile.
+
+5.  **[Magnetic Interpretation Methods](apps/depth-estimation.html)** <span class="lp-type">Interactive lecture</span>
+
+    Half-width depth rules, Peters' half-slope method, and reduction to the pole.
+
 </div>
+
+**After the path:** [practice questions](../../apps/practice-lab.html#magnetic) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab
 

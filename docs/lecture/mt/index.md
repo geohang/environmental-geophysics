@@ -19,29 +19,23 @@ Magnetotellurics uses natural electromagnetic fields, from lightning activity an
 [Practice this module](../../apps/practice-lab.html#mt){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#mt){ .md-button }
 
-## Interactive Lecture
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[Deep EM Methods - Interactive Visualizer](apps/mt.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[Deep EM Visualizer](apps/mt.html)** <span class="lp-type">Interactive lecture</span>
 
-    Natural-source EM sounding from crustal to mantle depths.
+    Four deep EM methods side by side: geomagnetic sounding, magnetotellurics, marine CSEM, and TEM.
 
-</div>
-
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[1D MT Sounding Curve Explorer](apps/demo-mt-sounding.html)**
-
-    ---
+2.  **[1D Magnetotelluric Sounding Explorer](apps/demo-mt-sounding.html)** <span class="lp-type">Demo</span>
 
     Build a layered-earth model and watch the apparent-resistivity and phase curves respond across the period range.
 
 </div>
+
+**After the path:** [practice questions](../../apps/practice-lab.html#mt) · [data and notebooks](#data-and-notebooks).
 
 ## Data and Notebooks
 

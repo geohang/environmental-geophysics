@@ -17,47 +17,31 @@ Electromagnetic induction lets us sense subsurface conductivity without ground c
 [Practice this module](../../apps/practice-lab.html#em){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#em){ .md-button }
 
-## Interactive Lecture
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[EM System Animation Activity](apps/electromagnetic-methods.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[EM Induction Principle (Whiteboard)](apps/electromagnetic-methods.html)** <span class="lp-type">Interactive lecture</span>
 
-    How transmitter, ground response, and receiver interact in an EM system.
+    How transmitter, ground response, and receiver interact in an EM system, drawn step by step.
 
--   🖥️ **[EM Waveforms Animation Activity](apps/electromagnetic-methods-2.html)**
+2.  **[CW vs. TEM Waveforms](apps/electromagnetic-methods-2.html)** <span class="lp-type">Interactive lecture</span>
 
-    ---
+    Continuous-wave and pulsed (time-domain) transmitter currents and the receiver responses they produce.
 
-    Primary and secondary fields, in-phase and quadrature components, and TEM decay.
-
-</div>
-
-## Topic Apps
-
-<div class="grid cards" markdown>
-
--   🖥️ **[Interactive 1D EM Forward Modeling](apps/fdem-tem.html)**
-
-    ---
-
-    Model FDEM and TEM responses over layered conductivity structures.
-
-</div>
-
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Skin Depth Calculator & Visualizer](apps/demo-skin-depth.html)**
-
-    ---
+3.  **[Skin Depth Calculator & Visualizer](apps/demo-skin-depth.html)** <span class="lp-type">Demo</span>
 
     See how frequency and ground conductivity set the penetration of EM fields, with the classic skin-depth formula evaluated live.
 
+4.  **[1D EM Response Explorer](apps/fdem-tem.html)** <span class="lp-type">Interactive lecture</span>
+
+    Qualitative FDEM and TEM trends over a two-layer earth, with the skin depth and the TEM smoke ring drawn on the section.
+
 </div>
+
+**After the path:** [practice questions](../../apps/practice-lab.html#em) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab
 

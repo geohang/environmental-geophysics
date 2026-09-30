@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borehole Geophysics: Principle & Data Dashboard</title>
+    <title>Borehole Logging Dashboard</title>
 
     <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
@@ -275,6 +275,10 @@
             position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; align-items: center; justify-content: center; border: 1px solid #94a3b8;
         }
+        /* Top view of the transverse plane under each pore grid (T₂ dephasing). */
+        .nmr-wheel { display: block; width: 100%; max-width: 260px; margin: 4px auto 0; overflow: visible; }
+        /* Phones: tighter proton grid so both pore panels fit side by side. */
+        @media (max-width: 760px) { .nmr-grid { gap: 6px; padding: 6px 0; } }
         .proton::after {
             content: '↑'; color: var(--accent-green); font-size: 18px; font-weight: bold;
             position: absolute; transform-origin: center; transition: all 0.5s ease;
@@ -535,7 +539,7 @@
         <div id="scene-nmr" class="scene-container">
             <div class="scene-header">
                 <h2>Nuclear Magnetic Resonance (NMR)</h2>
-                <p>Polarizes hydrogen protons to measure T₂ relaxation, differentiating bound vs. mobile water.</p>
+                <p>Polarizes hydrogen protons to measure T₂ relaxation, differentiating bound vs. mobile water. T₂ is shorter in small pores and clay-bound water and longer in large pores with free water, so the T₂ distribution maps pore sizes.</p>
             </div>
             <div class="visualization-area">
                 <div class="stage anim-stage">
@@ -545,10 +549,12 @@
                             <div style="flex:1; border-right:1px solid #e2e8f0; padding:10px;">
                                 <div style="font-weight:bold; color:var(--text-blue); margin-bottom:10px; text-align:center; font-size:13px;">Large Pores (Mobile Water)</div>
                                 <div class="nmr-grid" id="grid-large"></div>
+                                <svg class="nmr-wheel" id="wheel-large" viewBox="0 0 240 232" role="img" aria-label="Top view of the transverse plane for the large pores: spin directions and net transverse magnetization"></svg>
                             </div>
                             <div style="flex:1; background-color:#f8fafc; padding:10px;">
                                 <div style="font-weight:bold; color:var(--text-red); margin-bottom:10px; text-align:center; font-size:13px;">Small Pores (Bound Water)</div>
                                 <div class="nmr-grid" id="grid-small"></div>
+                                <svg class="nmr-wheel" id="wheel-small" viewBox="0 0 240 232" role="img" aria-label="Top view of the transverse plane for the small pores: spin directions and net transverse magnetization"></svg>
                             </div>
                         </div>
                     </div>
@@ -710,6 +716,7 @@
 
         window.onload = () => {
             initNMRGrid();
+            initNMRWheels();
             switchScene('gamma');
         };
 
@@ -923,19 +930,131 @@
             }
         }
 
+        // T₂ dephasing, drawn in a top view of the transverse plane (the plane the 90° pulse
+        // tips the spins into). Each of the 12 spins gets a fixed phase-spread quantile z_i of
+        // a normal distribution; its phase after the pulse is phi_i = z_i * sqrt(2 t / T₂), so
+        // the spins fan out and the net transverse magnetization mean(cos phi_i) follows
+        // exp(-t / T₂) (within about 4% of full scale for 12 spins). Animation times are schematic.
+        const NMR_Z = [-1.7317, -1.1503, -0.8122, -0.5485, -0.3186, -0.1046, 0.1046, 0.3186, 0.5485, 0.8122, 1.1503, 1.7317];
+        const NMR_PORES = {
+            large: { T2: 2.5, color: PAL.mobile, note: 'slow decay (long T₂)' },
+            small: { T2: 0.5, color: PAL.bound, note: 'fast decay (short T₂)' }
+        };
+        const NMR_TEND = 10; // s of animation; each panel stops once it is dephased (t = 4 T₂)
+        let nmrAnimId = null;
+        const SVGNS = 'http://www.w3.org/2000/svg';
+        function svgEl(tag, attrs, text) {
+            const el = document.createElementNS(SVGNS, tag);
+            Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+            if (text !== undefined) el.textContent = text;
+            return el;
+        }
+
+        // Wheel geometry (viewBox 240 x 232): wheel centre, radius, envelope plot box.
+        const NW = { cx: 64, cy: 88, r: 52, px0: 26, px1: 228, py0: 168, py1: 212 };
+        function initNMRWheels() {
+            Object.keys(NMR_PORES).forEach(key => {
+                const pore = NMR_PORES[key];
+                const svg = document.getElementById('wheel-' + key);
+                svg.innerHTML = '';
+                svg.appendChild(svgEl('text', { x: 120, y: 14, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 600, fill: '#475569' }, 'Top view of the transverse plane'));
+                svg.appendChild(svgEl('circle', { cx: NW.cx, cy: NW.cy, r: NW.r, fill: '#f8fafc', stroke: '#cbd5e1' }));
+                svg.appendChild(svgEl('line', { x1: NW.cx - NW.r, y1: NW.cy, x2: NW.cx + NW.r, y2: NW.cy, stroke: '#e5eaf1' }));
+                svg.appendChild(svgEl('line', { x1: NW.cx, y1: NW.cy - NW.r, x2: NW.cx, y2: NW.cy + NW.r, stroke: '#e5eaf1' }));
+                const spins = svgEl('g', { stroke: PAL.nmr, 'stroke-width': 1.6, 'stroke-linecap': 'round', opacity: 0.8 });
+                NMR_Z.forEach(() => spins.appendChild(svgEl('line', { x1: NW.cx, y1: NW.cy, x2: NW.cx, y2: NW.cy })));
+                svg.appendChild(spins);
+                svg.appendChild(svgEl('line', { class: 'net', x1: NW.cx, y1: NW.cy, x2: NW.cx, y2: NW.cy, stroke: pore.color, 'stroke-width': 4, 'stroke-linecap': 'round' }));
+                svg.appendChild(svgEl('polygon', { class: 'net-head', points: '', fill: pore.color }));
+                svg.appendChild(svgEl('circle', { cx: NW.cx, cy: NW.cy, r: 3, fill: '#334155' }));
+                svg.appendChild(svgEl('text', { x: 128, y: 70, 'font-size': 11, 'font-weight': 600, fill: '#475569' }, 'Net M⊥'));
+                svg.appendChild(svgEl('text', { class: 'net-val', x: 128, y: 94, 'font-size': 20, 'font-weight': 700, fill: pore.color }, '0%'));
+                svg.appendChild(svgEl('text', { class: 'net-state', x: 128, y: 112, 'font-size': 10, fill: '#64748b' }, ''));
+                // envelope plot: net M⊥ against time after the pulse
+                svg.appendChild(svgEl('text', { x: NW.px0, y: 158, 'font-size': 10, 'font-weight': 600, fill: '#334155' }, 'Net M⊥ vs time: ' + pore.note));
+                svg.appendChild(svgEl('polyline', { points: `${NW.px0},${NW.py0} ${NW.px0},${NW.py1} ${NW.px1},${NW.py1}`, fill: 'none', stroke: '#cbd5e1' }));
+                svg.appendChild(svgEl('text', { x: NW.px0 - 4, y: NW.py0 + 4, 'text-anchor': 'end', 'font-size': 9, fill: '#64748b' }, '1'));
+                svg.appendChild(svgEl('text', { x: NW.px0 - 4, y: NW.py1 + 3, 'text-anchor': 'end', 'font-size': 9, fill: '#64748b' }, '0'));
+                svg.appendChild(svgEl('text', { x: (NW.px0 + NW.px1) / 2, y: NW.py1 + 14, 'text-anchor': 'middle', 'font-size': 9, fill: '#64748b' }, 'time after the 90° pulse (schematic)'));
+                svg.appendChild(svgEl('polyline', { class: 'env-exp', points: '', fill: 'none', stroke: pore.color, 'stroke-width': 1, 'stroke-dasharray': '3 3', opacity: 0.5 }));
+                svg.appendChild(svgEl('polyline', { class: 'env', points: '', fill: 'none', stroke: pore.color, 'stroke-width': 2 }));
+            });
+            setNMRWheels('none');
+        }
+
+        // Draw one wheel state: mode 'none' (no transverse magnetization), or phases in radians.
+        function drawNMRWheel(key, phases, stateText) {
+            const svg = document.getElementById('wheel-' + key);
+            const lines = svg.querySelectorAll('g line');
+            let m = 0;
+            lines.forEach((ln, i) => {
+                if (!phases) { ln.setAttribute('x2', NW.cx); ln.setAttribute('y2', NW.cy); return; }
+                const a = phases[i];
+                m += Math.cos(a) / phases.length;
+                ln.setAttribute('x2', (NW.cx + 0.92 * NW.r * Math.cos(a)).toFixed(1));
+                ln.setAttribute('y2', (NW.cy - 0.92 * NW.r * Math.sin(a)).toFixed(1));
+            });
+            m = Math.max(0, m); // phases are symmetric, so the net vector stays on the +x axis
+            const tipX = NW.cx + NW.r * m;
+            const net = svg.querySelector('.net');
+            net.setAttribute('x2', tipX.toFixed(1));
+            svg.querySelector('.net-head').setAttribute('points', m > 0.12
+                ? `${(tipX + 7).toFixed(1)},${NW.cy} ${(tipX - 4).toFixed(1)},${NW.cy - 6} ${(tipX - 4).toFixed(1)},${NW.cy + 6}` : '');
+            svg.querySelector('.net-val').textContent = Math.round(m * 100) + '%';
+            svg.querySelector('.net-state').textContent = stateText;
+            return m;
+        }
+
+        function setNMRWheels(mode) {
+            cancelAnimationFrame(nmrAnimId);
+            Object.keys(NMR_PORES).forEach(key => {
+                const svg = document.getElementById('wheel-' + key);
+                svg.querySelector('.env').setAttribute('points', '');
+                svg.querySelector('.env-exp').setAttribute('points', '');
+                if (mode === 'tipped') drawNMRWheel(key, NMR_Z.map(() => 0), 'all spins in phase');
+                else drawNMRWheel(key, null, mode === 'aligned' ? 'spins along B₀' : 'no net magnetization');
+            });
+        }
+
         function nmrStep1() {
             document.querySelectorAll('.proton').forEach(p => p.style.transform = 'rotate(0deg)');
+            setNMRWheels('aligned');
             drawNMRGraph(false);
         }
 
         function nmrStep2() {
             document.querySelectorAll('.proton').forEach(p => p.style.transform = 'rotate(90deg)');
+            setNMRWheels('tipped');
         }
 
         function nmrStep3() {
-            // Small relax fast, Large relax slow
-            document.querySelectorAll('#grid-small .proton').forEach(p => { p.style.transition = 'transform 0.5s ease-out'; p.style.transform = 'rotate(0deg)'; });
-            document.querySelectorAll('#grid-large .proton').forEach(p => { p.style.transition = 'transform 3s ease-out'; p.style.transform = 'rotate(0deg)'; });
+            // T₂: after the 90° pulse the spins stay in the transverse plane but precess at
+            // slightly different rates, so they fan out and the net transverse magnetization
+            // decays. Small pores dephase fast (short T₂), large pores slowly (long T₂).
+            document.querySelectorAll('.proton').forEach(p => p.style.transform = 'rotate(90deg)');
+            setNMRWheels('tipped');
+            const tx = t => NW.px0 + (NW.px1 - NW.px0) * t / NMR_TEND;
+            const ty = m => NW.py1 - (NW.py1 - NW.py0) * m;
+            const trace = { large: [], small: [] };
+            Object.keys(NMR_PORES).forEach(key => {
+                const T2 = NMR_PORES[key].T2, pts = [];
+                for (let k = 0; k <= 100; k++) { const t = NMR_TEND * k / 100; pts.push(`${tx(t).toFixed(1)},${ty(Math.exp(-t / T2)).toFixed(1)}`); }
+                document.querySelector(`#wheel-${key} .env-exp`).setAttribute('points', pts.join(' '));
+            });
+            const start = performance.now();
+            function frame(now) {
+                const t = Math.min(NMR_TEND, Math.max(0, (now - start) / 1000)); // rAF time can precede start
+                Object.keys(NMR_PORES).forEach(key => {
+                    const T2 = NMR_PORES[key].T2;
+                    const te = Math.min(t, 4 * T2); // hold the fully dephased fan
+                    const s = Math.sqrt(2 * te / T2);
+                    const m = drawNMRWheel(key, NMR_Z.map(z => z * s), te < 4 * T2 ? 'spins fanning out' : 'dephased');
+                    trace[key].push(`${tx(t).toFixed(1)},${ty(m).toFixed(1)}`);
+                    document.querySelector(`#wheel-${key} .env`).setAttribute('points', trace[key].join(' '));
+                });
+                if (t < NMR_TEND) nmrAnimId = requestAnimationFrame(frame);
+            }
+            nmrAnimId = requestAnimationFrame(frame);
             drawNMRGraph(true);
         }
 

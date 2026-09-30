@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep EM Methods - Interactive Visualizer</title>
+    <title>Deep EM Visualizer</title>
 
 
 
@@ -337,7 +337,9 @@
                 colorTop: PAL.primary, colorAcc: PAL.red,
                 legend: [
                     { color: PAL.source, label: 'Solar Wind B-Field' },
+                    { color: PAL.fieldDot, label: 'Magnetic Field Lines' },
                     { color: PAL.red, label: 'Conductive Plume' },
+                    { color: PAL.eField, label: 'Induced Currents' },
                     { color: PAL.instrument, label: 'Magnetometer' }
                 ]
             },
@@ -368,7 +370,7 @@
             },
             'TEM': {
                 title: 'Transient EM (Time Domain)',
-                desc: 'We pulse a strong current through a ground loop, then turn it off. This abrupt change creates secondary "smoke rings" of current in the earth. Conductive mineral ores prolong this decay, acting like an echo.',
+                desc: 'We pulse a strong current through a ground loop, then turn it off. This abrupt change creates secondary "smoke rings" of current in the earth. Conductive mineral ores prolong this decay: the conductive ore sustains slowly decaying eddy currents, so the late-time signal stays high.',
                 tags: ['Active Source', 'Time Domain (Pulsed)', 'Depth: 0-1 km'],
                 scaleScale: '1 km',
                 colorTop: PAL.green, colorAcc: PAL.red,
@@ -391,6 +393,79 @@
         
         const GROUND_LEVEL = 280;
         const SEA_LEVEL = 100;
+
+        // --- GMS: field lines around a good conductor ---
+        // The plume is treated as a perfectly conducting cylinder in a uniform vertical field.
+        // The time-varying field cannot enter it (B·n = 0 on its surface), so the field lines
+        // are the streamlines of potential flow around a cylinder: x'(1 - R²/r²) = c, where
+        // x', y' are measured from the plume centre and c is the line's far-field offset.
+        const GMS_PLUME = { x: 600, y: 680, r: 200 };
+        let gmsLineCache = null;
+        function gmsFieldLines() {
+            if (gmsLineCache) return gmsLineCache;
+            const R = GMS_PLUME.r, R2 = R * R;
+            gmsLineCache = [];
+            for (let i = 1; i <= 7; i++) {
+                const c = (canvas.width / 8) * i - GMS_PLUME.x, sgn = Math.sign(c), ac = Math.abs(c);
+                const pts = [];
+                for (let y = 80; y <= canvas.height; y += 4) {
+                    const yp = y - GMS_PLUME.y, yp2 = yp * yp;
+                    let lo = Math.sqrt(Math.max(R2 - yp2, 0)), hi = ac + R; // root lies outside the cylinder
+                    for (let n = 0; n < 40; n++) {
+                        const u = 0.5 * (lo + hi);
+                        if (u * (1 - R2 / (u * u + yp2)) < ac) lo = u; else hi = u;
+                    }
+                    pts.push([GMS_PLUME.x + sgn * 0.5 * (lo + hi), y]);
+                }
+                const cum = [0];
+                for (let k = 1; k < pts.length; k++) cum.push(cum[k-1] + Math.hypot(pts[k][0] - pts[k-1][0], pts[k][1] - pts[k-1][1]));
+                gmsLineCache.push({ pts, cum, len: cum[cum.length - 1] });
+            }
+            return gmsLineCache;
+        }
+
+        // --- MT: 1-D layered-earth example ---
+        // Apparent resistivity and phase from the standard impedance recursion for a layered
+        // earth; rho_a = |Z|²/(ωμ0). Skin depth δ ≈ 503·sqrt(rho·T) m, here with rho = rho_a(T).
+        // The earth section on screen (GROUND_LEVEL to the canvas bottom) spans 0 to 50 km,
+        // the depth in the scale box.
+        const MT_MODEL = { rho: [100, 5, 1000], h: [5000, 10000] }; // Ω·m; thicknesses in m
+        const MT_PERIODS = [0.1, 1, 10, 100, 1000];                 // s, animated in turn
+        const MT_PERIOD_TICKS = 240;                                // animation ticks per period
+        const MT_SECTION_KM = 50;
+        function mt1d(T) {
+            const mu0 = 4e-7 * Math.PI, w = 2 * Math.PI / T;
+            // complex helpers on [re, im]
+            const mul = (a, b) => [a[0]*b[0] - a[1]*b[1], a[0]*b[1] + a[1]*b[0]];
+            const div = (a, b) => { const d = b[0]*b[0] + b[1]*b[1]; return [(a[0]*b[0] + a[1]*b[1]) / d, (a[1]*b[0] - a[0]*b[1]) / d]; };
+            const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
+            const sqrtI = s => { const m = Math.sqrt(s / 2); return [m, m]; };  // sqrt(i·s), s > 0
+            const tanh = z => { // tanh(x + iy) = (sinh 2x + i sin 2y) / (cosh 2x + cos 2y)
+                const x = Math.min(z[0], 30), d = Math.cosh(2*x) + Math.cos(2*z[1]);
+                return [Math.sinh(2*x) / d, Math.sin(2*z[1]) / d];
+            };
+            const rho = MT_MODEL.rho, h = MT_MODEL.h;
+            let Z = sqrtI(w * mu0 * rho[rho.length - 1]);
+            for (let j = h.length - 1; j >= 0; j--) {
+                const zj = sqrtI(w * mu0 * rho[j]);
+                const kh = sqrtI(w * mu0 / rho[j]).map(v => v * h[j]);
+                const th = tanh(kh);
+                Z = mul(zj, div(add(Z, mul(zj, th)), add(zj, mul(Z, th))));
+            }
+            const rhoA = (Z[0]*Z[0] + Z[1]*Z[1]) / (w * mu0);
+            return { rhoA, phase: Math.atan2(Z[1], Z[0]) * 180 / Math.PI };
+        }
+        const MT_CURVE = [];
+        for (let k = 0; k <= 60; k++) { const T = Math.pow(10, -2 + 6 * k / 60); MT_CURVE.push({ T, ...mt1d(T) }); }
+        function mtState(t) {
+            const idx = Math.floor(t / MT_PERIOD_TICKS) % MT_PERIODS.length;
+            const T = MT_PERIODS[idx], r = mt1d(T);
+            const deltaKm = 503 * Math.sqrt(r.rhoA * T) / 1000;
+            const pxPerKm = (canvas.height - GROUND_LEVEL) / MT_SECTION_KM;
+            return { idx, T, rhoA: r.rhoA, phase: r.phase, deltaKm, deltaPx: deltaKm * pxPerKm };
+        }
+        const fmtPeriod = T => T < 1 ? T.toFixed(1) : String(T);
+        const fmtNum = v => v >= 100 ? v.toFixed(0) : (v >= 10 ? v.toFixed(0) : v.toFixed(1));
 
         // --- UI LOGIC ---
         function setMethod(method) {
@@ -516,39 +591,51 @@
                 ctx.stroke();
             }
 
-            // Target: Mantle Plume
-            let plumeX = canvas.width/2 + 100;
-            let plumeY = canvas.height + 80;
-            let plumeGrad = ctx.createRadialGradient(plumeX, plumeY, 20, plumeX, plumeY, 250);
+            // Target: Mantle Plume (a good conductor of radius GMS_PLUME.r)
+            const plumeX = GMS_PLUME.x, plumeY = GMS_PLUME.y;
+            let plumeGrad = ctx.createRadialGradient(plumeX, plumeY, 20, plumeX, plumeY, GMS_PLUME.r + 10);
             plumeGrad.addColorStop(0, 'rgba(220, 38, 38, 0.8)'); // Red core
-            plumeGrad.addColorStop(0.5, 'rgba(234, 88, 12, 0.35)');
+            plumeGrad.addColorStop(0.55, 'rgba(234, 88, 12, 0.35)');
             plumeGrad.addColorStop(1, 'rgba(234, 88, 12, 0)');
             ctx.fillStyle = plumeGrad;
-            ctx.beginPath(); ctx.arc(plumeX, plumeY, 250, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(plumeX, plumeY, GMS_PLUME.r + 10, 0, Math.PI*2); ctx.fill();
+
+            // Induced current loops inside the plume. They flow so that their own field opposes
+            // the change of the source field, so they reverse when dB/dt (inset) changes sign
+            // and are strongest when the field changes fastest.
+            const dBdt = Math.cos(t*0.05);            // derivative of the inset's sin(0.05 t)
+            const dir = dBdt >= 0 ? -1 : 1;           // circulation sense on the front of each loop
+            ctx.strokeStyle = PAL.eField; ctx.fillStyle = PAL.eField;
+            ctx.globalAlpha = 0.3 + 0.7 * Math.abs(dBdt);
+            ctx.lineWidth = 2.5;
+            [[505, 62, 9], [577, 140, 14]].forEach(([ly, rx, ry]) => {
+                ctx.beginPath(); ctx.ellipse(plumeX, ly, rx, ry, 0, 0, Math.PI*2); ctx.stroke();
+                [-0.45, 0.45].forEach(f => {          // arrowheads on the near side of the loop
+                    const ax = plumeX + f*rx, ay = ly + ry*Math.sqrt(1 - f*f);
+                    ctx.beginPath(); ctx.moveTo(ax + dir*8, ay); ctx.lineTo(ax - dir*4, ay - 5); ctx.lineTo(ax - dir*4, ay + 5); ctx.closePath(); ctx.fill();
+                });
+            });
+            ctx.globalAlpha = 1;
             drawLabel(plumeX - 40, canvas.height - 50, "Hot Mantle Plume", PAL.redText);
 
-            // Penetrating Magnetic Fields (B)
+            // Magnetic field lines (B). Induced currents in the good conductor oppose the changing
+            // field, so the field is excluded from the plume and the lines bend around it.
             ctx.strokeStyle = PAL.fieldLine;
             ctx.lineWidth = 3;
-            for(let i=1; i<=7; i++) {
-                let startX = (canvas.width/8) * i;
+            gmsFieldLines().forEach((line, i) => {
                 ctx.beginPath();
-                ctx.moveTo(startX, 80);
-                
-                // Curve towards the highly conductive plume
-                let cpy1 = GROUND_LEVEL;
-                let endX = startX + (plumeX - startX) * 0.4;
-                
-                ctx.quadraticCurveTo(startX, cpy1, endX, canvas.height);
+                line.pts.forEach(([x, y], k) => { if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); });
                 ctx.stroke();
 
-                // Draw moving dots on field lines
-                let dotProgress = ((t*0.5 + i*20) % 100) / 100;
-                let dotX = startX + (endX - startX) * dotProgress;
-                let dotY = 80 + (canvas.height - 80) * dotProgress; // simplified lerp
+                // Moving dots, spaced along the line by arc length
+                const s = (((t*0.5 + (i+1)*20) % 100) / 100) * line.len;
+                let k = 1; while (k < line.cum.length - 1 && line.cum[k] < s) k++;
+                const f = (s - line.cum[k-1]) / Math.max(1e-6, line.cum[k] - line.cum[k-1]);
+                const dotX = line.pts[k-1][0] + (line.pts[k][0] - line.pts[k-1][0]) * f;
+                const dotY = line.pts[k-1][1] + (line.pts[k][1] - line.pts[k-1][1]) * f;
                 ctx.fillStyle = PAL.fieldDot;
                 ctx.beginPath(); ctx.arc(dotX, dotY, 3, 0, Math.PI*2); ctx.fill();
-            }
+            });
 
             // Surface Magnetometer (Rx)
             ctx.fillStyle = PAL.instrument;
@@ -574,17 +661,32 @@
                 ctx.fillRect(0,0, canvas.width, GROUND_LEVEL);
             }
 
-            // Plane waves descending
-            ctx.strokeStyle = 'rgba(217, 119, 6, 0.35)'; // Orangeish
+            // Plane waves descending. In the conductive earth the amplitude decays as exp(-z/δ),
+            // drawn as line opacity; δ grows with period, so long periods reach deeper.
+            const mt = mtState(t);
+            const fade = y => Math.exp(-(y - GROUND_LEVEL) / mt.deltaPx);
             ctx.lineWidth = 2;
             let waveGap = 80;
             let waveSpeed = 1.5;
             for(let yOffset = 0; yOffset < canvas.height; yOffset += waveGap) {
                 let y = ((t * waveSpeed) + yOffset) % canvas.height;
                 if(y > GROUND_LEVEL) {
+                    ctx.strokeStyle = `rgba(217, 119, 6, ${(0.6 * fade(y)).toFixed(3)})`; // Orangeish
                     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
                 }
             }
+
+            // Skin-depth marker for the period now animated
+            ctx.save();
+            ctx.strokeStyle = PAL.sourceText; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]);
+            const dY = GROUND_LEVEL + mt.deltaPx;
+            const inView = dY < canvas.height - 8;
+            const dText = `fades over one skin depth δ ≈ ${fmtNum(mt.deltaKm)} km` + (inView ? ` (T = ${fmtPeriod(mt.T)} s)` : ', below this view');
+            ctx.font = PAL.labelFont;
+            const dX = canvas.width - 24 - ctx.measureText(dText).width;
+            if (inView) { ctx.beginPath(); ctx.moveTo(dX - 10, dY); ctx.lineTo(canvas.width, dY); ctx.stroke(); }
+            ctx.restore();
+            drawLabel(dX, inView ? Math.max(dY - 8, GROUND_LEVEL + 22) : canvas.height - 14, dText, PAL.sourceText);
 
             // Target: Geothermal Fault (Conductive)
             let faultX = canvas.width/2 + 80;
@@ -603,16 +705,19 @@
 
             // Propagating E and H fields
             let fieldY = GROUND_LEVEL + ((t * 1.5) % (canvas.height - GROUND_LEVEL));
-            if(fieldY > GROUND_LEVEL + 20) {
+            const amp = fade(fieldY); // E and H shrink and fade with depth, exp(-z/δ)
+            if(fieldY > GROUND_LEVEL + 20 && amp > 0.03) {
+                ctx.globalAlpha = Math.min(1, 0.25 + amp);
                 // E Field (Horizontal - Cyan)
                 ctx.strokeStyle = PAL.eField; ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(canvas.width/3 - 40, fieldY); ctx.lineTo(canvas.width/3 + 40, fieldY); ctx.stroke();
-                ctx.fillStyle = PAL.eText; ctx.fillText("E-Field", canvas.width/3 + 45, fieldY + 4);
+                ctx.beginPath(); ctx.moveTo(canvas.width/3 - 40*amp, fieldY); ctx.lineTo(canvas.width/3 + 40*amp, fieldY); ctx.stroke();
+                ctx.fillStyle = PAL.eText; ctx.fillText("E-Field", canvas.width/3 + 40*amp + 5, fieldY + 4);
 
                 // H Field (Diagonal simulating into-page - Magenta)
                 ctx.strokeStyle = PAL.hField;
-                ctx.beginPath(); ctx.moveTo(canvas.width/3, fieldY); ctx.lineTo(canvas.width/3 - 25, fieldY - 20); ctx.stroke();
-                ctx.fillStyle = PAL.hText; ctx.fillText("H-Field", canvas.width/3 - 65, fieldY - 25);
+                ctx.beginPath(); ctx.moveTo(canvas.width/3, fieldY); ctx.lineTo(canvas.width/3 - 25*amp, fieldY - 20*amp); ctx.stroke();
+                ctx.fillStyle = PAL.hText; ctx.fillText("H-Field", canvas.width/3 - 25*amp - 40, fieldY - 20*amp - 5);
+                ctx.globalAlpha = 1;
             }
 
             // Current concentration in fault
@@ -633,7 +738,7 @@
             drawLabel(canvas.width/2 - 40, GROUND_LEVEL - 30, "MT Station (Ex, Ey, Hx, Hy)", PAL.ink);
 
             // --- HUD GRAPHIC FOR MT OBSERVATION ---
-            drawMTGraph(t);
+            drawMTGraph(t, mt);
         }
 
         function drawCSEM(t) {
@@ -728,7 +833,7 @@
             ctx.moveTo(oreX, oreY - 40); ctx.lineTo(oreX + 120, oreY - 20);
             ctx.lineTo(oreX + 80, oreY + 80); ctx.lineTo(oreX - 20, oreY + 60);
             ctx.fill();
-            drawLabel(oreX - 20, oreY + 100, "Highly Conductive Ore (Ni/Cu)", PAL.oreText); // below the ore, clear of the moving echo label
+            drawLabel(oreX - 20, oreY + 100, "Highly Conductive Ore (Ni/Cu)", PAL.oreText); // below the ore, clear of the eddy-current label
 
             // Source Loop (Tx) on ground
             ctx.strokeStyle = PAL.red; // Red loop
@@ -782,20 +887,23 @@
                 ctx.ellipse(canvas.width/2 - 100, ringDepth, ringWidth/2, 30 + decayTime/4, 0, 0, 2*Math.PI);
                 ctx.stroke();
 
-                // Interaction with ore body
-                if (ringDepth > oreY - 40 && ringDepth < oreY + 80) {
-                    // Flash the ore body
-                    ctx.fillStyle = `rgba(255, 255, 255, ${0.5 * alpha})`;
-                    ctx.beginPath();
-                    ctx.moveTo(oreX, oreY - 40); ctx.lineTo(oreX + 120, oreY - 20);
-                    ctx.lineTo(oreX + 80, oreY + 80); ctx.lineTo(oreX - 20, oreY + 60);
-                    ctx.fill();
+                // Interaction with ore body: once the diffusing currents reach the ore, the good
+                // conductor sustains its own eddy currents, which decay much more slowly than the
+                // host currents (no reflection involved), so the late-time signal stays high.
+                const hitTime = (oreY - 40 - GROUND_LEVEL) / 2; // decayTime when the ring reaches the ore
+                if (decayTime >= hitTime) {
+                    const oreAlpha = Math.exp(-(decayTime - hitTime) / 150);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${(0.9 * oreAlpha).toFixed(3)})`;
+                    ctx.lineWidth = 2.5;
+                    [[40, 14], [20, 7]].forEach(([rx, ry]) => {
+                        ctx.beginPath(); ctx.ellipse(oreX + 47, oreY + 22, rx, ry, 0, 0, 2*Math.PI); ctx.stroke();
+                    });
 
-                    // Echo field returning to surface Rx
-                    ctx.strokeStyle = `rgba(2, 132, 199, ${alpha})`;
+                    // Secondary field from the ore eddy currents reaching the surface Rx
+                    ctx.strokeStyle = `rgba(5, 150, 105, ${oreAlpha.toFixed(3)})`;
                     ctx.lineWidth = 2;
-                    ctx.beginPath(); ctx.moveTo(oreX + 40, ringDepth); ctx.lineTo(canvas.width/2 - 100, GROUND_LEVEL); ctx.stroke();
-                    drawLabel(oreX + 50, ringDepth - 20, "Secondary 'Echo'", PAL.primaryText);
+                    ctx.beginPath(); ctx.moveTo(oreX + 40, oreY - 30); ctx.lineTo(canvas.width/2 - 100, GROUND_LEVEL); ctx.stroke();
+                    drawLabel(oreX + 130, oreY - 20, "Ore eddy currents (slow decay)", PAL.greenText);
                 }
 
                 drawLabel(canvas.width/2 - 150, GROUND_LEVEL + 50, "STATE: Listening to Decay", '#065f46', 'rgba(209, 250, 229, 0.92)');
@@ -836,43 +944,71 @@
             ctx.beginPath(); ctx.arc(gX + gW - 10, gY + 60 + Math.sin(t*0.05)*20, 4, 0, Math.PI*2); ctx.fill();
         }
 
-        function drawMTGraph(t) {
-            let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
-            
+        function drawMTGraph(t, mt) {
+            // Left: E and H time series at the station for the period now animated (amplitudes
+            // normalized; E leads H by the model phase). Right: apparent resistivity is a function
+            // of period, so it is a fixed curve; the marker shows the period now animated.
+            const gX = 30, gY = canvas.height - 162, boxW = 470, boxH = 150;
+
             ctx.fillStyle = PAL.hudBg;
-            ctx.beginPath(); ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.beginPath(); ctx.roundRect(gX, gY, boxW, boxH, 8);
             ctx.fill();
-            ctx.strokeStyle = PAL.hudLine; ctx.stroke();
+            ctx.strokeStyle = PAL.hudLine; ctx.lineWidth = 1; ctx.stroke();
 
             ctx.fillStyle = PAL.hudTitle; ctx.font = PAL.hudFont;
-            ctx.fillText("MT Time Series (E & H)", gX + 10, gY + 20);
+            ctx.fillText("E & H at the station (normalized)", gX + 10, gY + 18);
+            ctx.fillText("Apparent resistivity vs period", gX + 250, gY + 18);
 
-            // Axes
-            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+gW, gY+gH+10); ctx.stroke(); // X
-            ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
-
-            // E and H Waves
+            // --- time series ---
+            const tsX0 = gX + 10, tsW = 200, tsY = gY + 62;
+            ctx.strokeStyle = PAL.hudLine;
+            ctx.beginPath(); ctx.moveTo(tsX0, gY + 100); ctx.lineTo(tsX0 + tsW, gY + 100); ctx.stroke(); // X
+            ctx.beginPath(); ctx.moveTo(tsX0, gY + 100); ctx.lineTo(tsX0, gY + 26); ctx.stroke();        // Y
+            const wVis = 0.2 / Math.pow(1.7, mt.idx);   // longer period, slower oscillation
+            const ph = mt.phase * Math.PI / 180;
             ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.strokeStyle = PAL.eField; // E-field
-            for(let i=0; i<gW-20; i++) {
-                let historyT = t - (gW - 20 - i);
-                let val = Math.sin(historyT*0.1) * 15;
-                if(i===0) ctx.moveTo(gX+10+i, gY+55+val); else ctx.lineTo(gX+10+i, gY+55+val);
-            }
-            ctx.stroke();
+            [[PAL.eField, 0, -8], [PAL.hField, ph, 8]].forEach(([col, lag, off]) => {
+                ctx.beginPath(); ctx.strokeStyle = col;
+                for (let i = 0; i < tsW; i++) {
+                    const val = Math.sin((t - (tsW - i)) * wVis - lag) * 14;
+                    if (i === 0) ctx.moveTo(tsX0 + i, tsY + off + val); else ctx.lineTo(tsX0 + i, tsY + off + val);
+                }
+                ctx.stroke();
+            });
+            ctx.font = '600 10px ' + FONT;
+            ctx.fillStyle = PAL.eText; ctx.fillText("E", tsX0 + tsW + 4, tsY - 6);
+            ctx.fillStyle = PAL.hText; ctx.fillText("H", tsX0 + tsW + 4, tsY + 12);
+            ctx.fillStyle = PAL.hudTitle; ctx.fillText("time", tsX0 + tsW / 2 - 10, gY + 112);
 
-            ctx.beginPath(); ctx.strokeStyle = PAL.hField; // H-field
-            for(let i=0; i<gW-20; i++) {
-                let historyT = t - (gW - 20 - i);
-                let val = Math.sin(historyT*0.1 - Math.PI/4) * 20; // Phase shifted
-                if(i===0) ctx.moveTo(gX+10+i, gY+65+val); else ctx.lineTo(gX+10+i, gY+65+val);
-            }
+            // --- rho_a(T) on log axes ---
+            const px0 = gX + 290, px1 = gX + boxW - 14, py0 = gY + 28, py1 = gY + 98;
+            const lx = T => px0 + (px1 - px0) * (Math.log10(T) + 2) / 6;       // 0.01 to 10^4 s
+            const ly = r => py1 - (py1 - py0) * Math.log10(r) / 3;             // 1 to 1000 Ω·m
+            ctx.strokeStyle = '#e5eaf1'; ctx.lineWidth = 1;
+            for (let d = -2; d <= 4; d += 2) { const x = lx(Math.pow(10, d)); ctx.beginPath(); ctx.moveTo(x, py0); ctx.lineTo(x, py1); ctx.stroke(); }
+            for (let d = 0; d <= 3; d++) { const y = ly(Math.pow(10, d)); ctx.beginPath(); ctx.moveTo(px0, y); ctx.lineTo(px1, y); ctx.stroke(); }
+            ctx.strokeStyle = PAL.hudLine; ctx.strokeRect(px0, py0, px1 - px0, py1 - py0);
+            ctx.fillStyle = '#64748b'; ctx.font = '600 10px ' + FONT;
+            ctx.textAlign = 'right';
+            ['1', '10', '100', '1000'].forEach((s, d) => ctx.fillText(s, px0 - 4, ly(Math.pow(10, d)) + 3));
+            ctx.textAlign = 'center';
+            [['0.01', -2], ['1', 0], ['100', 2], ['10⁴', 4]].forEach(([s, d]) => ctx.fillText(s, lx(Math.pow(10, d)), py1 + 12));
+            ctx.fillStyle = PAL.hudTitle;
+            ctx.fillText('Period T (s)', (px0 + px1) / 2, py1 + 24);
+            ctx.textAlign = 'left';
+            ctx.save(); ctx.translate(gX + 256, (py0 + py1) / 2 + 22); ctx.rotate(-Math.PI / 2); ctx.fillText('ρa (Ω·m)', 0, 0); ctx.restore();
+            ctx.strokeStyle = PAL.green; ctx.lineWidth = 2;
+            ctx.beginPath();
+            MT_CURVE.forEach((p, k) => { if (k === 0) ctx.moveTo(lx(p.T), ly(p.rhoA)); else ctx.lineTo(lx(p.T), ly(p.rhoA)); });
             ctx.stroke();
-            
-            // Apparent Resistivity readout
+            ctx.fillStyle = PAL.red;
+            ctx.beginPath(); ctx.arc(lx(mt.T), ly(mt.rhoA), 5, 0, Math.PI * 2); ctx.fill();
+
+            // Readout: changes only when the animated period changes
             ctx.fillStyle = PAL.greenText; ctx.font = 'bold 11px ' + FONT;
-            let rhoA = 120 + Math.sin(t*0.05)*5; // Simulated fluctuation
-            ctx.fillText(`Apparent ρ ≈ ${rhoA.toFixed(1)} Ω·m`, gX + 10, gY + gH + 30);
+            ctx.fillText(`T = ${fmtPeriod(mt.T)} s   ρa ≈ ${fmtNum(mt.rhoA)} Ω·m   phase ≈ ${mt.phase.toFixed(0)}°`, gX + 10, gY + 132);
+            ctx.font = '600 10px ' + FONT; ctx.fillStyle = PAL.hudTitle;
+            ctx.fillText('Layered-earth example: 100 Ω·m over a 5 Ω·m layer (5 to 15 km) over 1000 Ω·m', gX + 10, gY + 145);
         }
 
         function drawCSEMGraph(t, shipX, resX) {

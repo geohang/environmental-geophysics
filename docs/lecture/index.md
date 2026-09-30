@@ -16,4 +16,4 @@ The course walks through the subsurface geophysical toolbox one method at a time
 | [Borehole Geophysics](borehole/index.md) | Dashboard + demo | Wireline logs, integrated interpretation |
 
 !!! tip "Tools open full screen"
-    Every simulator and activity opens as its own full-page tool. Use the **← Course Home** bar at the top of any tool to come back here.
+    Every simulator and activity opens as its own full-page tool. The bar at the top of each tool shows where you are, lists the other apps in the module in learning-path order, and has **Prev** and **Next** buttons; **← Home** brings you back to the course.

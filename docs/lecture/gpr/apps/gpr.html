@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electromagnetic Physics: Conduction vs Displacement</title>
+    <title>Conduction vs. Displacement Currents</title>
     <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
@@ -79,7 +79,7 @@
                         <span id="freqLabel" class="font-mono text-slate-600 font-semibold text-xs">1.0 Hz</span>
                     </label>
                     <input type="range" id="freqSlider" class="lab-range" min="0" max="3" step="0.1" value="1.0">
-                    <p class="text-xs text-slate-500 mt-1">Set to 0 for a steady DC field.</p>
+                    <p class="text-xs text-slate-500 mt-1">Set to 0 for a steady DC field. This slider only sets the animation speed; the GPR readout below uses f = 100 MHz.</p>
                 </div>
                 <div class="mb-2">
                     <label class="block text-sm font-medium text-slate-700 mb-1 flex justify-between">
@@ -99,20 +99,34 @@
                 <div class="mb-4 bg-amber-50 p-3 rounded-lg border border-amber-100">
                     <label class="block text-sm font-medium text-amber-900 mb-1 flex justify-between">
                         <span>Conductivity (&sigma;)</span>
-                        <span id="sigmaLabel" class="text-amber-700 font-semibold text-xs">High</span>
+                        <span id="sigmaLabel" class="text-amber-700 font-semibold text-xs">10 mS/m</span>
                     </label>
-                    <input type="range" id="sigmaSlider" class="lab-range" min="0" max="1" step="0.05" value="0.8">
-                    <p class="text-xs text-amber-700 mt-1">Controls how easily free charges flow (EM Induction).</p>
+                    <!-- Slider value is log10 of sigma in mS/m: -2 to 2 means 0.01 to 100 mS/m -->
+                    <input type="range" id="sigmaSlider" class="lab-range" min="-2" max="2" step="0.05" value="1">
+                    <p class="text-xs text-amber-700 mt-1">Controls conduction current. For GPR it is the main cause of signal attenuation.</p>
                 </div>
 
                 <div class="mb-2 bg-blue-50 p-3 rounded-lg border border-blue-100">
                     <label class="block text-sm font-medium text-blue-900 mb-1 flex justify-between">
                         <span>Permittivity (&epsilon;)</span>
-                        <span id="epsilonLabel" class="text-blue-700 font-semibold text-xs">High</span>
+                        <span id="epsilonLabel" class="text-blue-700 font-semibold text-xs">&epsilon;<sub>r</sub> = 25</span>
                     </label>
-                    <input type="range" id="epsilonSlider" class="lab-range" min="0" max="1" step="0.05" value="0.8">
+                    <!-- Slider value is the relative permittivity, 3 to 30 -->
+                    <input type="range" id="epsilonSlider" class="lab-range" min="3" max="30" step="1" value="25">
                     <p class="text-xs text-blue-700 mt-1">Controls how easily bound molecules stretch (GPR).</p>
                 </div>
+            </div>
+
+            <!-- GPR readout: slider values as physical properties at a GPR frequency -->
+            <div class="lab-note text-sm p-4" id="gprReadout">
+                <p class="lab-note-title font-bold mb-1">What this means for GPR (f = 100 MHz)</p>
+                <p class="text-xs mb-2">Compare the conduction current J = &sigma;E with the displacement current &part;D/&part;t, whose amplitude is &omega;&epsilon;E. Their ratio is the loss tangent.</p>
+                <div class="space-y-1 text-xs tabular-nums">
+                    <div class="flex justify-between gap-3"><span>Loss tangent tan&delta; = &sigma;/(2&pi;f&epsilon;<sub>0</sub>&epsilon;<sub>r</sub>)</span><span id="tanDeltaOut" class="font-bold text-slate-900">0.072</span></div>
+                    <div class="flex justify-between gap-3"><span>Attenuation &alpha; &asymp; 1636&sigma;/&radic;&epsilon;<sub>r</sub> (&sigma; in S/m)</span><span id="alphaOut" class="font-bold text-slate-900">3.27 dB/m</span></div>
+                    <div class="flex justify-between gap-3"><span>Velocity v = 0.3/&radic;&epsilon;<sub>r</sub></span><span id="velOut" class="font-bold text-slate-900">0.060 m/ns</span></div>
+                </div>
+                <p id="regimeOut" class="text-xs font-semibold mt-2 text-emerald-700">tan&delta; &lt; 1: wave propagation dominates (GPR works).</p>
             </div>
 
             <!-- Play/Pause -->
@@ -165,11 +179,11 @@
             <div class="lab-card flex-1 flex flex-col relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full bg-white border-b border-slate-200 p-3 flex justify-between items-center gap-3 z-10">
                     <div>
-                        <h3 class="text-slate-900 font-semibold flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-blue-600 shrink-0" aria-hidden="true"></span>Electric Displacement (Polarization)</h3>
-                        <p class="text-xs text-slate-600">Bound molecules (dipoles) stretching in place. They do not flow.</p>
+                        <h3 class="text-slate-900 font-semibold flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-blue-600 shrink-0" aria-hidden="true"></span>Displacement Current (Polarization)</h3>
+                        <p class="text-xs text-slate-600">Bound dipoles stretch in place (D = &epsilon;E). They do not flow.</p>
                     </div>
-                    <div class="equation-box math-font text-blue-700 bg-blue-50 border-blue-200">
-                        D = &epsilon;E
+                    <div class="equation-box math-font text-blue-700 bg-blue-50 border-blue-200" title="Displacement current, the quantity to compare with J = &sigma;E">
+                        &part;D/&part;t = &epsilon;&thinsp;&part;E/&part;t
                     </div>
                 </div>
                 <div class="flex-1 relative mt-28 sm:mt-16">
@@ -195,12 +209,52 @@
         let isPlaying = true;
         let time = 0;
         
-        // Physics Parameters
+        // Physics Parameters (sigma and epsilon are 0..1 animation weights mapped from the sliders)
         let freq = 1.0;
         let amplitude = 1.0;
-        let sigma = 0.8;
-        let epsilon = 0.8;
+        let sigma = 0.75;          // log10(10 mS/m) = 1 on the -2..2 slider
+        let epsilon = 22 / 27;     // eps_r = 25 on the 3..30 slider
         let currentE = 0;
+
+        // GPR readout at a representative GPR frequency
+        const F_GPR = 100e6;       // Hz
+        const EPS0 = 8.854e-12;    // F/m
+        function fmtSigma(mS) {
+            if (mS >= 10) return mS.toFixed(0);
+            if (mS >= 1) return mS.toFixed(1);
+            return mS.toPrecision(2);
+        }
+        function fmtNum(x) {
+            if (x >= 10) return x.toFixed(1);
+            if (x >= 0.1) return x.toFixed(2);
+            return x.toPrecision(2);
+        }
+        function gprLoss(sigma_mS, epsR) {
+            const s = sigma_mS * 1e-3;                            // S/m
+            const tanDelta = s / (2 * Math.PI * F_GPR * EPS0 * epsR);
+            const alpha = 1636 * s / Math.sqrt(epsR);             // dB/m, low-loss approximation
+            const v = 0.3 / Math.sqrt(epsR);                      // m/ns
+            return { tanDelta, alpha, v };
+        }
+        function updateGprReadout() {
+            const sigma_mS = Math.pow(10, parseFloat(document.getElementById('sigmaSlider').value));
+            const epsR = parseFloat(document.getElementById('epsilonSlider').value);
+            const r = gprLoss(sigma_mS, epsR);
+            document.getElementById('sigmaLabel').textContent = `${fmtSigma(sigma_mS)} mS/m`;
+            document.getElementById('epsilonLabel').innerHTML = `&epsilon;<sub>r</sub> = ${epsR.toFixed(0)}`;
+            document.getElementById('tanDeltaOut').textContent = r.tanDelta >= 10 ? r.tanDelta.toFixed(0) : r.tanDelta.toPrecision(2);
+            document.getElementById('alphaOut').textContent = `${fmtNum(r.alpha)} dB/m`;
+            document.getElementById('velOut').textContent = `${r.v.toFixed(3)} m/ns`;
+            const regime = document.getElementById('regimeOut');
+            if (r.tanDelta < 1) {
+                regime.innerHTML = 'tan&delta; &lt; 1: wave propagation dominates (GPR works).';
+                regime.className = 'text-xs font-semibold mt-2 text-emerald-700';
+            } else {
+                regime.innerHTML = 'tan&delta; &gt; 1: conduction dominates (signal attenuates quickly, induction regime). The low-loss &alpha; formula is only a rough guide here.';
+                regime.className = 'text-xs font-semibold mt-2 text-red-700';
+            }
+            return r;
+        }
 
         // Entities Arrays
         let freeCharges = [];
@@ -418,19 +472,15 @@
         });
 
         document.getElementById('sigmaSlider').addEventListener('input', (e) => {
-            sigma = parseFloat(e.target.value);
-            let label = "Medium";
-            if(sigma < 0.3) label = "Low (Resistor)";
-            if(sigma > 0.7) label = "High (Conductor)";
-            document.getElementById('sigmaLabel').textContent = label;
+            // log10(sigma in mS/m) from -2 to 2, mapped to a 0..1 animation weight
+            sigma = (parseFloat(e.target.value) + 2) / 4;
+            updateGprReadout();
         });
 
         document.getElementById('epsilonSlider').addEventListener('input', (e) => {
-            epsilon = parseFloat(e.target.value);
-            let label = "Medium";
-            if(epsilon < 0.3) label = "Low (Air/Vacuum)";
-            if(epsilon > 0.7) label = "High (Water)";
-            document.getElementById('epsilonLabel').textContent = label;
+            // eps_r from 3 to 30, mapped to a 0..1 animation weight
+            epsilon = (parseFloat(e.target.value) - 3) / 27;
+            updateGprReadout();
         });
 
         document.getElementById('toggleBtn').addEventListener('click', (e) => {
@@ -446,6 +496,7 @@
         });
 
         // Init
+        updateGprReadout();
         setTimeout(() => {
             resize();
             animate();

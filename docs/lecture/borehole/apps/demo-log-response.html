@@ -28,26 +28,29 @@ select { background: var(--surface); color: var(--text); border: 1px solid var(-
     <div class="legend">
       <span><span class="sw" style="background:#22c55e"></span>Gamma ray (API)</span>
       <span><span class="sw" style="background:#0ea5e9"></span>Resistivity (Ω·m, log)</span>
-      <span><span class="sw" style="background:#f59e0b"></span>Neutron porosity (%)</span>
+      <span><span class="sw" style="background:#f59e0b"></span>Neutron porosity (%, limestone units)</span>
       <span><span class="sw" style="background:#ef4444"></span>Bulk density (g/cc)</span>
     </div>
     <canvas id="cv" width="1040" height="520"></canvas>
   </div>
   <div class="panel">
-    <div class="hint">Assign a lithology and thickness to each of five intervals. Curves update instantly.</div>
+    <div class="hint">Assign a lithology and thickness to each of five intervals. Curves update instantly. On the shared neutron-density track, shale shows separation (neutron left of density), water-filled limestone overlays, and gas sand shows crossover (neutron right of density).</div>
     <div class="builder" id="builder"></div>
   </div>
 </div>
 <script>
 // lithology library: typical log values
-// GR (API), Rt (ohm-m), NPHI (%), RHOB (g/cc)
+// GR (API), Rt (ohm-m), NPHI (%, limestone units), RHOB (g/cc)
+// Limestone RHOB is 2.71(1-phi) + 1.0 phi at phi = 5% (so it overlays NPHI = 5 on the
+// limestone-compatible scale); clay till RHOB is 2.65(1-phi) + 1.0 phi at phi = 25%.
+// Coal really is about 1.2 to 1.8 g/cc; it plots off scale to the left, as on real logs.
 const LITH={
   Sandstone_wet:{name:'Sandstone (brine)',gr:25,rt:8,nphi:28,rhob:2.25,col:'#e9c46a'},
   Sandstone_gas:{name:'Sandstone (gas)',gr:25,rt:120,nphi:10,rhob:2.10,col:'#f4a261'},
   Shale:{name:'Shale',gr:120,rt:4,nphi:38,rhob:2.45,col:'#6b7280'},
-  Limestone:{name:'Limestone',gr:15,rt:200,nphi:5,rhob:2.68,col:'#a8dadc'},
+  Limestone:{name:'Limestone',gr:15,rt:200,nphi:5,rhob:2.62,col:'#a8dadc'},
   Coal:{name:'Coal',gr:30,rt:150,nphi:45,rhob:1.35,col:'#1f2937'},
-  Claytill:{name:'Clay till',gr:90,rt:20,nphi:32,rhob:2.10,col:'#8d99ae'},
+  Claytill:{name:'Clay till',gr:90,rt:20,nphi:32,rhob:2.24,col:'#8d99ae'},
 };
 const keys=Object.keys(LITH);
 let layers=[{l:'Shale',t:6},{l:'Sandstone_wet',t:5},{l:'Shale',t:4},{l:'Limestone',t:6},{l:'Sandstone_gas',t:5}];
@@ -69,16 +72,26 @@ function buildUI(){
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 // log-curve colors chosen to read on both light and dark backgrounds
 const TRACK_COLS={gr:'#22c55e',rt:'#0ea5e9',nphi:'#f59e0b',rhob:'#ef4444'};
+// darker tones of the same hues for header text on the light canvas
+const TRACK_TEXT={gr:'#15803d',rt:'#0369a1',nphi:'#b45309',rhob:'#dc2626'};
+// Shared neutron-density track on the standard limestone-compatible scales:
+// NPHI 45 % (left) to -15 % (right), RHOB 1.95 (left) to 2.95 g/cc (right).
+// A water-filled limestone plots both curves at the same place; shale puts NPHI left of
+// RHOB (separation); gas puts NPHI right of RHOB (crossover).
+const NPHI_SCALE={left:45,right:-15,ticks:[45,30,15,0,-15]};
+const RHOB_SCALE={left:1.95,right:2.95,ticks:['1.95','2.20','2.45','2.70','2.95']};
 function draw(){
   const P=demoPalette();
+  const dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const txt=k=>dark?TRACK_COLS[k]:TRACK_TEXT[k];
   const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
   const totalT=layers.reduce((s,l)=>s+l.t,0);
-  const top=20,bot=H-30,depthPx=(bot-top)/totalT;
+  const top=60,bot=H-30,depthPx=(bot-top)/totalT;
   const x0=60, stripW=90;
   const tracks=[
-    {x:x0+stripW+20,w:180,label:'GR (API)',min:0,max:150,col:TRACK_COLS.gr,key:'gr',logv:false},
-    {x:x0+stripW+220,w:180,label:'Resistivity',min:1,max:300,col:TRACK_COLS.rt,key:'rt',logv:true},
-    {x:x0+stripW+420,w:180,label:'Neutron / Density',min:0,max:50,col:TRACK_COLS.nphi,key:'nphi',logv:false},
+    {x:x0+stripW+20,w:180,label:'GR (API)',left:0,right:150,col:TRACK_COLS.gr,key:'gr',logv:false},
+    {x:x0+stripW+220,w:180,label:'Resistivity (Ω·m)',left:1,right:300,col:TRACK_COLS.rt,key:'rt',logv:true},
+    {x:x0+stripW+420,w:180,label:'NPHI (%, limestone units)',left:NPHI_SCALE.left,right:NPHI_SCALE.right,col:TRACK_COLS.nphi,key:'nphi',logv:false},
   ];
   // lithology strip
   let z=0;
@@ -95,24 +108,45 @@ function draw(){
   // depth ticks
   ctx.fillStyle=P.muted;ctx.textAlign='right';
   for(let d=0;d<=totalT;d+=5){const y=top+d*depthPx;ctx.fillText(d+'m',x0-6,y+3);}
+  // fraction of track width (0 = left edge, 1 = right edge) for a value on a scale
+  const frac=(v,left,right,logv)=>logv?(Math.log10(v)-Math.log10(left))/(Math.log10(right)-Math.log10(left)):(v-left)/(right-left);
+  // one blocky curve per interval; values beyond the scale sit on the track edge with a
+  // small outward arrow, as off-scale readings do on a printed log
+  const drawCurve=(tk,key,left,right,logv,col)=>{
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();let zz=0,first=true;const off=[];
+    layers.forEach(L=>{const f=frac(LITH[L.l][key],left,right,logv);const fc=Math.max(0,Math.min(1,f));const x=tk.x+tk.w*fc;
+      const y0=top+zz*depthPx,y1=top+(zz+L.t)*depthPx;
+      if(first){ctx.moveTo(x,y0);first=false;}else{ctx.lineTo(x,y0);} ctx.lineTo(x,y1);
+      if(f<-1e-9||f>1+1e-9)off.push({x,y:(y0+y1)/2,dir:f<0?-1:1});
+      zz+=L.t;});
+    ctx.stroke();
+    ctx.fillStyle=col;
+    off.forEach(o=>{ctx.beginPath();ctx.moveTo(o.x+o.dir*9,o.y);ctx.lineTo(o.x-o.dir*1,o.y-6);ctx.lineTo(o.x-o.dir*1,o.y+6);ctx.closePath();ctx.fill();});
+  };
+  // header row: scale labels spread across the track at the given fractions
+  const tickRow=(tk,labels,y,col)=>{
+    ctx.fillStyle=col;ctx.font='10px Inter, Segoe UI';
+    labels.forEach((s,i)=>{const f=i/(labels.length-1);ctx.textAlign=f===0?'left':(f===1?'right':'center');ctx.fillText(String(s),tk.x+tk.w*f+(f===0?2:(f===1?-2:0)),y);});
+  };
   // draw each track
   tracks.forEach(tk=>{
-    ctx.strokeStyle=P.border;ctx.strokeRect(tk.x,top,tk.w,bot-top);
-    ctx.fillStyle=tk.col;ctx.textAlign='center';ctx.font='12px Inter, Segoe UI';ctx.fillText(tk.label,tk.x+tk.w/2,14);
-    const val2x=v=>{if(tk.logv){return tk.x+tk.w*(Math.log10(v)-Math.log10(tk.min))/(Math.log10(tk.max)-Math.log10(tk.min));}return tk.x+tk.w*(v-tk.min)/(tk.max-tk.min);};
-    ctx.strokeStyle=tk.col;ctx.lineWidth=2;ctx.beginPath();let zz=0,first=true;
-    layers.forEach(L=>{const v=LITH[L.l][tk.key];const x=val2x(Math.max(tk.min,Math.min(tk.max,v)));
-      const y0=top+zz*depthPx,y1=top+(zz+L.t)*depthPx;
-      if(first){ctx.moveTo(x,y0);first=false;}else{ctx.lineTo(x,y0);} ctx.lineTo(x,y1); zz+=L.t;});
-    ctx.stroke();
-    // second curve on track 3: density (red) mapped 1.3..2.8 g/cc onto same width
     if(tk.key==='nphi'){
-      ctx.strokeStyle=TRACK_COLS.rhob;ctx.lineWidth=2;ctx.beginPath();let z2=0,f2=true;
-      const d2x=v=>tk.x+tk.w*(v-1.3)/(2.8-1.3);
-      layers.forEach(L=>{const v=LITH[L.l].rhob;const x=d2x(v);const y0=top+z2*depthPx,y1=top+(z2+L.t)*depthPx;
-        if(f2){ctx.moveTo(x,y0);f2=false;}else ctx.lineTo(x,y0);ctx.lineTo(x,y1);z2+=L.t;});
-      ctx.stroke();
+      // shared-scale gridlines every quarter of the track
+      ctx.strokeStyle=P.grid;ctx.lineWidth=1;
+      for(let i=1;i<4;i++){const gx=tk.x+tk.w*i/4;ctx.beginPath();ctx.moveTo(gx,top);ctx.lineTo(gx,bot);ctx.stroke();}
     }
+    ctx.strokeStyle=P.border;ctx.lineWidth=1;ctx.strokeRect(tk.x,top,tk.w,bot-top);
+    ctx.fillStyle=txt(tk.key);ctx.textAlign='center';ctx.font='12px Inter, Segoe UI';ctx.fillText(tk.label,tk.x+tk.w/2,14);
+    if(tk.key==='nphi'){
+      tickRow(tk,NPHI_SCALE.ticks,28,txt('nphi'));
+      tickRow(tk,RHOB_SCALE.ticks,41,txt('rhob'));
+      ctx.fillStyle=txt('rhob');ctx.textAlign='center';ctx.font='12px Inter, Segoe UI';ctx.fillText('RHOB (g/cc)',tk.x+tk.w/2,54);
+    }else{
+      tickRow(tk,[tk.left,tk.right],28,txt(tk.key));
+    }
+    drawCurve(tk,tk.key,tk.left,tk.right,tk.logv,tk.col);
+    // second curve on the shared track: bulk density (red) on 1.95 to 2.95 g/cc
+    if(tk.key==='nphi')drawCurve(tk,'rhob',RHOB_SCALE.left,RHOB_SCALE.right,false,TRACK_COLS.rhob);
   });
 }
 onThemeChange(draw);

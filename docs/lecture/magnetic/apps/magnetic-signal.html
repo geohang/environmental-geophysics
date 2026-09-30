@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Geomagnetic Anomaly Simulator</title>
+    <title>Geomagnetic Anomaly Simulator</title>
     <style>
         :root {
             --primary: #0f172a;
@@ -353,7 +353,7 @@
     }
 
     function drawEarthFieldIndicator() {
-        const x = 140; // Right of the nT axis labels so the two do not overlap
+        const x = 140; // Right of the axis value labels so the two do not overlap
         const y = 60;
         const len = 40;
         const I = state.params.I;
@@ -477,7 +477,7 @@
         // Auto-scaling logic
         // If signal is weak, use a minimum range to avoid noise looking like huge spikes
         // If signal is strong, scale down to fit
-        const minDisplayRange = 200; // nT equivalent minimum
+        const minDisplayRange = 200; // minimum half-range, relative units
         const displayRange = Math.max(maxVal * 1.2, minDisplayRange); // Add 20% headroom
         
         const scaleFactor = (gAvailableHeight / 2) / displayRange;
@@ -506,11 +506,14 @@
         // Text Labels
         ctx.fillStyle = "#64748b";
         ctx.font = "12px Arial";
-        ctx.fillText("0 nT", 10, gCenterY - 5);
-        ctx.fillText(`+${Math.round(displayRange)} nT`, 10, gTop + 12);
-        ctx.fillText(`-${Math.round(displayRange)} nT`, 10, gBottom - 5);
+        // The model is in arbitrary units (no physical moment or distance scale), so no nT
+        ctx.fillText("0", 10, gCenterY - 5);
+        ctx.fillText(`+${Math.round(displayRange)}`, 10, gTop + 12);
+        ctx.fillText(`-${Math.round(displayRange)}`, 10, gBottom - 5);
         ctx.fillStyle = "#334155";
-        ctx.fillText("Magnetic Anomaly Profile (ΔT)", state.width - 180, gTop + 20);
+        ctx.textAlign = "right";
+        ctx.fillText("Anomaly profile ΔT (relative units)", state.width - 10, gTop + 20);
+        ctx.textAlign = "left";
 
         // Draw Curve
         ctx.beginPath();

@@ -17,53 +17,35 @@ Lateral density contrasts in the subsurface produce tiny variations in gravitati
 [Practice this module](../../apps/practice-lab.html#gravity){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#gravity){ .md-button }
 
-## Interactive Lecture
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[Complete Gravity Exploration & Data Reduction](apps/gravity-methods.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[Gravity Exploration & Data Reduction](apps/gravity-methods.html)** <span class="lp-type">Interactive lecture</span>
 
-    The full workflow from raw gravimeter readings to a Bouguer anomaly map, with each correction explained.
+    The geoid, the latitude effect, and the corrections that turn gravimeter readings into a Bouguer anomaly, with a calculator for each step.
 
-</div>
-
-## Activities
-
-<div class="grid cards" markdown>
-
--   🧪 **[Activity 1 · Advanced Gravity Drift Correction](apps/activity-1.html)**
-
-    ---
+2.  **[Activity 1 · Drift Correction Loop](apps/activity-1.html)** <span class="lp-type">Activity</span>
 
     Build a drift curve from repeated base-station readings and correct a field loop.
 
--   🧪 **[Activity 2 · Gravity Lab: The Cross-Section Challenge](apps/activity-2.html)**
+3.  **[Activity 2 · Cross-Section Challenge](apps/activity-2.html)** <span class="lp-type">Activity</span>
 
-    ---
+    Reduce the readings at four stations (latitude, free-air, and Bouguer corrections) to reveal a hidden structure.
 
-    Match observed anomaly profiles to candidate subsurface cross sections.
+4.  **[Buried-Body Gravity Anomaly Modeler](apps/demo-anomaly-modeler.html)** <span class="lp-type">Demo</span>
 
--   🧪 **[Activity 3 · Gravity Geometry: Subsurface Depth Detective](apps/activity-3.html)**
+    Drag a sphere or horizontal cylinder in the subsurface, set its density contrast, and watch the surface anomaly respond in real time.
 
-    ---
+5.  **[Activity 3 · Depth Detective](apps/activity-3.html)** <span class="lp-type">Activity</span>
 
     Use anomaly shape rules (half-width, amplitude) to estimate source depth and geometry.
 
 </div>
 
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Buried-Body Anomaly Modeler](apps/demo-anomaly-modeler.html)**
-
-    ---
-
-    Drag a sphere or horizontal cylinder in the subsurface, set its density contrast, and watch the surface anomaly respond in real time.
-
-</div>
+**After the path:** [practice questions](../../apps/practice-lab.html#gravity) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab
 

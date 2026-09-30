@@ -17,29 +17,23 @@ Wireline logging measures physical properties along a borehole wall, trading the
 [Practice this module](../../apps/practice-lab.html#borehole){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#borehole){ .md-button }
 
-## Interactive Lecture
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[Borehole Geophysics: Principle & Data Dashboard](apps/borehole-geophysics.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[Borehole Logging Dashboard](apps/borehole-geophysics.html)** <span class="lp-type">Interactive lecture</span>
 
     The major logging tools and how their curves respond to the formation.
 
-</div>
-
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Wireline Log Response Explorer](apps/demo-log-response.html)**
-
-    ---
+2.  **[Wireline Log Response Explorer](apps/demo-log-response.html)** <span class="lp-type">Demo</span>
 
     Stack lithology layers in a synthetic borehole and see how each standard log responds across the column.
 
 </div>
+
+**After the path:** [practice questions](../../apps/practice-lab.html#borehole) · [data and notebooks](#data-and-notebooks).
 
 ## Data and Notebooks
 

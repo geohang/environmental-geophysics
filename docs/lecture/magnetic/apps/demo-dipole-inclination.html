@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dipole Anomaly vs. Inclination Explorer</title>
+<title>Dipole Anomaly vs. Inclination</title>
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
@@ -36,7 +36,7 @@
       <div class="ctrl"><label>Depth to dipole $z$ <span id="zv">20 m</span></label><input id="z" type="range" min="5" max="60" value="20" step="1"></div>
     </div>
     <div class="formula" id="fbox">
-      Total-field anomaly of a buried dipole magnetized by the ambient field. At low inclination the anomaly is a positive-negative pair; toward the pole it becomes a single symmetric high centered on the body.
+      Total-field anomaly of a buried dipole magnetized by the ambient field. Near the magnetic equator (I ≈ 0°) the anomaly is a symmetric low with weak positive side lobes. At mid-latitudes it becomes a positive–negative pair with the low on the poleward (N) side. Toward the pole it becomes a single symmetric high centered on the body.
     </div>
   </div>
 </div>
@@ -71,17 +71,22 @@ function draw(){
   // subsurface
   ctx.fillStyle=P.surface2;ctx.fillRect(0,mid,W,H-mid);
   ctx.strokeStyle=P.border;ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(W,mid);ctx.stroke();
-  ctx.fillStyle=P.muted;ctx.fillText('surface',8,mid+14);
+  ctx.fillStyle=P.muted;ctx.fillText('surface',30,mid+14);
+  // Profile ends: x increases toward magnetic north (field direction (cos I, sin I) with z down),
+  // so a mid-latitude anomaly has its low on the right, N side
+  ctx.fillStyle=P.text;ctx.font='bold 14px Inter, Segoe UI';ctx.fillText('S',10,mid+16);
+  ctx.textAlign='right';ctx.fillText('N',W-10,mid+16);ctx.textAlign='left';ctx.font='12px Inter, Segoe UI';
   const dz=(H-mid)/70, by=mid+z*dz, cxp=sx(0);
   // body
   ctx.fillStyle=P.danger;ctx.globalAlpha=0.8;ctx.beginPath();ctx.arc(cxp,by,10,0,7);ctx.fill();ctx.globalAlpha=1;
   ctx.strokeStyle=P.danger;ctx.lineWidth=2;ctx.stroke();
   // induced magnetization arrow (direction of ambient field)
   const al=34;ctx.strokeStyle=P.primary;ctx.lineWidth=3;
-  ctx.beginPath();ctx.moveTo(cxp-bx*al,by+bz*al);ctx.lineTo(cxp+bx*al,by-bz*al);ctx.stroke();
-  ctx.fillStyle=P.primary;const hx=cxp+bx*al,hy=by-bz*al;
-  ctx.beginPath();ctx.arc(hx,hy,4,0,7);ctx.fill();
-  ctx.fillStyle=P.text;ctx.fillText('induced magnetization ∥ Earth field',cxp+14,by+4);
+  // Northern hemisphere: the field and the induced magnetization point north (right) and down
+  ctx.beginPath();ctx.moveTo(cxp-bx*al,by-bz*al);ctx.lineTo(cxp+bx*al,by+bz*al);ctx.stroke();
+  ctx.fillStyle=P.primary;const hx=cxp+bx*al,hy=by+bz*al,ca=bx,sa=bz;
+  ctx.beginPath();ctx.moveTo(hx+7*ca,hy+7*sa);ctx.lineTo(hx-5*ca-6*sa,hy-5*sa+6*ca);ctx.lineTo(hx-5*ca+6*sa,hy-5*sa-6*ca);ctx.closePath();ctx.fill();
+  ctx.fillStyle=P.text;ctx.fillText('induced magnetization ∥ Earth field',cxp+50,by+4);
   if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([document.getElementById('fbox')]);
 }
 document.getElementById('i').addEventListener('input',draw);

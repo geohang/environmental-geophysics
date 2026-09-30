@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elasticity: The Basis of Seismic Waves</title>
+    <title>Elasticity &amp; Seismic Waves</title>
     <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <script src="../../../assets/vendor/chartjs/chart.min.js"></script>
 
@@ -13,8 +13,8 @@
 
         /* Smooth transitions for the rock block */
         #rock-block {
-            transition: transform 0.1s ease-out, width 0.1s ease-out, background-color 0.2s;
-            will-change: transform, width;
+            transition: transform 0.1s ease-out, width 0.1s ease-out, height 0.1s ease-out, background-color 0.2s;
+            will-change: transform, width, height;
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
@@ -121,8 +121,12 @@
                             </div>
                         </div>
 
+                        <!-- Undeformed outline (200 x 128 px), drawn on top so the change stays visible -->
+                        <div class="absolute pointer-events-none" style="left:50%; top:50%; width:200px; height:128px; transform:translate(-50%,-50%); border:1.5px dashed #64748b; border-radius:4px;" aria-hidden="true"></div>
+
                     </div>
                     <!-- --- END VISUALIZATION --- -->
+                    <div id="exag-note" class="text-xs text-slate-600 text-center mt-5">Deformation exaggerated ×200 for visibility. Dashed outline: undeformed block.</div>
 
 
                     <!-- Control Panel -->
@@ -145,6 +149,26 @@
                         <div class="text-xs text-slate-500 text-center mt-2 italic" id="instruction-text">
                             Move slider to deform the rock
                         </div>
+
+                        <!-- Material controls -->
+                        <div class="mt-5 pt-4 border-t border-slate-200 space-y-3">
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700 mb-1 flex justify-between items-center" for="E-slider">
+                                    <span>Young's modulus E</span>
+                                    <span id="E-display" class="lab-chip">50 GPa</span>
+                                </label>
+                                <input type="range" min="1" max="100" value="50" step="1" id="E-slider" class="lab-range w-full">
+                            </div>
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700 mb-1 flex justify-between items-center" for="nu-slider">
+                                    <span>Poisson's ratio &nu;</span>
+                                    <span id="nu-display" class="lab-chip">0.25</span>
+                                </label>
+                                <input type="range" min="0.05" max="0.45" value="0.25" step="0.01" id="nu-slider" class="lab-range w-full">
+                                <div class="text-xs text-slate-500 mt-1">&nu; sets how much the block narrows as it lengthens: width strain = &minus;&nu; &times; height strain.</div>
+                            </div>
+                            <div class="text-xs text-slate-600">Defaults (E = 50 GPa, &nu; = 0.25) are granite-like illustrative values. Density is fixed at &rho; = 2650 kg/m³.</div>
+                        </div>
                     </div>
                 </div>
 
@@ -160,7 +184,7 @@
                         <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg transition-colors duration-300" id="box-stress">
                             <div class="text-xs text-slate-600 tracking-wide font-bold mb-1" id="lbl-stress-type">Normal Stress (&sigma;)</div>
                             <div class="text-2xl font-mono font-bold text-slate-900" id="val-stress">0</div>
-                            <div class="text-xs text-slate-500 mt-1">Force / Area</div>
+                            <div class="text-xs text-slate-500 mt-1">Force / Area (MPa)</div>
                         </div>
                         <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg transition-colors duration-300" id="box-strain">
                             <div class="text-xs text-slate-600 tracking-wide font-bold mb-1" id="lbl-strain-type">Normal Strain (&epsilon;)</div>
@@ -172,6 +196,19 @@
                     <!-- Chart JS Canvas -->
                     <div class="flex-grow min-h-[300px] relative">
                         <canvas id="hookesChart"></canvas>
+                    </div>
+
+                    <!-- From moduli to wave speeds -->
+                    <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg text-sm" id="wave-panel">
+                        <div class="font-bold text-slate-800 mb-2">From moduli to wave speeds</div>
+                        <div class="space-y-1 tabular-nums">
+                            <div class="flex justify-between gap-3"><span class="text-slate-600">Shear modulus G = E / (2(1+&nu;))</span><span id="val-G" class="font-mono font-bold text-slate-900 whitespace-nowrap">20.0 GPa</span></div>
+                            <div class="flex justify-between gap-3"><span class="text-slate-600">Bulk modulus K = E / (3(1&minus;2&nu;))</span><span id="val-K" class="font-mono font-bold text-slate-900 whitespace-nowrap">33.3 GPa</span></div>
+                            <div class="flex justify-between gap-3"><span class="text-slate-600">V<sub>p</sub> = &radic;((K + 4G/3) / &rho;)</span><span id="val-Vp" class="font-mono font-bold text-slate-900 whitespace-nowrap">4758 m/s</span></div>
+                            <div class="flex justify-between gap-3"><span class="text-slate-600">V<sub>s</sub> = &radic;(G / &rho;)</span><span id="val-Vs" class="font-mono font-bold text-slate-900 whitespace-nowrap">2747 m/s</span></div>
+                            <div class="flex justify-between gap-3"><span class="text-slate-600">V<sub>p</sub> / V<sub>s</sub></span><span id="val-VpVs" class="font-mono font-bold text-slate-900 whitespace-nowrap">1.732</span></div>
+                        </div>
+                        <div class="text-xs text-slate-500 mt-2">&rho; = 2650 kg/m³. Updates live from E and &nu;.</div>
                     </div>
 
                     <div class="mt-6 p-4 lab-note text-sm">
@@ -193,11 +230,36 @@
 
     <script>
         // --- Configuration ---
-        const originalWidth = 200; 
-        const youngsModulus = 5; // For Normal
-        const shearModulus = 5;  // For Shear
+        const originalWidth = 200;   // px, undeformed block
+        const originalHeight = 128;  // px (h-32)
+        const RHO = 2650;            // kg/m^3, fixed density
+        const EXAG = 200;            // drawn deformation = 200 x true strain
+        const MAX_VIS_AXIAL = 0.4;   // clamp of the drawn (exaggerated) axial strain
+        const MAX_VIS_SHEAR = 0.6;   // clamp of the drawn (exaggerated) tan(skew angle)
+
+        // Material state (GPa, dimensionless); updated from the sliders
+        let youngsModulus = 50;
+        let poisson = 0.25;
+        let shearModulus = youngsModulus / (2 * (1 + poisson));
+        let bulkModulus = youngsModulus / (3 * (1 - 2 * poisson));
 
         let currentMode = 'normal'; // 'normal' or 'shear'
+
+        // Readout format for strain in units of 10^-3
+        function fmtMilli(x) {
+            const a = Math.abs(x);
+            if (a >= 100) return x.toFixed(1);
+            if (a >= 10) return x.toFixed(2);
+            return x.toFixed(3);
+        }
+        // Smallest "nice" half-range for the strain axis that holds the dot at |stress| = 50 MPa
+        function niceStrainRange(modGPa) {
+            const need = 1.1 * 50 / modGPa;   // x10^-3
+            const steps = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500];
+            for (const s of steps) if (s >= need) return s;
+            return steps[steps.length - 1];
+        }
+        function clamp(v, lim) { return Math.max(-lim, Math.min(lim, v)); }
 
         // --- DOM Elements ---
         const slider = document.getElementById('stress-slider');
@@ -257,7 +319,7 @@
                     },
                     {
                         label: 'Linear Elasticity',
-                        data: [{x: -0.6, y: -60}, {x: 0.6, y: 60}], // slope 100 MPa per unit strain, same as the dot
+                        data: [{x: -2, y: -100}, {x: 2, y: 100}], // slope E (or G) in MPa per 10^-3; reset in updateChart()
                         borderColor: '#64748b',
                         borderWidth: 2,
                         borderDash: [5, 5],
@@ -274,14 +336,14 @@
                     x: {
                         type: 'linear',
                         position: 'bottom',
-                        title: { display: true, text: 'Strain (ε)', color: '#334155', font: axisTitleFont },
+                        title: { display: true, text: 'Normal Strain ε (×10⁻³)', color: '#334155', font: axisTitleFont },
                         grid: axisGrid,
                         ticks: axisTicks,
-                        min: -0.6,
-                        max: 0.6
+                        min: -2,
+                        max: 2
                     },
                     y: {
-                        title: { display: true, text: 'Stress (σ)', color: '#334155', font: axisTitleFont },
+                        title: { display: true, text: 'Normal Stress σ (MPa)', color: '#334155', font: axisTitleFont },
                         grid: axisGrid,
                         ticks: axisTicks,
                         min: -60,
@@ -315,8 +377,8 @@
                 topicDisplay.innerText = "Normal Stress";
                 
                 // Chart Axes
-                hookesChart.options.scales.x.title.text = "Normal Strain (ε)";
-                hookesChart.options.scales.y.title.text = "Normal Stress (σ)";
+                hookesChart.options.scales.x.title.text = "Normal Strain ε (×10⁻³)";
+                hookesChart.options.scales.y.title.text = "Normal Stress σ (MPa)";
                 
             } else {
                 btnNormal.className = "lab-tab";
@@ -332,10 +394,50 @@
                 topicDisplay.innerText = "Shear Stress";
 
                 // Chart Axes
-                hookesChart.options.scales.x.title.text = "Shear Strain (γ)";
-                hookesChart.options.scales.y.title.text = "Shear Stress (τ)";
+                hookesChart.options.scales.x.title.text = "Shear Strain γ (×10⁻³)";
+                hookesChart.options.scales.y.title.text = "Shear Stress τ (MPa)";
             }
+            updateSimulation();
+        }
+
+        // --- Material: moduli and wave speeds ---
+        function updateMaterial() {
+            youngsModulus = parseFloat(document.getElementById('E-slider').value);
+            poisson = parseFloat(document.getElementById('nu-slider').value);
+            shearModulus = youngsModulus / (2 * (1 + poisson));       // G, GPa
+            bulkModulus = youngsModulus / (3 * (1 - 2 * poisson));    // K, GPa
+            const vp = Math.sqrt((bulkModulus + 4 * shearModulus / 3) * 1e9 / RHO);
+            const vs = Math.sqrt(shearModulus * 1e9 / RHO);
+            document.getElementById('E-display').innerText = `${youngsModulus.toFixed(0)} GPa`;
+            document.getElementById('nu-display').innerText = poisson.toFixed(2);
+            document.getElementById('val-G').innerText = `${shearModulus.toFixed(shearModulus < 1 ? 2 : 1)} GPa`;
+            document.getElementById('val-K').innerText = `${bulkModulus.toFixed(1)} GPa`;
+            document.getElementById('val-Vp').innerText = `${vp.toFixed(0)} m/s`;
+            document.getElementById('val-Vs').innerText = `${vs.toFixed(0)} m/s`;
+            document.getElementById('val-VpVs').innerText = (vp / vs).toFixed(3);
+            updateSimulation();
+            return { G: shearModulus, K: bulkModulus, vp, vs, ratio: vp / vs };
+        }
+
+        // Hooke chart in true strain (x10^-3) and MPa: the reference line has slope M = E or G
+        // (MPa per 10^-3 when M is in GPa), so it passes through the state dot for every setting.
+        function updateChart(strain, stress, modGPa) {
+            const xr = niceStrainRange(modGPa);
+            hookesChart.options.scales.x.min = -xr;
+            hookesChart.options.scales.x.max = xr;
+            hookesChart.data.datasets[1].data = [{ x: -xr, y: -modGPa * xr }, { x: xr, y: modGPa * xr }];
+            hookesChart.data.datasets[0].data[0] = { x: strain * 1e3, y: stress };
             hookesChart.update();
+        }
+
+        function showStrain(strain) {
+            valStrain.innerHTML = `${fmtMilli(strain * 1e3)} <span class="text-sm font-semibold text-slate-600">×10⁻³</span>`;
+        }
+
+        function showExaggeration(clamped) {
+            document.getElementById('exag-note').innerText = clamped
+                ? 'Deformation exaggerated ×200 and clamped at the drawing limit so the block stays on screen (readouts show the true value). Dashed outline: undeformed block.'
+                : 'Deformation exaggerated ×200 for visibility. Dashed outline: undeformed block.';
         }
 
         // --- Main Simulation Loop ---
@@ -354,15 +456,20 @@
         }
 
         function handleNormalMode(stress) {
-            // Physics: Strain = Stress / E
-            const strain = stress / (youngsModulus * 20); 
-            
-            // Visuals: Width change
-            const pixelChange = strain * originalWidth;
-            const newWidth = originalWidth + pixelChange;
-            
+            // Physics: axial strain = stress / E (stress in MPa, E in GPa -> factor 1e3)
+            const strain = stress / (youngsModulus * 1e3);
+
+            // Visuals: vertical load changes the height by strain and the width by -nu * strain
+            // (Poisson effect), both exaggerated x200 and clamped so the block stays on screen.
+            const visRaw = EXAG * strain;
+            const visAxial = clamp(visRaw, MAX_VIS_AXIAL);
+            const newHeight = originalHeight * (1 + visAxial);
+            const newWidth = originalWidth * (1 - poisson * visAxial);
+
             rockBlock.style.transform = `skewX(0deg)`; // Reset shear
             rockBlock.style.width = `${newWidth}px`;
+            rockBlock.style.height = `${newHeight}px`;
+            showExaggeration(Math.abs(visRaw) > MAX_VIS_AXIAL);
             
             // Colors & Arrows
             arrowsShearTop.style.opacity = '0';
@@ -403,21 +510,22 @@
             }
 
             // Update Data
-            valStrain.innerText = strain.toFixed(3);
-            hookesChart.data.datasets[0].data[0] = { x: strain, y: stress };
-            hookesChart.update();
+            showStrain(strain);
+            updateChart(strain, stress, youngsModulus);
         }
 
         function handleShearMode(stress) {
-            // Physics: Shear Strain = Stress / G
-            const strain = stress / (shearModulus * 20); 
-            
-            // Visuals: Skew transform
-            // Map stress (-50 to 50) to degrees (-30 to 30)
-            const angle = stress * 0.6; 
-            
+            // Physics: shear strain gamma = tau / G (tau in MPa, G in GPa -> factor 1e3)
+            const strain = stress / (shearModulus * 1e3);
+
+            // Visuals: skew angle with tan(angle) = 200 x gamma, clamped so the block stays on screen
+            const visRaw = EXAG * strain;
+            const angle = Math.atan(clamp(visRaw, MAX_VIS_SHEAR)) * 180 / Math.PI;
+
             rockBlock.style.width = `${originalWidth}px`; // Reset Width
+            rockBlock.style.height = `${originalHeight}px`; // Reset Height
             rockBlock.style.transform = `skewX(${-angle}deg)`;
+            showExaggeration(Math.abs(visRaw) > MAX_VIS_SHEAR);
             
             // Colors
             rockBlock.style.backgroundColor = '#e9d5ff'; // Purple tint for shear
@@ -454,16 +562,17 @@
             }
 
             // Update Data
-            valStrain.innerText = strain.toFixed(3);
-            hookesChart.data.datasets[0].data[0] = { x: strain, y: stress };
-            hookesChart.update();
+            showStrain(strain);
+            updateChart(strain, stress, shearModulus);
         }
 
         // --- Event Listeners ---
         slider.addEventListener('input', updateSimulation);
-        
+        document.getElementById('E-slider').addEventListener('input', updateMaterial);
+        document.getElementById('nu-slider').addEventListener('input', updateMaterial);
+
         // Initial state
-        updateSimulation();
+        updateMaterial();
 
     </script>
 <script src="../../../assets/javascripts/course-app.js"></script>

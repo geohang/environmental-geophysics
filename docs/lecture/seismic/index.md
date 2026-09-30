@@ -17,35 +17,27 @@ Seismic waves travel at speeds set by the elastic moduli and density of the mate
 [Practice this module](../../apps/practice-lab.html#seismic){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#seismic){ .md-button }
 
-## Topic Apps
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[Elasticity: The Basis of Seismic Waves](apps/stress-and-strain.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[Elasticity & Seismic Waves](apps/stress-and-strain.html)** <span class="lp-type">Interactive lecture</span>
 
     Stress, strain, and the elastic moduli that set P- and S-wave velocities.
 
--   🖥️ **[Seismic Refraction Lab](apps/seismic-refraction.html)**
-
-    ---
-
-    Acquire and interpret a refraction survey over a layered subsurface.
-
-</div>
-
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Refraction Travel-Time Curve Builder](apps/demo-refraction-traveltime.html)**
-
-    ---
+2.  **[Refraction Travel-Time Curve Builder](apps/demo-refraction-traveltime.html)** <span class="lp-type">Demo</span>
 
     Adjust layer velocities and thickness in a two-layer earth and see the direct wave, head wave, crossover distance, and intercept time update live.
 
+3.  **[Seismic Refraction Lab](apps/seismic-refraction.html)** <span class="lp-type">Interactive lecture</span>
+
+    Acquire and interpret a refraction survey over a two- or three-layer subsurface, including a hidden low-velocity layer.
+
 </div>
+
+**After the path:** [practice questions](../../apps/practice-lab.html#seismic) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab
 

@@ -17,71 +17,47 @@ Electrical resistivity spans more orders of magnitude than any other rock proper
 [Practice this module](../../apps/practice-lab.html#electrical){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#electrical){ .md-button }
 
-## Interactive Lecture
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[How Do Rocks Conduct Electricity?](apps/electrical-methods.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[How Do Rocks Conduct Electricity?](apps/electrical-methods.html)** <span class="lp-type">Interactive lecture</span>
 
-    Electrolytic conduction, Archie's law, and what controls formation resistivity.
+    Electrolytic and electronic conduction, and dielectric polarization: how charges move or polarize in earth materials.
 
-</div>
+2.  **[ERT · Geometric Factor K](apps/ert.html)** <span class="lp-type">Interactive lecture</span>
 
-## Topic Apps
+    Geometric factors of the Wenner, Schlumberger, and dipole–dipole arrays, and why a larger K means a smaller measured voltage.
 
-<div class="grid cards" markdown>
+3.  **[ERT · 3-Layer VES Forward Model](apps/ert-2.html)** <span class="lp-type">Interactive lecture</span>
 
--   🖥️ **[ERT · Geometric Factor K for Common Arrays](apps/ert.html)**
+    Build layered models and generate vertical electrical sounding curves.
 
-    ---
+4.  **[Apparent-Resistivity Pseudosection Builder](apps/demo-pseudosection.html)** <span class="lp-type">Demo</span>
 
-    Wenner, Schlumberger, and dipole-dipole geometries and their sensitivity.
+    Place a conductive or resistive body in the subsurface, pick an array, and build the pseudosection measurement by measurement.
 
--   🖥️ **[ERT · 3-Layer VES Forward Modeling](apps/ert-2.html)**
+5.  **[SP · Signal Mechanisms](apps/sp.html)** <span class="lp-type">Interactive lecture</span>
 
-    ---
+    Streaming, mineralization (redox), and thermoelectric sources of self-potential signals.
 
-    Build layered models and generate vertical electric sounding curves.
+6.  **[SP · Field Applications](apps/sp-2.html)** <span class="lp-type">Activity</span>
 
--   🖥️ **[SP · Signal Mechanisms](apps/sp.html)**
+    Survey a sulfide ore body, a leaking dam, and a geothermal upflow with a virtual SP sensor.
 
-    ---
+7.  **[IP · Signal Mechanisms](apps/ip.html)** <span class="lp-type">Interactive lecture</span>
 
-    Streaming, diffusion, and mineral potentials behind self-potential signals.
+    Membrane and electrode polarization at the pore scale, and the decaying voltage they leave when the current switches off.
 
--   🖥️ **[SP · Method Applications](apps/sp-2.html)**
-
-    ---
-
-    Seepage detection, contaminant plumes, and other SP use cases.
-
--   🖥️ **[IP · Signal Mechanisms](apps/ip.html)**
-
-    ---
-
-    Membrane and electrode polarization, chargeability, and time- vs. frequency-domain IP.
-
--   🖥️ **[IP · Cole-Cole Model Interactive](apps/ip-2.html)**
-
-    ---
+8.  **[IP · Cole-Cole Model](apps/ip-2.html)** <span class="lp-type">Interactive lecture</span>
 
     Explore how Cole-Cole parameters shape the complex-resistivity spectrum.
 
 </div>
 
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Apparent-Resistivity Pseudosection Builder](apps/demo-pseudosection.html)**
-
-    ---
-
-    Place a conductive or resistive body in the subsurface, pick an array, and build the pseudosection measurement by measurement.
-
-</div>
+**After the path:** [practice questions](../../apps/practice-lab.html#electrical) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab
 

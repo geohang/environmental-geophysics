@@ -405,6 +405,38 @@ def audit_course_consistency() -> list[str]:
     return errors
 
 
+def audit_navigation_map() -> list[str]:
+    """Check that in-app navigation, module learning paths, and app files agree."""
+    errors: list[str] = []
+    script = (DOCS / "assets" / "javascripts" / "course-app.js").read_text(encoding="utf-8")
+    block = re.search(r"const COURSE_MAP = \[(.*?)\n  \];", script, re.S)
+    if not block:
+        return ["Navigation: COURSE_MAP not found in course-app.js"]
+    modules = re.findall(r"\{ id: '([a-z]+)', name: '[^']+', apps: \[(.*?)\] \}", block.group(1), re.S)
+    listed: set[str] = set()
+    for module, body in modules:
+        files = re.findall(r"\['([^']+\.html)', '[^']+', '(?:Demo|Activity|Interactive lecture)'\]", body)
+        if not files:
+            errors.append(f"Navigation: module {module} lists no apps")
+        for name in files:
+            if not (DOCS / "lecture" / module / "apps" / name).is_file():
+                errors.append(f"Navigation: lecture/{module}/apps/{name} is listed but missing")
+            listed.add(f"{module}/{name}")
+        page = DOCS / "lecture" / module / "index.md"
+        text = page.read_text(encoding="utf-8") if page.is_file() else ""
+        path = re.search(r'## Learning Path\s.*?<div class="learning-path" markdown>(.*?)</div>', text, re.S)
+        if not path:
+            errors.append(f"Navigation: lecture/{module}/index.md has no Learning Path section")
+            continue
+        page_files = re.findall(r"\]\(apps/([^)]+\.html)\)", path.group(1))
+        if page_files != files:
+            errors.append(f"Navigation: lecture/{module}/index.md path order {page_files} differs from course-app.js {files}")
+    on_disk = {f"{path.parent.parent.name}/{path.name}" for path in (DOCS / "lecture").glob("*/apps/*.html")}
+    for missing in sorted(on_disk - listed):
+        errors.append(f"Navigation: lecture/{missing.replace('/', '/apps/')} is not in COURSE_MAP")
+    return errors
+
+
 def audit_classroom_datasets() -> list[str]:
     """Check the units, structure, and expected physics of public lab datasets."""
     errors: list[str] = []
@@ -757,6 +789,7 @@ def main() -> int:
         + audit_assessments()
         + audit_numerical_benchmarks()
         + audit_course_consistency()
+        + audit_navigation_map()
         + audit_classroom_datasets()
         + audit_ashton_field_data()
     )

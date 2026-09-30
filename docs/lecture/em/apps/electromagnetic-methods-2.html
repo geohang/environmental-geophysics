@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EM Waveforms Animation Activity</title>
+    <title>CW vs. TEM Waveforms</title>
 
     <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
@@ -343,7 +343,11 @@
                         <text x="530" y="270" class="axis-label">Time</text>
                         <!-- Y Axis -->
                         <line class="axis-line" x1="70" y1="420" x2="70" y2="100" marker-end="url(#arrow-grey)"/>
-                        <text x="50" y="90" class="axis-label">Current / Amp</text>
+                        <text x="50" y="90" class="axis-label">TX: current</text>
+                    </g>
+                    <!-- RX axis meaning, shown with the RX curve (steps 2 and 3) -->
+                    <g class="annotation anno-rx">
+                        <text x="50" y="72" class="yellow-text" font-size="14" font-style="italic">RX: induced voltage (∝ dB/dt)</text>
                     </g>
 
                     <!-- Waveforms -->
@@ -390,7 +394,11 @@
                         <text x="1120" y="370" class="axis-label">Time</text>
                         <!-- Y Axis -->
                         <line class="axis-line" x1="670" y1="420" x2="670" y2="100" marker-end="url(#arrow-grey)"/>
-                        <text x="650" y="90" class="axis-label">Current / Amp</text>
+                        <text x="650" y="90" class="axis-label">TX: current</text>
+                    </g>
+                    <!-- RX axis meaning, shown with the RX curve (steps 2 and 3) -->
+                    <g class="annotation anno-rx">
+                        <text x="650" y="72" class="yellow-text" font-size="14" font-style="italic">RX: induced voltage (∝ dB/dt)</text>
                     </g>
 
                     <!-- Waveforms -->
@@ -451,7 +459,7 @@
             <!-- Physics Parameter Panel (TEM Only) -->
             <div class="panel lab-card" id="physics-panel" style="opacity: 0.5; pointer-events: none; transition: opacity 0.5s;">
                 <h3><i class="fa-solid fa-sliders"></i> TEM Physics Control</h3>
-                <p style="font-size:14px; color:#475569; margin-bottom:15px;">Adjust the target's conductivity to see how the TEM decay curve changes.</p>
+                <p style="font-size:14px; color:#475569; margin-bottom:15px;">Adjust the target's conductivity to see how the TEM decay curve changes. The exponential decay shown here is for a single isolated conductor (time constant &tau; = L/R); over a layered earth the late-time voltage instead falls off as a power law, roughly <span style="white-space:nowrap">t<sup>-5/2</sup></span>.</p>
                 
                 <div class="slider-container">
                     <div class="slider-label">

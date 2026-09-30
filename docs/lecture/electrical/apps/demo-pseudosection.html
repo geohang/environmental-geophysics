@@ -34,9 +34,9 @@
       <div class="ctrl"><label>Target depth <span id="dv">8 m</span></label><input id="d" type="range" min="2" max="22" value="8" step="1"></div>
       <div class="ctrl"><label>Target resistivity <span id="rv">10 Ω·m</span></label><input id="r" type="range" min="0.7" max="3.3" value="1" step="0.05"></div>
     </div>
-    <div style="margin-top:8px;font-size:.85rem;color:var(--text-muted);">Background resistivity is fixed at 100 Ω·m. Blue = conductive (low ρₐ), red = resistive (high ρₐ).</div>
+    <div style="margin-top:8px;font-size:.85rem;color:var(--text-muted);">Background resistivity is fixed at 100 Ω·m; electrodes are every 4 m. Blue = conductive (low ρₐ), red = resistive (high ρₐ).</div>
     <div class="note">
-      This is a first-order teaching model: apparent resistivity is a sensitivity-weighted average of the true model around each measurement's focus point. It reproduces the characteristic smearing and the array differences, but it is not a full numerical solution. The real inversion problem is to recover the true model from a pseudosection like this.
+      This is a first-order (linearized) teaching model. Each apparent resistivity is a sensitivity-weighted average of the true log resistivity. The weights are the sensitivity of that array over a uniform half-space, and for dipole-dipole they are negative in places. Each reading is plotted below the array midpoint at its median depth of investigation. The data are noise-free; in the field, large-n dipole-dipole readings are weak and noisy. The real inverse problem is to recover the true model from these data.
     </div>
   </div>
 </div>
@@ -44,36 +44,160 @@
 const RHO0=100;
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 let array='wenner';
+const XMAX=100;
 // true model resistivity at (x,z) metres
 function rhoTrue(x,z,tgt){
   const dx=x-tgt.x0, dz=z-tgt.depth;
   const rr=(dx*dx)/(tgt.w*tgt.w)+(dz*dz)/(tgt.h*tgt.h);
   return rr<=1?tgt.rho:RHO0;
 }
+
+// ---------------------------------------------------------------------------
+// First-order (linearized, Born) sensitivity model.
+// Electrodes every 4 m from 0 to 100 m on a homogeneous half-space (RHO0).
+// Pole-pole 3-D sensitivity at r = (x, y, z), z > 0 down:
+//   S_PQ(r) = ((r - rP).(r - rQ)) / (4 pi^2 |r - rP|^3 |r - rQ|^3)
+// Four-electrode sensitivity (A = +I, B = -I; V = V_M - V_N):
+//   S = S_AM - S_AN - S_BM + S_BN
+// The target is 2-D (constant along y), so a cell's value is S integrated over
+// y and over the cell's x-z area. Normalized Jacobian J_i = S_i / sum_all S,
+// with the sum over the extended grid below. Then
+//   ln rho_a = ln RHO0 + sum_i J_i (ln rho_i - ln RHO0)
+// over the displayed cells (padding cells are background).
+// Kernels depend only on geometry: pole-pole cell kernels are cached per
+// electrode pair and J is cached per array, so moving the target only redoes
+// the dot products.
+// ---------------------------------------------------------------------------
+const ESP=4;          // electrode spacing (m)
+const LMAX=XMAX;      // the longest arrays span the whole 100 m line
+// Displayed model cells: 1 m wide (x 0..100 m); 0.5 m tall (z 0..4 m), then
+// 1 m tall (z 4..30 m). Extended grid: cells growing by 1.25x out to more than
+// 3 LMAX beyond each end of the line and below the display to more than
+// 3 LMAX depth. Padding cells only enter the normalization and median depth.
+function growEdges(start,first,dir,reach){
+  const e=[];let w=first,p=start;
+  while(Math.abs(p-start)<reach){p+=dir*w;e.push(p);w*=1.25;}
+  return e;
+}
+const xDisp=[];for(let x=0;x<=XMAX;x++)xDisp.push(x);
+const xEdges=[...growEdges(0,1.25,-1,3*LMAX).reverse(),...xDisp,...growEdges(XMAX,1.25,1,3*LMAX)];
+const zDisp=[];for(let z=0;z<=4;z+=0.5)zDisp.push(z);for(let z=5;z<=30;z++)zDisp.push(z);
+const zEdges=[...zDisp,...growEdges(30,1.25,1,3*LMAX)];
+const NCX=xEdges.length-1, NCZ=zEdges.length-1;
+const C0=xEdges.indexOf(0);             // first displayed column
+const NDX=XMAX, NDZ=zDisp.length-1;     // displayed columns and rows
+
+// y integral: the integrand is even in y, so integrate y >= 0 and double.
+// Nodes are log-spaced, y = s e^t, with s the x-z distance to the nearer
+// electrode; the trapezoid rule in t = ln y converges quickly for this kernel.
+// 32 nodes span y = 0.0009 s to 4900 s, plus end corrections for the two tails.
+const NY=32, TY0=-7, HY=0.5;
+const YE=new Float64Array(NY), YW=new Float64Array(NY);
+for(let k=0;k<NY;k++){YE[k]=Math.exp(TY0+k*HY);YW[k]=HY*YE[k];}
+YW[0]=0.5*HY*YE[0]+YE[0];               // 0..first node: integrand nearly constant
+YW[NY-1]=0.5*HY*YE[NY-1]+YE[NY-1]/3;    // beyond last node: integrand ~ y^-4
+const FOURPI2=4*Math.PI*Math.PI;
+// y-integrated pole-pole kernel at u = x - xP, v = x - xQ, depth z
+function yInt(u,v,z){
+  const A=u*u+z*z, B=v*v+z*z, c=u*v+z*z;
+  const s=Math.sqrt(Math.min(A,B));
+  let acc=0;
+  for(let k=0;k<NY;k++){
+    const y=s*YE[k], y2=y*y, a2=A+y2, b2=B+y2;
+    acc+=YW[k]*(c+y2)/(a2*Math.sqrt(a2)*b2*Math.sqrt(b2));
+  }
+  return 2*s*acc/FOURPI2;
+}
+// Cell integral over x-z: 2x2 Gauss points near an electrode, midpoint elsewhere.
+const GL=[-0.5/Math.sqrt(3),0.5/Math.sqrt(3)];
+function cellInt(xp,xq,ix,iz){
+  const x0=xEdges[ix],x1=xEdges[ix+1],z0=zEdges[iz],z1=zEdges[iz+1];
+  const dx=x1-x0,dz=z1-z0,xc=(x0+x1)/2,zc=(z0+z1)/2;
+  if(zc>3||Math.min(Math.abs(xc-xp),Math.abs(xc-xq))>3)return dx*dz*yInt(xc-xp,xc-xq,zc);
+  let s=0;
+  for(const gx of GL)for(const gz of GL){const x=xc+gx*dx,z=zc+gz*dz;s+=yInt(x-xp,x-xq,z);}
+  return dx*dz*s/4;
+}
+// Pole-pole kernel of one electrode pair: displayed cells, and row sums over
+// the full width of the extended grid (x- and y-integrated S versus depth).
+const pairCache=new Map();
+function pairKernel(xp,xq){
+  if(xp>xq){const t=xp;xp=xq;xq=t;}      // S_PQ is symmetric in P and Q
+  const key=xp+','+xq;
+  let K=pairCache.get(key);if(K)return K;
+  const disp=new Float64Array(NDX*NDZ), rows=new Float64Array(NCZ);
+  for(let iz=0;iz<NCZ;iz++){
+    let rs=0;
+    for(let ix=0;ix<NCX;ix++){
+      const v=cellInt(xp,xq,ix,iz);rs+=v;
+      if(iz<NDZ&&ix>=C0&&ix<C0+NDX)disp[iz*NDX+ix-C0]=v;
+    }
+    rows[iz]=rs;
+  }
+  K={disp,rows};pairCache.set(key,K);return K;
+}
+// Electrode layouts (m). A, B current; M, N potential. Each array uses the
+// whole 100 m line at its largest spacing.
+const ARRAYS={
+  wenner:{name:'Wenner (a = 4–32 m)',list(){
+    const o=[];for(let k=1;k<=8;k++){const a=ESP*k;
+      for(let x=0;x+3*a<=XMAX;x+=ESP)o.push({A:x,M:x+a,N:x+2*a,B:x+3*a,lev:k});}
+    return o;}},
+  schlum:{name:'Schlumberger (MN = 4 m, n = 1–12)',list(){
+    const o=[],a=ESP;for(let n=1;(2*n+1)*a<=XMAX;n++)
+      for(let x=0;x+(2*n+1)*a<=XMAX;x+=ESP)o.push({A:x,M:x+n*a,N:x+(n+1)*a,B:x+(2*n+1)*a,lev:n});
+    return o;}},
+  dipole:{name:'Dipole-dipole (a = 4 m, n = 1–23)',list(){
+    const o=[],a=ESP;for(let n=1;(n+2)*a<=XMAX;n++)
+      for(let x=0;x+(n+2)*a<=XMAX;x+=ESP)o.push({B:x,A:x+a,M:x+(n+1)*a,N:x+(n+2)*a,lev:n});
+    return o;}}
+};
+const arrayCache={};
+function buildArray(key){
+  if(arrayCache[key])return arrayCache[key];
+  const ms=ARRAYS[key].list(), ncell=NDX*NDZ;
+  const J=new Float32Array(ms.length*ncell);
+  ms.forEach((m,i)=>{
+    const AM=pairKernel(m.A,m.M),AN=pairKernel(m.A,m.N),BM=pairKernel(m.B,m.M),BN=pairKernel(m.B,m.N);
+    const row=new Float64Array(NCZ);let tot=0;
+    for(let iz=0;iz<NCZ;iz++){row[iz]=AM.rows[iz]-AN.rows[iz]-BM.rows[iz]+BN.rows[iz];tot+=row[iz];}
+    m.sumS=tot;   // sum of S over the extended grid (normalization)
+    m.xm=(Math.min(m.A,m.B,m.M,m.N)+Math.max(m.A,m.B,m.M,m.N))/2;
+    // Median depth of investigation: depth where the cumulative signed J,
+    // integrated over x and y, reaches one half (signed J, not |J|).
+    let cum=0;m.zmed=NaN;
+    for(let iz=0;iz<NCZ;iz++){
+      const nxt=cum+row[iz]/tot;
+      if(nxt>=0.5){m.zmed=zEdges[iz]+(0.5-cum)/(nxt-cum)*(zEdges[iz+1]-zEdges[iz]);break;}
+      cum=nxt;
+    }
+    const off=i*ncell;
+    for(let c=0;c<ncell;c++)J[off+c]=(AM.disp[c]-AN.disp[c]-BM.disp[c]+BN.disp[c])/tot;
+  });
+  // Plot every reading of a level at that level's median depth, taken from
+  // the reading nearest the middle of the line (the kernel is translation invariant).
+  const lev={};
+  ms.forEach(m=>{const L=lev[m.lev];if(!L||Math.abs(m.xm-XMAX/2)<Math.abs(L.xm-XMAX/2))lev[m.lev]=m;});
+  ms.forEach(m=>{m.zp=lev[m.lev].zmed;});
+  return (arrayCache[key]={ms,J,lev});
+}
 // generate measurements: array of {xm, zp, rhoa}
 function measurements(tgt){
-  const XMAX=100, out=[];
-  const aList=[2,4,6,8,10,12,14];      // base electrode spacing (m)
-  for(const a of aList){
-    for(let xm=a; xm<=XMAX-a; xm+=4){
-      let zp;
-      if(array==='wenner') zp=0.519*a;
-      else if(array==='schlum') zp=0.5*a;    // roughly, for AB/2 ~ a
-      else zp=0.5*a;                          // dipole-dipole base; grows via 'a' list
-      // sensitivity-weighted geometric mean of ln(rho)
-      let sw=0, slr=0;
-      const sx=Math.max(3,zp*1.1), sz=Math.max(2,zp*0.8);
-      for(let gx=xm-3*sx; gx<=xm+3*sx; gx+=Math.max(1,sx/3)){
-        for(let gz=Math.max(0,zp-3*sz); gz<=zp+3*sz; gz+=Math.max(0.8,sz/3)){
-          const w=Math.exp(-(((gx-xm)*(gx-xm))/(2*sx*sx)+((gz-zp)*(gz-zp))/(2*sz*sz)));
-          sw+=w; slr+=w*Math.log(rhoTrue(gx,gz,tgt));
-        }
-      }
-      const rhoa=Math.exp(slr/sw);
-      out.push({xm,zp,rhoa,a});
+  const A=buildArray(array), ncell=NDX*NDZ;
+  const idx=[],dl=[];   // displayed cells that differ from the background
+  for(let iz=0;iz<NDZ;iz++){
+    const zc=(zEdges[iz]+zEdges[iz+1])/2;
+    for(let ix=0;ix<NDX;ix++){
+      const r=rhoTrue(ix+0.5,zc,tgt);
+      if(r!==RHO0){idx.push(iz*NDX+ix);dl.push(Math.log(r/RHO0));}
     }
   }
-  return out;
+  A.ms.forEach((m,i)=>{
+    const off=i*ncell;let s=0;
+    for(let k=0;k<idx.length;k++)s+=A.J[off+idx[k]]*dl[k];
+    m.rhoa=RHO0*Math.exp(s);
+  });
+  return A.ms;
 }
 // data colormap (blue conductive .. red resistive); same in light and dark
 function colFor(rhoa){
@@ -91,7 +215,7 @@ function draw(){
   document.getElementById('xv').textContent=tgt.x0+' m';
   document.getElementById('dv').textContent=tgt.depth+' m';
   document.getElementById('rv').textContent=tgt.rho.toFixed(tgt.rho<10?1:0)+' Ω·m';
-  const W=cv.width,H=cv.height,XMAX=100;ctx.clearRect(0,0,W,H);ctx.fillStyle=Pal.bg;ctx.fillRect(0,0,W,H);
+  const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);ctx.fillStyle=Pal.bg;ctx.fillRect(0,0,W,H);
   const gx0=60,gx1=W-20;
   const px=x=>gx0+(gx1-gx0)*x/XMAX;
   // TRUE MODEL (top third)
@@ -105,26 +229,30 @@ function draw(){
   ctx.globalAlpha=1;
   ctx.fillStyle=Pal.text;ctx.font='13px Inter, Segoe UI';ctx.textAlign='left';ctx.fillText('True subsurface model',gx0,18);
   // electrodes
-  ctx.fillStyle=Pal.accent;for(let x=0;x<=XMAX;x+=4)ctx.fillRect(px(x)-1,t0-4,2,4);
-  // PSEUDOSECTION (lower two-thirds)
+  ctx.fillStyle=Pal.accent;for(let x=0;x<=XMAX;x+=ESP)ctx.fillRect(px(x)-1,t0-4,2,4);
+  // PSEUDOSECTION (lower two-thirds), same depth axis for every array
   const p0=H*0.44,p1=H-30;
   ctx.fillStyle=Pal.surface2;ctx.fillRect(gx0,p0,gx1-gx0,p1-p0);
   const ms=measurements(tgt);
-  const zmax=Math.max(...ms.map(m=>m.zp));
-  const pyP=z=>p0+(p1-p0)*z/(zmax*1.1);
+  const zmax=Math.max(26,1.04*Math.max(...ms.map(m=>m.zp)));
+  const pyP=z=>p0+(p1-p0)*z/zmax;
   ms.forEach(m=>{
     ctx.fillStyle=colFor(m.rhoa);
     const x=px(m.xm),y=pyP(m.zp);
     ctx.beginPath();ctx.arc(x,y,6,0,7);ctx.fill();
   });
-  ctx.fillStyle=Pal.text;ctx.fillText('Apparent-resistivity pseudosection ('+array+')',gx0,p0-8);
+  ctx.fillStyle=Pal.text;ctx.fillText('Apparent-resistivity pseudosection: '+ARRAYS[array].name,gx0,p0-8);
   // depth axes
   ctx.fillStyle=Pal.muted;ctx.font='10px Inter, Segoe UI';ctx.textAlign='right';
   for(let z=0;z<=zmaxTrue;z+=10)ctx.fillText(z+'m',gx0-4,pyT(z)+3);
-  for(let z=0;z<=zmax;z+=2)ctx.fillText(z.toFixed(0)+'m',gx0-4,pyP(z)+3);
+  for(let z=0;z<=zmax;z+=4)ctx.fillText(z.toFixed(0)+'m',gx0-4,pyP(z)+3);
   ctx.textAlign='center';ctx.fillStyle=Pal.muted;
   for(let x=0;x<=XMAX;x+=20)ctx.fillText(x+' m',px(x),H-12);
   ctx.fillText('surface distance (m)',W/2,H-1);
+  ctx.save();ctx.fillStyle=Pal.text;ctx.font='11px Inter, Segoe UI';
+  ctx.translate(16,(t0+t1)/2);ctx.rotate(-Math.PI/2);ctx.fillText('depth (m)',0,0);ctx.restore();
+  ctx.save();ctx.fillStyle=Pal.text;ctx.font='11px Inter, Segoe UI';
+  ctx.translate(16,(p0+p1)/2);ctx.rotate(-Math.PI/2);ctx.fillText('median depth of investigation (m)',0,0);ctx.restore();
 }
 document.querySelectorAll('#array button').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('#array button').forEach(x=>x.classList.remove('active'));
@@ -133,6 +261,8 @@ document.querySelectorAll('#array button').forEach(b=>b.addEventListener('click'
 ['x','d','r'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
 onThemeChange(draw);
 draw();
+// Build the other two arrays' kernels while the page is idle, so switching is instant.
+setTimeout(()=>{buildArray('schlum');buildArray('dipole');},300);
 </script>
 <script src="../../../assets/javascripts/course-app.js"></script>
 </body>

@@ -17,35 +17,27 @@ GPR transmits radar pulses into the ground and records reflections from contrast
 [Practice this module](../../apps/practice-lab.html#gpr){ .md-button }
 [Teach with active-learning slides](../../apps/lecture-frameworks.html#gpr){ .md-button }
 
-## Topic Apps
+## Learning Path
 
-<div class="grid cards" markdown>
+Work through the apps in order. Each one opens full screen; the bar at its top shows this path and has Prev and Next buttons.
 
--   🖥️ **[Electromagnetic Physics: Conduction vs. Displacement](apps/gpr.html)**
+<div class="learning-path" markdown>
 
-    ---
+1.  **[Conduction vs. Displacement Currents](apps/gpr.html)** <span class="lp-type">Interactive lecture</span>
 
     Why radar waves propagate in resistive ground and dissipate in conductive ground.
 
--   🖥️ **[GPR Interactive Simulator](apps/gpr-2.html)**
-
-    ---
+2.  **[GPR Simulator](apps/gpr-2.html)** <span class="lp-type">Interactive lecture</span>
 
     Survey a synthetic subsurface and interpret the resulting radargram.
 
-</div>
-
-## Demo
-
-<div class="grid cards" markdown>
-
--   ⚡ **[Hyperbola Velocity Estimator](apps/demo-hyperbola.html)**
-
-    ---
+3.  **[Hyperbola Velocity Estimator](apps/demo-hyperbola.html)** <span class="lp-type">Demo</span>
 
     Fit a diffraction hyperbola on a radargram to recover wave velocity and target depth, the everyday calibration trick of GPR practice.
 
 </div>
+
+**After the path:** [practice questions](../../apps/practice-lab.html#gpr) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab
 
