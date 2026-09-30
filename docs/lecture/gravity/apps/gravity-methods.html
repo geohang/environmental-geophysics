@@ -248,7 +248,7 @@
     <div class="grid">
         <div class="card lab-card">
             <h3>The Geoid</h3>
-            <p>The Geoid is the surface of <strong>constant gravitational potential</strong>. It coincides with Mean Sea Level (MSL) if the ocean were still.</p>
+            <p>The Geoid is the <strong>equipotential surface of Earth's gravity potential</strong> (gravitational plus centrifugal) that best fits mean sea level (MSL). It is where a still ocean would settle, continued beneath the continents.</p>
             <div class="highlight-box lab-note">
                 <strong>Warping:</strong>
                 <ul>
@@ -330,13 +330,13 @@
     <div class="grid">
         <div class="card lab-card">
             <h4>1. Latitude Correction ($g_\phi$)</h4>
-            <p>Subtracts theoretical gravity using the <strong>GRS67 Formula</strong>:</p>
+            <p>Subtracts theoretical gravity using the <strong>GRS67 Formula</strong> (fine for teaching; the current reference system is GRS80, with slightly different coefficients):</p>
             $$ g_\phi = 9.780318 \left( 1 + 0.0052789 \sin^2 \phi + 0.0000235 \sin^4 \phi \right) \text{ m/s}^2 $$
         </div>
         <div class="card lab-card">
             <h4>2. Free-Air Correction (FAC)</h4>
             <p>Corrects for elevation above sea level.</p>
-            <p class="important">$\delta g_F = 0.3086 \times h$</p>
+            <p class="important">$\delta g_F = 0.3086 \times h$ (mGal, with $h$ in m)</p>
         </div>
     </div>
 
@@ -345,7 +345,7 @@
             <div>
                 <h4>3. Bouguer Correction (BC)</h4>
                 <p>Subtracts the attraction of the rock slab between the station and sea level.</p>
-                <p><strong>Formula:</strong> $\delta g_B = 0.0419 \times \rho \times h$</p>
+                <p><strong>Formula:</strong> $\delta g_B = 0.0419 \times \rho \times h$ (mGal, with $\rho$ in g/cm³ and $h$ in m)</p>
             </div>
             <div class="tool-box" style="margin-top:0;">
                 <h4 style="margin-top:0; color:var(--lab-text);">Quick Slab Calculator</h4>

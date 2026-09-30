@@ -170,7 +170,7 @@
     let chartGrav = createChart(ctxGrav, '#7c3aed', -55, 5);
     let chartMag = createChart(ctxMag, '#dc2626', -40, 40);
     let chartRes = createChart(ctxRes, '#d97706', -5, 85);
-    let chartSeis = createChart(ctxSeis, '#059669', -5, 45);
+    let chartSeis = createChart(ctxSeis, '#059669', -45, 5);
 
     // Grid offset as a fraction of the spacing (default: half a spacing). Keeping the
     // fraction when the spacing changes keeps the default at spacing/2 and never lets
@@ -231,8 +231,9 @@
             let mSignal = -100 * (x / 5) * Math.exp(-(x*x)/15);
             let mPower = 0;
             if(powerLvl > 0) {
-                let distToLine = 22 - x; 
-                mPower = (powerLvl * 50) / (distToLine * distToLine); 
+                // Power line at +20 m, as in the scenario; the 2 m offset keeps the value finite at the line
+                let distToLine = Math.hypot(20 - x, 2);
+                mPower = (powerLvl * 50) / (distToLine * distToLine);
             }
             // Mag noise increases near power line
             dataMag.push({x: x, y: mSignal + mPower + (r * (1 + powerLvl/10))});
@@ -242,12 +243,12 @@
             let cPower = 0;
             if(powerLvl > 0) {
                  cPower = (powerLvl * 2) * Math.sin(x); 
-                 cPower += (powerLvl * 10) / (25 - x);
+                 cPower += (powerLvl * 10) / Math.hypot(20 - x, 5); // same power line at +20 m
             }
             dataRes.push({x: x, y: cSignal + cPower + (r * 2)});
 
-            // 4. Seismic: Velocity Bump
-            let sSignal = 40 * Math.exp(-(x*x)/20);
+            // 4. Seismic: an empty tank is a void, so it is slow and scatters: a velocity low
+            let sSignal = -40 * Math.exp(-(x*x)/20);
             dataSeis.push({x: x, y: sSignal + r});
         }
 

@@ -43,11 +43,11 @@
 // [name, dmin (m), dmax (m), color, resolution note]
 const METHODS=[
   ['Ground-penetrating radar',0.3,15,'#ec4899','cm-scale, best resolution; dies in clay/conductive ground'],
-  ['Seismic refraction',2,60,'#0ea5e9','decimetre beds; needs a velocity increase with depth'],
+  ['Seismic refraction',2,60,'#0ea5e9','metre-scale layers; needs velocity increasing with depth; thin or low-velocity layers can be hidden'],
   ['Electrical resistivity (ERT)',1,120,'#f59e0b','resolution degrades with depth; very flexible'],
   ['Frequency-domain EM',1,60,'#10b981','fast reconnaissance; lower resolution'],
   ['Time-domain EM',20,500,'#06b6d4','good for conductive targets at depth'],
-  ['Gravity',10,5000,'#8b5cf6','broad density structure; low resolution'],
+  ['Gravity',1,5000,'#8b5cf6','broad density structure; low resolution (microgravity reaches voids a few metres deep)'],
   ['Magnetics',1,4000,'#f97316','magnetic sources; ambiguous depth'],
   ['Magnetotellurics',100,100000,'#ef4444','crustal to mantle; kilometre resolution'],
 ];

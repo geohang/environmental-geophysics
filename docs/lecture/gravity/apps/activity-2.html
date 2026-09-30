@@ -151,7 +151,7 @@
             </tr>
             <tr>
                 <td><strong>2</strong></td>
-                <td>980,573.2</td> <td><input type="number" id="ba2"></td>
+                <td>980,588.1</td> <td><input type="number" id="ba2"></td>
                 <td>
                     <select id="geo2" class="geology-select">
                         <option value="">-- Select --</option>
@@ -167,7 +167,7 @@
             </tr>
             <tr>
                 <td><strong>4</strong></td>
-                <td>980,601.7</td> <td><input type="number" id="ba4"></td>
+                <td>980,507.4</td> <td><input type="number" id="ba4"></td>
                 <td>
                     <select id="geo4" class="geology-select">
                         <option value="">-- Select --</option>
@@ -220,7 +220,8 @@
     const bcCorrect = hVals.map(h => 0.0419 * 2.67 * h);
 
     // 3. EXPECTED BA
-    const baCorrect = [0.0, -30.0, 0.0, 100.0];
+    // Realistic magnitudes: a salt dome gives about -10 to -20 mGal, a large ore body a few mGal
+    const baCorrect = [0.0, -15.0, 0.0, 5.0];
 
     // --- CHECK FUNCTIONS ---
     function checkPhase1() {
@@ -248,7 +249,7 @@
         fb.style.display = 'block';
         if(allCorrect && g2 === 'salt' && g4 === 'ore') {
             fb.className = 'hidden-feedback is-ok';
-            fb.innerHTML = "🎉 SUCCESS! You found the SALT DOME (-30 mGal) and the ORE BODY (+100 mGal).";
+            fb.innerHTML = "🎉 SUCCESS! You found the SALT DOME (-15 mGal) and the ORE BODY (+5 mGal).";
         } else {
             fb.className = 'hidden-feedback is-bad';
             fb.innerHTML = "❌ Keep trying. Check your BA math and geological choices.";

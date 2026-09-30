@@ -221,6 +221,8 @@
     const ctx = canvas.getContext('2d');
     const tooltip = document.getElementById('tooltip');
 
+    const G_TOP = 0.6; // mGal at the top gridline of the gravity graph
+
     // Game State
     let target = {
         type: '', // 'sphere', 'h_cyl', 'v_cyl'
@@ -240,7 +242,9 @@
         
         // Randomize Parameters
         target.depth = Math.floor(Math.random() * 30) + 20; // Depth 20-50m
-        target.gMax = (Math.random() * 10 + 8).toFixed(1); // 8-18 mGal
+        // 0.10-0.50 mGal: realistic for a body 20-50 m deep (a sphere centred 30 m deep with a
+        // 1000 kg/m³ contrast gives about 0.4 mGal at radius 24 m and 0.84 mGal at radius 30 m)
+        target.gMax = (Math.random() * 0.4 + 0.1).toFixed(2);
 
         drawScene(false); // Draw without revealing result
     }
@@ -281,14 +285,14 @@
         ctx.lineWidth = 1;
         ctx.beginPath();
         
-        // Y-Axis Grid Lines (every 5 mGal)
-        // Max visual height is 20 mGal. 200px / 20 = 10px per mGal.
-        for(let g = 0; g <= 20; g+=5) {
-            let y = 180 - (g * 7.5); // Scale: 150px height = 20 mGal
+        // Y-Axis Grid Lines (every 0.1 mGal); 150px of height spans 0 to G_TOP mGal
+        for(let i = 0; i <= 6; i++) {
+            const g = i / 10;
+            let y = 180 - (g / G_TOP * 150);
             ctx.moveTo(0, y); ctx.lineTo(800, y);
             // Label
             ctx.fillStyle = "#64748b"; ctx.font = "10px Arial";
-            ctx.fillText(g + " mGal", 5, y - 2);
+            ctx.fillText(g.toFixed(1) + " mGal", 5, y - 2);
         }
 
         // X-Axis Grid Lines (every 50m)
@@ -314,7 +318,7 @@
         for(let px=0; px<=800; px+=2) {
             let x_meters = (px - 400) / 2; // Scale: 1m = 2px
             let g = getGravity(x_meters);
-            let py = 180 - (g / 20 * 150); // Scale: 20 mGal max height
+            let py = 180 - (g / G_TOP * 150);
             if(px===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
         }
         ctx.stroke();
@@ -387,7 +391,7 @@
         tooltip.style.display = 'block';
         tooltip.style.left = (e.clientX - wrap.left + 15) + 'px';
         tooltip.style.top = (e.clientY - wrap.top - 15) + 'px';
-        tooltip.innerHTML = `Dist: ${meters.toFixed(1)} m<br>Grav: ${g.toFixed(2)} mGal`;
+        tooltip.innerHTML = `Dist: ${meters.toFixed(1)} m<br>Grav: ${g.toFixed(3)} mGal`;
     });
 
     document.getElementById('inpMax').addEventListener('input', (e) => {

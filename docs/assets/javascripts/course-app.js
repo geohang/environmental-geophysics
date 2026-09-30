@@ -275,8 +275,13 @@
   // Closing card: where the student is in the module and where to go next.
   function buildNextCard(place) {
     if (document.querySelector('.course-next-card')) return;
-    // Full-viewport dashboards clip the page; the top bar already carries Next there.
-    if (window.getComputedStyle(document.body).overflowY === 'hidden') return;
+    // Full-viewport dashboards clip the page, or would shrink to make room for the card when the
+    // body is a fixed-height flex/grid column; the top bar already carries Next there.
+    const bodyStyle = window.getComputedStyle(document.body);
+    const fixedViewportLayout = /flex|grid/.test(bodyStyle.display)
+      && Math.abs(parseFloat(bodyStyle.height) - window.innerHeight) < 2
+      && document.body.scrollHeight <= window.innerHeight + 1;
+    if (bodyStyle.overflowY === 'hidden' || fixedViewportLayout) return;
     const { appIndex, module } = place;
     const { next } = stepTargets(place);
     const card = el('nav', { class: 'course-next-card', 'aria-label': 'Continue the course' }, [

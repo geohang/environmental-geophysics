@@ -171,6 +171,9 @@
         // World Bounds
         const worldWidthMeters = 10;
         const worldDepthMeters = 5;
+        // A thin air strip above the ground; z = 0 is the ground surface, where the antenna
+        // sits and where travel times start, so drawing and physics share one surface.
+        const airMeters = 0.2;
         const maxTimeNs = 100;
 
         // Target Configuration
@@ -252,7 +255,7 @@
             return (meters / worldWidthMeters) * canvas.width;
         }
         function mToPxY(meters, canvas) {
-            return (meters / worldDepthMeters) * canvas.height;
+            return ((meters + airMeters) / (worldDepthMeters + airMeters)) * canvas.height;
         }
         function nsToPxY(ns, canvas) {
             return (ns / maxTimeNs) * canvas.height;
@@ -262,14 +265,16 @@
         function drawPhysicalWorld() {
             pCtx.clearRect(0, 0, physicalCanvas.width, physicalCanvas.height);
 
-            // 1. Draw Soil Background (color from the selected medium)
+            // 1. Draw air strip, then soil below the ground surface (color from the selected medium)
+            pCtx.fillStyle = '#f8fafc';
+            pCtx.fillRect(0, 0, physicalCanvas.width, mToPxY(0, physicalCanvas));
             pCtx.fillStyle = medium.color;
             pCtx.fillRect(0, mToPxY(0, physicalCanvas), physicalCanvas.width, physicalCanvas.height);
-            
-            // Draw surface line
+
+            // Draw surface line at z = 0
             pCtx.beginPath();
-            pCtx.moveTo(0, mToPxY(0.2, physicalCanvas));
-            pCtx.lineTo(physicalCanvas.width, mToPxY(0.2, physicalCanvas));
+            pCtx.moveTo(0, mToPxY(0, physicalCanvas));
+            pCtx.lineTo(physicalCanvas.width, mToPxY(0, physicalCanvas));
             pCtx.strokeStyle = '#475569';
             pCtx.lineWidth = 2;
             pCtx.stroke();
@@ -290,7 +295,7 @@
 
             // 3. Draw Radar Beam / Waves if playing
             const cartPxX = mToPxX(cartX, physicalCanvas);
-            const cartPxY = mToPxY(0.1, physicalCanvas); // Cart sits on surface
+            const cartPxY = mToPxY(0, physicalCanvas); // Antenna sits on the ground surface
 
             if (isPlaying || cartX > 0) {
                 // Draw beam cone
@@ -531,7 +536,7 @@
             const clickY = e.clientY - rect.top;
 
             const meterX = (clickX / physicalCanvas.width) * worldWidthMeters;
-            const meterZ = (clickY / physicalCanvas.height) * worldDepthMeters;
+            const meterZ = (clickY / physicalCanvas.height) * (worldDepthMeters + airMeters) - airMeters;
 
             // Only add target if below surface (z > 0.3m roughly)
             if (meterZ > 0.3) {

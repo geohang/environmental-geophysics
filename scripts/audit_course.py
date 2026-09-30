@@ -359,7 +359,7 @@ def audit_course_consistency() -> list[str]:
     expected_terms = {
         "README lecture count": ("34 original interactive lecture and demonstration pages", readme),
         "six material types": ("site offers six kinds of material", home),
-        "graduate enrollment logistics": ("SEES:5800", home),
+        "graduate enrollment logistics": ("undergraduate and graduate students both take under the same course number", home),
         "ICON logistics": ("https://icon.uiowa.edu/", home),
         "EM material count": ("4 apps + 2 demos", lecture_index),
         "magnetic research code": ("PyHydroGeophysX Research Code", magnetic),
@@ -391,6 +391,10 @@ def audit_course_consistency() -> list[str]:
     for name, (term, text) in expected_terms.items():
         if term not in text:
             errors.append(f"Course consistency: missing {name}")
+    # SEES:4800 is the only course number; graduate students take it too (there is no SEES:5800).
+    for label, text in (("README.md", readme), ("docs/index.md", home), ("docs/lecture/index.md", lecture_index)):
+        if "5800" in text:
+            errors.append(f"Course consistency: {label} mentions 5800, but SEES:4800 is the only course number")
     if "characterData: true" in progressive:
         errors.append("Course accessibility observer must not watch all character-data mutations")
     if "Math.max(V2raw,V1+50)" in refraction_demo:

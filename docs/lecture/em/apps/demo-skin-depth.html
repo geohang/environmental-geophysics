@@ -36,6 +36,9 @@
     <div class="formula">
       $\delta = \sqrt{\dfrac{2}{\omega\mu\sigma}} \approx 503\sqrt{\dfrac{\rho}{f}}$ (metres, with $\rho$ in Ω·m and $f$ in Hz). Lower frequency and more resistive ground both push the field deeper.
     </div>
+    <div class="science-caveat">
+      Small-coil instruments such as the EM31 and EM38, the most common EM tools in environmental work, operate at a low induction number: their skin depth is much larger than the coil spacing, so their depth of investigation is set by the coil spacing and orientation, not by the skin depth.
+    </div>
   </div>
 </div>
 <script>
@@ -69,7 +72,7 @@ function draw(){
   ctx.fillStyle=P.muted;ctx.font='11px Inter, Segoe UI';ctx.textAlign='left';
   ctx.fillText('field amplitude →',8,H/2);
   ctx.textAlign='center';
-  for(let m=0;m<=3;m++){const z=delta*m;ctx.fillText(z<1?(z*100).toFixed(0)+'cm':z.toFixed(z<10?1:0)+'m',px(z),H-22);}
+  for(let m=0;m<=3;m++){const z=delta*m;ctx.fillText(z===0?'0':z<1?(z*100).toFixed(0)+'cm':z.toFixed(z<10?1:0)+'m',px(z),H-22);}
   ctx.fillText('depth →',W-60,H-22);
 }
 document.getElementById('f').addEventListener('input',draw);

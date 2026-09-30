@@ -145,12 +145,18 @@
             <div class="lg:col-span-2 flex flex-col gap-6">
                 
                 <!-- Chart Container -->
-                <div class="lab-card p-6 relative">
-                    <div class="absolute top-4 right-6 bg-white border border-slate-200 px-4 py-2 rounded-lg text-center z-10 shadow-sm">
-                        <span class="block lab-kicker">Current Curve</span>
-                        <span id="current-curve-type" class="text-2xl font-bold text-sky-700">H-Type</span>
+                <div class="lab-card p-6">
+                    <!-- Badge sits above the plot so it never covers the end of the curve -->
+                    <div class="flex justify-end mb-2">
+                        <div class="bg-white border border-slate-200 px-4 py-2 rounded-lg text-center shadow-sm">
+                            <span class="block lab-kicker">Current Curve</span>
+                            <span id="current-curve-type" class="text-2xl font-bold text-sky-700">H-Type</span>
+                        </div>
                     </div>
-                    <canvas id="vesChart" class="w-full h-[400px]"></canvas>
+                    <!-- Fixed-height wrapper: Chart.js sizes the canvas to its parent, so the parent must not grow with it -->
+                    <div class="relative w-full h-[400px]">
+                        <canvas id="vesChart"></canvas>
+                    </div>
                 </div>
 
                 <!-- 4 Classic Curve Types (Interactive Legend) -->
@@ -227,7 +233,7 @@
                     borderWidth: 3,
                     pointRadius: 0,
                     pointHoverRadius: 6,
-                    tension: 0.4,
+                    tension: 0, // straight segments between computed points; a spline would overshoot the physics
                     fill: true
                 }]
             },

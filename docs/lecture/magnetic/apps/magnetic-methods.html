@@ -90,7 +90,7 @@
                         <option value="sedimentary">Sedimentary (Sandstone)</option>
                         <option value="granite">Acid Igneous (Granite)</option>
                         <option value="basalt">Basic Igneous (Basalt)</option>
-                        <option value="ore">Magnetite Ore Body</option>
+                        <option value="ore">Magnetite-Rich Ore Body</option>
                         <option value="reverse">Paleomagnetic Reversal</option>
                     </select>
                 </div>
@@ -98,7 +98,7 @@
                 <!-- Earth Field Control -->
                 <div>
                     <div class="flex justify-between mb-1">
-                        <label class="text-xs font-bold text-slate-700">Earth's Field (<span class="math-var">H</span>)</label>
+                        <label class="text-xs font-bold text-slate-700">Earth's Field (<span class="math-var">F</span>)</label>
                         <span id="h-val" class="text-xs font-mono text-blue-600">50000 nT</span>
                     </div>
                     <input type="range" id="h-slider" min="20000" max="70000" step="1000" value="50000" class="lab-range">
@@ -262,8 +262,8 @@
         const presets = {
             'sedimentary': { k: 0.0005, Jr: 10, angle: 10, desc: "Sedimentary: Very low k, almost no remanence." },
             'granite': { k: 0.005, Jr: 100, angle: 20, desc: "Granite: Moderate k. Induction usually dominates." },
-            'basalt': { k: 0.05, Jr: 2500, angle: 60, desc: "Basalt: High k and strong TRM. Q often > 1." },
-            'ore': { k: 0.15, Jr: 5000, angle: 15, desc: "Magnetite Ore: Massive k and remanence. Huge anomaly." },
+            'basalt': { k: 0.05, Jr: 5000, angle: 60, desc: "Basalt: High k and strong TRM, so Q is often > 1 (Q = 2 here)." },
+            'ore': { k: 0.15, Jr: 5000, angle: 15, desc: "Magnetite-rich ore: high k and remanence, huge anomaly. Massive magnetite can exceed k = 1 SI, beyond this slider." },
             'reverse': { k: 0.03, Jr: 2000, angle: 180, desc: "Reversal: Remanence opposes Earth's field." }
         };
 
@@ -422,12 +422,12 @@
             {
                 id: 1,
                 title: "Calculating Induction",
-                text: "The Induced Magnetization (<span class='math-var'>J<sub>i</sub></span>) depends on Field (<span class='math-var'>H</span>) and Susceptibility (<span class='math-var'>k</span>).<br><br><b>Task:</b> Calculate <span class='math-var'>J<sub>i</sub></span> if <span class='math-var'>H</span> = 55,000 and <span class='math-var'>k</span> = 0.02.",
+                text: "The Induced Magnetization (<span class='math-var'>J<sub>i</sub></span>) depends on the Earth's field (<span class='math-var'>F</span>) and Susceptibility (<span class='math-var'>k</span>).<br><br><b>Task:</b> Calculate <span class='math-var'>J<sub>i</sub></span> if <span class='math-var'>F</span> = 55,000 nT and <span class='math-var'>k</span> = 0.02.",
                 type: 'input',
                 answer: 1100,
                 check: (val) => Math.abs(val - 1100) < 50,
                 success: "Correct! 0.02 × 55,000 = 1,100 nT.",
-                fail: "Recall: <span class='math-var'>J<sub>i</sub></span> = <span class='math-var'>k</span> × <span class='math-var'>H</span>."
+                fail: "Recall: <span class='math-var'>J<sub>i</sub></span> = <span class='math-var'>k</span> × <span class='math-var'>F</span>."
             },
             {
                 id: 2,

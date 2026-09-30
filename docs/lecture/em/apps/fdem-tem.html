@@ -442,13 +442,21 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        const skinLabel = `Skin Depth (δ) at ${(state.freq/1000).toFixed(1)} kHz ≈ ${fdemDelta.toFixed(0)}m`;
+        // Hz below 1 kHz (0.0 kHz otherwise); δ is computed from layer 1's resistivity only
+        const fLabel = state.freq >= 1000 ? `${(state.freq/1000).toFixed(1)} kHz` : `${state.freq.toFixed(0)} Hz`;
+        // When δ is deeper than the section the line is clamped to the bottom edge; say so, and
+        // move the label to the left so the legend in the bottom-right corner does not cover it.
+        const belowView = fdemDelta * depthScale > h - surfaceY;
+        const skinLabel = `Skin depth δ in layer 1 (ρ₁) at ${fLabel} ≈ ${fdemDelta.toFixed(0)} m${belowView ? ' (below this section)' : ''}`;
+        const labelX = belowView ? 10 : w - 10;
+        ctx.textAlign = belowView ? 'left' : 'right';
         ctx.lineJoin = 'round';
         ctx.lineWidth = 3;
         ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-        ctx.strokeText(skinLabel, w - 200, surfaceY + delta_px - 5);
+        ctx.strokeText(skinLabel, labelX, surfaceY + delta_px - 5);
         ctx.fillStyle = '#047857';
-        ctx.fillText(skinLabel, w - 200, surfaceY + delta_px - 5);
+        ctx.fillText(skinLabel, labelX, surfaceY + delta_px - 5);
+        ctx.textAlign = 'left';
 
         // TEM Smoke Ring Overlay
         if (state.temAnimActive) {
