@@ -1,6 +1,6 @@
 # MkDocs build output
 site/
-output/
+/output/
 .playwright-cli/
 
 # Python
