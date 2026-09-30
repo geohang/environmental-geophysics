@@ -4,15 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Rock Magnetism Lab & Activity</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
+    <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; }
-        
-        /* Grid pattern for the canvas background */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        /* White plot field; the canvas draws its own hairline grid */
         .canvas-container {
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 20px 20px;
+            background: #ffffff;
+        }
+
+        /* Compact light app bar: lab-title typography at a smaller size */
+        .lab-appbar .lab-title { font-size: 1.25rem; letter-spacing: -.01em; }
+        @media (max-width: 767px) { .lab-appbar .lab-title { font-size: 1.125rem; } }
+
+        input[type=radio], input[type=checkbox] { accent-color: var(--lab-primary); }
+
+        /* One multiple-choice option per row, as the label's flex class intends (the shared sheet makes radio labels inline-flex) */
+        #questions-list label:has(input[type="radio"]) { display: flex; }
+
+        /* Completed task button (keeps the bg-green-600 marker that updateProgress() counts) */
+        #questions-list button.is-done:disabled {
+            border-color: #a7f3d0;
+            background: #ecfdf5;
+            color: #047857;
         }
 
         /* Custom Scrollbar for panels to keep them slim */
@@ -31,27 +46,27 @@
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="h-screen flex flex-col overflow-hidden text-slate-800">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen md:h-screen flex flex-col md:overflow-hidden text-slate-800">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Magnetic Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
     <!-- Header (Compacted) -->
-    <header class="bg-slate-900 text-white p-2 shadow-lg flex justify-between items-center z-30 shrink-0 h-14">
-        <div class="flex items-center">
-            <h1 class="text-lg md:text-xl font-bold text-yellow-400 mr-3"><i class="fa-solid fa-magnet mr-2"></i>GeoMag Lab</h1>
-            <div class="hidden md:block text-[10px] leading-tight text-slate-400 border-l border-slate-700 pl-3">
+    <header class="lab-appbar bg-white border-b border-slate-200 px-3 md:px-4 flex justify-between items-center z-30 shrink-0 h-14">
+        <div class="flex items-center min-w-0">
+            <h1 class="lab-title whitespace-nowrap mr-3"><i class="fa-solid fa-magnet lab-icon mr-2"></i><span class="lab-title-accent">GeoMag</span> Lab</h1>
+            <div class="hidden md:block text-[11px] leading-tight text-slate-500 border-l border-slate-200 pl-3">
                 Interactive Vector Analysis<br>Classroom Edition
             </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="toggleNotebook()" class="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-3 py-1 rounded text-xs font-bold transition flex items-center shadow-lg animate-pulse" id="notebook-btn">
-                <i class="fa-solid fa-book-open mr-2"></i> Notebook
+            <button onclick="toggleNotebook()" class="lab-btn lab-btn-primary animate-pulse" id="notebook-btn">
+                <i class="fa-solid fa-book-open"></i> Notebook
             </button>
-            <button onclick="document.getElementById('help-modal').classList.remove('hidden')" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-xs font-bold transition">
+            <button onclick="document.getElementById('help-modal').classList.remove('hidden')" class="lab-btn">
                 <i class="fa-solid fa-circle-question"></i>
             </button>
         </div>
@@ -63,14 +78,14 @@
         <!-- Left Panel: Controls (Compacted Width) -->
         <aside class="w-full md:w-64 bg-white border-r border-slate-200 flex flex-col z-20 shadow-md shrink-0">
             <div class="p-3 bg-slate-50 border-b border-slate-200 shrink-0">
-                <h2 class="font-bold text-slate-700 uppercase text-xs tracking-wider"><i class="fa-solid fa-sliders mr-2"></i>Parameters</h2>
+                <h2 class="font-bold text-slate-700 uppercase text-xs tracking-wider"><i class="fa-solid fa-sliders lab-icon mr-2"></i>Parameters</h2>
             </div>
-            
+
             <div class="p-4 overflow-y-auto space-y-5 flex-grow">
                 <!-- Preset Selector -->
-                <div class="p-2 bg-blue-50 rounded border border-blue-100">
+                <div class="p-2 bg-slate-50 rounded-lg border border-slate-200">
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Rock Preset</label>
-                    <select id="preset-selector" class="w-full p-1.5 border border-slate-300 rounded bg-white text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                    <select id="preset-selector" class="w-full p-1.5 border border-slate-300 rounded bg-white text-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer">
                         <option value="custom">Custom Experiment</option>
                         <option value="sedimentary">Sedimentary (Sandstone)</option>
                         <option value="granite">Acid Igneous (Granite)</option>
@@ -86,7 +101,7 @@
                         <label class="text-xs font-bold text-slate-700">Earth's Field (<span class="math-var">H</span>)</label>
                         <span id="h-val" class="text-xs font-mono text-blue-600">50000 nT</span>
                     </div>
-                    <input type="range" id="h-slider" min="20000" max="70000" step="1000" value="50000" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none accent-blue-600">
+                    <input type="range" id="h-slider" min="20000" max="70000" step="1000" value="50000" class="lab-range">
                 </div>
 
                 <!-- Susceptibility Control -->
@@ -95,7 +110,7 @@
                         <label class="text-xs font-bold text-slate-700">Susceptibility (<span class="math-var">k</span>)</label>
                         <span id="k-val" class="text-xs font-mono text-blue-600">0.01 SI</span>
                     </div>
-                    <input type="range" id="k-slider" min="0" max="0.2" step="0.001" value="0.01" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none accent-blue-600">
+                    <input type="range" id="k-slider" min="0" max="0.2" step="0.001" value="0.01" class="lab-range">
                 </div>
 
                 <hr class="border-slate-200">
@@ -104,24 +119,24 @@
                 <div>
                     <div class="flex justify-between mb-1">
                         <label class="text-xs font-bold text-slate-700">Remanence (<span class="math-var">J<sub>r</sub></span>)</label>
-                        <span id="jr-val" class="text-xs font-mono text-green-600">500 nT</span>
+                        <span id="jr-val" class="text-xs font-mono text-green-700">500 nT</span>
                     </div>
-                    <input type="range" id="jr-slider" min="0" max="5000" step="50" value="500" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none accent-green-600">
+                    <input type="range" id="jr-slider" min="0" max="5000" step="50" value="500" class="lab-range">
                 </div>
 
                 <!-- Remanence Direction -->
                 <div>
                     <div class="flex justify-between mb-1">
                         <label class="text-xs font-bold text-slate-700">Remanence Angle</label>
-                        <span id="angle-val" class="text-xs font-mono text-green-600">45°</span>
+                        <span id="angle-val" class="text-xs font-mono text-green-700">45°</span>
                     </div>
-                    <input type="range" id="angle-slider" min="0" max="360" step="1" value="45" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none accent-green-600">
+                    <input type="range" id="angle-slider" min="0" max="360" step="1" value="45" class="lab-range">
                 </div>
             </div>
         </aside>
 
         <!-- Center Panel: Visualization (Maximized Space) -->
-        <div class="flex-grow flex flex-col bg-slate-50 relative min-w-0">
+        <div class="flex-grow flex flex-col bg-white relative min-w-0 min-h-[440px] md:min-h-0">
             <!-- Canvas Layer -->
             <div class="canvas-container relative flex-grow w-full h-full overflow-hidden" id="canvas-wrapper">
                 <canvas id="sim-canvas" class="absolute top-0 left-0 w-full h-full block"></canvas>
@@ -130,7 +145,7 @@
                 <div class="absolute top-2 right-2 bg-white/90 p-1.5 rounded shadow-sm backdrop-blur-sm pointer-events-none border border-slate-200 z-10">
                     <div class="text-center text-[9px] font-bold text-slate-500 mb-0.5">NORTH</div>
                     <div class="w-5 h-5 border border-slate-300 rounded-full mx-auto relative bg-white">
-                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-0.5 w-0 h-0 border-l-[3px] border-l-transparent border-r-[3px] border-r-transparent border-b-[6px] border-b-red-500"></div>
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-0.5 w-0 h-0 border-l-[3px] border-l-transparent border-r-[3px] border-r-transparent border-b-[6px] border-b-red-600"></div>
                     </div>
                 </div>
             </div>
@@ -138,23 +153,23 @@
             <!-- Bottom Data Strip (Compacted Height) -->
             <div class="bg-white border-t border-slate-200 p-2 flex gap-2 overflow-x-auto shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10 h-24 items-center">
                 <!-- Card 1 -->
-                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-blue-500 w-28 shrink-0 flex flex-col justify-center">
+                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-blue-600 w-28 shrink-0 flex flex-col justify-center">
                     <div class="text-[9px] font-bold text-slate-500 uppercase">Induced (<span class="math-var">J<sub>i</sub></span>)</div>
                     <div class="text-base font-bold text-blue-700 truncate" id="res-induced">0 nT</div>
                 </div>
                 <!-- Card 2 -->
-                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-red-500 w-28 shrink-0 flex flex-col justify-center">
+                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-red-600 w-28 shrink-0 flex flex-col justify-center">
                     <div class="text-[9px] font-bold text-slate-500 uppercase">Total (<span class="math-var">J<sub>tot</sub></span>)</div>
                     <div class="text-base font-bold text-red-700 truncate" id="res-total">0 nT</div>
                 </div>
                 <!-- Card 3 -->
-                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-yellow-400 w-32 shrink-0 flex flex-col justify-center">
+                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-amber-500 w-32 shrink-0 flex flex-col justify-center">
                     <div class="text-[9px] font-bold text-slate-500 uppercase">Königsberger (<span class="math-var">Q</span>)</div>
                     <div class="text-lg font-bold text-slate-800 leading-none" id="res-q">0.00</div>
                     <div class="text-[9px] text-slate-500 leading-tight mt-1 truncate" id="q-interpretation">-</div>
                 </div>
                 <!-- Card 4 -->
-                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-slate-600 flex-grow min-w-[150px] h-full overflow-y-auto">
+                <div class="bg-slate-50 p-1.5 rounded border-l-4 border-slate-400 flex-grow min-w-[150px] h-full overflow-y-auto">
                     <div class="text-[9px] font-bold text-slate-500 uppercase">Interpretation</div>
                     <div class="text-[11px] text-slate-700 mt-0.5 leading-snug" id="geo-interpretation">...</div>
                 </div>
@@ -163,17 +178,17 @@
 
         <!-- Right Panel: Lab Notebook (Floating/Sidebar) -->
         <aside id="lab-notebook" class="w-full md:w-80 bg-white border-l border-slate-200 flex flex-col z-40 shadow-xl transition-transform duration-300 absolute top-0 bottom-0 right-0 transform translate-x-full md:relative md:translate-x-0 h-full">
-            <div class="p-3 bg-yellow-400 text-slate-900 border-b border-yellow-500 flex justify-between items-center shrink-0 h-14">
-                <h2 class="font-bold uppercase text-xs tracking-wider flex items-center"><i class="fa-solid fa-clipboard-list mr-2"></i>Activity Log</h2>
+            <div class="p-3 bg-slate-50 text-slate-700 border-b border-slate-200 flex justify-between items-center shrink-0 h-14">
+                <h2 class="font-bold uppercase text-xs tracking-wider flex items-center"><i class="fa-solid fa-clipboard-list lab-icon mr-2"></i>Activity Log</h2>
                 <div class="flex items-center gap-2">
-                    <span id="progress-text" class="text-[10px] font-bold bg-white/30 px-2 py-0.5 rounded">0/5 Done</span>
-                    <button onclick="toggleNotebook()" class="md:hidden text-slate-800 hover:text-black p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    <span id="progress-text" class="lab-chip">0/5 Done</span>
+                    <button onclick="toggleNotebook()" class="md:hidden text-slate-600 hover:text-slate-900 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
             </div>
 
             <!-- Progress Bar -->
             <div class="w-full bg-slate-200 h-1.5 shrink-0">
-                <div id="progress-bar" class="bg-blue-600 h-1.5 transition-all duration-500" style="width: 0%"></div>
+                <div id="progress-bar" class="bg-sky-600 h-1.5 transition-all duration-500" style="width: 0%"></div>
             </div>
 
             <!-- Quiz Content Area -->
@@ -181,12 +196,12 @@
                 
                 <!-- Start Screen -->
                 <div id="quiz-start" class="text-center mt-6 mb-8 px-4">
-                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                         <i class="fa-solid fa-graduation-cap text-2xl text-blue-500"></i>
+                    <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                         <i class="fa-solid fa-graduation-cap text-2xl lab-icon"></i>
                     </div>
-                    <h3 class="text-base font-bold text-slate-700 mb-1">Student Activity</h3>
+                    <h3 class="text-base font-bold text-slate-800 mb-1">Student Activity</h3>
                     <p class="text-slate-500 text-xs mb-4">Complete 5 tasks to master the concepts.</p>
-                    <button onclick="startQuiz()" class="bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-bold shadow hover:bg-blue-500 transition w-full uppercase tracking-wide">Start Lab</button>
+                    <button onclick="startQuiz()" class="lab-btn lab-btn-primary w-full uppercase tracking-wide">Start Lab</button>
                 </div>
 
                 <!-- Questions List (Hidden Initially) -->
@@ -199,18 +214,18 @@
     </main>
 
     <!-- Help Modal -->
-    <div id="help-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden backdrop-blur-sm">
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md p-5 m-4">
-            <h2 class="text-xl font-bold text-slate-800 mb-3 border-b pb-2">Quick Guide</h2>
+    <div id="help-modal" class="fixed inset-0 bg-slate-900/40 z-50 flex items-center justify-center hidden backdrop-blur-sm">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-md p-5 m-4">
+            <h2 class="text-xl font-bold text-slate-900 mb-3 border-b border-slate-200 pb-2">Quick Guide</h2>
             <div class="space-y-2 text-slate-600 text-sm">
-                <p class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded-full inline-block mr-2"></span> <strong>Induced (Blue):</strong> Controlled by Earth's Field & Susceptibility.</p>
-                <p class="flex items-center"><span class="w-3 h-3 bg-green-500 rounded-full inline-block mr-2"></span> <strong>Remanent (Green):</strong> The rock's permanent memory.</p>
-                <p class="flex items-center"><span class="w-3 h-3 bg-red-500 rounded-full inline-block mr-2"></span> <strong>Total (Red):</strong> The vector sum (what we measure).</p>
-                <div class="bg-yellow-50 p-3 rounded border border-yellow-200 mt-4 text-xs">
+                <p class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-600 rounded-full inline-block mr-2"></span> <strong>Induced (Blue):</strong> Controlled by Earth's Field & Susceptibility.</p>
+                <p class="flex items-center gap-1"><span class="w-3 h-3 bg-green-600 rounded-full inline-block mr-2"></span> <strong>Remanent (Green):</strong> The rock's permanent memory.</p>
+                <p class="flex items-center gap-1"><span class="w-3 h-3 bg-red-600 rounded-full inline-block mr-2"></span> <strong>Total (Red):</strong> The vector sum (what we measure).</p>
+                <div class="bg-amber-50 p-3 rounded border border-amber-200 mt-4 text-xs text-slate-700">
                     <strong>Tip:</strong> If the sidebar is closed on mobile, click "Notebook" in the top right.
                 </div>
             </div>
-            <button onclick="document.getElementById('help-modal').classList.add('hidden')" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded transition text-sm">
+            <button onclick="document.getElementById('help-modal').classList.add('hidden')" class="mt-5 w-full lab-btn lab-btn-primary">
                 Close
             </button>
         </div>
@@ -314,7 +329,7 @@
             let qText = "", qColor = "";
             if(state.Q < 0.2) { qText = "Induction Dominant"; qColor = "text-blue-600"; }
             else if(state.Q < 1.0) { qText = "Mixed"; qColor = "text-slate-600"; }
-            else if(state.Q < 10) { qText = "Remanence Dominant"; qColor = "text-yellow-600"; }
+            else if(state.Q < 10) { qText = "Remanence Dominant"; qColor = "text-amber-700"; }
             else { qText = "Extreme Remanence"; qColor = "text-red-600"; }
             els.qInterp.className = `text-[10px] font-bold truncate ${qColor}`;
             els.qInterp.innerText = qText;
@@ -345,7 +360,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Grid
-            ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1; ctx.beginPath();
+            ctx.strokeStyle = '#e5eaf1'; ctx.lineWidth = 1; ctx.beginPath();
             for(let x = 0; x < canvas.width; x+=40) { ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); }
             for(let y = 0; y < canvas.height; y+=40) { ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); }
             ctx.stroke();
@@ -365,21 +380,21 @@
             const vTot = { x: vInd.x + vRem.x, y: vInd.y + vRem.y };
 
             // Draw Vectors with labels
-            drawArrow(ctx, cx, cy, cx + vInd.x, cy + vInd.y, '#3b82f6', 3);
-            drawLabel(ctx, "Induced", cx + vInd.x - 10, cy + vInd.y - 10, '#3b82f6', "right");
+            drawArrow(ctx, cx, cy, cx + vInd.x, cy + vInd.y, '#2563eb', 3);
+            drawLabel(ctx, "Induced", cx + vInd.x - 10, cy + vInd.y - 10, '#1d4ed8', "right");
 
-            drawArrow(ctx, cx, cy, cx + vRem.x, cy + vRem.y, '#22c55e', 3);
-            drawLabel(ctx, "Remanent", cx + vRem.x + 10, cy + vRem.y - 5, '#22c55e', "left");
+            drawArrow(ctx, cx, cy, cx + vRem.x, cy + vRem.y, '#16a34a', 3);
+            drawLabel(ctx, "Remanent", cx + vRem.x + 10, cy + vRem.y - 5, '#15803d', "left");
 
             // Dashed lines
-            ctx.setLineDash([4, 4]); ctx.strokeStyle = '#cbd5e1'; ctx.beginPath();
+            ctx.setLineDash([4, 4]); ctx.strokeStyle = '#94a3b8'; ctx.beginPath();
             ctx.moveTo(cx + vInd.x, cy + vInd.y); ctx.lineTo(cx + vTot.x, cy + vTot.y);
             ctx.moveTo(cx + vRem.x, cy + vRem.y); ctx.lineTo(cx + vTot.x, cy + vTot.y);
             ctx.stroke(); ctx.setLineDash([]);
 
             // Total Vector
-            drawArrow(ctx, cx, cy, cx + vTot.x, cy + vTot.y, '#ef4444', 4);
-            drawLabel(ctx, "TOTAL", cx + vTot.x, cy + vTot.y - 15, '#ef4444', "center");
+            drawArrow(ctx, cx, cy, cx + vTot.x, cy + vTot.y, '#dc2626', 4);
+            drawLabel(ctx, "TOTAL", cx + vTot.x, cy + vTot.y - 15, '#b91c1c', "center");
         }
 
         function drawArrow(ctx, fromx, fromy, tox, toy, color, width) {
@@ -479,7 +494,7 @@
                 let html = `
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Task ${q.id}</span>
-                        <span id="status-${index}" class="text-[10px] font-bold text-slate-300"><i class="fa-regular fa-circle"></i> Todo</span>
+                        <span id="status-${index}" class="text-[10px] font-bold text-slate-500"><i class="fa-regular fa-circle"></i> Todo</span>
                     </div>
                     <h3 class="font-bold text-sm text-slate-800 mb-1">${q.title}</h3>
                     <p class="text-xs text-slate-600 mb-3 leading-relaxed">${q.text}</p>
@@ -488,18 +503,18 @@
                 // Inputs
                 html += `<div class="mb-2" id="input-area-${index}">`;
                 if (q.type === 'input') {
-                    html += `<input type="number" id="input-${index}" class="w-full p-1.5 border rounded text-xs bg-slate-50 focus:bg-white transition" placeholder="Value...">`;
+                    html += `<input type="number" id="input-${index}" class="w-full p-1.5 border border-slate-300 rounded text-xs bg-slate-50 focus:bg-white transition" placeholder="Value...">`;
                 } else if (q.type === 'mcq') {
                     q.options.forEach((opt, i) => {
                         html += `
-                            <label class="flex items-center space-x-2 p-1.5 border rounded hover:bg-slate-50 cursor-pointer mb-1">
+                            <label class="flex items-center space-x-2 p-1.5 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer mb-1">
                                 <input type="radio" name="mcq-${index}" value="${i}" class="text-blue-600">
                                 <span class="text-xs text-slate-700">${opt}</span>
                             </label>
                         `;
                     });
                 } else if (q.type === 'state') {
-                    html += `<div class="text-[10px] text-blue-600 bg-blue-50 p-1.5 rounded border border-blue-100 flex items-center">
+                    html += `<div class="text-[10px] text-sky-700 bg-sky-50 p-1.5 rounded border border-sky-100 flex items-center">
                         <i class="fa-solid fa-sliders mr-2"></i> Adjust sliders, then check.
                     </div>`;
                 }
@@ -509,7 +524,7 @@
                 html += `<div id="feedback-${index}" class="hidden mb-2 p-2 rounded text-xs border"></div>`;
 
                 // Button
-                html += `<button onclick="checkQuestion(${index})" id="btn-${index}" class="w-full bg-slate-800 text-white py-1 rounded text-xs font-bold hover:bg-slate-700 transition">Check</button>`;
+                html += `<button onclick="checkQuestion(${index})" id="btn-${index}" class="lab-btn lab-btn-primary w-full">Check</button>`;
 
                 card.innerHTML = html;
                 list.appendChild(card);
@@ -541,7 +556,7 @@
                 fb.innerHTML = `<i class="fa-solid fa-check-circle mr-1"></i> ${q.success}`;
                 
                 btn.disabled = true;
-                btn.className = "w-full bg-green-600 text-white py-1 rounded text-xs font-bold cursor-default opacity-50";
+                btn.className = "lab-btn w-full is-done bg-green-600";
                 btn.innerHTML = `<i class="fa-solid fa-check mr-1"></i> Done`;
 
                 status.innerHTML = `<i class="fa-solid fa-circle-check"></i> Done`;
@@ -566,7 +581,7 @@
                 setTimeout(() => {
                     const list = document.getElementById('questions-list');
                     const victory = document.createElement('div');
-                    victory.className = "bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-3 mt-2 rounded shadow animate-bounce text-xs";
+                    victory.className = "bg-amber-50 border-l-4 border-amber-500 text-amber-800 p-3 mt-2 rounded shadow-sm animate-bounce text-xs";
                     victory.innerHTML = `
                         <p class="font-bold"><i class="fa-solid fa-trophy mr-1"></i> All Tasks Complete!</p>
                         <p>You have mastered the concepts.</p>

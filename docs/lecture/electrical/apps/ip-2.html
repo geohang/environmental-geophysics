@@ -4,78 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cole-Cole Model Interactive</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
+
+    <script id="MathJax-script" async src="../../../assets/vendor/mathjax/tex-mml-chtml.js"></script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
         .param-card {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease;
         }
         .param-card:hover {
-            border-color: #38bdf8;
+            border-color: #7dd3fc;
         }
         canvas {
-            background-color: #0f172a;
+            background-color: #ffffff;
             border-radius: 0.5rem;
         }
-        
-        /* Custom Range Sliders */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            margin-top: -6px;
-            box-shadow: 0 0 4px rgba(0,0,0,0.5);
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: #475569;
-            border-radius: 2px;
-        }
-        .slider-val-badge {
-            background: #0f172a;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            border: 1px solid #334155;
+        .lab-chip.slider-val-badge {
+            color: var(--lab-text-2);
+            font-size: 0.8rem;
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Electrical Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <div class="max-w-6xl w-full">
-        <!-- Header Section -->
-        <header class="mb-6">
-            <h1 class="text-3xl md:text-5xl font-bold text-sky-400 mb-3">Cole-Cole Model: 4 Numbers Tell the Whole Story</h1>
-            <p class="text-slate-300 text-lg">Instead of measuring at 100 frequencies, we fit 4 key parameters:</p>
-        </header>
+    <!-- Header Section -->
+    <header class="lab-hero">
+        <div class="lab-hero-inner">
+            <h1 class="lab-title"><span class="lab-title-accent">Cole-Cole</span> Model: 4 Numbers Tell the Whole Story</h1>
+            <p class="lab-subtitle">Instead of measuring at 100 frequencies, we fit 4 key parameters:</p>
+        </div>
+    </header>
 
+    <div class="max-w-6xl w-full mx-auto p-6 pb-12">
         <!-- Main Content Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
@@ -83,58 +52,58 @@
             <div class="lg:col-span-5 flex flex-col space-y-4">
                 
                 <!-- Math Formula Box -->
-                <div class="bg-slate-50 rounded-lg p-6 mb-2 flex justify-center items-center shadow-lg border-2 border-slate-200">
-                    <div class="text-slate-900 text-xl md:text-2xl overflow-x-auto">
+                <div class="lab-formula mb-2 flex justify-center items-center">
+                    <div class="text-slate-900 text-base sm:text-xl overflow-x-auto">
                         $$ \rho^*(\omega) = \rho_0 \left[ 1 - m \left( 1 - \frac{1}{1 + (i\omega\tau)^c} \right) \right] $$
                     </div>
                 </div>
 
                 <!-- Parameter 1: rho0 -->
-                <div class="param-card p-4 rounded-lg">
+                <div class="lab-card param-card p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div>
-                            <h2 class="text-lg font-bold text-sky-400">ρ₀ (resistivity)</h2>
-                            <p class="text-sm text-slate-300">How conductive the rock is (DC limit)</p>
+                            <h2 class="text-lg font-bold text-slate-800">ρ₀ (resistivity)</h2>
+                            <p class="text-sm text-slate-600">How conductive the rock is (DC limit)</p>
                         </div>
-                        <span class="slider-val-badge" id="val-rho0">100 Ω·m</span>
+                        <span class="lab-chip slider-val-badge shrink-0 whitespace-nowrap" id="val-rho0">100 Ω·m</span>
                     </div>
-                    <input type="range" id="slider-rho0" min="10" max="1000" step="10" value="100">
+                    <input type="range" id="slider-rho0" class="lab-range" min="10" max="1000" step="10" value="100">
                 </div>
 
                 <!-- Parameter 2: m -->
-                <div class="param-card p-4 rounded-lg">
+                <div class="lab-card param-card p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div>
-                            <h2 class="text-lg font-bold text-sky-400">m (chargeability)</h2>
-                            <p class="text-sm text-slate-300">How much charge can be stored (0-1 scale)</p>
+                            <h2 class="text-lg font-bold text-slate-800">m (chargeability)</h2>
+                            <p class="text-sm text-slate-600">How much charge can be stored (0-1 scale)</p>
                         </div>
-                        <span class="slider-val-badge" id="val-m">0.50</span>
+                        <span class="lab-chip slider-val-badge shrink-0 whitespace-nowrap" id="val-m">0.50</span>
                     </div>
-                    <input type="range" id="slider-m" min="0.1" max="0.9" step="0.05" value="0.5">
+                    <input type="range" id="slider-m" class="lab-range" min="0.1" max="0.9" step="0.05" value="0.5">
                 </div>
 
                 <!-- Parameter 3: tau -->
-                <div class="param-card p-4 rounded-lg">
+                <div class="lab-card param-card p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div>
-                            <h2 class="text-lg font-bold text-sky-400">Ï" (time constant)</h2>
-                            <p class="text-sm text-slate-300">How fast charge releases (related to grain size)</p>
+                            <h2 class="text-lg font-bold text-slate-800">τ (time constant)</h2>
+                            <p class="text-sm text-slate-600">How fast charge releases (related to grain size)</p>
                         </div>
-                        <span class="slider-val-badge" id="val-tau">0.10 s</span>
+                        <span class="lab-chip slider-val-badge shrink-0 whitespace-nowrap" id="val-tau">0.10 s</span>
                     </div>
-                    <input type="range" id="slider-tau" min="-3" max="2" step="0.1" value="-1">
+                    <input type="range" id="slider-tau" class="lab-range" min="-3" max="2" step="0.1" value="-1">
                 </div>
 
                 <!-- Parameter 4: c -->
-                <div class="param-card p-4 rounded-lg">
+                <div class="lab-card param-card p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div>
-                            <h2 class="text-lg font-bold text-sky-400">c (shape factor)</h2>
-                            <p class="text-sm text-slate-300">Describes variety of grain sizes (0-1)</p>
+                            <h2 class="text-lg font-bold text-slate-800">c (shape factor)</h2>
+                            <p class="text-sm text-slate-600">Describes variety of grain sizes (0-1)</p>
                         </div>
-                        <span class="slider-val-badge" id="val-c">0.50</span>
+                        <span class="lab-chip slider-val-badge shrink-0 whitespace-nowrap" id="val-c">0.50</span>
                     </div>
-                    <input type="range" id="slider-c" min="0.1" max="1.0" step="0.05" value="0.5">
+                    <input type="range" id="slider-c" class="lab-range" min="0.1" max="1.0" step="0.05" value="0.5">
                 </div>
 
             </div>
@@ -143,36 +112,36 @@
             <div class="lg:col-span-7 flex flex-col space-y-4">
                 
                 <!-- Spectral Graph -->
-                <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg flex-grow relative shadow-inner h-[350px] flex flex-col">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Complex Resistivity Spectrum</h3>
+                <div class="lab-card p-4 flex-grow relative h-[350px] flex flex-col">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+                        <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider">Complex Resistivity Spectrum</h3>
                         <!-- Data Views Toggle -->
-                        <div class="flex space-x-1 bg-slate-900 rounded-lg p-1 border border-slate-700">
-                            <button id="btn-phase" class="px-3 py-1 rounded text-xs font-semibold bg-sky-500 text-white shadow transition-colors">Phase</button>
-                            <button id="btn-real" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors">Real</button>
-                            <button id="btn-imag" class="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors">Imaginary</button>
+                        <div class="flex gap-1">
+                            <button id="btn-phase" class="lab-tab is-active">Phase</button>
+                            <button id="btn-real" class="lab-tab">Real</button>
+                            <button id="btn-imag" class="lab-tab">Imaginary</button>
                         </div>
                     </div>
-                    
+
                     <div class="relative flex-grow">
                         <canvas id="graph-canvas" class="w-full h-full absolute inset-0"></canvas>
-                        
+
                         <!-- Dynamic annotations -->
                         <div id="annotation-box" class="absolute hidden flex-col items-center pointer-events-none transition-all duration-100 ease-out">
-                            <div class="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></div>
-                            <div id="annotation-text" class="text-sky-300 text-xs font-mono mt-1 bg-slate-900/80 px-2 py-1 rounded border border-sky-500/30 whitespace-nowrap"></div>
+                            <div class="w-2 h-2 rounded-full bg-sky-600 ring-2 ring-white"></div>
+                            <div id="annotation-text" class="text-slate-700 text-xs font-mono mt-1 bg-white/90 px-2 py-1 rounded border border-slate-200 shadow-sm whitespace-nowrap"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Animated Microscope View -->
-                <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg relative h-[200px] overflow-hidden">
-                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center">
-                        <svg class="w-4 h-4 mr-2 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                <div class="lab-card p-4 pb-[140px] relative overflow-hidden">
+                    <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-2 flex items-center">
+                        <svg class="w-4 h-4 mr-2 lab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
                         Simulated Rock Fabric
                     </h3>
-                    <p class="text-xs text-slate-500 mb-2">Grains dynamically respond: <strong class="text-sky-400">Ï"</strong> controls average size. <strong class="text-sky-400">c</strong> controls uniformity.</p>
-                    <canvas id="rock-canvas" class="absolute bottom-0 right-0 w-full h-[140px] opacity-80"></canvas>
+                    <p class="text-xs text-slate-600 mb-2">Grains dynamically respond: <strong class="text-sky-700">τ</strong> controls average size. <strong class="text-sky-700">c</strong> controls uniformity.</p>
+                    <canvas id="rock-canvas" class="absolute bottom-0 right-0 w-full h-[140px]"></canvas>
                 </div>
 
             </div>
@@ -213,9 +182,9 @@
             views.forEach(v => {
                 const btn = document.getElementById(`btn-${v}`);
                 if (v === view) {
-                    btn.className = "px-3 py-1 rounded text-xs font-semibold bg-sky-500 text-white shadow transition-colors";
+                    btn.className = "lab-tab is-active";
                 } else {
-                    btn.className = "px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors";
+                    btn.className = "lab-tab";
                 }
             });
             drawGraph();
@@ -328,16 +297,17 @@
             }
 
             // 2. Draw Grid and Axes
-            gCtx.strokeStyle = '#334155';
+            gCtx.strokeStyle = '#e5eaf1';
             gCtx.lineWidth = 1;
-            gCtx.fillStyle = '#94a3b8';
-            gCtx.font = '11px Inter';
-            
+            gCtx.fillStyle = '#64748b';
+            gCtx.font = '11px Inter, system-ui, sans-serif';
+
             // X-axis (Frequencies)
             gCtx.textAlign = 'center';
             gCtx.textBaseline = 'top';
             for (let logF = minLogF; logF <= maxLogF; logF++) {
                 let x = margin.left + ((logF - minLogF) / decades) * plotW;
+                gCtx.strokeStyle = logF === minLogF ? '#cbd5e1' : '#e5eaf1'; // left axis vs grid
                 gCtx.beginPath(); gCtx.moveTo(x, margin.top); gCtx.lineTo(x, h - margin.bottom + 5); gCtx.stroke();
                 let label = logF === 0 ? "1 Hz" : (logF === 3 ? "1 kHz" : `10^${logF}`);
                 gCtx.fillText(label, x, h - margin.bottom + 10);
@@ -350,7 +320,8 @@
             for (let i = 0; i <= yTicks; i++) {
                 let py = plotMinY + (i / yTicks) * (plotMaxY - plotMinY);
                 let y = h - margin.bottom - ((py - plotMinY) / (plotMaxY - plotMinY)) * plotH;
-                
+
+                gCtx.strokeStyle = i === 0 ? '#cbd5e1' : '#e5eaf1'; // bottom axis vs grid
                 gCtx.beginPath(); gCtx.moveTo(margin.left - 5, y); gCtx.lineTo(w - margin.right, y); gCtx.stroke();
                 let labelText = py >= 10 ? Math.round(py) : py.toFixed(1);
                 gCtx.fillText(labelText, margin.left - 10, y);
@@ -360,9 +331,9 @@
             gCtx.save();
             gCtx.translate(15, h/2);
             gCtx.rotate(-Math.PI/2);
-            gCtx.fillStyle = '#cbd5e1';
+            gCtx.fillStyle = '#334155';
             gCtx.textAlign = 'center';
-            gCtx.font = 'bold 12px Inter';
+            gCtx.font = 'bold 12px Inter, system-ui, sans-serif';
             
             let yLabel = "-Phase (mrad)";
             if (currentView === 'real') yLabel = "Real ρ' (Ω·m)";
@@ -371,10 +342,8 @@
             gCtx.restore();
 
             // 3. Draw Data Curve
-            gCtx.strokeStyle = currentView === 'real' ? '#34d399' : (currentView === 'imag' ? '#f472b6' : '#38bdf8');
+            gCtx.strokeStyle = currentView === 'real' ? '#059669' : (currentView === 'imag' ? '#db2777' : '#0284c7');
             gCtx.lineWidth = 3;
-            gCtx.shadowColor = gCtx.strokeStyle;
-            gCtx.shadowBlur = 8;
             gCtx.beginPath();
 
             dataPoints.forEach((pt, i) => {
@@ -386,7 +355,6 @@
                 else gCtx.lineTo(pt.x, y);
             });
             gCtx.stroke();
-            gCtx.shadowBlur = 0;
 
             // 4. Update Annotation
             let peakPt = dataPoints[maxIndex];
@@ -396,7 +364,16 @@
                 annotationBox.classList.add('flex');
                 annotationBox.style.left = `${peakPt.x - 4}px`; // center dot
                 annotationBox.style.top = `${peakPt.y - 30}px`;
-                annotationText.innerText = `Peak frequency ≈ 1/τ`;
+                // -ρ'' peaks exactly at f = 1/(2πτ). The phase peak sits higher, at
+                // f = 1/(2πτ(1-m)^(1/(2c))), the geometric mean of 1/τ and 1/(τ(1-m)^(1/c)).
+                const fTau = 1 / (2 * Math.PI * currentParams.tau);
+                const fmtHz = f => f >= 100 ? f.toFixed(0) : (f >= 1 ? f.toFixed(1) : f.toPrecision(2));
+                if (currentView === 'phase') {
+                    const fPhase = fTau / Math.pow(1 - currentParams.m, 1 / (2 * currentParams.c));
+                    annotationText.innerText = `Phase peak ≈ ${fmtHz(fPhase)} Hz\n1/(2πτ) = ${fmtHz(fTau)} Hz`;
+                } else {
+                    annotationText.innerText = `Peak at 1/(2πτ) ≈ ${fmtHz(fTau)} Hz`;
+                }
                 annotationBox.firstElementChild.style.backgroundColor = gCtx.strokeStyle;
             } 
             else if (currentView === 'real') { // Real drops across tau
@@ -415,7 +392,7 @@
         // --- DYNAMIC ROCK PHYSICS SIMULATION ---
         function initRockGrains() {
             rockGrains = [];
-            const shades = ['#334155', '#475569', '#64748b', '#1e293b'];
+            const shades = ['#e3d3b3', '#d6c09a', '#c4ad84', '#a8a29e'];
             
             for(let i=0; i<100; i++) {
                 rockGrains.push({
@@ -446,7 +423,7 @@
             const h = rockCanvas.height;
             
             rCtx.clearRect(0, 0, w, h);
-            rCtx.fillStyle = '#0f172a';
+            rCtx.fillStyle = '#f8fafc';
             rCtx.fillRect(0, 0, w, h);
 
             // Physics Step
@@ -496,9 +473,12 @@
                 rCtx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
                 rCtx.fillStyle = g.color;
                 rCtx.fill();
-                
+                rCtx.strokeStyle = 'rgba(87, 83, 78, 0.35)'; // thin grain outline
+                rCtx.lineWidth = 1;
+                rCtx.stroke();
+
                 // 3D lighting highlight
-                rCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+                rCtx.strokeStyle = 'rgba(255,255,255,0.4)';
                 rCtx.lineWidth = g.r > 10 ? 2 : 1;
                 rCtx.beginPath();
                 rCtx.arc(g.x - g.r*0.2, g.y - g.r*0.2, g.r*0.5, 0, Math.PI * 1.5);

@@ -4,39 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elasticity: The Basis of Seismic Waves</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
+    <script src="../../../assets/vendor/chartjs/chart.min.js"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
         .math-font { font-family: 'Times New Roman', serif; font-style: italic; }
-        
-        /* Custom range slider styling */
-        input[type=range] {
-            -webkit-appearance: none; 
-            background: transparent; 
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background: #1e3a8a;
-            cursor: pointer;
-            margin-top: -10px; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            transition: background 0.2s;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            background: #2563eb;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: #cbd5e1;
-            border-radius: 2px;
-        }
 
         /* Smooth transitions for the rock block */
         #rock-block {
@@ -46,24 +19,24 @@
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen flex flex-col">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Seismic Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+    <header class="lab-hero">
+        <div class="lab-hero-inner flex justify-between items-center gap-4">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-blue-900">Elasticity & Seismic Waves</h1>
-                <p class="text-slate-500 text-sm mt-1">Interactive Class Demonstration</p>
+                <h1 class="lab-title"><span class="lab-title-accent">Elasticity</span> & Seismic Waves</h1>
+                <p class="lab-subtitle">Interactive Class Demonstration</p>
             </div>
             <div class="hidden md:block text-right">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Current Topic</div>
-                <div class="font-semibold text-blue-600" id="topic-display">Normal Stress</div>
+                <div class="lab-kicker">Current Topic</div>
+                <div class="font-semibold text-sky-700" id="topic-display">Normal Stress</div>
             </div>
         </div>
     </header>
@@ -71,26 +44,26 @@
     <main class="flex-grow max-w-6xl mx-auto px-6 py-8 w-full flex flex-col justify-center">
 
         <!-- Interactive Lab Section -->
-        <section class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
-                <h3 class="text-lg font-semibold flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <section class="lab-card overflow-hidden">
+            <div class="bg-slate-50 border-b border-slate-200 px-6 py-3 flex flex-wrap justify-between items-center gap-3">
+                <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lab-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                     </svg>
                     Virtual Rock Lab
                 </h3>
                 
                 <!-- Mode Switcher -->
-                <div class="flex bg-slate-800 rounded-lg p-1">
-                    <button onclick="setMode('normal')" id="btn-normal" class="px-3 py-1 text-xs font-semibold rounded bg-blue-600 text-white shadow-sm transition-all">Normal</button>
-                    <button onclick="setMode('shear')" id="btn-shear" class="px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition-all">Shear</button>
+                <div class="flex gap-2">
+                    <button onclick="setMode('normal')" id="btn-normal" class="lab-tab is-active">Normal</button>
+                    <button onclick="setMode('shear')" id="btn-shear" class="lab-tab">Shear</button>
                 </div>
             </div>
             
             <div class="grid lg:grid-cols-12 gap-0">
                 
                 <!-- Left: Simulation Viewport -->
-                <div class="lg:col-span-7 p-8 border-b lg:border-b-0 lg:border-r border-slate-200 bg-slate-50 flex flex-col items-center justify-center min-h-[500px] relative overflow-hidden">
+                <div class="lg:col-span-7 p-8 border-b lg:border-b-0 lg:border-r border-slate-200 bg-white flex flex-col items-center justify-center min-h-[500px] relative overflow-hidden">
                     
                     <!-- --- VISUALIZATION AREA --- -->
                     <div class="relative w-full h-[300px] flex flex-col items-center justify-center">
@@ -153,17 +126,17 @@
 
 
                     <!-- Control Panel -->
-                    <div class="w-full max-w-md mt-6 bg-white p-6 rounded-xl border border-slate-200 shadow-sm z-10">
+                    <div class="w-full max-w-md mt-6 bg-slate-50 p-6 rounded-xl border border-slate-200 z-10">
                         <label class="block text-sm font-semibold text-slate-700 mb-4 flex justify-between items-center">
                             <span id="control-label">Applied Force</span>
-                            <span id="stress-display" class="font-mono text-blue-600 bg-blue-50 px-2 py-1 rounded">0 MPa</span>
+                            <span id="stress-display" class="lab-chip">0 MPa</span>
                         </label>
-                        
+
                         <div class="relative flex items-center pt-2 pb-6">
-                            <span id="label-left" class="text-xs font-bold text-slate-400 absolute left-0 bottom-0">Compression</span>
-                            <span id="label-right" class="text-xs font-bold text-slate-400 absolute right-0 bottom-0">Tension</span>
-                            
-                            <input type="range" min="-50" max="50" value="0" step="1" id="stress-slider" class="w-full z-20 focus:outline-none">
+                            <span id="label-left" class="text-xs font-bold text-slate-500 absolute left-0 bottom-0">Compression</span>
+                            <span id="label-right" class="text-xs font-bold text-slate-500 absolute right-0 bottom-0">Tension</span>
+
+                            <input type="range" min="-50" max="50" value="0" step="1" id="stress-slider" class="lab-range w-full z-20 focus:outline-none">
                             
                             <!-- Center mark -->
                             <div class="absolute left-1/2 top-3 w-px h-3 bg-slate-300 z-10"></div>
@@ -179,20 +152,20 @@
                 <div class="lg:col-span-5 bg-white p-8 flex flex-col">
                     <h4 class="text-lg font-bold text-slate-800 mb-6 border-b border-slate-100 pb-2 flex justify-between items-center">
                         Real-time Analysis
-                        <span class="text-xs font-normal bg-slate-100 text-slate-500 px-2 py-1 rounded-full">Hooke's Law</span>
+                        <span class="text-xs font-normal bg-slate-100 text-slate-600 px-2 py-1 rounded-full">Hooke's Law</span>
                     </h4>
 
                     <!-- Dynamic Values -->
                     <div class="grid grid-cols-2 gap-4 mb-8">
-                        <div class="bg-blue-50 p-4 rounded-lg transition-colors duration-300" id="box-stress">
-                            <div class="text-xs text-blue-500 uppercase tracking-wide font-bold mb-1" id="lbl-stress-type">Normal Stress (&sigma;)</div>
-                            <div class="text-2xl font-mono font-bold text-blue-900" id="val-stress">0</div>
-                            <div class="text-xs text-blue-400 mt-1">Force / Area</div>
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg transition-colors duration-300" id="box-stress">
+                            <div class="text-xs text-slate-600 tracking-wide font-bold mb-1" id="lbl-stress-type">Normal Stress (&sigma;)</div>
+                            <div class="text-2xl font-mono font-bold text-slate-900" id="val-stress">0</div>
+                            <div class="text-xs text-slate-500 mt-1">Force / Area</div>
                         </div>
-                        <div class="bg-indigo-50 p-4 rounded-lg transition-colors duration-300" id="box-strain">
-                            <div class="text-xs text-indigo-500 uppercase tracking-wide font-bold mb-1" id="lbl-strain-type">Normal Strain (&epsilon;)</div>
-                            <div class="text-2xl font-mono font-bold text-indigo-900" id="val-strain">0.000</div>
-                            <div class="text-xs text-indigo-400 mt-1" id="lbl-strain-formula">&Delta;L / L</div>
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg transition-colors duration-300" id="box-strain">
+                            <div class="text-xs text-slate-600 tracking-wide font-bold mb-1" id="lbl-strain-type">Normal Strain (&epsilon;)</div>
+                            <div class="text-2xl font-mono font-bold text-slate-900" id="val-strain">0.000</div>
+                            <div class="text-xs text-slate-500 mt-1" id="lbl-strain-formula">&Delta;L / L</div>
                         </div>
                     </div>
 
@@ -201,7 +174,7 @@
                         <canvas id="hookesChart"></canvas>
                     </div>
 
-                    <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-600">
+                    <div class="mt-6 p-4 lab-note text-sm">
                         <p id="theory-text">
                             <strong>Normal Stress:</strong> Forces act perpendicular to the surface. Deforms by changing volume/length.
                         </p>
@@ -212,8 +185,8 @@
 
     </main>
 
-    <footer class="bg-white border-t border-slate-200 mt-auto py-6">
-        <div class="max-w-6xl mx-auto px-6 text-center text-slate-400 text-xs">
+    <footer class="border-t border-slate-200 mt-auto py-6">
+        <div class="max-w-6xl mx-auto px-6 text-center text-slate-500 text-xs">
             Generated for Classroom Demonstration
         </div>
     </footer>
@@ -253,6 +226,21 @@
         const btnShear = document.getElementById('btn-shear');
 
         // --- Chart Setup ---
+        // Light plot styling: slate text, hairline grid, white tooltips.
+        Chart.defaults.color = '#475569';
+        Chart.defaults.borderColor = '#e5eaf1';
+        Chart.defaults.font.family = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+        Object.assign(Chart.defaults.plugins.tooltip, {
+            backgroundColor: '#ffffff',
+            titleColor: '#0f172a',
+            bodyColor: '#334155',
+            borderColor: '#e2e8f0',
+            borderWidth: 1
+        });
+        const axisGrid = { color: '#e5eaf1', borderColor: '#cbd5e1' };
+        const axisTicks = { color: '#64748b', font: { size: 11 } };
+        const axisTitleFont = { size: 12, weight: '600' };
+
         const ctx = document.getElementById('hookesChart').getContext('2d');
         const hookesChart = new Chart(ctx, {
             type: 'scatter',
@@ -262,13 +250,15 @@
                         label: 'Current State',
                         data: [{x: 0, y: 0}],
                         backgroundColor: '#ea580c',
+                        borderColor: '#ffffff',
+                        borderWidth: 2,
                         pointRadius: 8,
                         pointHoverRadius: 10
                     },
                     {
                         label: 'Linear Elasticity',
-                        data: [{x: -10, y: -50}, {x: 10, y: 50}],
-                        borderColor: '#94a3b8',
+                        data: [{x: -0.6, y: -60}, {x: 0.6, y: 60}], // slope 100 MPa per unit strain, same as the dot
+                        borderColor: '#64748b',
                         borderWidth: 2,
                         borderDash: [5, 5],
                         showLine: true,
@@ -284,12 +274,16 @@
                     x: {
                         type: 'linear',
                         position: 'bottom',
-                        title: { display: true, text: 'Strain (ε)' },
-                        min: -0.3,
-                        max: 0.3
+                        title: { display: true, text: 'Strain (ε)', color: '#334155', font: axisTitleFont },
+                        grid: axisGrid,
+                        ticks: axisTicks,
+                        min: -0.6,
+                        max: 0.6
                     },
                     y: {
-                        title: { display: true, text: 'Stress (σ)' },
+                        title: { display: true, text: 'Stress (σ)', color: '#334155', font: axisTitleFont },
+                        grid: axisGrid,
+                        ticks: axisTicks,
                         min: -60,
                         max: 60
                     }
@@ -308,8 +302,8 @@
 
             // Update UI Buttons
             if (mode === 'normal') {
-                btnNormal.className = "px-3 py-1 text-xs font-semibold rounded bg-blue-600 text-white shadow-sm transition-all";
-                btnShear.className = "px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition-all";
+                btnNormal.className = "lab-tab is-active";
+                btnShear.className = "lab-tab";
                 
                 // Labels
                 lblLeft.innerText = "Compression";
@@ -325,8 +319,8 @@
                 hookesChart.options.scales.y.title.text = "Normal Stress (σ)";
                 
             } else {
-                btnNormal.className = "px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition-all";
-                btnShear.className = "px-3 py-1 text-xs font-semibold rounded bg-purple-600 text-white shadow-sm transition-all";
+                btnNormal.className = "lab-tab";
+                btnShear.className = "lab-tab is-active";
                 
                 // Labels
                 lblLeft.innerText = "Sinistral (Left)";
@@ -382,11 +376,11 @@
                 arrowsNormalBottom.style.opacity = '1';
                 
                 // Arrows pointing OUT
-                arrowsNormalTop.innerHTML = `<div class="flex flex-col items-center"><span class="text-xs font-bold text-red-500 uppercase mb-1">Tension</span><svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>`;
-                arrowsNormalTop.style.top = "-60px";
+                arrowsNormalTop.innerHTML = `<div class="flex flex-col items-center"><span class="text-xs font-bold text-red-600 uppercase mb-1">Tension</span><svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>`;
+                arrowsNormalTop.style.top = "-12px";
                 
-                arrowsNormalBottom.innerHTML = `<div class="flex flex-col items-center"><svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg><span class="text-xs font-bold text-red-500 uppercase mt-1">Tension</span></div>`;
-                arrowsNormalBottom.style.bottom = "-60px";
+                arrowsNormalBottom.innerHTML = `<div class="flex flex-col items-center"><svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg><span class="text-xs font-bold text-red-600 uppercase mt-1">Tension</span></div>`;
+                arrowsNormalBottom.style.bottom = "-12px";
 
             } else if (stress < 0) { // Compression
                 rockBlock.style.backgroundColor = '#a8a29e';
@@ -396,10 +390,10 @@
                 arrowsNormalBottom.style.opacity = '1';
 
                 // Arrows pointing IN
-                arrowsNormalTop.innerHTML = `<div class="flex flex-col items-center"><svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg><span class="text-xs font-bold text-indigo-500 uppercase mt-1">Compression</span></div>`;
+                arrowsNormalTop.innerHTML = `<div class="flex flex-col items-center"><svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg><span class="text-xs font-bold text-indigo-600 uppercase mt-1">Compression</span></div>`;
                 arrowsNormalTop.style.top = "10px";
 
-                arrowsNormalBottom.innerHTML = `<div class="flex flex-col items-center"><span class="text-xs font-bold text-indigo-500 uppercase mb-1">Compression</span><svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>`;
+                arrowsNormalBottom.innerHTML = `<div class="flex flex-col items-center"><span class="text-xs font-bold text-indigo-600 uppercase mb-1">Compression</span><svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>`;
                 arrowsNormalBottom.style.bottom = "10px";
 
             } else {

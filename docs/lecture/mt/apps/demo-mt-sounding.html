@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="../../../assets/vendor/mathjax/tex-mml-chtml.js"></script>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
@@ -35,10 +35,11 @@
     <div class="controls cols-3">
       <div class="ctrl"><label>thickness h₂ <span id="h2v">1000 m</span></label><input id="h2" type="range" min="2" max="4" value="3" step="0.02"></div>
       <div class="ctrl"><label>ρ₃ (basement) <span id="r3v">1000 Ω·m</span></label><input id="r3" type="range" min="0.5" max="4.3" value="3" step="0.05"></div>
-      <div class="ctrl"><label style="visibility:hidden">.</label></div>
+      <div class="ctrl"><label>Static shift factor <span id="staticShiftValue">×1.0</span></label><input id="staticShift" type="range" min="0.3" max="3" value="1" step="0.1"></div>
     </div>
     <div class="formula">
       Apparent resistivity $\rho_a=\dfrac{1}{\omega\mu_0}|Z|^2$ and phase $\phi=\arg Z$, where the surface impedance $Z$ comes from the layered-earth recursion. For a 1D, isotropic Earth with this sign convention, phase above 45° commonly indicates decreasing resistivity with depth over the sampled interval; below 45° commonly indicates increasing resistivity.
+      The static-shift factor represents galvanic distortion at one site: it multiplies the plotted $\rho_a$ data but leaves phase unchanged. It is a data artifact, not a property of the layered model.
     </div>
   </div>
 </div>
@@ -80,17 +81,20 @@ function draw(){
   const r3=Math.pow(10,+document.getElementById('r3').value);
   const h1=Math.pow(10,+document.getElementById('h1').value);
   const h2=Math.pow(10,+document.getElementById('h2').value);
+  const staticShift=+document.getElementById('staticShift').value;
   document.getElementById('r1v').textContent=r1.toFixed(r1<10?1:0)+' Ω·m';
   document.getElementById('r2v').textContent=r2.toFixed(r2<10?1:0)+' Ω·m';
   document.getElementById('r3v').textContent=r3.toFixed(r3<10?1:0)+' Ω·m';
   document.getElementById('h1v').textContent=h1<1000?h1.toFixed(0)+' m':(h1/1000).toFixed(2)+' km';
   document.getElementById('h2v').textContent=h2<1000?h2.toFixed(0)+' m':(h2/1000).toFixed(2)+' km';
+  document.getElementById('staticShiftValue').textContent='×'+staticShift.toFixed(1);
   // sweep periods 1e-3 .. 1e3 s
   const P0=-3,P1=3,NP=120,rhoArr=[],phArr=[],perArr=[];
   let rmin=1e9,rmax=1e-9;
   for(let i=0;i<=NP;i++){const per=Math.pow(10,P0+(P1-P0)*i/NP);const m=mt1d(per,[r1,r2,r3],[h1,h2]);
-    perArr.push(per);rhoArr.push(m.rhoa);phArr.push(m.phase);rmin=Math.min(rmin,m.rhoa);rmax=Math.max(rmax,m.rhoa);}
-  rmin=Math.min(rmin,r1,r2,r3)*0.6;rmax=Math.max(rmax,r1,r2,r3)*1.6;
+    perArr.push(per);rhoArr.push(m.rhoa*staticShift);phArr.push(m.phase);rmin=Math.min(rmin,m.rhoa);rmax=Math.max(rmax,m.rhoa);}
+  // Fixed limits across the full static-shift range make the vertical offset visible.
+  rmin=Math.min(rmin,r1,r2,r3)*0.3*0.6;rmax=Math.max(rmax,r1,r2,r3)*3*1.6;
   const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);ctx.fillStyle=Pal.bg;ctx.fillRect(0,0,W,H);
   // two stacked plots: apparent resistivity (top), phase (bottom)
   const split=H*0.60, gx0=70,gx1=W-20;
@@ -98,13 +102,16 @@ function draw(){
   const px=p=>gx0+(gx1-gx0)*(Math.log10(p)-P0)/(P1-P0);
   const pyR=r=>30+(split-60)*(1-(Math.log10(r)-lymin)/(lymax-lymin));
   const pyP=ph=>split+10+(H-split-40)*(1-ph/90);
+  // Tick labels as powers of ten with superscript exponents (10⁻³, 10⁰, 10²)
+  const SUP={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+  const pow10=e=>'10'+String(e).split('').map(c=>SUP[c]).join('');
   // grids
   ctx.font='11px Inter, Segoe UI';ctx.textAlign='center';
   for(let e=P0;e<=P1;e++){const x=px(Math.pow(10,e));ctx.strokeStyle=Pal.grid;ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,H-30);ctx.stroke();
-    ctx.fillStyle=Pal.muted;ctx.fillText('10'+(e)+' s',x,H-14);}
+    ctx.fillStyle=Pal.muted;ctx.fillText(pow10(e)+' s',x,H-14);}
   // rho axis labels
   ctx.textAlign='right';ctx.fillStyle=Pal.muted;
-  for(let e=Math.ceil(lymin);e<=Math.floor(lymax);e++){const y=pyR(Math.pow(10,e));ctx.fillText('10'+e,gx0-6,y+3);}
+  for(let e=Math.ceil(lymin);e<=Math.floor(lymax);e++){const y=pyR(Math.pow(10,e));ctx.fillText(pow10(e),gx0-6,y+3);}
   ctx.fillStyle=Pal.primary;ctx.textAlign='left';ctx.font='12px Inter, Segoe UI';ctx.fillText('apparent resistivity ρₐ (Ω·m)',gx0,24);
   // rho curve
   ctx.strokeStyle=Pal.primary;ctx.lineWidth=2.5;ctx.beginPath();
@@ -116,7 +123,7 @@ function draw(){
   ctx.strokeStyle=Pal.accent;ctx.lineWidth=2.5;ctx.beginPath();
   phArr.forEach((p,i)=>{const X=px(perArr[i]),Y=pyP(p);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});ctx.stroke();
 }
-['r1','r2','r3','h1','h2'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+['r1','r2','r3','h1','h2','staticShift'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
 onThemeChange(draw);
 draw();
 if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();

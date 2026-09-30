@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geometric Factor K for Common Arrays</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Dark slate */
-            color: #e2e8f0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
         /* Smooth transitions for all moving parts */
@@ -37,8 +34,8 @@
             font-weight: bold;
             font-size: 14px;
         }
-        .electrode.current { background: linear-gradient(to bottom, #ef4444, #991b1b); }
-        .electrode.potential { background: linear-gradient(to bottom, #10b981, #047857); }
+        .electrode.current { background: #dc2626; }
+        .electrode.potential { background: #059669; }
 
         /* Ground styling */
         .ground-surface {
@@ -48,12 +45,12 @@
             height: 20px;
             background: repeating-linear-gradient(
                 45deg,
-                #1e293b,
-                #1e293b 10px,
-                #334155 10px,
-                #334155 20px
+                #efe4cf,
+                #efe4cf 10px,
+                #d6c09a 10px,
+                #d6c09a 20px
             );
-            border-top: 3px solid #475569;
+            border-top: 3px solid #a8a29e;
         }
 
         /* Dimension line styling */
@@ -70,37 +67,35 @@
             pointer-events: none;
         }
         .dimension span {
-            background-color: #1e293b; /* Match stage bg to overlap line cleanly */
+            background-color: #ffffff; /* Match stage bg to overlap line cleanly */
             padding: 0 8px;
             transform: translateY(-50%);
             font-family: monospace;
             font-size: 14px;
-            color: #cbd5e1;
-        }
-
-        /* Custom range slider styling */
-        input[type=range] {
-            accent-color: #38bdf8;
+            color: #334155;
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="min-h-screen flex flex-col items-center py-10 px-4">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Electrical Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <div class="max-w-5xl w-full">
-        <!-- Header -->
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-sky-400 mb-2">Geometric Factor K for Common Arrays</h1>
-            <p class="text-gray-400 text-lg">K derived from potential of point source on half-space: 
-                <span class="font-mono bg-slate-800 px-2 py-1 rounded">K = 2&pi; / (1/r<sub class="text-xs">AM</sub> - 1/r<sub class="text-xs">BM</sub> - 1/r<sub class="text-xs">AN</sub> + 1/r<sub class="text-xs">BN</sub>)</span>
+    <!-- Header -->
+    <header class="lab-hero">
+        <div class="lab-hero-inner is-5xl">
+            <h1 class="lab-title">Geometric Factor <span class="lab-title-accent">K</span> for Common Arrays</h1>
+            <p class="lab-subtitle">K derived from potential of point source on half-space:
+                <span class="font-mono bg-white border border-slate-200 text-slate-800 px-2 py-1 rounded">K = 2&pi; / (1/r<sub class="text-xs">AM</sub> - 1/r<sub class="text-xs">BM</sub> - 1/r<sub class="text-xs">AN</sub> + 1/r<sub class="text-xs">BN</sub>)</span>
             </p>
-        </header>
+        </div>
+    </header>
+
+    <div class="max-w-5xl w-full mx-auto px-6 pt-8 pb-10">
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
@@ -108,12 +103,12 @@
             <div class="lg:col-span-2 flex flex-col gap-4">
                 
                 <!-- Visualization Stage -->
-                <div class="bg-slate-800 rounded-xl p-6 h-80 relative overflow-hidden border border-slate-700 shadow-xl flex flex-col justify-end">
+                <div class="lab-card p-6 h-80 relative overflow-hidden flex flex-col justify-end">
                     <!-- Instruction Overlay -->
-                    <div class="absolute top-4 left-4 text-sm text-slate-400 opacity-70">
+                    <div class="absolute top-4 left-4 text-sm text-slate-600">
                         Top-down cross-section. <br>
-                        <span class="text-red-400 font-bold">A, B</span> = Current Electrodes<br>
-                        <span class="text-emerald-400 font-bold">M, N</span> = Potential Electrodes
+                        <span class="text-red-600 font-bold">A, B</span> = Current Electrodes<br>
+                        <span class="text-emerald-700 font-bold">M, N</span> = Potential Electrodes
                     </div>
 
                     <!-- The Stage -->
@@ -123,10 +118,10 @@
                         <div id="dimensions-container" class="absolute w-full h-full bottom-10"></div>
 
                         <!-- Electrodes -->
-                        <div id="elec-A" class="electrode current anim-position"><div class="electrode-label text-red-400">A</div></div>
-                        <div id="elec-M" class="electrode potential anim-position"><div class="electrode-label text-emerald-400">M</div></div>
-                        <div id="elec-N" class="electrode potential anim-position"><div class="electrode-label text-emerald-400">N</div></div>
-                        <div id="elec-B" class="electrode current anim-position"><div class="electrode-label text-red-400">B</div></div>
+                        <div id="elec-A" class="electrode current anim-position"><div class="electrode-label text-red-600">A</div></div>
+                        <div id="elec-M" class="electrode potential anim-position"><div class="electrode-label text-emerald-700">M</div></div>
+                        <div id="elec-N" class="electrode potential anim-position"><div class="electrode-label text-emerald-700">N</div></div>
+                        <div id="elec-B" class="electrode current anim-position"><div class="electrode-label text-red-600">B</div></div>
 
                         <!-- Ground -->
                         <div class="ground-surface"></div>
@@ -134,11 +129,11 @@
                 </div>
 
                 <!-- Controls -->
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-lg">
-                    <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-700 pb-4">
-                        <button onclick="setArray('wenner')" id="btn-wenner" class="px-4 py-2 rounded-md bg-sky-600 text-white font-medium transition-colors hover:bg-sky-500">Wenner (a)</button>
-                        <button onclick="setArray('schlumberger')" id="btn-schlumberger" class="px-4 py-2 rounded-md bg-slate-700 text-slate-300 font-medium transition-colors hover:bg-slate-600">Schlumberger</button>
-                        <button onclick="setArray('dipole')" id="btn-dipole" class="px-4 py-2 rounded-md bg-slate-700 text-slate-300 font-medium transition-colors hover:bg-slate-600">Dipole-Dipole</button>
+                <div class="lab-card p-6">
+                    <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-200 pb-4">
+                        <button onclick="setArray('wenner')" id="btn-wenner" class="lab-tab is-active">Wenner (a)</button>
+                        <button onclick="setArray('schlumberger')" id="btn-schlumberger" class="lab-tab">Schlumberger</button>
+                        <button onclick="setArray('dipole')" id="btn-dipole" class="lab-tab">Dipole-Dipole</button>
                     </div>
 
                     <!-- Dynamic Sliders Container -->
@@ -149,20 +144,20 @@
             </div>
 
             <!-- Information Panel -->
-            <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-lg flex flex-col h-full">
-                <h2 id="info-title" class="text-2xl font-bold text-sky-400 mb-4">Array Name</h2>
-                
+            <div class="lab-card p-6 flex flex-col h-full">
+                <h2 id="info-title" class="text-2xl font-bold text-slate-900 mb-4">Array Name</h2>
+
                 <div class="flex-grow">
-                    <p id="info-desc" class="text-slate-300 mb-6 leading-relaxed">
+                    <p id="info-desc" class="text-slate-700 mb-6 leading-relaxed">
                         Description goes here.
                     </p>
-                    
-                    <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
-                        <p class="text-sm text-slate-400 mb-1">Geometric Factor Formula:</p>
-                        <p id="info-formula" class="text-xl font-bold text-sky-400 font-mono tracking-wide">
+
+                    <div class="lab-formula">
+                        <p class="text-sm text-slate-600 mb-1">Geometric Factor Formula:</p>
+                        <p id="info-formula" class="text-xl font-bold text-sky-700 font-mono tracking-wide">
                             K = ...
                         </p>
-                        <p id="info-subtext" class="text-sm text-slate-400 mt-2 font-mono hidden"></p>
+                        <p id="info-subtext" class="text-sm text-slate-600 mt-2 font-mono hidden"></p>
                     </div>
                 </div>
             </div>
@@ -170,7 +165,7 @@
         </div>
 
         <!-- Footer Note -->
-        <div class="mt-8 text-center text-slate-400 text-sm border-t border-slate-800 pt-6">
+        <div class="mt-8 text-center text-slate-600 text-sm border-t border-slate-200 pt-6">
             <p>Larger K &rarr; smaller &Delta;V signal &rarr; more sensitive to noise. Array choice = trade-off between depth, resolution, and signal strength.</p>
         </div>
     </div>
@@ -190,7 +185,7 @@
         const arrayData = {
             wenner: {
                 title: 'Wenner (a)',
-                desc: 'Equal spacing: A–M–N–B each <span class="font-mono italic text-sky-300">a</span> apart.',
+                desc: 'Equal spacing: A–M–N–B each <span class="font-mono italic text-sky-700">a</span> apart.',
                 formula: 'K = 2&pi;a',
                 subtext: ''
             },
@@ -243,10 +238,10 @@
             return `
                 <div class="flex flex-col gap-1">
                     <div class="flex justify-between">
-                        <label for="${id}" class="text-sm font-medium text-slate-300">${label}</label>
-                        <span id="${id}-val" class="text-sm font-mono text-sky-400">${val}</span>
+                        <label for="${id}" class="text-sm font-medium text-slate-700">${label}</label>
+                        <span id="${id}-val" class="text-sm font-mono text-sky-700">${val}</span>
                     </div>
-                    <input type="range" id="${id}" min="${min}" max="${max}" value="${val}" class="w-full"
+                    <input type="range" id="${id}" min="${min}" max="${max}" value="${val}" class="w-full lab-range"
                         oninput="document.getElementById('${id}-val').innerText = this.value; ${onInputLogic}">
                 </div>
             `;
@@ -290,9 +285,9 @@
             Object.keys(els.btns).forEach(k => {
                 const btn = els.btns[k];
                 if (k === type) {
-                    btn.className = "px-4 py-2 rounded-md bg-sky-600 text-white font-medium transition-colors hover:bg-sky-500 shadow-[0_0_10px_rgba(56,189,248,0.3)]";
+                    btn.className = "lab-tab is-active";
                 } else {
-                    btn.className = "px-4 py-2 rounded-md bg-slate-700 text-slate-300 font-medium transition-colors hover:bg-slate-600";
+                    btn.className = "lab-tab";
                 }
             });
 

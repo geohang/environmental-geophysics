@@ -20,12 +20,22 @@ h1,h2{margin:0 0 1.7%;color:var(--navy);line-height:1.07}h1{font-size:clamp(2rem
 .signal-path{display:flex;gap:1%;align-items:stretch;margin:3% 0}.signal-step{flex:1;border-top:5px solid var(--blue);border-radius:13px;background:var(--blue-soft);padding:2.5%}.signal-step b{display:block;color:var(--blue);font-size:clamp(.82rem,1.25vw,1.08rem)}.signal-step span{font-size:clamp(.72rem,1.05vw,.94rem);color:var(--muted)}.arrow{align-self:center;color:var(--muted);font-size:clamp(1.2rem,2vw,2rem)}
 .prediction{margin:3% 0;padding:3.2%;border-left:8px solid var(--gold);border-radius:14px;background:var(--gold-soft);color:var(--navy);font-size:clamp(1.15rem,2.15vw,1.9rem);font-weight:760;line-height:1.32}.write-row{display:grid;grid-template-columns:1fr 1fr;gap:2%;margin-top:2%}.write-box{min-height:100px;border:2px dashed #a9b7c8;border-radius:13px;padding:2.5%;color:var(--muted)}
 .launch-row{display:flex;flex-wrap:wrap;gap:10px;margin:1.6% 0 2%}.launch{display:inline-flex;align-items:center;min-height:50px;border-radius:11px;background:var(--blue);color:#fff;padding:10px 17px;text-decoration:none;font-weight:850;box-shadow:0 8px 20px rgba(21,101,192,.2)}.launch.secondary{background:#fff;color:var(--blue);border:2px solid var(--blue);box-shadow:none}.launch:hover,.launch:focus-visible{background:var(--blue-dark);color:#fff;outline:4px solid rgba(21,101,192,.18)}
-.task-table{width:100%;border-collapse:collapse;margin-top:1.2%;font-size:clamp(.7rem,1.05vw,.93rem)}.task-table th,.task-table td{padding:1.05% 1.25%;text-align:left;border-bottom:1px solid var(--line)}.task-table th{background:var(--navy);color:#fff}.task-table tr:nth-child(even){background:#f7f9fc}.evidence{color:var(--green);font-weight:800}.question-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4%;margin-top:1.5%}.question-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:3%}.question-card b{color:var(--gold)}.prompt{margin-top:1.7%;border-left:6px solid var(--blue);border-radius:12px;background:var(--blue-soft);padding:1.7% 2.3%;font-size:clamp(.75rem,1.1vw,.96rem)}
+.task-table{width:100%;border-collapse:collapse;margin-top:1.2%;font-size:clamp(.7rem,1.05vw,.93rem)}.task-table th,.task-table td{padding:1.05% 1.25%;text-align:left;border-bottom:1px solid var(--line)}.task-table th{background:var(--navy);color:#fff}.task-table tr:nth-child(even){background:#f7f9fc}.app-tag{display:inline-block;margin-right:.55em;border:1px solid #9fc5f3;border-radius:999px;background:var(--blue-soft);color:var(--blue-dark);padding:.16em .5em;font-size:.76em;font-weight:850;white-space:nowrap}.evidence{color:var(--green);font-weight:800}.question-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4%;margin-top:1.5%}.question-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:3%}.question-card b{color:var(--gold)}.prompt{margin-top:1.7%;border-left:6px solid var(--blue);border-radius:12px;background:var(--blue-soft);padding:1.7% 2.3%;font-size:clamp(.75rem,1.1vw,.96rem)}
 .practice-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:2%;align-items:start}.practice-card{border:1px solid var(--line);border-radius:16px;background:#f8fafc;padding:4%}.discussion-grid{display:grid;grid-template-columns:1fr 1fr;gap:2%;margin-top:1.5%}.exit{border:2px solid var(--blue);border-radius:15px;background:#fff;padding:3.5%}.exit ol{display:grid;grid-template-columns:1fr 1fr;gap:.4em 1.5em}.source-note{position:absolute;left:5.5%;bottom:2.2%;font-size:clamp(.56rem,.76vw,.7rem);color:var(--muted)}
-.slide-controls{display:flex;align-items:center;gap:11px;margin-top:11px}.progress{height:8px;flex:1;overflow:hidden;border-radius:999px;background:#dce4ee}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#38a3db);transition:width .2s}.counter{min-width:68px;text-align:center;color:var(--navy);font-weight:850}.keyboard-hint{color:var(--muted);font-size:.8rem}.student-link{margin-top:9px;text-align:center;color:var(--muted);font-size:.82rem}.student-link button{border:0;background:transparent;color:var(--blue);text-decoration:underline;cursor:pointer}
-.presentation:fullscreen{width:100vw;height:100vh;margin:0;padding:16px;background:var(--page);display:grid;grid-template-rows:1fr auto}.presentation:fullscreen .stage{width:100%;height:auto;max-height:calc(100vh - 84px);margin:auto}
+.slide-controls{display:flex;align-items:center;gap:11px;margin-top:11px}.progress{height:8px;flex:1;overflow:hidden;border-radius:999px;background:#dce4ee}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#38a3db);transition:width .2s}.progress-dots{display:flex;gap:5px}.progress-dot{width:18px;height:18px;border:1px solid #9aabc0;border-radius:50%;background:#fff;color:transparent;padding:0;cursor:pointer}.progress-dot[aria-current="step"]{border-color:var(--blue);background:var(--blue);box-shadow:0 0 0 3px rgba(21,101,192,.15)}.progress-dot:focus-visible{outline:3px solid rgba(21,101,192,.25);outline-offset:2px}.fullscreen-timer{display:none;min-width:68px;justify-content:center;border-radius:8px;background:#fff;color:var(--green);padding:7px 9px;font-weight:850;font-variant-numeric:tabular-nums}.keyboard-hint{color:var(--muted);font-size:.8rem}.student-link{margin-top:9px;text-align:center;color:var(--muted);font-size:.82rem}.student-link button{border:0;background:transparent;color:var(--blue);text-decoration:underline;cursor:pointer}
+.presentation:fullscreen{width:100vw;height:100vh;margin:0;padding:16px;background:var(--page);display:grid;grid-template-rows:1fr auto}.presentation:fullscreen .stage{width:100%;height:auto;max-height:calc(100vh - 84px);margin:auto}.presentation:fullscreen .fullscreen-timer{display:inline-flex}
+.stage{touch-action:pan-y}.blackout{position:absolute;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:#000;color:#9ca3af;padding:4%;font-size:.78rem;letter-spacing:.04em}.blackout.active{display:flex}.blackout-hint{opacity:0;transition:opacity .35s}.blackout.show-hint .blackout-hint{opacity:.65}
+.shortcut-help{position:absolute;inset:0;z-index:70;display:grid;place-items:center;background:rgba(10,18,32,.72);padding:5%}.shortcut-card{width:min(680px,94%);max-height:90%;overflow:auto;border-radius:18px;background:#fff;padding:28px;box-shadow:0 24px 70px rgba(0,0,0,.34)}.shortcut-card header{display:flex;align-items:center;gap:16px}.shortcut-card header h2{margin:0}.shortcut-card header button{margin-left:auto}.shortcut-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 22px;margin-top:20px}.shortcut-grid div{display:grid;grid-template-columns:105px 1fr;align-items:center;gap:10px}.shortcut-grid kbd{border:1px solid #b8c4d2;border-bottom-width:3px;border-radius:7px;background:#f7f9fc;padding:5px 8px;text-align:center;font-weight:850}
+.annotation-canvas{position:absolute;inset:0;z-index:35;width:100%;height:100%;cursor:crosshair;touch-action:none}.annotation-toolbar{position:absolute;top:10px;left:50%;z-index:45;display:flex;align-items:center;gap:6px;transform:translateX(-50%);border:1px solid #9aa8ba;border-radius:12px;background:rgba(255,255,255,.96);padding:6px;box-shadow:0 7px 24px rgba(20,33,61,.18)}.annotation-toolbar button{min-width:36px;min-height:34px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--navy);cursor:pointer;font-weight:800}.annotation-toolbar button[aria-pressed="true"]{border-color:var(--blue);box-shadow:0 0 0 2px rgba(21,101,192,.18)}.color-swatch{color:var(--swatch)!important;font-size:1.25rem}
+.annotation-canvas[hidden],.annotation-toolbar[hidden],.shortcut-help[hidden]{display:none!important}
+.speaker-view{min-height:100vh;background:#111827;color:#e5e7eb;padding:28px}.speaker-header{display:flex;align-items:center;gap:18px;border-bottom:1px solid #374151;padding-bottom:18px}.speaker-header h1{margin:0;color:#fff;font-size:clamp(1.5rem,4vw,2.6rem)}.speaker-status{margin-left:auto;color:#93c5fd;font-weight:800}.speaker-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:22px;margin-top:24px}.speaker-panel{border:1px solid #374151;border-radius:16px;background:#1f2937;padding:22px}.speaker-panel h2,.speaker-panel h3{color:#fff}.speaker-notes{white-space:pre-wrap;font-size:1.15rem;line-height:1.55}.speaker-clocks{display:grid;grid-template-columns:1fr 1fr;gap:12px}.speaker-clock{border-radius:12px;background:#111827;padding:15px}.speaker-clock strong{display:block;color:#93c5fd;font-size:1.8rem;font-variant-numeric:tabular-nums}.speaker-actions{display:flex;gap:10px;margin-top:18px}.speaker-actions button{min-height:44px;border:1px solid #60a5fa;border-radius:9px;background:#1d4ed8;color:#fff;padding:8px 15px;cursor:pointer;font-weight:800}
+.print-handout{width:min(1100px,96%);margin:20px auto}.print-actions{position:sticky;top:0;z-index:10;display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 14px;box-shadow:0 5px 20px rgba(20,33,61,.1)}.print-actions .spacer{flex:1}.print-slide{position:relative;min-height:680px;margin:20px 0;border:1px solid var(--line);border-radius:16px;background:#fff;padding:48px 56px;box-shadow:var(--shadow);overflow:hidden}.print-slide::after{content:"";position:absolute;right:-8%;bottom:-25%;width:34%;aspect-ratio:1;border-radius:50%;background:rgba(21,101,192,.045)}.print-slide>*{position:relative;z-index:1}.print-slide .slide-top{width:100%}.print-slide .time-chip{position:absolute;top:0;right:0;min-width:48px;text-align:center}.print-slide .source-note{position:static;margin-top:24px}.print-slide .launch{box-shadow:none}
+.speaker-mode>.course-nav-bar,.speaker-mode>.lesson-toolbar,.speaker-mode>#presentation,.speaker-mode>#print-handout,.print-mode>.course-nav-bar,.print-mode>.lesson-toolbar,.print-mode>#presentation,.print-mode>#speaker-view{display:none!important}
 @media(max-width:760px){.lesson-toolbar{align-items:center;flex-wrap:wrap}.lesson-toolbar label{width:100%}.lesson-toolbar select{width:100%}.toolbar-spacer{display:none}.presentation{width:100%;margin:8px auto}.stage{border-radius:0}.slide{padding:5.5%}.goal-row,.card-grid{grid-template-columns:1fr 1fr}.keyboard-hint{display:none}.question-grid{grid-template-columns:1fr 1fr}.course-nav-bar .spacer{display:none}}
-@media(max-width:520px){.stage{aspect-ratio:9/16}.slide{overflow-y:auto;padding:7% 6% 12%}.goal-row,.card-grid,.write-row,.question-grid,.practice-grid,.discussion-grid{grid-template-columns:1fr}.signal-path{display:grid;grid-template-columns:1fr 1fr}.arrow{display:none}.task-table{font-size:.72rem}.task-table th,.task-table td{padding:6px 7px}.task-table th:first-child,.task-table td:first-child{width:38px}.slide-controls{padding:0 8px}.tool{padding:7px 9px}.exit ol{grid-template-columns:1fr}.source-note{position:static;margin-top:12px}}
+@media(max-width:760px){.speaker-grid{grid-template-columns:1fr}.shortcut-grid{grid-template-columns:1fr}.annotation-toolbar{top:5px;max-width:96%;overflow-x:auto}.progress-dots{gap:3px}.progress-dot{width:15px;height:15px}}
+@media(max-width:520px){.stage{aspect-ratio:9/16}.slide{overflow-y:auto;padding:7% 6% 12%}.goal-row,.card-grid,.write-row,.question-grid,.practice-grid,.discussion-grid{grid-template-columns:1fr}.signal-path{display:grid;grid-template-columns:1fr 1fr}.arrow{display:none}.task-table{font-size:.72rem}.task-table th,.task-table td{padding:6px 7px}.task-table th:first-child,.task-table td:first-child{width:38px}.slide-controls{padding:0 8px}.tool{padding:7px 9px}.exit ol{grid-template-columns:1fr}.source-note{position:static;margin-top:12px}.progress{display:none}}
+/* print-handout stylesheet marker */
+@media print{@page{size:landscape;margin:10mm}html,body{background:#fff!important}.print-actions{display:none!important}.print-handout{display:block!important;width:100%;margin:0}.print-slide{min-height:0;margin:0;border:0;border-radius:0;box-shadow:none;page-break-after:always;break-after:page;padding:8mm}.print-slide:last-child{page-break-after:auto;break-after:auto}.print-slide a[href]::after{content:" (" attr(href) ")";color:#334155;font-size:.78em;font-weight:500}.print-slide .launch{display:block;min-height:0;background:#fff!important;color:#0d4e9d!important;border:1px solid #8da6c5;padding:6px 9px}.print-slide .source-note{font-size:8pt}}
 </style>
 </head>
 <body>
@@ -33,21 +43,47 @@ h1,h2{margin:0 0 1.7%;color:var(--navy);line-height:1.07}h1{font-size:clamp(2rem
 <div class="lesson-toolbar">
   <label for="chapter-select">Lesson<select id="chapter-select"></select></label>
   <div class="toolbar-spacer"></div>
-  <button class="tool timer" id="timer" type="button" aria-label="Start or pause 50-minute timer">50:00</button>
+  <button class="tool timer" id="timer" type="button" aria-label="Start or pause 50-minute timer" title="Click to start or pause; double-click to reset to 50:00">50:00</button>
+  <button class="tool" id="shortcut-help-button" type="button" aria-label="Show keyboard shortcuts" title="Keyboard shortcuts">?</button>
   <button class="tool" id="copy-link" type="button">Copy lesson link</button>
   <a class="tool" href="../references/" target="_blank" rel="noopener">Sources</a>
+  <button class="tool" id="print-handout-button" type="button">Print / PDF</button>
   <button class="tool" id="fullscreen" type="button">Full screen</button>
 </div>
 
 <main class="presentation" id="presentation">
   <section class="stage" id="stage" aria-live="polite" aria-label="Active-learning lesson slide">
     <article class="slide" id="slide"></article>
+    <canvas class="annotation-canvas" id="annotation-canvas" aria-label="Slide annotation layer" hidden></canvas>
+    <div class="annotation-toolbar" id="annotation-toolbar" role="toolbar" aria-label="Annotation tools" hidden>
+      <button type="button" id="annotation-pen" aria-pressed="true">Pen</button>
+      <button type="button" class="color-swatch" data-color="#dc2626" style="--swatch:#dc2626" aria-label="Red pen" aria-pressed="true">●</button>
+      <button type="button" class="color-swatch" data-color="#1565c0" style="--swatch:#1565c0" aria-label="Blue pen" aria-pressed="false">●</button>
+      <button type="button" class="color-swatch" data-color="#f59e0b" style="--swatch:#f59e0b" aria-label="Amber pen" aria-pressed="false">●</button>
+      <button type="button" id="annotation-eraser" aria-pressed="false">Eraser</button>
+      <button type="button" id="annotation-thin" aria-pressed="true">Thin</button>
+      <button type="button" id="annotation-thick" aria-pressed="false">Thick</button>
+      <button type="button" id="annotation-clear">Clear</button>
+    </div>
+    <div class="blackout" id="blackout" aria-hidden="true"><span class="blackout-hint">Press B or Escape to resume</span></div>
+    <section class="shortcut-help" id="shortcut-help" role="dialog" aria-modal="true" aria-labelledby="shortcut-help-title" hidden>
+      <div class="shortcut-card">
+        <header><h2 id="shortcut-help-title">Lesson shortcuts</h2><button class="tool" id="shortcut-help-close" type="button">Close</button></header>
+        <div class="shortcut-grid">
+          <div><kbd>← / → / Space</kbd><span>Previous or next slide</span></div><div><kbd>F</kbd><span>Toggle full screen</span></div>
+          <div><kbd>B or .</kbd><span>Blackout / resume</span></div><div><kbd>C</kbd><span>Show or hide annotations</span></div>
+          <div><kbd>S</kbd><span>Open speaker view</span></div><div><kbd>T</kbd><span>Start or pause timer</span></div>
+          <div><kbd>Double-click timer</kbd><span>Reset to 50:00</span></div><div><kbd>?</kbd><span>Show this help</span></div>
+        </div>
+      </div>
+    </section>
   </section>
   <div>
     <div class="slide-controls">
       <button class="tool" id="previous" type="button">&#8592; Previous</button>
       <div class="progress" role="progressbar" aria-label="Lesson progress" aria-valuemin="1" aria-valuemax="7"><span id="progress"></span></div>
-      <div class="counter" id="counter">1 / 7</div>
+      <nav class="progress-dots" id="progress-dots" aria-label="Go to lesson slide"></nav>
+      <span class="fullscreen-timer" id="fullscreen-timer" role="timer" aria-label="Lesson time remaining">50:00</span>
       <button class="tool" id="next" type="button">Next &#8594;</button>
       <span class="keyboard-hint">Arrow keys or Space</span>
     </div>
@@ -55,10 +91,35 @@ h1,h2{margin:0 0 1.7%;color:var(--navy);line-height:1.07}h1{font-size:clamp(2rem
   </div>
 </main>
 
+<section class="speaker-view" id="speaker-view" hidden>
+  <header class="speaker-header"><div><div class="kicker">Speaker view</div><h1 id="speaker-title">Lesson</h1></div><div class="speaker-status" id="speaker-counter">1 / 7</div></header>
+  <div class="speaker-grid">
+    <section class="speaker-panel"><h2>Current-slide notes</h2><div class="speaker-notes" id="speaker-notes"></div></section>
+    <aside>
+      <section class="speaker-panel"><h3>Next slide</h3><p id="speaker-next"></p></section>
+      <section class="speaker-panel"><h3>Lesson clock</h3><div class="speaker-clocks"><div class="speaker-clock">Elapsed<strong id="speaker-elapsed">00:00</strong></div><div class="speaker-clock">Remaining<strong id="speaker-remaining">50:00</strong></div></div><div class="speaker-actions"><button type="button" id="speaker-previous">← Previous</button><button type="button" id="speaker-next-button">Next →</button></div></section>
+    </aside>
+  </div>
+</section>
+
+<main class="print-handout" id="print-handout" hidden>
+  <div class="print-actions"><strong id="print-title">Lesson handout</strong><span class="spacer"></span><button class="tool" id="print-now" type="button">Print / Save PDF</button><a class="tool" id="print-return" href="lecture-frameworks.html">Return to lesson</a></div>
+  <div id="print-slides"></div>
+</main>
+
 <script>
 const lessons={
   intro:{
     nav:'Introduction',title:'Introduction to Environmental Geophysics',decision:'How can we investigate a buried target without digging everywhere?',
+    notes:[
+      'Timing: 3 min. Ask students to name the decision before naming a method. Listen for property contrasts rather than object labels.',
+      'Timing: 10 min. Emphasize that instruments respond to density, susceptibility, conductivity, velocity, or permittivity contrasts. Common misconception: a method detects “a tank” directly.',
+      'Prediction debrief: steel favors magnetic or EM response, but the power line is also a cultural EM/magnetic source. Sampling must resolve the 5 m target; ask which assumption drives each method choice.',
+      'Timing: 14 min. Require one observation from each selected panel. Do not let “largest anomaly” substitute for a defensible signal-to-noise argument.',
+      'Timing: 8 min. Press for observable → physical contrast → limited interpretation. Ask what the simulator omits at a real site.',
+      'Timing: 6 min. Have pairs revise one answer after comparing evidence. Flag claims that turn coverage into certainty.',
+      'Timing: 5 min. Exit ticket must include the strongest limitation. Use two contrasting responses for a one-minute debrief.'
+    ],
     goals:['Match a target to a physical-property contrast','Choose a defensible method and spacing','Separate data, model, and interpretation'],
     core:[
       {title:'Contrast',text:'Geophysics detects a change in density, susceptibility, velocity, resistivity, or permittivity—not an object name.'},
@@ -72,9 +133,9 @@ const lessons={
       {label:'Open depth–resolution demo',url:'../lecture/intro/apps/demo-depth-resolution.html',secondary:true}
     ],
     tasks:[
-      ['A','Select a buried metal target; compare candidate methods','Best method and the property it senses'],
-      ['B','Increase depth while keeping target size fixed','Change in detectability and required spacing'],
-      ['C','Make spacing coarser than the target width','When the target is missed or misrepresented']
+      ['A','Compare the four method panels over the buried-tank scenario','Clearest anomaly and the property contrast that explains it','Method simulator'],
+      ['B','Increase depth while keeping target size fixed','Change in detectability and required spacing','Depth demo'],
+      ['C','Make spacing coarser than the target width','When the target is missed or misrepresented','Method simulator']
     ],
     questions:['What observation—not intuition—supports your method choice?','Why is the suggested spacing smaller than the target width?','Which alternative method could reduce the main ambiguity?','What site condition could make your preferred method fail?'],
     practice:'practice-lab.html#intro',activity:'field-missions.html',activityLabel:'Apply it in a Field Mission',
@@ -84,6 +145,7 @@ const lessons={
   },
   gravity:{
     nav:'Gravity',title:'Gravity Methods',decision:'Can a small gravity low justify a cavity investigation beneath planned infrastructure?',
+    notes:[],
     goals:['Relate anomaly sign to density contrast','Apply correction signs consistently','Limit a half-width depth estimate to its geometry'],
     core:[
       {title:'Property',text:'Gravity responds to lateral density contrast integrated over source volume.'},
@@ -109,6 +171,7 @@ const lessons={
   },
   magnetic:{
     nav:'Magnetics',title:'Magnetic Methods',decision:'Where is the buried ferrous target—and how certain can its excavation location be?',
+    notes:[],
     goals:['Distinguish induced and remanent magnetization','Predict inclination and depth effects','Separate total field, sensor difference, and gradient units'],
     core:[
       {title:'Property',text:'The anomaly depends on magnetization magnitude and direction, not susceptibility alone.'},
@@ -134,6 +197,15 @@ const lessons={
   },
   seismic:{
     nav:'Seismic',title:'Seismic Methods',decision:'How deep is competent bedrock, and could first arrivals miss an intermediate layer?',
+    notes:[
+      'Timing: 3 min. Frame the field decision as bedrock depth plus the risk of an unseen layer, not simply fitting straight lines.',
+      'Timing: 10 min. Reinforce that slope is reciprocal velocity and that the earliest arrival can switch branches. Common misconception: every interface must make a head wave.',
+      'Prediction debrief: faster V₂ permits critical refraction; increasing thickness raises intercept and crossover. If V₂ ≤ V₁, no critically refracted first-arrival branch forms.',
+      'Timing: 14 min. Test velocity and thickness separately before the inversion case. Require students to record slope, intercept, or branch disappearance before explaining it.',
+      'Timing: 8 min. Ask where milliseconds enter the velocity calculation. Distinguish a velocity inversion from noisy or uncertain first-break picks.',
+      'Timing: 6 min. The classroom lab is the place to perturb picks. Compare that uncertainty with the structural blind zone shown in the demo.',
+      'Timing: 5 min. Exit ticket should name the horizontal-layer assumption and one hidden-layer risk. Do not accept an unqualified depth value.'
+    ],
     goals:['Convert T–X slope to velocity','Use intercepts under a horizontal-layer model','Recognize hidden layers and pick uncertainty'],
     core:[
       {title:'Property',text:'P- and S-wave velocities depend on elastic moduli and density; impedance controls reflection strength.'},
@@ -147,18 +219,19 @@ const lessons={
       {label:'Open seismic refraction lab',url:'../lecture/seismic/apps/seismic-refraction.html',secondary:true}
     ],
     tasks:[
-      ['A','Increase V₂ while holding thickness fixed','Slope and crossover distance'],
-      ['B','Increase Layer 1 thickness','Intercept and crossover distance'],
-      ['C','Set V₂ ≤ V₁ or perturb picks','Missing branch or unstable depth']
+      ['A','Increase V₂ while holding thickness fixed','Slope and crossover distance','T–X demo'],
+      ['B','Increase Layer 1 thickness','Intercept and crossover distance','T–X demo'],
+      ['C','Set V₂ ≤ V₁','Head-wave branch disappears (refraction blind zone)','T–X demo']
     ],
     questions:['Which graph feature gives velocity?','Why must milliseconds be converted before reporting m/s?','What evidence reveals a low-velocity hidden layer?','How would reciprocal shots change confidence?'],
-    practice:'practice-lab.html#seismic',activity:'classroom-labs.html#seismic',activityLabel:'Open foundation seismic lab',
+    practice:'practice-lab.html#seismic',activity:'classroom-labs.html#seismic',activityLabel:'Perturb first-break picks in the classroom lab',
     discuss:['Would reflection detect an interface that refraction misses?','How does one uncertain first-break pick affect the fitted model?','What statement about saturation differs for P and S waves?'],
     exit:'Submit one fitted velocity, its evidence on the T–X plot, the model assumption, and one hidden-layer risk.',
     next:'../lecture/electrical/',nextLabel:'Next chapter: Electrical'
   },
   electrical:{
     nav:'Electrical',title:'Electrical, SP, and IP Methods',decision:'Does a conductive anomaly indicate water, clay, salinity, contamination—or several at once?',
+    notes:[],
     goals:['Distinguish measured, apparent, and inverted resistivity','Connect conduction to pore fluids and surfaces','Avoid direct hydrologic interpretation without calibration'],
     core:[
       {title:'Rock physics',text:'Porosity, saturation, salinity, clay, temperature, and pore geometry all affect bulk conductivity.'},
@@ -184,6 +257,7 @@ const lessons={
   },
   em:{
     nav:'EM',title:'Electromagnetic Methods',decision:'Which FDEM frequency or TEM time range can sense the target without pretending depth is a hard boundary?',
+    notes:[],
     goals:['Trace primary field to secondary response','Compare FDEM frequency and TEM time gates','Use diffusion depth only as a teaching proxy'],
     core:[
       {title:'Induction',text:'A changing primary field drives subsurface currents whose secondary field is measured by the receiver.'},
@@ -197,9 +271,9 @@ const lessons={
       {label:'Open FDEM–TEM comparison',url:'../lecture/em/apps/fdem-tem.html',secondary:true}
     ],
     tasks:[
-      ['A','Lower frequency at fixed resistivity','Attenuation scale and resolution'],
-      ['B','Lower resistivity at fixed frequency','Diffusion depth and signal concentration'],
-      ['C','Compare early and late TEM gates','Shallow versus deeper sensitivity']
+      ['A','Lower frequency at fixed resistivity','Attenuation scale and resolution','Skin-depth demo'],
+      ['B','Lower resistivity at fixed frequency','Diffusion depth and signal concentration','Skin-depth demo'],
+      ['C','Play the TEM smoke ring and watch early versus late time','Current ring depth grows with time; late decay reflects the deeper layer','FDEM–TEM app']
     ],
     questions:['Why is skin depth not a hard DOI?','Which system parameter is absent from the proxy?','Why is low-frequency marine CSEM predominantly diffusive?','What cultural source could dominate the field response?'],
     practice:'practice-lab.html#em',activity:'classroom-labs.html#em',activityLabel:'Open FDEM/TEM classroom lab',
@@ -209,6 +283,7 @@ const lessons={
   },
   gpr:{
     nav:'GPR',title:'Ground-Penetrating Radar',decision:'Is the utility deep enough for a proposed excavation, given uncertain radar velocity?',
+    notes:[],
     goals:['Relate permittivity to radar velocity','Convert two-way time to a depth range','Recognize hyperbolas, attenuation, and migration limits'],
     core:[
       {title:'Velocity',text:'Under a low-loss approximation, greater relative permittivity lowers radar velocity.'},
@@ -224,7 +299,7 @@ const lessons={
     tasks:[
       ['A','Fit a dry-sand velocity','Depth and hyperbola shape'],
       ['B','Fit a wet-sand velocity','New depth using the same time apex'],
-      ['C','Increase antenna frequency or conductivity','Resolution and penetration trade-off']
+      ['C','Switch from Dry Sand to Wet Sand in the GPR simulator and re-scan','Lower velocity, later two-way times, and targets crossing the fixed time window']
     ],
     questions:['Which quantity is measured directly?','How wide is the plausible depth range?','What causes a hyperbola besides a utility?','What calibration would make excavation advice safer?'],
     practice:'practice-lab.html#gpr',activity:'classroom-labs.html#gpr',activityLabel:'Open utility safety lab',
@@ -234,6 +309,7 @@ const lessons={
   },
   mt:{
     nav:'EM · Magnetotellurics',title:'Magnetotellurics and Deep EM',decision:'Does a deep conductor indicate fluids, graphite, melt, or an unresolved combination?',
+    notes:[],
     goals:['Form impedance from natural E and H fields','Interpret apparent resistivity and phase cautiously','Recognize dimensionality, static shift, and non-uniqueness'],
     core:[
       {title:'Natural source',text:'Lightning and ionospheric/magnetospheric currents provide a broad frequency range without a transmitter.'},
@@ -259,6 +335,7 @@ const lessons={
   },
   borehole:{
     nav:'Borehole',title:'Borehole Geophysics',decision:'Which combination of logs can distinguish lithology, fluid conditions, and active fractures?',
+    notes:[],
     goals:['Match each tool to its measured signal','Recognize borehole and casing effects','Interpret logs jointly instead of converting one log directly'],
     core:[
       {title:'Investigation volume',text:'Each log averages a different radial and vertical volume around the borehole.'},
@@ -272,9 +349,9 @@ const lessons={
       {label:'Open borehole dashboard',url:'../lecture/borehole/apps/borehole-geophysics.html',secondary:true}
     ],
     tasks:[
-      ['A','Compare gamma and induction responses','Intervals that support clay-rich material'],
-      ['B','Increase borehole diameter or add casing','Environmental distortion'],
-      ['C','Add televiewer/flow information','Static fracture versus active flow zone']
+      ['A','Compare gamma and induction responses','Intervals that support clay-rich material','Log-response demo'],
+      ['B','Run the Acoustic Televiewer and Neutron tools','Which tools degrade in an enlarged or cased interval, and why','Dashboard'],
+      ['C','Add televiewer/flow information','Static fracture versus active flow zone','Dashboard']
     ],
     questions:['Which response is measured directly?','Which log is most affected by washout?','Why is neutron response not universal porosity?','What calibration links NMR or flow to hydraulic properties?'],
     practice:'practice-lab.html#borehole',activity:'../lecture/borehole/',activityLabel:'Open all borehole apps',
@@ -286,44 +363,129 @@ const lessons={
 
 const lessonOrder=['intro','gravity','magnetic','seismic','electrical','em','mt','gpr','borehole'];
 const times=['3 min','10 min','4 min','14 min','8 min','6 min','5 min'];
+const slideKickers=['Field decision & goals','Essential physics','Predict before clicking','Play the demo or activity','Guided exploration','Formative practice','Discussion & exit ticket'];
 let chapter='intro';let slideIndex=0;let seconds=3000;let timerId=null;
-const slide=document.getElementById('slide');const select=document.getElementById('chapter-select');
+let blackoutActive=false;let blackoutHintTimer=null;let helpPreviousFocus=null;let speakerWindow=null;
+let annotationVisible=false;let annotationMode='pen';let annotationColor='#dc2626';let annotationWidth=3;let activeStroke=null;
+const annotationStorageKey='lesson-annotations-v1';
+let annotations={};
+try{annotations=JSON.parse(sessionStorage.getItem(annotationStorageKey)||'{}');}catch{annotations={};}
+const params=new URLSearchParams(location.search);const isSpeakerView=params.get('speaker')==='1';const isPrintMode=params.get('print')==='1';
+const slide=document.getElementById('slide');const select=document.getElementById('chapter-select');const stage=document.getElementById('stage');
+const annotationCanvas=document.getElementById('annotation-canvas');const annotationToolbar=document.getElementById('annotation-toolbar');
+const lessonChannel='BroadcastChannel' in window?new BroadcastChannel('lesson-sync'):null;
 
 function escapeHTML(value){return String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));}
 function slideTop(kicker,index){return `<div class="slide-top"><div class="kicker">${escapeHTML(kicker)}</div><span class="time-chip">${times[index]}</span></div>`;}
 function sourceFooter(){return '<div class="source-note">Original course graphics and wording · scientific sources linked from the course References page</div>';}
-function renderSlide(){
-  const lesson=lessons[chapter];let html='';
-  if(slideIndex===0){
+function slideTitles(lesson){return [lesson.title,'How the method turns physics into evidence','Commit to an answer first','Change parameters. Record evidence.','Answer with evidence from the app','Apply the observation before the debrief','What can we defend after the exploration?'];}
+function slideMarkup(lesson,index){
+  let html='';
+  if(index===0){
     html=`${slideTop('Field decision & goals',0)}<div class="hero"><h1>${escapeHTML(lesson.title)}</h1><div class="field-question">${escapeHTML(lesson.decision)}</div><div class="goal-row">${lesson.goals.map((goal,i)=>`<div class="goal">${i+1}. ${escapeHTML(goal)}</div>`).join('')}</div></div>${sourceFooter()}`;
-  }else if(slideIndex===1){
+  }else if(index===1){
     html=`${slideTop('Essential physics',1)}<h2>How the method turns physics into evidence</h2><div class="card-grid">${lesson.core.map(item=>`<div class="card"><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.text)}</p></div>`).join('')}</div><div class="signal-path">${lesson.path.map((item,i)=>`${i?'<span class="arrow">→</span>':''}<div class="signal-step"><b>${escapeHTML(item)}</b><span>${['Question','Physics','Observable','Evidence-limited conclusion'][i]}</span></div>`).join('')}</div>${sourceFooter()}`;
-  }else if(slideIndex===2){
+  }else if(index===2){
     html=`${slideTop('Predict before clicking',2)}<h2>Commit to an answer first</h2><div class="prediction">${escapeHTML(lesson.prediction)}</div><div class="write-row"><div class="write-box"><h3>Prediction</h3>Write the expected method, signal, trend, or threshold.</div><div class="write-box"><h3>Reason</h3>Name the physical contrast or survey geometry behind it.</div></div>${sourceFooter()}`;
-  }else if(slideIndex===3){
-    html=`${slideTop('Play the demo or activity',3)}<h2>Change parameters. Record evidence.</h2><div class="launch-row">${lesson.apps.map(app=>`<a class="launch${app.secondary?' secondary':''}" href="${app.url}" target="_blank" rel="noopener">${escapeHTML(app.label)} ↗</a>`).join('')}</div><table class="task-table"><thead><tr><th>Test</th><th>Change in the app</th><th class="evidence">Evidence to record</th></tr></thead><tbody>${lesson.tasks.map(row=>`<tr>${row.map(cell=>`<td>${escapeHTML(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table><div class="prompt"><strong>Evidence rule:</strong> Describe what changed in the graph or readout before explaining why.</div>${sourceFooter()}`;
-  }else if(slideIndex===4){
+  }else if(index===3){
+    html=`${slideTop('Play the demo or activity',3)}<h2>Change parameters. Record evidence.</h2><div class="launch-row">${lesson.apps.map(app=>`<a class="launch${app.secondary?' secondary':''}" href="${app.url}" target="_blank" rel="noopener">${escapeHTML(app.label)} ↗</a>`).join('')}</div><table class="task-table"><thead><tr><th>Test</th><th>Change in the app</th><th class="evidence">Evidence to record</th></tr></thead><tbody>${lesson.tasks.map(row=>`<tr><td>${escapeHTML(row[0])}</td><td>${row[3]?`<span class="app-tag">${escapeHTML(row[3])}</span>`:''}${escapeHTML(row[1])}</td><td>${escapeHTML(row[2])}</td></tr>`).join('')}</tbody></table><div class="prompt"><strong>Evidence rule:</strong> Describe what changed in the graph or readout before explaining why. Opening an app in a new tab may exit full screen; press F to return.</div>${sourceFooter()}`;
+  }else if(index===4){
     html=`${slideTop('Guided exploration',4)}<h2>Answer with evidence from the app</h2><div class="question-grid">${lesson.questions.map((question,i)=>`<div class="question-card"><b>Q${i+1}</b><p>${escapeHTML(question)}</p></div>`).join('')}</div><div class="prompt"><strong>Limit the claim:</strong> What conclusion would this demo not justify at a real site?</div>${sourceFooter()}`;
-  }else if(slideIndex===5){
+  }else if(index===5){
     html=`${slideTop('Formative practice',5)}<h2>Apply the observation before the debrief</h2><div class="practice-grid"><div class="practice-card"><h3>Individual → pair</h3><ol><li>Open the linked practice set.</li><li>Complete the chapter questions using your demo notes.</li><li>Compare one changed answer with a partner.</li></ol><div class="launch-row"><a class="launch" href="${lesson.practice}" target="_blank" rel="noopener">Open Practice Lab ↗</a></div></div><div class="practice-card"><h3>Apply it to a field workflow</h3><p>Use the observation to make a method, processing, or safety decision.</p><a class="launch secondary" href="${lesson.activity}" target="_blank" rel="noopener">${escapeHTML(lesson.activityLabel)} ↗</a></div></div>${sourceFooter()}`;
   }else{
     html=`${slideTop('Discussion & exit ticket',6)}<h2>What can we defend after the exploration?</h2><div class="discussion-grid"><div class="card"><h3>Discuss</h3><ol>${lesson.discuss.map(item=>`<li>${escapeHTML(item)}</li>`).join('')}</ol></div><div class="exit"><h3>Exit ticket</h3><p>${escapeHTML(lesson.exit)}</p><a class="launch secondary" href="${lesson.next}">${escapeHTML(lesson.nextLabel)} →</a></div></div>${sourceFooter()}`;
   }
-  slide.innerHTML=html;
-  const progress=100*(slideIndex+1)/7;document.getElementById('progress').style.width=`${progress}%`;document.querySelector('.progress').setAttribute('aria-valuenow',String(slideIndex+1));document.getElementById('counter').textContent=`${slideIndex+1} / 7`;document.getElementById('previous').disabled=slideIndex===0;document.getElementById('next').disabled=slideIndex===6;
+  return html;
+}
+function renderProgressDots(){
+  const dots=document.getElementById('progress-dots');
+  dots.innerHTML=Array.from({length:7},(_,index)=>`<button class="progress-dot" type="button" data-slide="${index}" aria-label="Go to slide ${index+1}">${index+1}</button>`).join('');
+  dots.addEventListener('click',event=>{const button=event.target.closest('[data-slide]');if(button)setSlide(Number(button.dataset.slide));});
+}
+function renderSlide(){
+  const lesson=lessons[chapter];slide.innerHTML=slideMarkup(lesson,slideIndex);
+  const progress=100*(slideIndex+1)/7;document.getElementById('progress').style.width=`${progress}%`;document.querySelector('.progress').setAttribute('aria-valuenow',String(slideIndex+1));
+  document.querySelectorAll('.progress-dot').forEach((dot,index)=>{if(index===slideIndex)dot.setAttribute('aria-current','step');else dot.removeAttribute('aria-current');});
+  document.getElementById('previous').disabled=slideIndex===0;document.getElementById('next').disabled=slideIndex===6;
   document.title=`${lesson.nav} Active-Learning Lesson | Environmental Geophysics`;
   history.replaceState(null,'',`#${chapter}/${slideIndex+1}`);
+  if(annotationVisible)requestAnimationFrame(resizeAnnotationCanvas);
+  publishState();
 }
-function parseHash(){const [requested,number]=location.hash.slice(1).split('/');chapter=lessonOrder.includes(requested)?requested:'intro';const parsed=Number(number);slideIndex=Number.isInteger(parsed)&&parsed>=1&&parsed<=7?parsed-1:0;select.value=chapter;renderSlide();}
-function changeSlide(delta){slideIndex=Math.max(0,Math.min(6,slideIndex+delta));renderSlide();}
+function readHash(){const [requested,number]=location.hash.slice(1).split('/');const parsed=Number(number);return {chapter:lessonOrder.includes(requested)?requested:'intro',slideIndex:Number.isInteger(parsed)&&parsed>=1&&parsed<=7?parsed-1:0};}
+function parseHash(){const state=readHash();chapter=state.chapter;slideIndex=state.slideIndex;select.value=chapter;renderSlide();}
+function setSlide(index){const next=Math.max(0,Math.min(6,index));if(next===slideIndex)return;activeStroke=null;slideIndex=next;renderSlide();}
+function changeSlide(delta){setSlide(slideIndex+delta);}
 function lessonURL(){return `${location.origin}${location.pathname}#${chapter}/1`;}
 async function copyLessonLink(button){try{await navigator.clipboard.writeText(lessonURL());const old=button.textContent;button.textContent='Copied';setTimeout(()=>button.textContent=old,1200);}catch{window.prompt('Copy this lesson link:',lessonURL());}}
-function updateTimer(){const mins=Math.floor(seconds/60);const secs=seconds%60;document.getElementById('timer').textContent=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;}
+function formatTime(value){const safe=Math.max(0,value);return `${String(Math.floor(safe/60)).padStart(2,'0')}:${String(safe%60).padStart(2,'0')}`;}
+function updateTimer(){const value=formatTime(seconds);document.getElementById('timer').textContent=value;document.getElementById('fullscreen-timer').textContent=value;publishState();}
 function toggleTimer(){if(timerId){clearInterval(timerId);timerId=null;return;}timerId=setInterval(()=>{if(seconds>0){seconds-=1;updateTimer();}else{clearInterval(timerId);timerId=null;}},1000);}
-lessonOrder.forEach(key=>{const option=document.createElement('option');option.value=key;option.textContent=lessons[key].nav;select.appendChild(option);});
-select.addEventListener('change',()=>{chapter=select.value;slideIndex=0;seconds=3000;updateTimer();renderSlide();});document.getElementById('previous').addEventListener('click',()=>changeSlide(-1));document.getElementById('next').addEventListener('click',()=>changeSlide(1));document.getElementById('fullscreen').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen():document.getElementById('presentation').requestFullscreen());document.getElementById('copy-link').addEventListener('click',event=>copyLessonLink(event.currentTarget));document.getElementById('copy-student-link').addEventListener('click',event=>copyLessonLink(event.currentTarget));document.getElementById('timer').addEventListener('click',toggleTimer);window.addEventListener('hashchange',parseHash);
-document.addEventListener('keydown',event=>{if(['SELECT','A','BUTTON'].includes(document.activeElement.tagName))return;if(event.key==='ArrowLeft')changeSlide(-1);if(event.key==='ArrowRight'||event.key===' '){event.preventDefault();changeSlide(1);}if(event.key.toLowerCase()==='f')document.getElementById('fullscreen').click();});
-parseHash();updateTimer();
+function resetTimer(){if(timerId){clearInterval(timerId);timerId=null;}seconds=3000;updateTimer();}
+function publishState(){if(lessonChannel&&!isSpeakerView)lessonChannel.postMessage({chapter,slideIndex,secondsRemaining:seconds});}
+
+function setBlackout(active){
+  blackoutActive=active;const blackout=document.getElementById('blackout');blackout.classList.toggle('active',active);blackout.classList.remove('show-hint');blackout.setAttribute('aria-hidden',String(!active));
+  clearTimeout(blackoutHintTimer);if(active)blackoutHintTimer=setTimeout(()=>blackout.classList.add('show-hint'),2000);
+}
+function toggleBlackout(){setBlackout(!blackoutActive);}
+function showShortcutHelp(show=true){
+  const help=document.getElementById('shortcut-help');
+  if(show){helpPreviousFocus=document.activeElement;help.hidden=false;document.getElementById('shortcut-help-close').focus();}
+  else{help.hidden=true;if(helpPreviousFocus&&helpPreviousFocus.focus)helpPreviousFocus.focus();}
+}
+
+function annotationKey(){return `${chapter}:${slideIndex}`;}
+function saveAnnotations(){try{sessionStorage.setItem(annotationStorageKey,JSON.stringify(annotations));}catch{}}
+function drawAnnotationStroke(ctx,stroke,width,height){
+  if(!stroke.points.length)return;ctx.save();ctx.globalCompositeOperation=stroke.mode==='erase'?'destination-out':'source-over';ctx.strokeStyle=stroke.color;ctx.fillStyle=stroke.color;ctx.lineWidth=stroke.width;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();
+  const first=stroke.points[0];ctx.moveTo(first[0]*width,first[1]*height);stroke.points.slice(1).forEach(point=>ctx.lineTo(point[0]*width,point[1]*height));
+  if(stroke.points.length===1){ctx.arc(first[0]*width,first[1]*height,stroke.width/2,0,Math.PI*2);ctx.fill();}else ctx.stroke();ctx.restore();
+}
+function resizeAnnotationCanvas(){
+  if(!annotationVisible)return;const rect=stage.getBoundingClientRect();if(!rect.width||!rect.height)return;const ratio=Math.min(window.devicePixelRatio||1,2);annotationCanvas.width=Math.round(rect.width*ratio);annotationCanvas.height=Math.round(rect.height*ratio);annotationCanvas.style.width=`${rect.width}px`;annotationCanvas.style.height=`${rect.height}px`;
+  const ctx=annotationCanvas.getContext('2d');ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,rect.width,rect.height);(annotations[annotationKey()]||[]).forEach(stroke=>drawAnnotationStroke(ctx,stroke,rect.width,rect.height));
+}
+function annotationPoint(event){const rect=annotationCanvas.getBoundingClientRect();return [(event.clientX-rect.left)/rect.width,(event.clientY-rect.top)/rect.height];}
+function toggleAnnotation(){annotationVisible=!annotationVisible;annotationCanvas.hidden=!annotationVisible;annotationToolbar.hidden=!annotationVisible;if(annotationVisible)requestAnimationFrame(resizeAnnotationCanvas);}
+function setAnnotationMode(mode){annotationMode=mode;document.getElementById('annotation-pen').setAttribute('aria-pressed',String(mode==='pen'));document.getElementById('annotation-eraser').setAttribute('aria-pressed',String(mode==='erase'));}
+function setAnnotationWidth(width){annotationWidth=width;document.getElementById('annotation-thin').setAttribute('aria-pressed',String(width===3));document.getElementById('annotation-thick').setAttribute('aria-pressed',String(width===9));}
+function clearAnnotation(){delete annotations[annotationKey()];saveAnnotations();resizeAnnotationCanvas();}
+function beginAnnotation(event){if(!annotationVisible)return;event.preventDefault();event.stopPropagation();annotationCanvas.setPointerCapture(event.pointerId);activeStroke={mode:annotationMode,color:annotationColor,width:annotationWidth,points:[annotationPoint(event)]};(annotations[annotationKey()]||(annotations[annotationKey()]=[])).push(activeStroke);resizeAnnotationCanvas();}
+function moveAnnotation(event){if(!activeStroke)return;event.preventDefault();event.stopPropagation();activeStroke.points.push(annotationPoint(event));resizeAnnotationCanvas();}
+function endAnnotation(event){if(!activeStroke)return;event.preventDefault();event.stopPropagation();activeStroke=null;saveAnnotations();}
+
+function openSpeakerView(){
+  const url=new URL(location.href);url.searchParams.delete('print');url.searchParams.set('speaker','1');url.hash=`${chapter}/${slideIndex+1}`;speakerWindow=window.open(url.toString(),'lesson-speaker-view','popup,width=1050,height=760');
+  if(speakerWindow){speakerWindow.focus();setTimeout(publishState,300);}
+}
+function renderSpeaker(){
+  const lesson=lessons[chapter];const titles=slideTitles(lesson);document.getElementById('speaker-title').textContent=`${lesson.nav} · ${slideKickers[slideIndex]}`;document.getElementById('speaker-counter').textContent=`${slideIndex+1} / 7`;document.getElementById('speaker-notes').textContent=(lesson.notes&&lesson.notes[slideIndex])||'No speaker notes for this slide.';
+  document.getElementById('speaker-next').textContent=slideIndex<6?`${slideKickers[slideIndex+1]} — ${titles[slideIndex+1]}`:'End of lesson';document.getElementById('speaker-elapsed').textContent=formatTime(3000-seconds);document.getElementById('speaker-remaining').textContent=formatTime(seconds);document.getElementById('speaker-previous').disabled=slideIndex===0;document.getElementById('speaker-next-button').disabled=slideIndex===6;document.title=`${lesson.nav} Speaker View`;
+  history.replaceState(null,'',`#${chapter}/${slideIndex+1}`);
+}
+function initSpeakerView(){
+  const state=readHash();chapter=state.chapter;slideIndex=state.slideIndex;document.body.classList.add('speaker-mode');document.getElementById('speaker-view').hidden=false;renderSpeaker();
+  document.getElementById('speaker-previous').addEventListener('click',()=>lessonChannel&&lessonChannel.postMessage({command:'navigate',delta:-1}));document.getElementById('speaker-next-button').addEventListener('click',()=>lessonChannel&&lessonChannel.postMessage({command:'navigate',delta:1}));
+  if(lessonChannel){lessonChannel.addEventListener('message',event=>{const data=event.data||{};if(lessonOrder.includes(data.chapter)&&Number.isInteger(data.slideIndex)&&Number.isFinite(data.secondsRemaining)){chapter=data.chapter;slideIndex=Math.max(0,Math.min(6,data.slideIndex));seconds=Math.max(0,Math.min(3000,data.secondsRemaining));renderSpeaker();}});lessonChannel.postMessage({command:'request-state'});}
+}
+function initPrintMode(){
+  const state=readHash();chapter=state.chapter;slideIndex=state.slideIndex;const lesson=lessons[chapter];document.body.classList.add('print-mode');document.getElementById('print-handout').hidden=false;document.getElementById('print-title').textContent=`${lesson.title} · 7-slide handout`;document.getElementById('print-slides').innerHTML=Array.from({length:7},(_,index)=>`<article class="print-slide" data-print-slide="${index+1}">${slideMarkup(lesson,index)}</article>`).join('');document.getElementById('print-return').href=`${location.pathname}#${chapter}/${slideIndex+1}`;document.getElementById('print-now').addEventListener('click',()=>window.print());document.title=`${lesson.nav} Handout | Environmental Geophysics`;
+}
+
+function initMainView(){
+  lessonOrder.forEach(key=>{const option=document.createElement('option');option.value=key;option.textContent=lessons[key].nav;select.appendChild(option);});renderProgressDots();
+  select.addEventListener('change',()=>{chapter=select.value;slideIndex=0;resetTimer();renderSlide();});document.getElementById('previous').addEventListener('click',()=>changeSlide(-1));document.getElementById('next').addEventListener('click',()=>changeSlide(1));document.getElementById('fullscreen').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen():document.getElementById('presentation').requestFullscreen());document.getElementById('copy-link').addEventListener('click',event=>copyLessonLink(event.currentTarget));document.getElementById('copy-student-link').addEventListener('click',event=>copyLessonLink(event.currentTarget));document.getElementById('timer').addEventListener('click',toggleTimer);document.getElementById('timer').addEventListener('dblclick',resetTimer);document.getElementById('shortcut-help-button').addEventListener('click',()=>showShortcutHelp());document.getElementById('shortcut-help-close').addEventListener('click',()=>showShortcutHelp(false));document.getElementById('print-handout-button').addEventListener('click',()=>{const url=new URL(location.href);url.searchParams.delete('speaker');url.searchParams.set('print','1');url.hash=`${chapter}/1`;window.open(url.toString(),'_blank','noopener');});window.addEventListener('hashchange',parseHash);
+  document.getElementById('annotation-pen').addEventListener('click',()=>setAnnotationMode('pen'));document.getElementById('annotation-eraser').addEventListener('click',()=>setAnnotationMode('erase'));document.getElementById('annotation-thin').addEventListener('click',()=>setAnnotationWidth(3));document.getElementById('annotation-thick').addEventListener('click',()=>setAnnotationWidth(9));document.getElementById('annotation-clear').addEventListener('click',clearAnnotation);document.querySelectorAll('[data-color]').forEach(button=>button.addEventListener('click',()=>{annotationColor=button.dataset.color;setAnnotationMode('pen');document.querySelectorAll('[data-color]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));}));annotationCanvas.addEventListener('pointerdown',beginAnnotation);annotationCanvas.addEventListener('pointermove',moveAnnotation);annotationCanvas.addEventListener('pointerup',endAnnotation);annotationCanvas.addEventListener('pointercancel',endAnnotation);window.addEventListener('resize',resizeAnnotationCanvas);document.addEventListener('fullscreenchange',()=>setTimeout(resizeAnnotationCanvas,50));
+  let swipeStart=null;stage.addEventListener('pointerdown',event=>{if(event.pointerType!=='touch'||event.target.closest('a,button,input,select,textarea,#annotation-canvas'))return;swipeStart={id:event.pointerId,x:event.clientX,y:event.clientY};});stage.addEventListener('pointerup',event=>{if(!swipeStart||event.pointerId!==swipeStart.id)return;const dx=event.clientX-swipeStart.x,dy=event.clientY-swipeStart.y;swipeStart=null;if(Math.abs(dx)>=40&&Math.abs(dx)>Math.abs(dy)*1.25)changeSlide(dx<0?1:-1);});stage.addEventListener('pointercancel',()=>{swipeStart=null;});
+  if(lessonChannel)lessonChannel.addEventListener('message',event=>{const data=event.data||{};if(data.command==='request-state')publishState();if(data.command==='navigate'&&Number.isFinite(data.delta))changeSlide(data.delta);});
+  document.addEventListener('keydown',event=>{const active=document.activeElement;const key=event.key.toLowerCase();if(event.key==='Escape'){if(blackoutActive){event.preventDefault();setBlackout(false);return;}if(!document.getElementById('shortcut-help').hidden){event.preventDefault();showShortcutHelp(false);return;}if(annotationVisible){event.preventDefault();toggleAnnotation();return;}}if(['SELECT','INPUT','TEXTAREA','A'].includes(active.tagName)||active.isContentEditable)return;if(event.key==='?'){event.preventDefault();showShortcutHelp();return;}if(key==='b'||event.key==='.'){event.preventDefault();toggleBlackout();return;}if(key==='c'){event.preventDefault();toggleAnnotation();return;}if(key==='s'){event.preventDefault();openSpeakerView();return;}if(key==='t'){event.preventDefault();toggleTimer();return;}if(key==='f'){event.preventDefault();document.getElementById('fullscreen').click();return;}if(event.key==='ArrowLeft'){event.preventDefault();changeSlide(-1);}if(event.key==='ArrowRight'){event.preventDefault();changeSlide(1);}if(event.key===' '&&active.tagName!=='BUTTON'){event.preventDefault();changeSlide(1);}});
+  parseHash();updateTimer();
+}
+
+if(isSpeakerView)initSpeakerView();else if(isPrintMode)initPrintMode();else initMainView();
+window.addEventListener('beforeunload',()=>{if(lessonChannel)lessonChannel.close();});
 </script>
 </body>
 </html>

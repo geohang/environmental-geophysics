@@ -4,85 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borehole Geophysics: Principle & Data Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
+        /* Light lab theme: page chrome uses the --lab-* tokens from course-app.css;
+           log-track colors live in the PAL object at the top of the script. */
         :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --stage-bg: #0b1121;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #0ea5e9;
-            --accent-green: #10b981;
+            --panel-bg: #ffffff;
+            --stage-bg: #dbeafe;        /* borehole fluid */
+            --wall-color: #a8a29e;      /* borehole wall */
+            --formation: #efe4cf;       /* formation around the hole (sand) */
+            --text-main: #0f172a;
+            --text-muted: #5b6b82;
+            --text-blue: #0369a1;
+            --text-red: #b91c1c;
+            --text-green: #047857;
+            --text-amber: #92400e;
+            --accent-blue: #0284c7;
+            --accent-green: #059669;
             --accent-amber: #f59e0b;
-            --accent-red: #ef4444;
-            --accent-purple: #8b5cf6;
-            --clay-color: #475569;
-            --sand-color: #b45309;
+            --accent-red: #dc2626;
+            --accent-purple: #7c3aed;
+            --clay-color: #d6d3d1;
+            --sand-color: #ecdfc3;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Public Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             display: grid;
             grid-template-columns: 280px minmax(0, 1fr);
-            grid-template-rows: auto minmax(0, 1fr);
+            grid-template-rows: auto auto minmax(0, 1fr);
             height: 100vh;
             overflow: hidden;
         }
 
         #course-nav-bar { grid-column: 1 / -1; grid-row: 1; }
 
+        /* Compact title bar: the dashboard fills the viewport, so the band stays short. */
+        .lab-hero.bh-hero { grid-column: 1 / -1; grid-row: 2; padding: .7rem 0 .75rem; }
+        .bh-hero .lab-hero-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .9rem; padding: 0 20px; }
+        .bh-hero .lab-title { font-size: 1.3rem; }
+        .bh-hero .lab-subtitle { margin: 0; font-size: .9rem; }
+
         /* Sidebar */
         .sidebar {
             width: 280px;
             grid-column: 1;
-            grid-row: 2;
-            background-color: #0b1121;
+            grid-row: 3;
+            background-color: var(--lab-surface);
             padding: 20px;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #334155;
+            border-right: 1px solid var(--lab-border);
             z-index: 10;
         }
 
-        .sidebar h1 {
-            font-size: 20px;
-            color: var(--accent-blue);
-            margin-bottom: 25px;
-            line-height: 1.3;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 15px;
-        }
-
-        .nav-btn {
-            background: none;
-            border: 1px solid transparent;
-            color: var(--text-muted);
-            text-align: left;
+        /* Tool buttons use .lab-tab; switchScene() toggles .is-active together with .active. */
+        .sidebar .nav-btn {
+            border-color: transparent;
+            background: transparent;
             padding: 12px 15px;
             margin-bottom: 8px;
-            border-radius: 8px;
-            cursor: pointer;
+            font-family: inherit;
             font-size: 15px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
             gap: 10px;
         }
-
-        .nav-btn:hover { background-color: rgba(255,255,255,0.05); color: var(--text-main); }
-        .nav-btn.active { background-color: rgba(14, 165, 233, 0.15); border-color: var(--accent-blue); color: var(--accent-blue); }
+        .sidebar .nav-btn:hover { background: var(--lab-surface-2); color: var(--lab-text); }
+        .sidebar .nav-btn.is-active,
+        .sidebar .nav-btn.is-active:hover { border-color: var(--lab-primary); background: var(--lab-primary-soft); color: var(--lab-primary-strong); }
+        .nav-btn i { width: 18px; text-align: center; color: #64748b; }
+        .nav-btn.is-active i { color: var(--lab-primary); }
 
         /* Main Content */
         .main-content {
             grid-column: 2;
-            grid-row: 2;
+            grid-row: 3;
             flex-grow: 1;
             min-width: 0;
             overflow: auto;
@@ -105,8 +103,8 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .scene-header { margin-bottom: 15px; }
-        .scene-header h2 { font-size: 28px; color: var(--text-main); margin-bottom: 5px; }
-        .scene-header p { font-size: 15px; color: var(--text-muted); }
+        .scene-header h2 { font-size: 24px; color: var(--lab-text); margin-bottom: 4px; letter-spacing: -.01em; }
+        .scene-header p { font-size: 15px; color: var(--lab-muted); }
 
         /* Dual Layout: Animation vs Data */
         .visualization-area {
@@ -119,25 +117,29 @@
 
         .stage {
             background-color: var(--panel-bg);
-            border-radius: 12px;
-            border: 1px solid #334155;
+            border-radius: var(--lab-radius);
+            border: 1px solid var(--lab-border);
+            box-shadow: var(--lab-shadow);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
-        
+
         .stage-title {
-            background-color: rgba(15, 23, 42, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #f8fafc;
             padding: 10px 15px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            color: var(--accent-blue);
-            border-bottom: 1px solid #334155;
+            color: var(--lab-text);
+            border-bottom: 1px solid var(--lab-border);
             z-index: 10;
         }
-
-        .data-stage .stage-title { color: var(--accent-green); }
+        .stage-title::before { content: ""; flex: 0 0 auto; width: 8px; height: 8px; border-radius: 2px; background: var(--lab-primary); }
+        .data-stage .stage-title::before { background: var(--lab-success); }
 
         .stage-content {
             flex-grow: 1;
@@ -147,48 +149,54 @@
             justify-content: center;
         }
 
+        /* Principle scenes are cross-sections through the formation; NMR shows pore panels. */
+        .anim-stage .stage-content { background-color: var(--formation); }
+        #scene-nmr .anim-stage .stage-content { background-color: var(--panel-bg); }
+
         /* Explainer Box */
         .explainer-box {
             position: absolute;
             top: 15px;
             left: 15px;
-            background-color: rgba(15, 23, 42, 0.85);
-            border-left: 3px solid var(--accent-amber);
+            background-color: rgb(255 255 255 / .94);
+            border: 1px solid var(--lab-border);
+            border-left: 3px solid var(--lab-primary);
+            color: var(--lab-text-2);
             padding: 12px 15px;
-            border-radius: 4px;
+            border-radius: 6px;
             width: 250px;
             font-size: 13px;
             line-height: 1.5;
             z-index: 20;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 1px 2px rgb(15 23 42 / .06), 0 6px 16px rgb(15 23 42 / .08);
         }
+        .explainer-box strong { color: var(--lab-text); }
+        /* Top-right here, so the box no longer hides the upper-left water pore. */
+        #neutron-area .explainer-box { left: auto; right: 15px; }
 
-        /* Controls Area */
+        /* Lithology labels sit right of the hole, clear of the explainer box. */
+        .litho-label { position: absolute; z-index: 2; right: 20px; font-weight: bold; }
+
+        /* Controls Area; buttons are .lab-btn (outline) and .lab-btn-primary (filled). */
         .controls-area {
-            background-color: rgba(15, 23, 42, 0.95);
-            padding: 15px;
-            border-top: 1px solid #334155;
+            background-color: rgb(255 255 255 / .92);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            padding: 12px 15px;
+            border-top: 1px solid var(--lab-border);
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
             position: absolute;
             bottom: 0; left: 0; right: 0;
             z-index: 30;
         }
 
-        .control-btn {
-            background-color: var(--accent-blue); color: white; border: none;
-            padding: 10px 20px; border-radius: 6px; font-size: 15px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;
-        }
-
-        .control-btn:hover { background-color: #0284c7; }
-        .control-btn.secondary { background-color: #334155; color: #e2e8f0; }
-        .control-btn.secondary:hover { background-color: #475569; }
-        .control-btn.accent { background-color: var(--accent-green); }
-
         /* Canvas */
         canvas { width: 100%; height: 100%; display: block; }
+        /* The unwrapped image shares its column with the N-E-S-W strip: give it the remaining
+           height so the ATV stages no longer grow under the controls bar. */
+        #atvCanvas { flex: 1 1 0; min-height: 0; height: auto; }
 
         /* --- SPECIFIC PHYSICS ASSETS --- */
 
@@ -196,10 +204,10 @@
         .borehole {
             width: 100px; height: 100%; background-color: var(--stage-bg);
             position: absolute; left: 50%; transform: translateX(-50%);
-            border-left: 2px solid #334155; border-right: 2px solid #334155; z-index: 2;
+            border-left: 2px solid var(--wall-color); border-right: 2px solid var(--wall-color); z-index: 2;
         }
         .formation { position: absolute; width: 100%; z-index: 1; }
-        
+
         /* 1. Gamma */
         .gamma-tool {
             width: 50px; height: 160px; background: linear-gradient(90deg, #94a3b8, #f8fafc, #94a3b8);
@@ -208,11 +216,11 @@
         }
         .detector-window {
             width: 24px; height: 40px; background-color: var(--accent-red); border-radius: 6px;
-            position: absolute; bottom: 20px; left: 13px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            position: absolute; bottom: 20px; left: 13px; box-shadow: inset 0 0 8px rgba(0,0,0,0.35);
         }
         .gamma-ray {
             position: absolute; width: 6px; height: 6px; background-color: var(--accent-red);
-            border-radius: 50%; box-shadow: 0 0 10px 2px var(--accent-red); opacity: 0; z-index: 4;
+            border-radius: 50%; box-shadow: 0 0 0 1.5px #ffffff; opacity: 0; z-index: 4;
         }
         @keyframes rayLeft { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(-80px, 0) scale(0); opacity: 0; } }
         @keyframes rayRight { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(80px, 0) scale(0); opacity: 0; } }
@@ -220,10 +228,11 @@
         /* 2. EM */
         .em-tool {
             width: 40px; height: 280px; background: linear-gradient(90deg, #cbd5e1, #ffffff, #cbd5e1);
+            border: 1px solid #94a3b8;
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 20px; z-index: 5;
         }
         .coil {
-            width: 50px; height: 20px; background-color: #78350f; border: 2px solid #451a03;
+            width: 50px; height: 20px; background-color: #b45309; border: 2px solid rgb(15 23 42 / .3);
             position: absolute; left: -5px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
             color: white; font-weight: bold; font-size: 10px;
         }
@@ -237,34 +246,34 @@
         /* 3. Neutron */
         .neutron-particle {
             position: absolute; width: 8px; height: 8px; border-radius: 50%;
-            background-color: var(--accent-amber); box-shadow: 0 0 8px var(--accent-amber); z-index: 6; opacity: 0;
+            background-color: var(--accent-amber); box-shadow: 0 0 0 1.5px #92400e; z-index: 6; opacity: 0;
         }
-        .thermal-neutron { background-color: var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue); }
+        .thermal-neutron { background-color: var(--accent-blue); box-shadow: 0 0 0 1.5px #ffffff; }
         .water-pore {
             position: absolute; width: 30px; height: 30px; border-radius: 50%;
-            background-color: rgba(2, 132, 199, 0.4); border: 1px solid var(--accent-blue);
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold;
+            background-color: #bfdbfe; border: 1px solid var(--accent-blue);
+            display: flex; align-items: center; justify-content: center; color: #075985; font-size: 10px; font-weight: bold;
         }
 
         /* 4. ATV */
         .atv-view-top {
-            background-color: #0b1121; border-radius: 50%; width: 250px; height: 250px;
-            position: relative; border: 4px solid #334155; overflow: hidden; margin: auto;
+            background-color: var(--stage-bg); border-radius: 50%; width: 250px; height: 250px;
+            position: relative; border: 4px solid var(--wall-color); overflow: hidden; margin: auto;
         }
         .ultrasonic-beam {
-            width: 2px; height: 125px; background-color: var(--accent-amber);
+            width: 2px; height: 125px; background-color: #d97706;
             position: absolute; top: 125px; left: 123px; transform-origin: top center;
-            box-shadow: 0 0 10px var(--accent-amber); opacity: 0;
+            opacity: 0;
         }
         .beam-spinning { animation: spinBeam 1.5s linear infinite; opacity: 1;}
         @keyframes spinBeam { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
+
         /* 5. NMR */
         .nmr-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px; }
         .proton {
-            width: 30px; height: 30px; border-radius: 50%; background-color: #334155;
+            width: 30px; height: 30px; border-radius: 50%; background-color: #f1f5f9;
             position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; align-items: center; justify-content: center; border: 1px solid #475569;
+            display: flex; align-items: center; justify-content: center; border: 1px solid #94a3b8;
         }
         .proton::after {
             content: '↑'; color: var(--accent-green); font-size: 18px; font-weight: bold;
@@ -273,53 +282,54 @@
 
         /* 6. LIF */
         .lif-target {
-            width: 180px; height: 120px; background-color: rgba(0,0,0,0.5);
+            width: 180px; height: 120px; background-color: rgba(87, 83, 78, 0.22);
             border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; position: absolute; right: 40px; top: 30%;
-            border: 2px dashed #475569; display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+            border: 2px dashed #78716c; display: flex; align-items: center; justify-content: center; transition: all 0.3s;
         }
         .lif-target.glowing {
-            background-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); border-color: #10b981;
+            background-color: rgba(5, 150, 105, 0.22); box-shadow: 0 0 0 6px rgba(5, 150, 105, 0.14); border-color: #059669;
         }
 
         /* 7. HPFM */
         .heater-grid {
-            width: 90px; height: 6px; background-color: #475569;
+            width: 90px; height: 6px; background-color: #64748b;
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; transition: background-color 0.2s;
         }
-        .heater-grid.heating { background-color: var(--accent-red); box-shadow: 0 0 20px var(--accent-red); }
+        .heater-grid.heating { background-color: var(--accent-red); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2); }
         .thermistor {
-            width: 14px; height: 6px; background-color: #cbd5e1; position: absolute; left: 50%; transform: translateX(-50%); z-index: 3;
+            width: 14px; height: 6px; background-color: #475569; position: absolute; left: 50%; transform: translateX(-50%); z-index: 3;
         }
         .heat-blob {
-            width: 80px; height: 20px; background: radial-gradient(ellipse at center, rgba(239, 68, 68, 0.8) 0%, rgba(239, 68, 68, 0) 70%);
+            width: 80px; height: 20px; background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.7) 0%, rgba(220, 38, 38, 0) 70%);
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0; z-index: 2;
         }
 
         @media (max-width: 760px) {
             body {
                 grid-template-columns: minmax(0, 1fr);
-                grid-template-rows: auto auto minmax(0, 1fr);
+                grid-template-rows: auto auto auto minmax(0, 1fr);
                 height: auto;
                 min-height: 100vh;
                 overflow: auto;
             }
             #course-nav-bar { grid-column: 1; grid-row: 1; }
+            .lab-hero.bh-hero { grid-column: 1; grid-row: 2; }
+            .bh-hero .lab-hero-inner { padding: 0 12px; }
             .sidebar {
                 grid-column: 1;
-                grid-row: 2;
+                grid-row: 3;
                 width: 100%;
                 padding: 12px;
                 flex-direction: row;
                 flex-wrap: wrap;
                 gap: 6px;
                 border-right: 0;
-                border-bottom: 1px solid #334155;
+                border-bottom: 1px solid var(--lab-border);
             }
-            .sidebar h1 { width: 100%; margin: 0 0 6px; padding-bottom: 8px; }
-            .nav-btn { flex: 1 1 145px; margin: 0; padding: 9px 10px; }
+            .sidebar .nav-btn { flex: 1 1 145px; margin: 0; padding: 9px 10px; border-color: var(--lab-border); }
             .main-content {
                 grid-column: 1;
-                grid-row: 3;
+                grid-row: 4;
                 min-height: 980px;
                 padding: 14px 12px;
             }
@@ -328,32 +338,39 @@
                 grid-template-rows: repeat(2, minmax(330px, auto));
                 margin-bottom: 82px;
             }
-            .scene-header h2 { font-size: 24px; }
+            .scene-header h2 { font-size: 22px; }
             .controls-area { flex-wrap: wrap; }
             .stage { min-height: 330px; }
             .explainer-box { width: min(250px, calc(100% - 24px)); }
+            .litho-label { right: 12px; font-size: 13px; }
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Borehole Geophysics</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
+    <header class="lab-hero bh-hero">
+        <div class="lab-hero-inner is-full">
+            <h1 class="lab-title"><span class="lab-title-accent">Borehole</span> Geophysics</h1>
+            <p class="lab-subtitle">Principle & Data Viewer</p>
+        </div>
+    </header>
+
     <!-- Sidebar Navigation -->
     <div class="sidebar">
-        <h1>Borehole Geophysics<br><span style="color:var(--text-muted); font-size:13px; font-weight:400;">Principle & Data Viewer</span></h1>
-        <button class="nav-btn active" onclick="switchScene('gamma')"><i class="fa-solid fa-atom"></i> 1. Natural Gamma</button>
-        <button class="nav-btn" onclick="switchScene('em')"><i class="fa-solid fa-magnet"></i> 2. EM Induction</button>
-        <button class="nav-btn" onclick="switchScene('neutron')"><i class="fa-solid fa-radiation"></i> 3. Neutron Porosity</button>
-        <button class="nav-btn" onclick="switchScene('atv')"><i class="fa-solid fa-satellite-dish"></i> 4. Acoustic Televiewer</button>
-        <button class="nav-btn" onclick="switchScene('nmr')"><i class="fa-solid fa-circle-nodes"></i> 5. NMR Logging</button>
-        <button class="nav-btn" onclick="switchScene('lif')"><i class="fa-solid fa-lightbulb"></i> 6. LIF (Fluorescence)</button>
-        <button class="nav-btn" onclick="switchScene('hpfm')"><i class="fa-solid fa-temperature-arrow-up"></i> 7. Heat Pulse Flowmeter</button>
+        <button class="nav-btn lab-tab active is-active" onclick="switchScene('gamma')"><i class="fa-solid fa-atom"></i> 1. Natural Gamma</button>
+        <button class="nav-btn lab-tab" onclick="switchScene('em')"><i class="fa-solid fa-magnet"></i> 2. EM Induction</button>
+        <button class="nav-btn lab-tab" onclick="switchScene('neutron')"><i class="fa-solid fa-radiation"></i> 3. Neutron Porosity</button>
+        <button class="nav-btn lab-tab" onclick="switchScene('atv')"><i class="fa-solid fa-satellite-dish"></i> 4. Acoustic Televiewer</button>
+        <button class="nav-btn lab-tab" onclick="switchScene('nmr')"><i class="fa-solid fa-circle-nodes"></i> 5. NMR Logging</button>
+        <button class="nav-btn lab-tab" onclick="switchScene('lif')"><i class="fa-solid fa-lightbulb"></i> 6. LIF (Fluorescence)</button>
+        <button class="nav-btn lab-tab" onclick="switchScene('hpfm')"><i class="fa-solid fa-temperature-arrow-up"></i> 7. Heat Pulse Flowmeter</button>
     </div>
 
     <!-- Main Content -->
@@ -373,13 +390,13 @@
                         <div class="explainer-box" id="gamma-text">
                             <strong>Status: Idle</strong><br>Watch gamma rays (red) emit naturally from the clay layer due to K, U, and Th isotopes.
                         </div>
-                        <div class="formation" style="background-color:var(--sand-color); opacity:0.3; top:0; height:30%;"></div>
-                        <div class="formation" style="background-color:var(--clay-color); opacity:0.6; top:30%; height:40%;"></div>
-                        <div class="formation" style="background-color:var(--sand-color); opacity:0.3; top:70%; height:30%;"></div>
+                        <div class="formation" style="background-color:var(--sand-color); top:0; height:30%;"></div>
+                        <div class="formation" style="background-color:var(--clay-color); top:30%; height:40%;"></div>
+                        <div class="formation" style="background-color:var(--sand-color); top:70%; height:30%;"></div>
                         
-                        <div style="position:absolute; top: 12%; left: 20px; font-weight:bold; color:var(--accent-amber);">Clean Sand</div>
-                        <div style="position:absolute; top: 48%; left: 20px; font-weight:bold; color:#cbd5e1;">Clay / Shale</div>
-                        <div style="position:absolute; top: 82%; left: 20px; font-weight:bold; color:var(--accent-amber);">Clean Sand</div>
+                        <div class="litho-label" style="top: 12%; color:var(--text-amber);">Clean Sand</div>
+                        <div class="litho-label" style="top: 48%; color:#44403c;">Clay / Shale</div>
+                        <div class="litho-label" style="top: 82%; color:var(--text-amber);">Clean Sand</div>
                         
                         <div class="borehole"></div>
                         <div class="gamma-tool" id="gamma-tool">
@@ -395,8 +412,8 @@
                 </div>
             </div>
             <div class="controls-area">
-                <button class="control-btn" onclick="startGamma()"><i class="fa-solid fa-play"></i> Start Logging</button>
-                <button class="control-btn secondary" onclick="resetGamma()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                <button class="control-btn lab-btn lab-btn-primary" onclick="startGamma()"><i class="fa-solid fa-play"></i> Start Logging</button>
+                <button class="control-btn secondary lab-btn" onclick="resetGamma()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
             </div>
         </div>
 
@@ -409,20 +426,20 @@
             <div class="visualization-area">
                 <div class="stage anim-stage">
                     <div class="stage-title">Physics Principle</div>
-                    <div class="stage-content" style="background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);">
+                    <div class="stage-content" style="background: linear-gradient(180deg, #efe4cf 0%, #e3d3b3 100%);">
                         <div class="explainer-box" id="em-text">
                             <strong>Status: Idle</strong><br>Tx coil emits alternating field. Conductive layer generates secondary field received by Rx.
                         </div>
-                        <div class="formation" style="top:40%; height:20%; background-color:rgba(16, 185, 129, 0.15); border-top:1px dashed var(--accent-green); border-bottom:1px dashed var(--accent-green);">
-                            <span style="position:absolute; left:10px; top:5px; color:var(--accent-green); font-weight:bold; font-size:12px;">Conductive Leachate Plume</span>
+                        <div class="formation" style="top:40%; height:20%; background-color:rgba(5, 150, 105, 0.14); border-top:1px dashed var(--accent-green); border-bottom:1px dashed var(--accent-green);">
+                            <span style="position:absolute; left:10px; top:5px; color:var(--text-green); font-weight:bold; font-size:12px;">Conductive Leachate Plume</span>
                         </div>
                         <div class="borehole"></div>
                         <div class="em-tool">
                             <div class="coil" style="top:20px;">Tx</div>
-                            <div class="coil" style="bottom:20px; background-color:#1e3a8a;">Rx</div>
+                            <div class="coil" style="bottom:20px; background-color:#1d4ed8;">Rx</div>
                         </div>
-                        <div class="mag-field" id="em-primary" style="border-color: rgba(14, 165, 233, 0.6); top:calc(50% - 100px);"></div>
-                        <div class="mag-field" id="em-secondary" style="border-color: rgba(16, 185, 129, 0.6); border-style: dashed; top:50%;"></div>
+                        <div class="mag-field" id="em-primary" style="border-color: rgba(2, 132, 199, 0.8); top:calc(50% - 100px);"></div>
+                        <div class="mag-field" id="em-secondary" style="border-color: rgba(5, 150, 105, 0.85); border-style: dashed; top:50%;"></div>
                     </div>
                 </div>
                 <div class="stage data-stage">
@@ -433,8 +450,8 @@
                 </div>
             </div>
             <div class="controls-area">
-                <button class="control-btn" onclick="pulseEM()"><i class="fa-solid fa-wifi"></i> Trigger EM Pulse</button>
-                <button class="control-btn secondary" onclick="drawEMGraph()"><i class="fa-solid fa-chart-line"></i> Show Full Log</button>
+                <button class="control-btn lab-btn lab-btn-primary" onclick="pulseEM()"><i class="fa-solid fa-wifi"></i> Trigger EM Pulse</button>
+                <button class="control-btn secondary lab-btn" onclick="drawEMGraph()"><i class="fa-solid fa-chart-line"></i> Show Full Log</button>
             </div>
         </div>
 
@@ -455,8 +472,8 @@
                         </div>
                         <div class="borehole"></div>
                         <div class="em-tool" style="height:180px;">
-                            <div class="coil" style="top:20px; background-color:var(--accent-amber);">Source</div>
-                            <div class="coil" style="bottom:20px; background-color:var(--accent-blue);">Det.</div>
+                            <div class="coil" style="top:20px; background-color:#b45309;">Source</div>
+                            <div class="coil" style="bottom:20px; background-color:#0369a1;">Det.</div>
                         </div>
                     <div class="water-pore" style="top: 20%; left: 15%;">H₂O</div>
                     <div class="water-pore" style="top: 60%; left: 25%;">H₂O</div>
@@ -472,8 +489,8 @@
                 </div>
             </div>
             <div class="controls-area">
-                <button class="control-btn accent" onclick="emitNeutrons()"><i class="fa-solid fa-burst"></i> Emit Neutrons</button>
-                <button class="control-btn secondary" onclick="drawNeutronGraph()"><i class="fa-solid fa-chart-line"></i> Show Log Comparison</button>
+                <button class="control-btn accent lab-btn lab-btn-primary" onclick="emitNeutrons()"><i class="fa-solid fa-burst"></i> Emit Neutrons</button>
+                <button class="control-btn secondary lab-btn" onclick="drawNeutronGraph()"><i class="fa-solid fa-chart-line"></i> Show Log Comparison</button>
             </div>
         </div>
 
@@ -492,7 +509,7 @@
                         </div>
                         <div class="atv-view-top">
                             <div style="position:absolute; width:150%; height:4px; background-color:var(--accent-red); top:60%; left:-25%; transform:rotate(-20deg);"></div>
-                            <div style="width:40px; height:40px; background-color:#cbd5e1; border-radius:50%; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%);">
+                            <div style="width:40px; height:40px; background-color:#64748b; border-radius:50%; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%);">
                                 <div class="ultrasonic-beam" id="atv-beam" style="top:20px; left:19px; height:105px;"></div>
                             </div>
                         </div>
@@ -501,7 +518,7 @@
                 <div class="stage data-stage">
                     <div class="stage-title">Example Data: Unwrapped Image Log</div>
                     <div class="stage-content" style="flex-direction: column;">
-                        <div style="width:100%; display:flex; justify-content:space-between; padding:5px 20px; font-weight:bold; background:#0f172a; border-bottom:1px solid #334155; font-size:12px;">
+                        <div style="width:100%; display:flex; justify-content:space-between; padding:5px 20px; font-weight:bold; background:#f8fafc; border-bottom:1px solid #e2e8f0; color:#334155; font-size:12px;">
                             <span>N</span><span>E</span><span>S</span><span>W</span><span>N</span>
                         </div>
                         <canvas id="atvCanvas"></canvas>
@@ -509,8 +526,8 @@
                 </div>
             </div>
             <div class="controls-area">
-                <button class="control-btn" onclick="startATV()"><i class="fa-solid fa-rotate"></i> Start Rotation & Scan</button>
-                <button class="control-btn secondary" onclick="resetATV()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                <button class="control-btn lab-btn lab-btn-primary" onclick="startATV()"><i class="fa-solid fa-rotate"></i> Start Rotation & Scan</button>
+                <button class="control-btn secondary lab-btn" onclick="resetATV()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
             </div>
         </div>
 
@@ -525,12 +542,12 @@
                     <div class="stage-title">Physics Principle: Proton Spin</div>
                     <div class="stage-content" style="flex-direction: column;">
                         <div style="display:flex; width:100%; height:100%;">
-                            <div style="flex:1; border-right:1px dashed #475569; padding:10px;">
-                                <div style="font-weight:bold; color:var(--accent-blue); margin-bottom:10px; text-align:center; font-size:13px;">Large Pores (Mobile Water)</div>
+                            <div style="flex:1; border-right:1px solid #e2e8f0; padding:10px;">
+                                <div style="font-weight:bold; color:var(--text-blue); margin-bottom:10px; text-align:center; font-size:13px;">Large Pores (Mobile Water)</div>
                                 <div class="nmr-grid" id="grid-large"></div>
                             </div>
-                            <div style="flex:1; background-color:rgba(255,255,255,0.02); padding:10px;">
-                                <div style="font-weight:bold; color:var(--accent-red); margin-bottom:10px; text-align:center; font-size:13px;">Small Pores (Bound Water)</div>
+                            <div style="flex:1; background-color:#f8fafc; padding:10px;">
+                                <div style="font-weight:bold; color:var(--text-red); margin-bottom:10px; text-align:center; font-size:13px;">Small Pores (Bound Water)</div>
                                 <div class="nmr-grid" id="grid-small"></div>
                             </div>
                         </div>
@@ -544,9 +561,9 @@
                 </div>
             </div>
             <div class="controls-area">
-                        <button class="control-btn secondary" onclick="nmrStep1()"><i class="fa-solid fa-magnet"></i> 1. B₀ Field (Align)</button>
-                <button class="control-btn" style="background-color: var(--accent-red);" onclick="nmrStep2()"><i class="fa-solid fa-wave-square"></i> 2. RF Pulse (90° Tip)</button>
-                        <button class="control-btn accent" onclick="nmrStep3()"><i class="fa-solid fa-stopwatch"></i> 3. Measure T₂ Relaxation</button>
+                        <button class="control-btn secondary lab-btn" onclick="nmrStep1()"><i class="fa-solid fa-magnet"></i> 1. B₀ Field (Align)</button>
+                <button class="control-btn lab-btn" onclick="nmrStep2()"><i class="fa-solid fa-wave-square"></i> 2. RF Pulse (90° Tip)</button>
+                        <button class="control-btn accent lab-btn" onclick="nmrStep3()"><i class="fa-solid fa-stopwatch"></i> 3. Measure T₂ Relaxation</button>
             </div>
         </div>
 
@@ -565,13 +582,13 @@
                         </div>
                         <div class="borehole" style="left:20%; width:60px;"></div>
                         <div class="em-tool" style="left:20%; height:100px; top:50%; width:30px; border-radius:0;">
-                            <div style="position:absolute; right:-2px; top:50%; transform:translateY(-50%); width:6px; height:12px; background:white;"></div>
+                            <div style="position:absolute; right:-2px; top:50%; transform:translateY(-50%); width:6px; height:12px; background:#334155;"></div>
                         </div>
                         <div class="lif-target" id="lif-napl" style="left:35%; top:40%;">
-                            <span style="font-weight:bold; font-size:14px; color:white;">NAPL Source (Diesel)</span>
+                            <span style="font-weight:bold; font-size:14px; color:#292524;">NAPL Source (Diesel)</span>
                         </div>
-                        <div style="position:absolute; height:4px; left:22%; top:50%; background-color:var(--accent-purple); box-shadow:0 0 10px var(--accent-purple); width:0; transition:width 0.1s;" id="lif-uv"></div>
-                        <div style="position:absolute; height:6px; left:22%; top:50%; background-color:var(--accent-green); box-shadow:0 0 15px var(--accent-green); width:0; transition:width 0.1s; opacity:0;" id="lif-return"></div>
+                        <div style="position:absolute; height:4px; left:22%; top:50%; background-color:var(--accent-purple); width:0; transition:width 0.1s;" id="lif-uv"></div>
+                        <div style="position:absolute; height:6px; left:22%; top:50%; background-color:var(--accent-green); width:0; transition:width 0.1s; opacity:0;" id="lif-return"></div>
                     </div>
                 </div>
                 <div class="stage data-stage">
@@ -582,7 +599,7 @@
                 </div>
             </div>
             <div class="controls-area">
-                <button class="control-btn" onclick="fireLIF()"><i class="fa-solid fa-bolt"></i> Fire UV Laser</button>
+                <button class="control-btn lab-btn lab-btn-primary" onclick="fireLIF()"><i class="fa-solid fa-bolt"></i> Fire UV Laser</button>
             </div>
         </div>
 
@@ -615,21 +632,46 @@
                 </div>
             </div>
             <div class="controls-area">
-                <button class="control-btn accent" onclick="triggerHeatPulse()"><i class="fa-solid fa-fire"></i> Trigger Heat Pulse</button>
-                <button class="control-btn secondary" onclick="resetHPFM()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                <button class="control-btn accent lab-btn lab-btn-primary" onclick="triggerHeatPulse()"><i class="fa-solid fa-fire"></i> Trigger Heat Pulse</button>
+                <button class="control-btn secondary lab-btn" onclick="resetHPFM()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
             </div>
         </div>
 
     </div>
 
     <script>
+        // Light log-track palette: white track, hairline grid, 600-level curves, dark axis text.
+        const PAL = {
+            font: '600 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+            labelFont: '600 14px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+            grid: '#e5eaf1', axis: '#94a3b8', axisText: '#334155',
+            sand: 'rgba(214, 192, 154, 0.3)', clay: 'rgba(168, 162, 158, 0.32)',
+            gamma: '#059669', em: '#0284c7', neutron: '#d97706',
+            porosity: 'rgba(2, 132, 199, 0.12)', porosityText: '#0369a1',
+            nmr: '#059669', bound: '#b91c1c', mobile: '#0369a1',
+            lif: '#7c3aed', hpfm: '#dc2626',
+            atvHigh: '#fde68a', atvLow: '#78350f'
+        };
+
         // === Drawing Utilities ===
         function drawAxes(ctx, width, height, xLabel, yLabel, yInvert = false) {
-            ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
+            // Hairline grid (5 x 5 cells) under the axes, so each plot reads as a log track.
+            ctx.strokeStyle = PAL.grid; ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let i = 1; i <= 5; i++) {
+                const gx = Math.round(50 + i * (width - 70) / 5) + 0.5;
+                ctx.moveTo(gx, 20); ctx.lineTo(gx, height - 40);
+            }
+            for (let i = 0; i < 5; i++) {
+                const gy = Math.round(20 + i * (height - 60) / 5) + 0.5;
+                ctx.moveTo(50, gy); ctx.lineTo(width - 20, gy);
+            }
+            ctx.stroke();
+            ctx.strokeStyle = PAL.axis; ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(50, 20); ctx.lineTo(50, height - 40); ctx.lineTo(width - 20, height - 40);
             ctx.stroke();
-            ctx.fillStyle = '#94a3b8'; ctx.font = '12px Public Sans';
+            ctx.fillStyle = PAL.axisText; ctx.font = PAL.font;
             ctx.textAlign = 'center'; ctx.fillText(xLabel, width / 2, height - 10);
             ctx.save(); ctx.translate(15, height / 2); ctx.rotate(-Math.PI / 2);
             ctx.fillText(yLabel, 0, 0); ctx.restore();
@@ -647,9 +689,9 @@
 
         // === Navigation & Init ===
         function switchScene(sceneId) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active', 'is-active'));
             const activeButton = document.querySelector(`.nav-btn[onclick*="'${sceneId}'"]`);
-            if (activeButton) activeButton.classList.add('active');
+            if (activeButton) activeButton.classList.add('active', 'is-active');
             
             document.querySelectorAll('.scene-container').forEach(scene => scene.classList.remove('active'));
             document.getElementById('scene-' + sceneId).classList.add('active');
@@ -678,9 +720,9 @@
             const { cvs, ctx } = clearCanvas('gammaCanvas');
             drawAxes(ctx, cvs.width, cvs.height, 'Gamma API (0 - 150)', 'Depth');
             // Draw lithology background
-            ctx.fillStyle = 'rgba(180, 83, 9, 0.1)'; ctx.fillRect(51, 20, cvs.width-70, (cvs.height-60)*0.3);
-            ctx.fillStyle = 'rgba(71, 85, 105, 0.2)'; ctx.fillRect(51, 20+(cvs.height-60)*0.3, cvs.width-70, (cvs.height-60)*0.4);
-            ctx.fillStyle = 'rgba(180, 83, 9, 0.1)'; ctx.fillRect(51, 20+(cvs.height-60)*0.7, cvs.width-70, (cvs.height-60)*0.3);
+            ctx.fillStyle = PAL.sand; ctx.fillRect(51, 20, cvs.width-70, (cvs.height-60)*0.3);
+            ctx.fillStyle = PAL.clay; ctx.fillRect(51, 20+(cvs.height-60)*0.3, cvs.width-70, (cvs.height-60)*0.4);
+            ctx.fillStyle = PAL.sand; ctx.fillRect(51, 20+(cvs.height-60)*0.7, cvs.width-70, (cvs.height-60)*0.3);
         }
 
         function startGamma() {
@@ -692,7 +734,7 @@
             const ctx = cvs.getContext('2d');
             ctx.beginPath();
             ctx.moveTo(80, 20);
-            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+            ctx.strokeStyle = PAL.gamma; ctx.lineWidth = 2;
 
             function animate() {
                 toolY += 1.0;
@@ -761,7 +803,7 @@
             drawAxes(ctx, cvs.width, cvs.height, 'Conductivity (mS/m)', 'Depth');
             
             ctx.beginPath();
-            ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 3;
+            ctx.strokeStyle = PAL.em; ctx.lineWidth = 3;
             
             for(let i=0; i<=100; i++) {
                 let y = 20 + (i/100) * (cvs.height - 60);
@@ -808,7 +850,7 @@
             const { cvs, ctx } = clearCanvas('neutronCanvas');
             drawAxes(ctx, cvs.width, cvs.height, 'Neutron Counts (Increasing <— )', 'Depth');
             
-            ctx.beginPath(); ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.strokeStyle = PAL.neutron; ctx.lineWidth = 3;
             for(let i=0; i<=100; i++) {
                 let y = 20 + (i/100) * (cvs.height - 60);
                 let counts = 80; // Default high counts (low porosity)
@@ -821,9 +863,9 @@
             ctx.stroke();
             
             if(highlight) {
-                ctx.fillStyle = 'rgba(2, 132, 199, 0.2)';
+                ctx.fillStyle = PAL.porosity;
                 ctx.fillRect(51, 20 + 0.3*(cvs.height-60), cvs.width-70, 0.4*(cvs.height-60));
-                ctx.fillStyle = '#0ea5e9'; ctx.font='14px Public Sans';
+                ctx.fillStyle = PAL.porosityText; ctx.font = PAL.labelFont;
                 ctx.fillText("High Porosity Zone", cvs.width/2, cvs.height/2);
             }
         }
@@ -842,8 +884,8 @@
             const ctx = cvs.getContext('2d');
             
             // Draw background mimicking televiewer palette
-            ctx.fillStyle = '#f59e0b'; ctx.fillRect(0, 0, cvs.width, cvs.height);
-            ctx.beginPath(); ctx.strokeStyle = '#451a03'; ctx.lineWidth = 6;
+            ctx.fillStyle = PAL.atvHigh; ctx.fillRect(0, 0, cvs.width, cvs.height);
+            ctx.beginPath(); ctx.strokeStyle = PAL.atvLow; ctx.lineWidth = 6;
             
             function draw() {
                 // Sine wave math
@@ -905,7 +947,7 @@
 
             ctx.beginPath();
             ctx.moveTo(50, cvs.height - 40);
-            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 3;
+            ctx.strokeStyle = PAL.nmr; ctx.lineWidth = 3;
             
             for(let x=50; x<=cvs.width-20; x++) {
                 let normX = (x - 50) / (cvs.width - 70); // 0 to 1
@@ -922,8 +964,8 @@
             ctx.stroke();
 
             // Labels
-            ctx.fillStyle = '#ef4444'; ctx.fillText("Bound", 50 + 0.2*(cvs.width-70), cvs.height/2);
-            ctx.fillStyle = '#0ea5e9'; ctx.fillText("Mobile (Free)", 50 + 0.7*(cvs.width-70), cvs.height/2 - 40);
+            ctx.fillStyle = PAL.bound; ctx.fillText("Bound", 50 + 0.2*(cvs.width-70), cvs.height/2);
+            ctx.fillStyle = PAL.mobile; ctx.fillText("Mobile (Free)", 50 + 0.7*(cvs.width-70), cvs.height/2 - 40);
         }
 
         // === 6. LIF Logic ===
@@ -931,7 +973,7 @@
             const { cvs, ctx } = clearCanvas('lifCanvas');
             drawAxes(ctx, cvs.width, cvs.height, 'Wavelength (nm)', 'Fluorescence Intensity');
             
-            ctx.beginPath(); ctx.moveTo(50, cvs.height-40); ctx.strokeStyle = '#8b5cf6'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(50, cvs.height-40); ctx.strokeStyle = PAL.lif; ctx.lineWidth = 2;
             for(let i=50; i<cvs.width-20; i++) {
                 let y = cvs.height - 40 - (Math.random()*5);
                 if(showSpike) {
@@ -990,7 +1032,7 @@
                 let posY = 50; 
                 const cvs = document.getElementById('hpfmCanvas');
                 const ctx = cvs.getContext('2d');
-                ctx.beginPath(); ctx.moveTo(50, cvs.height-40); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(50, cvs.height-40); ctx.strokeStyle = PAL.hpfm; ctx.lineWidth = 3;
 
                 hpfmTimerId = setInterval(() => {
                     posY -= 0.5; hpfmTime += 0.1;

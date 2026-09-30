@@ -9,70 +9,82 @@
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } 
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="../../../assets/vendor/mathjax/tex-mml-chtml.js"></script>
     <style>
+        /* Light lab palette (the --lab-* tokens and .lab-* classes come from course-app.css). */
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --primary: #38bdf8;
-            --accent: #fbbf24;
-            --success: #4ade80;
-            --error: #f87171;
-            --border: #334155;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #0f172a;
+            --primary: #0284c7;        /* sky-600 */
+            --primary-strong: #0369a1; /* sky-700 */
+            --accent: #d97706;         /* amber-600 */
+            --success: #047857;        /* emerald-700, readable as text */
+            --error: #b91c1c;          /* red-700, readable as text */
+            --border: #e2e8f0;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; max-width: 1100px; margin: 0 auto; line-height: 1.6; }
-        h1, h2 { color: var(--primary); margin-top: 0; }
-        
-        .card { 
-            background: var(--card); padding: 25px; margin-bottom: 25px; 
-            border-radius: 12px; border: 1px solid var(--border); 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
+        body { font-family: var(--lab-font); margin: 0; padding: 0; line-height: 1.6; }
+        button, input, select { font-family: inherit; }
+        h1, h2 { margin-top: 0; }
+        .lab-subtitle strong { color: var(--lab-text-2); }
 
-        .formula-box {
-            background: #020617; padding: 15px; border-left: 4px solid var(--accent);
-            margin: 15px 0; font-family: 'Courier New', monospace;
-        }
+        .container { max-width: 72rem; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.95rem; }
-        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--primary); color: var(--accent); background: rgba(255,255,255,0.05); }
+        .card { padding: 25px; margin-bottom: 24px; }
+        .card h2 { margin-bottom: .6rem; color: var(--lab-text); font-size: 1.3rem; line-height: 1.35; }
+
+        .formula-box { margin: 15px 0; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.95rem; color: var(--lab-text-2); }
+        th { text-align: left; padding: 12px; border-bottom: 1px solid var(--lab-border-strong); color: var(--lab-text); background: var(--lab-surface-2); font-weight: 700; }
         td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        
-        input { 
-            background: #0f172a; border: 1px solid #64748b; color: white; 
-            padding: 6px; width: 100px; border-radius: 4px; text-align: center;
-        }
-        input.correct { border-color: var(--success); background: rgba(74, 222, 128, 0.1); }
-        input.incorrect { border-color: var(--error); background: rgba(248, 113, 113, 0.1); }
+        td strong { color: var(--lab-text); }
 
-        .btn {
-            background: var(--primary); color: #0f172a; border: none; padding: 12px 24px; 
-            font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px;
+        input {
+            background: #ffffff; border: 1px solid var(--lab-border-strong); color: var(--lab-text);
+            padding: 6px; width: 100px; border-radius: 8px; text-align: center;
         }
-        .btn:hover { background: #7dd3fc; }
+        input:focus { border-color: var(--primary); }
+        input.correct { border-color: var(--lab-success); box-shadow: inset 0 0 0 1px var(--lab-success); background: #ecfdf5; color: #064e3b; }
+        input.incorrect { border-color: var(--lab-danger); box-shadow: inset 0 0 0 1px var(--lab-danger); background: #fef2f2; color: #7f1d1d; }
 
-        .hidden-feedback { display: none; margin-top: 15px; padding: 15px; border-radius: 8px; font-weight: bold; }
-        .geology-select { background: #0f172a; color: white; border: 1px solid var(--primary); padding: 8px; border-radius: 4px; width: 100%; }
+        .btn { margin-top: 15px; }
+
+        /* Hidden until "Reveal Geology"; the tint follows the result (light tints, dark text). */
+        .hidden-feedback { display: none; margin-top: 15px; padding: 15px; border: 1px solid var(--lab-border-strong); border-radius: 10px; font-weight: bold; color: var(--lab-text); }
+        .hidden-feedback.is-ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+        .hidden-feedback.is-bad { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+        .geology-select { background: #ffffff; color: var(--lab-text); border: 1px solid var(--lab-border-strong); padding: 8px; border-radius: 8px; width: 100%; }
+        .geology-select:focus { border-color: var(--primary); }
+
+        @media (max-width: 640px) {
+            .card { padding: 18px; }
+            .card .formula-box { font-size: .85rem; padding: .7rem .75rem; } /* equations fit a phone screen */
+        }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Gravity Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-<h1>Gravity Lab: The Cross-Section Challenge</h1>
-<p><strong>Mission:</strong> Process the gravity data for 4 stations to reveal the hidden geological structure.</p>
+<header class="lab-hero">
+    <div class="lab-hero-inner">
+        <h1 class="lab-title"><span class="lab-title-accent">Gravity</span> Lab: The Cross-Section Challenge</h1>
+        <p class="lab-subtitle"><strong>Mission:</strong> Process the gravity data for 4 stations to reveal the hidden geological structure.</p>
+    </div>
+</header>
 
-<div class="card">
+<div class="container">
+<div class="card lab-card">
     <h2>Phase 1: Latitude Correction ($g_\phi$)</h2>
-    <div class="formula-box">
+    <div class="formula-box lab-formula">
         $$ g_\phi = 9.780318 \left( 1 + 0.0052789 \sin^2 \phi + 0.0000235 \sin^4 \phi \right) \text{ m/s}^2 $$
-        <p style="color: #94a3b8; font-size: 0.9em; margin-top:5px;">⚠️ <strong>Note:</strong> Multiply result by <strong>100,000</strong> to get mGal.</p>
+        <p style="color: #475569; font-size: 0.9em; margin-top:5px;">⚠️ <strong>Note:</strong> Multiply result by <strong>100,000</strong> to get mGal.</p>
     </div>
     <table>
         <thead>
@@ -90,12 +102,12 @@
             <tr><td><strong>4</strong></td><td>45.45°</td><td><input type="number" id="lat4"></td><td id="s4"></td></tr>
         </tbody>
     </table>
-    <button class="btn" onclick="checkPhase1()">Verify Phase 1</button>
+    <button class="btn lab-btn lab-btn-primary" onclick="checkPhase1()">Verify Phase 1</button>
 </div>
 
-<div class="card">
+<div class="card lab-card">
     <h2>Phase 2: Elevation Corrections (FAC & BC)</h2>
-    <div class="formula-box">
+    <div class="formula-box lab-formula">
         $$ FAC = 0.3086 \times h \text{ (mGal)} $$
         $$ BC = 0.0419 \times 2.67 \times h \text{ (mGal)} $$
     </div>
@@ -116,12 +128,12 @@
             <tr><td><strong>4</strong></td><td>800 m</td><td><input type="number" id="fac4"></td><td><input type="number" id="bc4"></td><td id="es4"></td></tr>
         </tbody>
     </table>
-    <button class="btn" onclick="checkPhase2()">Verify Phase 2</button>
+    <button class="btn lab-btn lab-btn-primary" onclick="checkPhase2()">Verify Phase 2</button>
 </div>
 
-<div class="card">
+<div class="card lab-card">
     <h2>Phase 3: Geological Interpretation</h2>
-    <div class="formula-box">$$ BA = g_{obs} - g_\phi + FAC - BC $$</div>
+    <div class="formula-box lab-formula">$$ BA = g_{obs} - g_\phi + FAC - BC $$</div>
     <table>
         <thead>
             <tr>
@@ -135,7 +147,7 @@
             <tr>
                 <td><strong>1</strong></td>
                 <td>980,599.7</td> <td><input type="number" id="ba1"></td>
-                <td><span style="color:#94a3b8">Background</span></td>
+                <td><span style="color:#64748b">Background</span></td>
             </tr>
             <tr>
                 <td><strong>2</strong></td>
@@ -151,7 +163,7 @@
             <tr>
                 <td><strong>3</strong></td>
                 <td>980,567.2</td> <td><input type="number" id="ba3"></td>
-                <td><span style="color:#94a3b8">Transition</span></td>
+                <td><span style="color:#64748b">Transition</span></td>
             </tr>
             <tr>
                 <td><strong>4</strong></td>
@@ -166,8 +178,9 @@
             </tr>
         </tbody>
     </table>
-    <button class="btn" onclick="checkPhase3()">Reveal Geology</button>
-    <div id="final-result" class="hidden-feedback" style="border: 1px solid var(--primary); color: var(--text);"></div>
+    <button class="btn lab-btn lab-btn-primary" onclick="checkPhase3()">Reveal Geology</button>
+    <div id="final-result" class="hidden-feedback"></div>
+</div>
 </div>
 
 <script>
@@ -234,10 +247,10 @@
         
         fb.style.display = 'block';
         if(allCorrect && g2 === 'salt' && g4 === 'ore') {
-            fb.style.background = 'rgba(74, 222, 128, 0.1)';
+            fb.className = 'hidden-feedback is-ok';
             fb.innerHTML = "🎉 SUCCESS! You found the SALT DOME (-30 mGal) and the ORE BODY (+100 mGal).";
         } else {
-            fb.style.background = 'rgba(248, 113, 113, 0.1)';
+            fb.className = 'hidden-feedback is-bad';
             fb.innerHTML = "❌ Keep trying. Check your BA math and geological choices.";
         }
     }

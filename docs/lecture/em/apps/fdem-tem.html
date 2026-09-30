@@ -4,75 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive 1D EM Forward Modeling</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
+    <script src="../../../assets/vendor/chartjs/chart.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .slider-label { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 1.1rem; font-weight: 500; color: #cbd5e1; }
-        
-        /* Custom Larger Sliders */
-        input[type=range] { 
-            -webkit-appearance: none;
-            width: 100%; 
-            height: 12px;
-            background: #334155;
-            border-radius: 6px;
-            outline: none;
-            margin-bottom: 0.5rem;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
-        }
-        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
-        input[type=range]::-moz-range-thumb {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
-        }
-        input[type=range]::-moz-range-thumb:hover { transform: scale(1.1); }
-
-        /* Thumb Colors */
-        .slider-blue::-webkit-slider-thumb { background: #3b82f6; }
-        .slider-blue::-moz-range-thumb { background: #3b82f6; }
-        .slider-green::-webkit-slider-thumb { background: #22c55e; }
-        .slider-green::-moz-range-thumb { background: #22c55e; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .slider-label { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 500; color: #334155; }
 
         canvas { display: block; width: 100%; }
-        .panel { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; padding: 1.25rem; }
-        .control-card { background-color: rgba(15, 23, 42, 0.4); border: 1px solid #475569; padding: 1.25rem; border-radius: 0.5rem; margin-bottom: 1.5rem; }
+        /* Panels take the shared .lab-card surface; control cards are light insets */
+        .panel { padding: 1.25rem; }
+        .control-card { background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1.5rem; }
+        .control-card.card-fdem { background-color: #ecfdf5; border-color: #a7f3d0; }
+        .control-card.card-tem { background-color: #fff7ed; border-color: #fed7aa; }
+
+        /* Compact light header bar: the dashboard fills the viewport, so no tall title band */
+        .lab-hero.fdem-bar { padding: 0.7rem 1rem; }
+        .fdem-bar .lab-title { font-size: 1.35rem; }
+        .fdem-bar .lab-subtitle { margin-top: 0.15rem; font-size: 0.85rem; }
+        .legend-swatch { width: 0.75rem; height: 0.75rem; border-radius: 999px; display: inline-block; border: 1px solid rgb(15 23 42 / 0.25); }
+
+        /* The body no longer pads the page, so the caveat box takes the page gutter itself */
+        body > .science-caveat { margin: 0 1rem; }
+
+        @media (min-width: 768px) {
+            .lab-hero.fdem-bar { padding: 0.7rem 1.5rem; }
+            body > .science-caveat { margin: 0 1.5rem; }
+        }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="p-4 md:p-6 h-screen flex flex-col gap-4">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen lg:h-screen flex flex-col gap-4">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Electromagnetic Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
     <!-- Header -->
-    <header class="flex justify-between items-center mb-2">
+    <header class="lab-hero fdem-bar flex flex-wrap justify-between items-center gap-x-6 gap-y-2">
         <div>
-            <h1 class="text-2xl font-bold text-blue-400">1D Electromagnetic (EM) Response Explorer</h1>
-            <p class="text-sm text-slate-400">Qualitative Time Domain (TEM) and Frequency Domain (FDEM) trends over a two-layer Earth</p>
+            <h1 class="lab-title">1D Electromagnetic (EM) Response Explorer</h1>
+            <p class="lab-subtitle">Qualitative Time Domain (TEM) and Frequency Domain (FDEM) trends over a two-layer Earth</p>
         </div>
-        <div class="flex gap-2">
+        <!-- Swatches are the two ends of the earth-tone layer colormap (getColor) -->
+        <div class="flex gap-4 text-slate-600">
             <div class="flex items-center gap-2 text-xs">
-                <span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Conductive (Low ρ)
+                <span class="legend-swatch" style="background:#7c93a8"></span> Conductive (Low ρ)
             </div>
             <div class="flex items-center gap-2 text-xs">
-                <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Resistive (High ρ)
+                <span class="legend-swatch" style="background:#ead8b0"></span> Resistive (High ρ)
             </div>
         </div>
     </header>
@@ -80,91 +61,91 @@
     <div class="science-caveat"><strong>Teaching proxy:</strong> The curves use skin-depth weighting and half-space decay approximations, not a full Maxwell-equation layered-earth solver. Use them to study trends, not to predict instrument voltages or inversion-ready apparent resistivity.</div>
 
     <!-- Main Content -->
-    <div class="flex-grow grid grid-cols-1 lg:grid-cols-4 gap-4 overflow-hidden">
-        
+    <div class="flex-grow grid grid-cols-1 lg:grid-cols-4 gap-4 lg:overflow-hidden mx-4 md:mx-6 mb-4 md:mb-6">
+
         <!-- Controls Panel -->
-        <div class="panel col-span-1 flex flex-col overflow-y-auto">
-            <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-600 pb-3">Earth Model Controls</h2>
-            
+        <div class="panel lab-card col-span-1 flex flex-col overflow-y-auto relative">
+            <h2 class="text-xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-3">Earth Model Controls</h2>
+
             <div class="control-card">
                 <div class="slider-label">
                     <span>Layer 1 Resistivity (ρ₁)</span>
-                    <span id="rho1-val" class="font-mono text-blue-300 font-bold">10 Ω·m</span>
+                    <span id="rho1-val" class="font-mono text-sky-700 font-bold text-sm whitespace-nowrap">10 Ω·m</span>
                 </div>
-                <input type="range" id="rho1" min="0" max="3" step="0.01" value="1" class="slider-blue">
-                <p class="text-sm text-slate-400 mt-2">Log scale: 1 to 1000 Ω·m</p>
+                <input type="range" id="rho1" min="0" max="3" step="0.01" value="1" class="lab-range">
+                <p class="text-sm text-slate-600 mt-2">Log scale: 1 to 1000 Ω·m</p>
             </div>
 
             <div class="control-card">
                 <div class="slider-label">
                     <span>Layer 1 Thickness (h₁)</span>
-                    <span id="h1-val" class="font-mono text-blue-300 font-bold">50 m</span>
+                    <span id="h1-val" class="font-mono text-sky-700 font-bold text-sm whitespace-nowrap">50 m</span>
                 </div>
-                <input type="range" id="h1" min="10" max="150" step="1" value="50" class="slider-blue">
+                <input type="range" id="h1" min="10" max="150" step="1" value="50" class="lab-range">
             </div>
 
             <div class="control-card">
                 <div class="slider-label">
                     <span>Layer 2 Resistivity (ρ₂)</span>
-                    <span id="rho2-val" class="font-mono text-blue-300 font-bold">100 Ω·m</span>
+                    <span id="rho2-val" class="font-mono text-sky-700 font-bold text-sm whitespace-nowrap">100 Ω·m</span>
                 </div>
-                <input type="range" id="rho2" min="0" max="3" step="0.01" value="2" class="slider-blue">
-                <p class="text-sm text-slate-400 mt-2">Log scale: 1 to 1000 Ω·m</p>
+                <input type="range" id="rho2" min="0" max="3" step="0.01" value="2" class="lab-range">
+                <p class="text-sm text-slate-600 mt-2">Log scale: 1 to 1000 Ω·m</p>
             </div>
 
-            <h2 class="text-xl font-bold text-white mb-6 mt-4 border-b border-slate-600 pb-3">Simulation Controls</h2>
+            <h2 class="text-xl font-bold text-slate-900 mb-6 mt-4 border-b border-slate-200 pb-3">Simulation Controls</h2>
 
             <!-- FDEM Controls -->
-            <div class="control-card bg-slate-800/80 border-green-700/50">
-                <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div> FDEM Settings</h3>
+            <div class="control-card card-fdem">
+                <h3 class="text-lg font-semibold text-emerald-700 mb-4 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-emerald-600"></div> FDEM Settings</h3>
                 <div class="slider-label">
                     <span>Survey Frequency (f)</span>
-                    <span id="freq-val" class="font-mono text-green-300 font-bold">1000 Hz</span>
+                    <span id="freq-val" class="font-mono text-emerald-700 font-bold text-sm whitespace-nowrap">1000 Hz</span>
                 </div>
-                <input type="range" id="freq" min="1" max="5" step="0.01" value="3" class="slider-green" style="background: #14532d;">
-                <p class="text-sm text-slate-400 mt-2">Adjust frequency to see <b>Skin Depth</b> change.</p>
+                <input type="range" id="freq" min="1" max="5" step="0.01" value="3" class="lab-range" style="accent-color: #059669;">
+                <p class="text-sm text-slate-600 mt-2">Adjust frequency to see <b>Skin Depth</b> change.</p>
             </div>
 
             <!-- TEM Controls -->
-            <div class="control-card bg-slate-800/80 border-orange-700/50">
-                <h3 class="text-lg font-semibold text-orange-400 mb-4 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-orange-500"></div> TEM Settings</h3>
-                <button id="play-tem" class="w-full bg-orange-600 hover:bg-orange-500 text-white text-lg font-bold py-4 px-4 rounded-xl shadow-lg transition-all transform active:scale-95 mb-3">
+            <div class="control-card card-tem">
+                <h3 class="text-lg font-semibold text-orange-700 mb-4 flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-orange-600"></div> TEM Settings</h3>
+                <button id="play-tem" class="w-full bg-orange-600 hover:bg-orange-700 text-white text-lg font-bold py-4 px-4 rounded-xl shadow-sm transition-all transform active:scale-95 mb-3">
                         ▶ Play "Smoke Ring"
                 </button>
-                <p class="text-sm text-slate-400">Watch the diffusion of the EM field over time.</p>
+                <p class="text-sm text-slate-600">Watch the diffusion of the EM field over time.</p>
             </div>
         </div>
 
         <!-- Right Side: Vis and Charts -->
-        <div class="col-span-1 lg:col-span-3 grid grid-rows-2 gap-4">
-            
+        <div class="col-span-1 lg:col-span-3 grid lg:grid-rows-2 gap-4">
+
             <!-- Visualization Canvas -->
-            <div class="panel flex flex-col relative h-full min-h-[300px]">
-                <h2 class="text-sm font-semibold absolute top-4 left-4 z-10 bg-slate-900/80 px-2 py-1 rounded">Subsurface Cross-Section</h2>
-                <div id="canvas-container" class="w-full flex-grow relative overflow-hidden rounded bg-black">
+            <div class="panel lab-card flex flex-col relative h-full min-h-[300px]">
+                <h2 class="text-sm font-semibold text-slate-800 absolute top-4 left-4 z-10 bg-white/90 border border-slate-200 shadow-sm px-2 py-1 rounded">Subsurface Cross-Section</h2>
+                <div id="canvas-container" class="w-full flex-grow relative overflow-hidden rounded bg-white border border-slate-200">
                     <canvas id="earthCanvas" class="absolute inset-0"></canvas>
                 </div>
                 <!-- Legend for Canvas -->
-                <div class="absolute bottom-4 right-4 bg-slate-900/80 p-2 rounded text-xs flex gap-4 border border-slate-700">
-                    <div class="flex items-center gap-1"><div class="w-4 h-1 border-t-2 border-dashed border-green-400"></div> FDEM Skin Depth</div>
-                    <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full border border-orange-400"></div> TEM Smoke Ring</div>
+                <div class="absolute bottom-4 right-4 bg-white/90 text-slate-700 p-2 rounded text-xs flex gap-4 border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-1"><div class="w-4 h-1 border-t-2 border-dashed border-emerald-700"></div> FDEM Skin Depth</div>
+                    <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full border border-orange-600"></div> TEM Smoke Ring</div>
                 </div>
             </div>
 
             <!-- Charts Container -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
+
                 <!-- FDEM Chart -->
-                <div class="panel flex flex-col h-[250px] lg:h-full relative">
-                    <h2 class="text-sm font-semibold mb-2 text-green-400">FDEM: Apparent Resistivity vs Frequency</h2>
+                <div class="panel lab-card flex flex-col h-[250px] lg:h-full relative">
+                    <h2 class="text-sm font-semibold mb-2 text-emerald-700">FDEM: Apparent Resistivity vs Frequency</h2>
                     <div class="flex-grow relative">
                         <canvas id="fdemChart"></canvas>
                     </div>
                 </div>
 
                 <!-- TEM Chart -->
-                <div class="panel flex flex-col h-[250px] lg:h-full relative">
-                    <h2 class="text-sm font-semibold mb-2 text-orange-400">TEM: Voltage Decay vs Time</h2>
+                <div class="panel lab-card flex flex-col h-[250px] lg:h-full relative">
+                    <h2 class="text-sm font-semibold mb-2 text-orange-700">TEM: Voltage Decay vs Time</h2>
                     <div class="flex-grow relative">
                         <canvas id="temChart"></canvas>
                     </div>
@@ -258,12 +239,16 @@
         temAnimProgress: 0, // 0 to 1
     };
 
-    // Colormap (Log Resistivity to Color)
-    // Blue (conductive, ~1 ohm-m) to Red (resistive, ~1000 ohm-m)
+    // Colormap (Log Resistivity to Color), earth tones that darken with conductivity:
+    // blue-grey wet clay (conductive, ~1 ohm-m), grey silt (~10), tan sand (~100),
+    // pale dry sand (resistive, ~1000 ohm-m). The header swatches show the two ends.
+    const EARTH_STOPS = [[124, 147, 168], [163, 172, 174], [205, 187, 148], [234, 216, 176]];
     const getColor = (rho) => {
         const logRho = Math.max(0, Math.min(3, Math.log10(rho)));
-        const hue = 240 - (logRho / 3) * 240; // 240 is blue, 0 is red
-        return `hsl(${hue}, 70%, 40%)`;
+        const i = Math.min(2, Math.floor(logRho));
+        const t = logRho - i;
+        const mix = (k) => Math.round(EARTH_STOPS[i][k] + (EARTH_STOPS[i + 1][k] - EARTH_STOPS[i][k]) * t);
+        return `rgb(${mix(0)}, ${mix(1)}, ${mix(2)})`;
     };
 
     // Update DOM texts
@@ -277,8 +262,19 @@
     };
 
     // --- Charts Setup ---
-    Chart.defaults.color = '#cbd5e1';
-    Chart.defaults.borderColor = '#334155';
+    // Light plot styling: slate ticks, hairline grid, white tooltips
+    Chart.defaults.color = '#475569';
+    Chart.defaults.borderColor = '#e5eaf1';
+    const lightTooltip = { backgroundColor: '#ffffff', titleColor: '#0f172a', bodyColor: '#334155', borderColor: '#cbd5e1', borderWidth: 1 };
+    const axisTitleColor = '#334155';
+
+    // Log-axis ticks as powers of ten (10⁻⁴ rather than 0.0001); other ticks stay unlabeled.
+    const SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+    function pow10Tick(value) {
+        const e = Math.log10(value);
+        if (Math.abs(e - Math.round(e)) > 1e-6) return '';
+        return '10' + String(Math.round(e)).split('').map(c => SUP[c]).join('');
+    }
 
     const ctxFDEM = document.getElementById('fdemChart').getContext('2d');
     const fdemChart = new Chart(ctxFDEM, {
@@ -288,8 +284,8 @@
             datasets: [{
                 label: 'Apparent Resistivity',
                 data: [],
-                borderColor: '#4ade80',
-                backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                borderColor: '#059669',
+                backgroundColor: 'rgba(5, 150, 105, 0.08)',
                 borderWidth: 2,
                 fill: true,
                 pointRadius: 0,
@@ -298,8 +294,9 @@
             {
                 label: 'Current Frequency',
                 data: [],
-                borderColor: '#fff',
-                backgroundColor: '#fff',
+                borderColor: '#ffffff',
+                backgroundColor: '#0f172a',
+                pointBorderWidth: 2,
                 pointRadius: 6,
                 pointStyle: 'circle',
                 showLine: false
@@ -309,10 +306,10 @@
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { type: 'logarithmic', title: { display: true, text: 'Frequency (Hz)' }, reverse: true }, // Reverse so depth goes left-to-right visually
-                y: { type: 'logarithmic', title: { display: true, text: 'ρ_app (Ω·m)' }, min: 1, max: 1000 }
+                x: { type: 'logarithmic', title: { display: true, text: 'Frequency (Hz)', color: axisTitleColor }, reverse: true }, // Reverse so depth goes left-to-right visually
+                y: { type: 'logarithmic', title: { display: true, text: 'ρ_app (Ω·m)', color: axisTitleColor }, min: 1, max: 1000 }
             },
-            plugins: { legend: { display: false } },
+            plugins: { legend: { display: false }, tooltip: lightTooltip },
             animation: false
         }
     });
@@ -325,7 +322,7 @@
             datasets: [{
                 label: 'Voltage Decay',
                 data: [],
-                borderColor: '#fb923c',
+                borderColor: '#ea580c',
                 borderWidth: 2,
                 pointRadius: 0,
                 tension: 0.1
@@ -333,8 +330,9 @@
             {
                 label: 'Current Time',
                 data: [],
-                borderColor: '#fff',
-                backgroundColor: '#fff',
+                borderColor: '#ffffff',
+                backgroundColor: '#0f172a',
+                pointBorderWidth: 2,
                 pointRadius: 6,
                 pointStyle: 'circle',
                 showLine: false
@@ -344,10 +342,10 @@
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { type: 'logarithmic', title: { display: true, text: 'Time (s)' }, min: 1e-5, max: 1e-2 },
-                y: { type: 'logarithmic', title: { display: true, text: 'dB/dt (V/A)' } }
+                x: { type: 'logarithmic', title: { display: true, text: 'Time (s)', color: axisTitleColor }, min: 1e-5, max: 1e-2, ticks: { callback: pow10Tick } },
+                y: { type: 'logarithmic', title: { display: true, text: 'dB/dt (V/A)', color: axisTitleColor }, ticks: { callback: pow10Tick } }
             },
-            plugins: { legend: { display: false } },
+            plugins: { legend: { display: false }, tooltip: lightTooltip },
             animation: false
         }
     });
@@ -375,14 +373,14 @@
         const depthScale = (h - surfaceY) / 200; // 200m total visible depth
         
         // Draw Sky
-        ctx.fillStyle = '#0f172a';
+        ctx.fillStyle = '#eef6fc';
         ctx.fillRect(0, 0, w, surfaceY);
-        
+
         // Draw Transmitter / Receiver Coils (abstract representation)
-        ctx.fillStyle = '#94a3b8';
+        ctx.fillStyle = '#475569';
         ctx.fillRect(w/2 - 20, surfaceY - 10, 10, 10); // TX
         ctx.fillRect(w/2 + 10, surfaceY - 10, 10, 10); // RX
-        ctx.fillStyle = '#f8fafc';
+        ctx.fillStyle = '#334155';
         ctx.font = '10px sans-serif';
         ctx.fillText('TX', w/2 - 22, surfaceY - 15);
         ctx.fillText('RX', w/2 + 8, surfaceY - 15);
@@ -397,8 +395,8 @@
         ctx.fillRect(0, surfaceY + h1_px, w, h - (surfaceY + h1_px));
 
         // Draw Boundary Line
-        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(15,23,42,0.4)';
+        ctx.lineWidth = 1.5;
         ctx.setLineDash([5, 5]);
         ctx.beginPath();
         ctx.moveTo(0, surfaceY + h1_px);
@@ -406,8 +404,16 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
+        // Ground surface line between the sky and layer 1
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, surfaceY);
+        ctx.lineTo(w, surfaceY);
+        ctx.stroke();
+
         // Labels
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.fillStyle = '#1e293b';
         ctx.font = '12px sans-serif';
         ctx.fillText(`Layer 1: ${state.rho1.toFixed(1)} Ω·m`, 10, surfaceY + 20);
         ctx.fillText(`Depth: ${state.h1.toFixed(0)} m`, 10, surfaceY + h1_px - 10);
@@ -420,7 +426,14 @@
         // Note: strictly speaking skin depth gets complex in 2 layers, but visualizing Layer 1's penetration is educational
         const delta_px = Math.min(fdemDelta * depthScale, h - surfaceY);
         
-        ctx.strokeStyle = '#4ade80';
+        // White underlay keeps the dark green marker readable on every layer tone
+        ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, surfaceY + delta_px);
+        ctx.lineTo(w, surfaceY + delta_px);
+        ctx.stroke();
+        ctx.strokeStyle = '#047857';
         ctx.lineWidth = 2;
         ctx.setLineDash([8, 4]);
         ctx.beginPath();
@@ -428,9 +441,14 @@
         ctx.lineTo(w, surfaceY + delta_px);
         ctx.stroke();
         ctx.setLineDash([]);
-        
-        ctx.fillStyle = '#4ade80';
-        ctx.fillText(`Skin Depth (δ) at ${(state.freq/1000).toFixed(1)} kHz ≈ ${fdemDelta.toFixed(0)}m`, w - 200, surfaceY + delta_px - 5);
+
+        const skinLabel = `Skin Depth (δ) at ${(state.freq/1000).toFixed(1)} kHz ≈ ${fdemDelta.toFixed(0)}m`;
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.strokeText(skinLabel, w - 200, surfaceY + delta_px - 5);
+        ctx.fillStyle = '#047857';
+        ctx.fillText(skinLabel, w - 200, surfaceY + delta_px - 5);
 
         // TEM Smoke Ring Overlay
         if (state.temAnimActive) {
@@ -457,16 +475,25 @@
             const cx = w/2;
             const cy = surfaceY;
             
-            ctx.strokeStyle = `rgba(251, 146, 60, ${1 - state.temAnimProgress})`; // Fade out
-            ctx.lineWidth = 3;
+            const fade = 1 - state.temAnimProgress; // Fade out
+            // Draw semi-ellipse. Width relates to depth. A white underlay separates it from the layers.
             ctx.beginPath();
-            // Draw semi-ellipse. Width relates to depth.
             ctx.ellipse(cx, cy, d_px * 1.5, d_px, 0, 0, Math.PI);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.8 * fade})`;
+            ctx.lineWidth = 6;
+            ctx.stroke();
+            ctx.strokeStyle = `rgba(234, 88, 12, ${fade})`;
+            ctx.lineWidth = 3;
             ctx.stroke();
 
             // Draw current time on canvas
-            ctx.fillStyle = '#fb923c';
-            ctx.fillText(`t = ${(t*1000).toFixed(2)} ms`, cx + 20, cy + d_px - 10);
+            const timeLabel = `t = ${(t*1000).toFixed(2)} ms`;
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+            ctx.strokeText(timeLabel, cx + 20, cy + d_px - 10);
+            ctx.fillStyle = '#c2410c';
+            ctx.fillText(timeLabel, cx + 20, cy + d_px - 10);
         }
     };
 

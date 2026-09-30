@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async src="../../../assets/vendor/mathjax/tex-mml-chtml.js"></script>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
 <body>
@@ -36,7 +36,7 @@
       <div class="stat"><div class="v" id="hest">–</div><div class="l">Depth from intercept (m)</div></div>
     </div>
     <div class="formula" id="fbox">
-      Direct wave $t=x/V_1$; head wave $t=\dfrac{x}{V_2}+t_i$ with intercept $t_i=\dfrac{2h\sqrt{V_2^2-V_1^2}}{V_1 V_2}$. Depth from intercept: $h=\dfrac{t_i}{2}\dfrac{V_1 V_2}{\sqrt{V_2^2-V_1^2}}$; crossover $x_c=2h\sqrt{\dfrac{V_2+V_1}{V_2-V_1}}$.
+      Direct wave $t=x/V_1$; when $V_2>V_1$, the head wave is $t=\dfrac{x}{V_2}+t_i$ with intercept $t_i=\dfrac{2h\sqrt{V_2^2-V_1^2}}{V_1 V_2}$. Depth from intercept: $h=\dfrac{t_i}{2}\dfrac{V_1 V_2}{\sqrt{V_2^2-V_1^2}}$; crossover $x_c=2h\sqrt{\dfrac{V_2+V_1}{V_2-V_1}}$.
     </div>
   </div>
 </div>
@@ -44,20 +44,20 @@
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 function draw(){
   const P=demoPalette();
-  const V1=+document.getElementById('v1').value, V2raw=+document.getElementById('v2').value, h=+document.getElementById('h').value;
-  const V2=Math.max(V2raw,V1+50);
+  const V1=+document.getElementById('v1').value, V2=+document.getElementById('v2').value, h=+document.getElementById('h').value;
+  const hasHeadWave=V2>V1;
   document.getElementById('v1v').textContent=V1+' m/s';
-  document.getElementById('v2v').textContent=V2raw+' m/s';
+  document.getElementById('v2v').textContent=V2+' m/s';
   document.getElementById('hv').textContent=h+' m';
-  const ti=2*h*Math.sqrt(V2*V2-V1*V1)/(V1*V2);       // s
-  const xc=2*h*Math.sqrt((V2+V1)/(V2-V1));            // m
-  const hEst=(ti/2)*V1*V2/Math.sqrt(V2*V2-V1*V1);
-  document.getElementById('xcross').textContent=xc.toFixed(1);
-  document.getElementById('ti').textContent=(ti*1000).toFixed(1);
-  document.getElementById('hest').textContent=hEst.toFixed(1);
+  const ti=hasHeadWave?2*h*Math.sqrt(V2*V2-V1*V1)/(V1*V2):null;       // s
+  const xc=hasHeadWave?2*h*Math.sqrt((V2+V1)/(V2-V1)):null;            // m
+  const hEst=hasHeadWave?(ti/2)*V1*V2/Math.sqrt(V2*V2-V1*V1):null;
+  document.getElementById('xcross').textContent=hasHeadWave?xc.toFixed(1):'\u2013';
+  document.getElementById('ti').textContent=hasHeadWave?(ti*1000).toFixed(1):'\u2013';
+  document.getElementById('hest').textContent=hasHeadWave?hEst.toFixed(1):'\u2013';
   const W=cv.width,H=cv.height,mid=H*0.60;ctx.clearRect(0,0,W,H);ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
   const XMAX=100;
-  const tAt=x=> Math.min(x/V1, x/V2+ti);
+  const tAt=x=> hasHeadWave?Math.min(x/V1, x/V2+ti):x/V1;
   const tmax=Math.max(tAt(XMAX), XMAX/V1)*1.05;
   const gx0=60,gx1=W-20,gy0=20,gy1=mid-30;
   const px=x=>gx0+(gx1-gx0)*x/XMAX, py=t=>gy1-(gy1-gy0)*t/tmax;
@@ -71,21 +71,26 @@ function draw(){
   // direct wave (full)
   ctx.strokeStyle=P.primary;ctx.lineWidth=2;ctx.setLineDash([5,4]);
   ctx.beginPath();ctx.moveTo(px(0),py(0));ctx.lineTo(px(XMAX),py(XMAX/V1));ctx.stroke();ctx.setLineDash([]);
-  // head wave
-  ctx.strokeStyle=P.accent;ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(px(0),py(ti));ctx.lineTo(px(XMAX),py(XMAX/V2+ti));ctx.stroke();
-  // first-arrival (thick)
-  ctx.strokeStyle=P.success;ctx.lineWidth=3.5;ctx.beginPath();
-  for(let k=0;k<=200;k++){const x=XMAX*k/200;const t=tAt(x);k?ctx.lineTo(px(x),py(t)):ctx.moveTo(px(x),py(t));}
-  ctx.stroke();
-  // crossover marker
-  if(xc<=XMAX){const cx=px(xc),cy=py(xc/V1);ctx.fillStyle=P.danger;ctx.beginPath();ctx.arc(cx,cy,5,0,7);ctx.fill();
-    ctx.fillStyle=P.danger;ctx.textAlign='center';ctx.fillText('crossover',cx,cy-10);}
+  if(hasHeadWave){
+    // critically refracted head wave and the resulting first-arrival envelope
+    ctx.strokeStyle=P.accent;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(px(0),py(ti));ctx.lineTo(px(XMAX),py(XMAX/V2+ti));ctx.stroke();
+    ctx.strokeStyle=P.success;ctx.lineWidth=3.5;ctx.beginPath();
+    for(let k=0;k<=200;k++){const x=XMAX*k/200;const t=tAt(x);k?ctx.lineTo(px(x),py(t)):ctx.moveTo(px(x),py(t));}
+    ctx.stroke();
+    if(xc<=XMAX){const cx=px(xc),cy=py(xc/V1);ctx.fillStyle=P.danger;ctx.beginPath();ctx.arc(cx,cy,5,0,7);ctx.fill();
+      ctx.fillStyle=P.danger;ctx.textAlign='center';ctx.fillText('crossover',cx,cy-10);}
+  }else{
+    ctx.fillStyle=P.danger;ctx.font='bold 14px Inter, Segoe UI';ctx.textAlign='left';
+    ctx.fillText('No head wave: v2 <= v1 (velocity inversion)',gx0+18,gy0+24);
+  }
   // legend
   ctx.textAlign='left';ctx.font='12px Inter, Segoe UI';
   ctx.fillStyle=P.primary;ctx.fillText('— direct (1/V₁)',gx1-150,gy0+12);
-  ctx.fillStyle=P.accent;ctx.fillText('— head wave (1/V₂)',gx1-150,gy0+28);
-  ctx.fillStyle=P.success;ctx.fillText('— first arrival',gx1-150,gy0+44);
+  if(hasHeadWave){
+    ctx.fillStyle=P.accent;ctx.fillText('— head wave (1/V₂)',gx1-150,gy0+28);
+    ctx.fillStyle=P.success;ctx.fillText('— first arrival',gx1-150,gy0+44);
+  }
   // model section
   ctx.fillStyle=P.surface2;ctx.fillRect(0,mid,W,H-mid);
   const zscale=(H-mid-20)/40;const yb=mid+h*zscale;
@@ -93,7 +98,7 @@ function draw(){
   ctx.strokeStyle=P.primary;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,yb);ctx.lineTo(W,yb);ctx.stroke();
   ctx.fillStyle=P.text;ctx.font='13px Inter, Segoe UI';
   ctx.fillText('Layer 1:  V₁ = '+V1+' m/s,  h = '+h+' m',16,mid+22);
-  ctx.fillText('Layer 2:  V₂ = '+V2raw+' m/s',16,yb+24);
+  ctx.fillText('Layer 2:  V₂ = '+V2+' m/s',16,yb+24);
   ctx.fillStyle=P.danger;ctx.fillText('★ shot',8,mid-6);
   if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([document.getElementById('fbox')]);
 }

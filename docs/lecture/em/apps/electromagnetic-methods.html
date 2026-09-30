@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EM System Animation Activity</title>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -14,37 +14,20 @@
         }
 
         body {
-            background-color: #0b1521;
-            color: #e0e0e0;
-            font-family: 'Lato', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        /* Header Section */
-        .header {
+        /* Header Section: shared light title band, widened to the app's 1400px container */
+        .lab-hero .lab-hero-inner {
+            max-width: calc(1400px + 3rem);
             display: flex;
             align-items: center;
-            gap: 15px;
-            width: 100%;
-            max-width: 1400px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #00bcd4;
+            gap: 12px;
         }
 
-        .header i {
-            font-size: 28px;
-            color: #ffb74d;
-        }
-
-        .header h1 {
-            font-family: 'Urbanist', sans-serif;
-            color: #f4c542;
-            font-size: 30px;
+        .lab-hero .lab-hero-inner i {
+            font-size: 24px;
         }
 
         /* Main Layout */
@@ -52,8 +35,10 @@
             display: flex;
             gap: 25px;
             width: 100%;
-            max-width: 1400px;
-            height: calc(100vh - 120px);
+            max-width: calc(1400px + 3rem);
+            margin: 20px auto 24px;
+            padding: 0 1.5rem;
+            height: calc(100vh - 185px);
             min-height: 600px;
         }
 
@@ -65,63 +50,44 @@
             gap: 20px;
         }
 
-        /* Compact Stepper */
+        /* Compact Stepper: tabs take the shared .lab-tab look; JS toggles is-active / completed */
         .stepper {
             display: flex;
             gap: 10px;
-            background: #15202b;
+            background: var(--lab-surface);
             padding: 10px;
-            border-radius: 12px;
-            border: 1px solid #2a3b4c;
+            border-radius: var(--lab-radius);
+            border: 1px solid var(--lab-border);
+            box-shadow: var(--lab-shadow);
         }
 
-        .step-tab {
+        .stepper .step-tab {
             flex: 1;
             padding: 12px 10px;
             text-align: center;
-            background-color: #1a2530;
-            border-radius: 8px;
-            font-family: 'Urbanist', sans-serif;
-            font-weight: 600;
-            color: #78909c;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
             justify-content: center;
             gap: 8px;
         }
 
-        .step-tab:hover {
-            background-color: #243447;
-            color: #b0bec5;
-        }
-
-        .step-tab.active {
-            background-color: #00bcd4;
-            color: #0b1521;
-            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
-        }
-
-        .step-tab.completed {
-            border-bottom: 3px solid #00bcd4;
-            color: #00bcd4;
+        .stepper .step-tab.completed {
+            color: var(--lab-primary-strong);
+            border-bottom: 3px solid var(--lab-primary);
             border-bottom-left-radius: 2px;
             border-bottom-right-radius: 2px;
         }
 
-        /* Animation Canvas Area */
+        /* Animation Canvas Area: a white whiteboard */
         .animation-board {
-            background-color: #0f1a24;
-            border: 2px dashed #37474f;
-            border-radius: 12px;
+            background-color: #ffffff;
+            border: 1px solid var(--lab-border-strong);
+            border-radius: var(--lab-radius);
             flex-grow: 1;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            box-shadow: var(--lab-shadow);
         }
 
         svg {
@@ -139,27 +105,28 @@
         }
 
         .panel {
-            background-color: #15202b;
-            border-radius: 12px;
             padding: 25px;
-            border: 1px solid #2a3b4c;
         }
 
         .panel h3 {
-            font-family: 'Urbanist', sans-serif;
-            color: #f4c542;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--lab-text);
             margin-bottom: 15px;
-            font-size: 22px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
+        .panel h3 i {
+            color: var(--lab-primary);
+        }
+
         /* Step Info Text */
         .step-info p {
-            font-size: 17px;
+            font-size: 16px;
             line-height: 1.6;
-            color: #cfd8dc;
+            color: var(--lab-text-2);
             margin-bottom: 20px;
         }
 
@@ -170,131 +137,88 @@
             gap: 15px;
         }
 
+        /* Buttons take the shared .lab-btn / .lab-btn-primary look */
         button {
-            padding: 12px 20px;
-            font-size: 16px;
-            font-family: 'Urbanist', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 8px;
-            border: none;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .controls .lab-btn {
+            padding: 11px 20px;
+            font-size: 15px;
             gap: 10px;
         }
 
-        .btn-primary {
-            background-color: #00bcd4;
-            color: #0d1b2a;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background-color: #4dd0e1;
-            transform: scale(1.02);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: #f4c542;
-            border: 2px solid #f4c542;
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background-color: rgba(244, 197, 66, 0.1);
-        }
-
-        button:disabled {
-            background-color: #2a3b4c;
-            color: #546e7a;
-            border-color: transparent;
-            cursor: not-allowed;
-        }
-
-        /* Interactive Slider */
+        /* Interactive Slider (native track, class lab-range) */
         .slider-container {
             margin-top: 10px;
         }
-        
+
         .slider-label {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
             font-size: 15px;
-            color: #b0bec5;
+            color: var(--lab-text-2);
         }
 
         .slider-value {
-            color: #00bcd4;
+            color: #0e7490;
             font-weight: bold;
-        }
-
-        input[type=range] {
-            width: 100%;
-            accent-color: #00bcd4;
-            height: 6px;
-            border-radius: 3px;
-            background: #2a3b4c;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #00bcd4;
-            cursor: pointer;
-            border: 3px solid #0b1521;
         }
 
         .param-hint {
             font-size: 14px;
-            color: #78909c;
+            color: var(--lab-muted);
             margin-top: 10px;
             font-style: italic;
         }
 
-        /* SVG Element Styles & Animations */
-        .ground-line { stroke: #78909c; stroke-width: 3; stroke-dasharray: 1200; stroke-dashoffset: 1200; transition: stroke-dashoffset 1.5s ease; }
+        /* SVG Element Styles & Animations: dark ink on the whiteboard, 600/700-level field colors */
+        .ground-line { stroke: #475569; stroke-width: 3; stroke-dasharray: 1200; stroke-dashoffset: 1200; transition: stroke-dashoffset 1.5s ease; }
         .coil { opacity: 0; transition: opacity 1s ease 0.5s, transform 1s ease 0.5s; transform: translateY(-20px); }
-        .primary-field path { fill: none; stroke: #00bcd4; stroke-width: 3; stroke-dasharray: 1500; stroke-dashoffset: 1500; transition: stroke-dashoffset 2s ease-in-out; }
-        
+        .primary-field path { fill: none; stroke: #0891b2; stroke-width: 3; stroke-dasharray: 1500; stroke-dashoffset: 1500; transition: stroke-dashoffset 2s ease-in-out; }
+        /* Primary-field arrowheads stay hidden until their field lines have been drawn */
+        #arrow-cyan path { opacity: 0; transition: opacity 0.3s ease; }
+
         .blob { opacity: 0; transform: scale(0.8); transform-origin: 600px 260px; transition: all 1s ease; }
-        
+
         /* Dynamic physics elements */
         .dynamic-eddy {
             fill: none;
-            stroke: #f4c542;
+            stroke: #b45309;
             stroke-dasharray: 100;
             stroke-dashoffset: 100;
             transition: stroke-dashoffset 1.5s ease 0.5s, stroke-width 0.3s, opacity 0.3s;
         }
         .dynamic-eddy-arrow {
+            fill: #b45309;
             opacity: 0;
             transition: opacity 0.3s ease 1.8s, fill 0.3s;
         }
         .dynamic-secondary path {
             fill: none;
-            stroke: #f4c542;
+            stroke: #d97706;
             stroke-dasharray: 15, 10;
             transition: stroke-width 0.3s, opacity 0.3s;
         }
 
         .reveal-rect { width: 0; height: 500px; transition: width 2s ease-in-out; }
-        .label { font-family: 'Urbanist', sans-serif; font-size: 20px; font-weight: bold; opacity: 0; transition: opacity 1s ease 1.5s; }
-        .label-p { fill: #00bcd4; }
-        .label-s { fill: #f4c542; transition: opacity 1s ease 1.5s, font-size 0.3s; }
-        .annotation { fill: #b0bec5; font-size: 16px; font-family: 'Lato', sans-serif; }
+        .label { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 20px; font-weight: bold; opacity: 0; transition: opacity 1s ease 1.5s; }
+        .label-p { fill: #0e7490; }
+        .label-s { fill: #b45309; transition: opacity 1s ease 1.5s, font-size 0.3s; }
+        .annotation { fill: #475569; font-size: 16px; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        /* The dimmed "Ground Surface" note keeps its 0.7 opacity, so it uses darker ink to stay readable */
+        .annotation[opacity] { fill: #1e293b; }
 
         /* Step Activation Logic */
         .step-1 .ground-line { stroke-dashoffset: 0; }
         .step-1 .coil { opacity: 1; transform: translateY(0); }
         .step-1 .primary-field path { stroke-dashoffset: 0; transition-delay: 1.2s; }
         .step-1 .label-p { opacity: 1; transition-delay: 2.5s; }
+        .step-1 #arrow-cyan path { opacity: 1; transition-delay: 3s; }
+
+        .step-2 #arrow-cyan path,
+        .step-3 #arrow-cyan path { opacity: 1; }
 
         .step-2 .ground-line { stroke-dashoffset: 0; }
         .step-2 .coil { opacity: 1; transform: translateY(0); }
@@ -314,31 +238,32 @@
         .step-3 .reveal-rect { width: 1200px; }
         .step-3 .label-s { opacity: 1; transition-delay: 1.5s; }
         @media (max-width: 760px) {
-            body { padding: 12px; align-items: stretch; }
-            .header { align-items: flex-start; }
-            .header h1 { font-size: 24px; }
-            .main-container { flex-direction: column; height: auto; min-height: 0; }
+            .lab-hero .lab-hero-inner { align-items: flex-start; padding: 0 16px; }
+            .lab-hero .lab-title { font-size: 1.4rem; }
+            .main-container { flex-direction: column; height: auto; min-height: 0; margin-top: 16px; padding: 0 16px; }
             .animation-panel, .sidebar { width: 100%; flex: none; }
             .stepper { overflow-x: auto; }
-            .step-tab { min-width: 130px; }
-            .animation-board { min-height: 430px; }
+            .stepper .step-tab { min-width: 130px; }
+            .animation-board { min-height: 300px; }
             .panel { padding: 18px; }
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Electromagnetic Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <div class="header">
-        <i class="fa-solid fa-clipboard-list"></i>
-        <h1>Whiteboard Exercise: EM Induction Principle</h1>
-    </div>
+    <header class="lab-hero">
+        <div class="lab-hero-inner">
+            <i class="fa-solid fa-clipboard-list lab-icon" aria-hidden="true"></i>
+            <h1 class="lab-title">Whiteboard Exercise: EM Induction Principle</h1>
+        </div>
+    </header>
 
     <div class="main-container">
         
@@ -347,10 +272,10 @@
             
             <!-- Compact Stepper -->
             <div class="stepper">
-                <div class="step-tab active" id="tab-0" onclick="setStep(0)"><i class="fa-solid fa-chalkboard"></i> 0. Start</div>
-                <div class="step-tab" id="tab-1" onclick="setStep(1)"><i class="fa-solid fa-satellite-dish"></i> 1. Primary</div>
-                <div class="step-tab" id="tab-2" onclick="setStep(2)"><i class="fa-solid fa-water"></i> 2. Eddy Currents</div>
-                <div class="step-tab" id="tab-3" onclick="setStep(3)"><i class="fa-solid fa-magnet"></i> 3. Secondary</div>
+                <div class="step-tab lab-tab is-active" id="tab-0" onclick="setStep(0)"><i class="fa-solid fa-chalkboard"></i> 0. Start</div>
+                <div class="step-tab lab-tab" id="tab-1" onclick="setStep(1)"><i class="fa-solid fa-satellite-dish"></i> 1. Primary</div>
+                <div class="step-tab lab-tab" id="tab-2" onclick="setStep(2)"><i class="fa-solid fa-water"></i> 2. Eddy Currents</div>
+                <div class="step-tab lab-tab" id="tab-3" onclick="setStep(3)"><i class="fa-solid fa-magnet"></i> 3. Secondary</div>
             </div>
 
             <!-- Animation Canvas -->
@@ -361,10 +286,10 @@
                             <rect class="reveal-rect" x="350" y="0" width="0" height="450" />
                         </clipPath>
                         <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#00bcd4" />
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#0891b2" />
                         </marker>
                         <marker id="arrow-yellow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                            <path d="M 0 0 L 10 5 L 0 10 z" id="arrow-yellow-path" fill="#f4c542" />
+                            <path d="M 0 0 L 10 5 L 0 10 z" id="arrow-yellow-path" fill="#d97706" />
                         </marker>
                     </defs>
 
@@ -374,14 +299,14 @@
 
                     <!-- Component 1: TX & RX Coils -->
                     <g class="coil" id="tx-coil">
-                        <rect x="250" y="90" width="60" height="60" rx="8" fill="#1e2d3b" stroke="#00bcd4" stroke-width="2" />
-                        <text x="280" y="125" fill="#00bcd4" font-weight="bold" font-family="Urbanist" font-size="20" text-anchor="middle">TX</text>
+                        <rect x="250" y="90" width="60" height="60" rx="8" fill="#ecfeff" stroke="#0891b2" stroke-width="2" />
+                        <text x="280" y="125" fill="#0e7490" font-weight="bold" font-family="system-ui, sans-serif" font-size="20" text-anchor="middle">TX</text>
                         <text x="280" y="80" class="annotation" text-anchor="middle">Transmitter</text>
                     </g>
                     
                     <g class="coil" id="rx-coil">
-                        <rect x="850" y="90" width="60" height="60" rx="8" fill="#1e2d3b" stroke="#00bcd4" stroke-width="2" />
-                        <text x="880" y="125" fill="#00bcd4" font-weight="bold" font-family="Urbanist" font-size="20" text-anchor="middle">RX</text>
+                        <rect x="850" y="90" width="60" height="60" rx="8" fill="#ecfeff" stroke="#0891b2" stroke-width="2" />
+                        <text x="880" y="125" fill="#0e7490" font-weight="bold" font-family="system-ui, sans-serif" font-size="20" text-anchor="middle">RX</text>
                         <text x="880" y="80" class="annotation" text-anchor="middle">Receiver</text>
                     </g>
 
@@ -394,15 +319,15 @@
 
                     <!-- Conductive Body & Eddy Currents -->
                     <g class="blob">
-                        <ellipse id="conductive-blob" cx="600" cy="260" rx="120" ry="60" fill="#263238" stroke="#546e7a" stroke-width="2" transition="fill 0.3s"/>
-                        <text x="600" y="265" fill="#cfd8dc" font-family="Lato" font-size="18" text-anchor="middle">Conductive Target</text>
-                        
-                        <!-- Left loop -->
+                        <ellipse id="conductive-blob" cx="600" cy="260" rx="120" ry="60" fill="#e2e8f0" stroke="#64748b" stroke-width="2" transition="fill 0.3s"/>
+                        <text x="600" y="292" fill="#1e293b" font-family="system-ui, sans-serif" font-size="18" text-anchor="middle">Conductive Target</text>
+
+                        <!-- Left loop (circle centred at 520,245; arrowhead sits on its right edge) -->
                         <path class="dynamic-eddy" d="M 520 260 A 15 15 0 1 1 520.1 260" />
-                        <polygon class="dynamic-eddy-arrow" points="535,260 540,268 530,268" />
-                        <!-- Right loop -->
+                        <polygon class="dynamic-eddy-arrow" points="535,241 540,249 530,249" />
+                        <!-- Right loop (circle centred at 680,245) -->
                         <path class="dynamic-eddy" d="M 680 260 A 15 15 0 1 1 680.1 260" />
-                        <polygon class="dynamic-eddy-arrow" points="695,260 700,268 690,268" />
+                        <polygon class="dynamic-eddy-arrow" points="695,241 700,249 690,249" />
                     </g>
 
                     <!-- Secondary Field Lines -->
@@ -410,7 +335,7 @@
                         <path class="sec-path" d="M 630 220 C 700 120, 800 100, 850 120" marker-end="url(#arrow-yellow)" />
                         <path class="sec-path" d="M 680 250 C 750 200, 850 150, 860 150" marker-end="url(#arrow-yellow)" />
                     </g>
-                    <text x="750" y="100" class="label label-s" id="sec-label">Secondary Field (H_secondary)</text>
+                    <text x="838" y="92" text-anchor="end" class="label label-s" id="sec-label">Secondary Field (H_secondary)</text>
                 </svg>
             </div>
         </div>
@@ -419,23 +344,23 @@
         <div class="sidebar">
             
             <!-- Instructions Panel -->
-            <div class="panel step-info">
+            <div class="panel step-info lab-card">
                 <h3 id="step-title"><i class="fa-solid fa-chalkboard"></i> 0. Start</h3>
                 <p id="step-desc">The whiteboard is blank. Get ready to draw the components of the electromagnetic system.</p>
-                
+
                 <div class="controls">
-                    <button id="btn-next" class="btn-primary" onclick="nextStep()">Next Step <i class="fa-solid fa-arrow-right"></i></button>
+                    <button id="btn-next" class="btn-primary lab-btn lab-btn-primary" onclick="nextStep()">Next Step <i class="fa-solid fa-arrow-right"></i></button>
                     <div style="display:flex; gap:10px;">
-                        <button id="btn-prev" class="btn-secondary" style="flex:1" onclick="prevStep()" disabled><i class="fa-solid fa-arrow-left"></i> Prev</button>
-                        <button id="btn-reset" class="btn-secondary" style="flex:1" onclick="setStep(0)"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                        <button id="btn-prev" class="btn-secondary lab-btn" style="flex:1" onclick="prevStep()" disabled><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                        <button id="btn-reset" class="btn-secondary lab-btn" style="flex:1" onclick="setStep(0)"><i class="fa-solid fa-rotate-right"></i> Reset</button>
                     </div>
                 </div>
             </div>
 
             <!-- Physics Parameter Panel -->
-            <div class="panel" id="physics-panel" style="opacity: 0.5; pointer-events: none; transition: opacity 0.5s;">
+            <div class="panel lab-card" id="physics-panel" style="opacity: 0.5; pointer-events: none; transition: opacity 0.5s;">
                 <h3><i class="fa-solid fa-sliders"></i> Physics Controls</h3>
-                <p style="font-size:14px; color:#cfd8dc; margin-bottom:15px;">Adjust the target's properties to see how the physical response changes.</p>
+                <p style="font-size:14px; color:#475569; margin-bottom:15px;">Adjust the target's properties to see how the physical response changes.</p>
                 
                 <div class="slider-container">
                     <div class="slider-label">
@@ -443,7 +368,7 @@
                         <span class="slider-value" id="cond-display">Medium</span>
                     </div>
                     <!-- Slider goes from 1 to 100 representing low to high conductivity -->
-                    <input type="range" id="conductivity" min="1" max="100" value="50" oninput="updatePhysics()">
+                    <input type="range" id="conductivity" class="lab-range" min="1" max="100" value="50" oninput="updatePhysics()">
                     <div class="param-hint" id="cond-hint">Example: Damp Soil or Till</div>
                 </div>
             </div>
@@ -487,11 +412,11 @@
             for (let i = 0; i <= totalSteps; i++) {
                 const tab = document.getElementById('tab-' + i);
                 if (i === currentStep) {
-                    tab.className = 'step-tab active';
+                    tab.className = 'step-tab lab-tab is-active';
                 } else if (i < currentStep) {
-                    tab.className = 'step-tab completed';
+                    tab.className = 'step-tab lab-tab completed';
                 } else {
-                    tab.className = 'step-tab';
+                    tab.className = 'step-tab lab-tab';
                 }
             }
 
@@ -549,19 +474,19 @@
             
             if(val < 33) {
                 display.innerText = "Low";
-                display.style.color = "#ffb74d";
+                display.style.color = "#c2410c";
                 hint.innerText = "Example: Dry Sand, Gravel, Ice";
-                blob.style.fill = "#1e2d3b"; // Lighter/less dense
+                blob.style.fill = "#f1f5f9"; // Lighter/less dense
             } else if (val < 66) {
                 display.innerText = "Medium";
-                display.style.color = "#00bcd4";
+                display.style.color = "#0e7490";
                 hint.innerText = "Example: Damp Soil, Till, Fresh Water";
-                blob.style.fill = "#263238"; // Medium density
+                blob.style.fill = "#e2e8f0"; // Medium density
             } else {
                 display.innerText = "High";
-                display.style.color = "#f4c542";
+                display.style.color = "#b45309";
                 hint.innerText = "Example: Clay, Saltwater, Metallic Ore";
-                blob.style.fill = "#37474f"; // Dense
+                blob.style.fill = "#cbd5e1"; // Dense
             }
 
             // Apply SVG style changes dynamically

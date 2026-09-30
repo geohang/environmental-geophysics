@@ -4,81 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SP Signal Mechanisms</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
+
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Dark slate matching the image */
-            color: #f8fafc;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
-        .mechanism-btn {
-            transition: all 0.2s ease-in-out;
+        /* Mechanism tabs: light lab tabs laid out as full-width cards. */
+        .mechanism-btn.lab-tab {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
         }
-        .mechanism-btn.active {
-            background-color: #1e293b;
-            border-left: 4px solid #38bdf8;
+        .mechanism-btn.lab-tab.is-active {
+            box-shadow: inset 4px 0 0 var(--lab-primary);
         }
         canvas {
-            background-color: #1e293b;
+            background-color: #f8fafc;
             border-radius: 0.5rem;
-            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Electrical Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <div class="max-w-6xl w-full">
-        <!-- Header -->
-        <header class="mb-8 text-center md:text-left">
-            <h1 class="text-3xl md:text-5xl font-bold text-sky-400 mb-2">Three Mechanisms Generate SP Signals</h1>
-            <p class="text-slate-400 text-lg">Interactive physical models of Spontaneous Potential generation.</p>
-        </header>
+    <!-- Header -->
+    <header class="lab-hero">
+        <div class="lab-hero-inner">
+            <h1 class="lab-title">Three Mechanisms Generate <span class="lab-title-accent">SP</span> Signals</h1>
+            <p class="lab-subtitle">Interactive physical models of Spontaneous Potential generation.</p>
+        </div>
+    </header>
 
+    <div class="max-w-6xl w-full mx-auto p-6 pb-12">
         <!-- Main Content -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
+
             <!-- Left Column: Navigation and Descriptions -->
             <div class="space-y-4 lg:col-span-1 flex flex-col">
-                
+
                 <div class="space-y-2">
                     <!-- Mechanism 1 -->
-                    <button onclick="switchTab(1)" id="btn-1" class="w-full mechanism-btn active text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
-                        <h2 class="text-lg font-bold text-sky-400">1. Electrokinetic (Streaming)</h2>
+                    <button onclick="switchTab(1)" id="btn-1" class="lab-tab mechanism-btn is-active">
+                        <h2 class="text-lg font-bold">1. Electrokinetic (Streaming)</h2>
                     </button>
 
                     <!-- Mechanism 2 -->
-                    <button onclick="switchTab(2)" id="btn-2" class="w-full mechanism-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
-                        <h2 class="text-lg font-bold text-sky-400">2. Electrochemical (Redox)</h2>
+                    <button onclick="switchTab(2)" id="btn-2" class="lab-tab mechanism-btn">
+                        <h2 class="text-lg font-bold">2. Electrochemical (Redox)</h2>
                     </button>
 
                     <!-- Mechanism 3 -->
-                    <button onclick="switchTab(3)" id="btn-3" class="w-full mechanism-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
-                        <h2 class="text-lg font-bold text-sky-400">3. Thermoelectric</h2>
+                    <button onclick="switchTab(3)" id="btn-3" class="lab-tab mechanism-btn">
+                        <h2 class="text-lg font-bold">3. Thermoelectric</h2>
                     </button>
                 </div>
 
                 <!-- Concept Explanation Card -->
-                <div class="bg-slate-800 p-5 rounded-lg border border-slate-600 shadow-lg mt-2">
-                    <h3 class="text-sm font-bold text-emerald-400 mb-2 uppercase tracking-wider flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="lab-card p-5 mt-2">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2 uppercase tracking-wider flex items-center">
+                        <svg class="w-4 h-4 mr-2 lab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Concept Breakdown
                     </h3>
-                    <p id="concept-text" class="text-slate-300 text-sm leading-relaxed mb-4">
+                    <p id="concept-text" class="text-slate-700 text-sm leading-relaxed mb-4">
                         <!-- Populated by JS -->
                     </p>
-                    
-                    <div class="border-t border-slate-700 pt-4 mt-4">
-                        <label id="slider-label" class="block text-sm font-semibold text-sky-300 mb-2">Adjust Variable</label>
-                        <input type="range" id="interactive-slider" min="0" max="100" value="50" class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer">
-                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+
+                    <div class="border-t border-slate-200 pt-4 mt-4">
+                        <label id="slider-label" class="block text-sm font-semibold text-slate-800 mb-2">Adjust Variable</label>
+                        <input type="range" id="interactive-slider" min="0" max="100" value="50" class="lab-range">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
                             <span>Low</span>
                             <span>High</span>
                         </div>
@@ -87,9 +89,9 @@
 
                 <!-- Legend Card -->
                 <div class="mt-auto pt-2">
-                    <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                        <h3 class="text-sm font-semibold text-slate-200 mb-3 uppercase tracking-wider">Animation Legend</h3>
-                        <ul class="space-y-2 text-sm text-slate-400" id="legend-content">
+                    <div class="lab-card p-4">
+                        <h3 class="text-sm font-semibold text-slate-800 mb-3 uppercase tracking-wider">Animation Legend</h3>
+                        <ul class="space-y-2 text-sm text-slate-600" id="legend-content">
                             <!-- Populated by JS -->
                         </ul>
                     </div>
@@ -98,21 +100,21 @@
             </div>
 
             <!-- Right Column: Canvas Animation -->
-            <div class="lg:col-span-2 relative h-[500px] lg:h-auto min-h-[500px] border border-slate-700 rounded-xl overflow-hidden bg-slate-800 flex flex-col">
-                
+            <div class="lab-card lg:col-span-2 relative h-[500px] lg:h-auto min-h-[500px] overflow-hidden flex flex-col">
+
                 <!-- Educational overlay text -->
-                <div class="absolute top-4 left-4 z-10 pointer-events-none drop-shadow-md">
-                    <h3 id="canvas-title" class="text-2xl font-bold text-white">Streaming Potential</h3>
-                    <p id="canvas-subtitle" class="text-sky-300 text-sm">Drag of the electrical double layer</p>
+                <div class="absolute top-4 left-4 z-10 pointer-events-none">
+                    <h3 id="canvas-title" class="text-2xl font-bold text-slate-900">Streaming Potential</h3>
+                    <p id="canvas-subtitle" class="text-slate-600 text-sm">Drag of the electrical double layer</p>
                 </div>
-                
+
                 <!-- Voltage Indicator -->
-                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-slate-900/80 px-6 py-2 rounded-full border border-slate-600 flex items-center space-x-4">
-                    <span id="volt-left" class="text-red-400 font-bold text-lg">-</span>
-                    <div class="w-32 h-2 bg-slate-700 rounded-full overflow-hidden relative">
-                        <div id="volt-meter" class="absolute top-0 left-0 h-full bg-gradient-to-r from-red-500 to-sky-500 w-full transition-all duration-500 opacity-50"></div>
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 px-6 py-2 rounded-full border border-slate-200 shadow-sm flex items-center space-x-4 w-max max-w-[calc(100%-2rem)]">
+                    <span id="volt-left" class="text-red-600 font-bold text-lg">-</span>
+                    <div class="w-32 h-2 bg-slate-200 rounded-full overflow-hidden relative shrink-0">
+                        <div id="volt-meter" class="absolute top-0 left-0 h-full bg-gradient-to-r from-red-600 to-sky-600 w-full transition-all duration-500"></div>
                     </div>
-                    <span id="volt-right" class="text-sky-400 font-bold text-lg">+</span>
+                    <span id="volt-right" class="text-sky-700 font-bold text-lg">+</span>
                 </div>
 
                 <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
@@ -153,26 +155,26 @@
                 sub: "Drag of the electrical double layer", 
                 left: "Low Voltage (-)", 
                 right: "High Voltage (+)", 
-                legend: `<li><span class="inline-block w-4 h-4 rounded-full border-2 border-red-400 bg-slate-500 mr-2 align-middle"></span>Rock Grain w/ Negative Layer</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-400 mr-2 align-middle"></span>Positive Ion (Mobile)</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-400 mr-2 align-middle"></span>Negative Ion (Diffuse)</li>`,
+                legend: `<li><span class="inline-block w-4 h-4 rounded-full border-2 border-red-600 bg-[#d6c09a] mr-2 align-middle"></span>Rock Grain w/ Negative Layer</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-600 mr-2 align-middle"></span>Positive Ion (Mobile)</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-600 mr-2 align-middle"></span>Negative Ion (Diffuse)</li>`,
                 concept: "<strong>How it works:</strong> Groundwater flowing through rock pores naturally drags 'loose' positive ions with it. Meanwhile, the rock surfaces hold tightly onto a fixed layer of negative charge (the <strong>Electrical Double Layer</strong>, shown as the red ring). This physical pulling apart of charges creates a voltage difference across the aquifer.<br><br><em>Drag the slider to increase the fluid flow speed. Notice how faster flow forces more positive charge to build up on the right side.</em>",
                 sliderLabel: "Fluid Flow Speed"
             },
             { 
                 title: "Redox Diffusion Potential", 
                 sub: "Self-potential over a sulfide ore body", 
-                left: "Surface (+)", 
-                right: "Underground (-)", 
-                legend: `<li><span class="inline-block w-3 h-3 bg-slate-600 mr-2"></span>Conductive Ore Body</li><li><span class="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>Electron (e⁻)</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-400 mr-2"></span>Ion Current in Groundwater</li>`,
-                concept: "<strong>How it works:</strong> A conductive ore body acts like a giant natural battery connecting two environments. Near the surface, plentiful oxygen pulls electrons out of the rock. Deep underground, a lack of oxygen pushes electrons into the rock. Electrons flow up through the solid ore, and ions in the water complete the electrical circuit.<br><br><em>Drag the slider to adjust the chemical reaction rate.</em>",
+                left: "Surface (-)",
+                right: "Depth (+)",
+                legend: `<li><span class="inline-block w-3 h-3 bg-slate-600 mr-2"></span>Conductive Ore Body</li><li><span class="inline-block w-3 h-3 rounded-full bg-amber-500 mr-2"></span>Electron (e⁻)</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-600 mr-2"></span>Ion Current in Groundwater</li>`,
+                concept: "<strong>How it works:</strong> A conductive ore body acts like a giant natural battery connecting two environments. Near the surface, plentiful oxygen pulls electrons out of the rock. Deep underground, a lack of oxygen pushes electrons into the rock. Electrons flow up through the solid ore, and ions in the water complete the electrical circuit. In the groundwater, current flows toward the top of the ore body, so the ground surface directly above it reads a negative SP anomaly.<br><br><em>Drag the slider to adjust the chemical reaction rate.</em>",
                 sliderLabel: "Chemical Reaction Rate"
             },
             { 
                 title: "Thermoelectric Effect", 
                 sub: "Differential ion mobility in a thermal gradient", 
-                left: "Hot (+)", 
-                right: "Cold (-)", 
-                legend: `<li><span class="inline-block w-3 h-3 bg-gradient-to-r from-red-500 to-blue-500 mr-2"></span>Heat Difference</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-400 mr-2"></span>Small/Fast Ion (e.g., H+)</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-400 mr-2"></span>Large/Slow Ion</li>`,
-                concept: "<strong>How it works:</strong> Heat gives ions kinetic energy, causing them to vibrate and spread toward cooler areas. However, lighter/smaller ions travel much faster than heavier ones. Because the fast positive ions win the race to the cold side first, the cold side becomes positively charged.<br><br><em>Drag the slider to increase the temperature difference between the hot and cold sides.</em>",
+                left: "Hot (-)",
+                right: "Cold (+)",
+                legend: `<li><span class="inline-block w-3 h-3 bg-gradient-to-r from-red-600 to-sky-600 mr-2"></span>Heat Difference</li><li><span class="inline-block w-3 h-3 rounded-full bg-sky-600 mr-2"></span>Small/Fast Ion (e.g., H+)</li><li><span class="inline-block w-3 h-3 rounded-full bg-red-600 mr-2"></span>Large/Slow Ion</li>`,
+                concept: "<strong>How it works:</strong> Heat gives ions kinetic energy, causing them to vibrate and spread toward cooler areas. However, lighter/smaller ions travel much faster than heavier ones. Because the fast positive ions win the race to the cold side first, the cold side becomes positively charged. (The polarity depends on which ions dominate the pore water; this animation assumes the faster ion is positive, like H⁺.)<br><br><em>Drag the slider to increase the temperature difference between the hot and cold sides.</em>",
                 sliderLabel: "Temperature Difference (Gradient)"
             }
         ];
@@ -184,8 +186,8 @@
             document.getElementById('interactive-slider').value = 50;
             
             // Update buttons
-            document.querySelectorAll('.mechanism-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${tabId}`).classList.add('active');
+            document.querySelectorAll('.mechanism-btn').forEach(btn => btn.classList.remove('is-active'));
+            document.getElementById(`btn-${tabId}`).classList.add('is-active');
 
             // Update text
             document.getElementById('canvas-title').innerText = titles[tabId-1].title;
@@ -198,11 +200,13 @@
 
             // Update Voltmeter visual
             const meter = document.getElementById('volt-meter');
-            if(tabId === 1) meter.style.background = 'linear-gradient(to right, #f87171, #38bdf8)';
-            if(tabId === 2) meter.style.background = 'linear-gradient(to top, #f87171, #38bdf8)';
-            if(tabId === 3) meter.style.background = 'linear-gradient(to right, #f87171, #38bdf8)';
+            if(tabId === 1) meter.style.background = 'linear-gradient(to right, #dc2626, #0284c7)';
+            if(tabId === 2) meter.style.background = 'linear-gradient(to right, #dc2626, #0284c7)'; // surface (-) to depth (+)
+            if(tabId === 3) meter.style.background = 'linear-gradient(to right, #dc2626, #0284c7)';
 
-            initSimulation(tabId);
+            // The panel height follows the new text, so size the canvas again before
+            // re-initialising (resizeCanvas calls initSimulation(currentTab)).
+            resizeCanvas();
         }
 
         // --- SIMULATION INITIALIZATION ---
@@ -267,6 +271,17 @@
             }
         }
 
+        // Canvas text on a translucent white backing, for labels drawn over busy fills.
+        function backedText(text, x, y) {
+            const textColor = ctx.fillStyle;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.beginPath();
+            ctx.roundRect(x - 4, y - 14, ctx.measureText(text).width + 8, 19, 4);
+            ctx.fill();
+            ctx.fillStyle = textColor;
+            ctx.fillText(text, x, y);
+        }
+
         // --- DRAWING LOOPS ---
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -278,8 +293,12 @@
             const intensity = Math.max(0.1, sliderValue / 50);
 
             if (currentTab === 1) {
+                // Pore water
+                ctx.fillStyle = '#dbeafe';
+                ctx.fillRect(0, 0, w, h);
+
                 // Background Flow indicator
-                ctx.fillStyle = `rgba(56, 189, 248, ${0.05 * intensity})`;
+                ctx.fillStyle = `rgba(2, 132, 199, ${0.06 * intensity})`;
                 for(let i=0; i<5; i++) {
                     let flowX = ((time * 2 * intensity) + i * (w/5)) % w;
                     ctx.fillRect(flowX, 0, 50, h);
@@ -288,28 +307,28 @@
                 // Draw Grains
                 grains.forEach(g => {
                     // FIX: Reset fillStyle inside the loop so rocks stay gray!
-                    ctx.fillStyle = '#475569';
+                    ctx.fillStyle = '#d6c09a';
                     ctx.beginPath();
                     ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
                     ctx.fill();
-                    
+
                     // Draw negative boundary layer around grains
-                    ctx.strokeStyle = 'rgba(248, 113, 113, 0.6)';
+                    ctx.strokeStyle = 'rgba(220, 38, 38, 0.6)';
                     ctx.lineWidth = 4;
                     ctx.beginPath();
                     ctx.arc(g.x, g.y, g.r + 8, 0, Math.PI * 2);
                     ctx.stroke();
                     
                     // Add clear text label inside the rock
-                    ctx.fillStyle = '#94a3b8';
-                    ctx.font = 'bold 12px Inter';
+                    ctx.fillStyle = '#44403c';
+                    ctx.font = 'bold 12px Inter, system-ui, sans-serif';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.fillText('ROCK', g.x, g.y);
 
                     // Explicitly draw minus signs around the boundary layer
-                    ctx.fillStyle = '#f87171';
-                    ctx.font = 'bold 18px Inter';
+                    ctx.fillStyle = '#dc2626';
+                    ctx.font = 'bold 18px Inter, system-ui, sans-serif';
                     for(let i=0; i<6; i++) {
                         let angle = (i / 6) * Math.PI * 2;
                         let mx = g.x + Math.cos(angle) * (g.r + 16);
@@ -347,62 +366,65 @@
                     if(p.y > h) p.y = 0;
                     if(p.y < 0) p.y = h;
 
-                    ctx.fillStyle = p.charge === 1 ? '#38bdf8' : '#f87171';
+                    ctx.fillStyle = p.charge === 1 ? '#0284c7' : '#dc2626';
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                     ctx.fill();
-                    
+
                     // Add tiny + sign to mobile ions for clarity
                     if(p.charge === 1 && p.radius >= 4) {
-                        ctx.fillStyle = '#0f172a';
-                        ctx.font = '10px Inter';
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '10px Inter, system-ui, sans-serif';
                         ctx.fillText('+', p.x - 3, p.y + 3);
                     }
                 });
 
                 // Labels
-                ctx.fillStyle = '#94a3b8';
-                ctx.font = '16px Inter';
-                ctx.fillText('Groundwater Flow →', 20, h - 60);
+                ctx.fillStyle = '#334155';
+                ctx.font = '16px Inter, system-ui, sans-serif';
+                ctx.fillText('Groundwater Flow →', 20, h - 100); // clear of the voltage readout
 
             } 
             else if (currentTab === 2) {
                 // Water table line
                 let waterY = h * 0.35;
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.1)';
+                ctx.fillStyle = '#efe4cf'; // unsaturated soil above the water table
+                ctx.fillRect(0, 0, w, waterY);
+                ctx.fillStyle = '#dbeafe'; // saturated zone
                 ctx.fillRect(0, waterY, w, h - waterY);
-                
-                ctx.strokeStyle = '#38bdf8';
+
+                ctx.strokeStyle = '#0284c7';
                 ctx.setLineDash([5, 5]);
                 ctx.beginPath();
                 ctx.moveTo(0, waterY);
                 ctx.lineTo(w, waterY);
                 ctx.stroke();
                 ctx.setLineDash([]);
-                
-                ctx.fillStyle = '#94a3b8';
-                ctx.font = '14px Inter';
+
+                ctx.fillStyle = '#475569';
+                ctx.font = '14px Inter, system-ui, sans-serif';
                 ctx.fillText('Water Table (High Oxygen Above)', 10, waterY - 10);
 
                 // Draw Ore Body (Rectangle)
                 ctx.save();
                 ctx.translate(w/2, h/2);
                 ctx.rotate(-Math.PI / 6); // tilt
-                ctx.fillStyle = '#334155'; // Dark gray ore
+                ctx.fillStyle = '#475569'; // Dark gray ore
                 ctx.fillRect(-40, -h/2 + 50, 80, h - 100);
                 ctx.restore();
 
-                // Draw Oxidation/Reduction Labels
-                ctx.fillStyle = '#f8fafc';
-                ctx.font = '14px Inter';
-                ctx.fillText('Reduction (Pulls Electrons)', w/2 - 80, waterY - 40);
-                ctx.fillText('O₂ + 2H₂O + 4e⁻ → 4OH⁻', w/2 - 70, waterY - 20);
+                // Draw Oxidation/Reduction Labels (on light backing where they cross the ore body)
+                ctx.fillStyle = '#1e293b';
+                ctx.font = '14px Inter, system-ui, sans-serif';
+                backedText('Reduction (Pulls Electrons)', w/2 - 80, waterY - 40);
+                backedText('O₂ + 2H₂O + 4e⁻ → 4OH⁻', w/2 - 70, waterY - 20);
 
-                ctx.fillText('Oxidation (Pushes Electrons)', w/2 + 20, h - 60);
-                ctx.fillText('S²⁻ → S + 2e⁻', w/2 + 20, h - 40);
+                // Raised above the voltage readout, which used to cover these two lines.
+                backedText('Oxidation (Pushes Electrons)', w/2 + 20, h - 110);
+                backedText('S²⁻ → S + 2e⁻', w/2 + 20, h - 90);
 
                 // Animate Electrons moving UP the ore body
-                ctx.fillStyle = '#fbbf24'; // Yellow electrons
+                ctx.fillStyle = '#f59e0b'; // Amber electrons
                 electrons.forEach(e => {
                     e.progress -= 0.005 * intensity; // Move up faster based on slider
                     if(e.progress < 0) e.progress = 1;
@@ -420,13 +442,13 @@
                     
                     // Add tiny 'e' for electron
                     ctx.fillStyle = '#000';
-                    ctx.font = '10px Inter';
+                    ctx.font = '10px Inter, system-ui, sans-serif';
                     ctx.fillText('e⁻', (Math.random()-0.5)*5 - 4, yOffset + 4);
                     ctx.restore();
                 });
 
                 // Animate return current (ions in fluid)
-                ctx.fillStyle = '#38bdf8';
+                ctx.fillStyle = '#0284c7';
                 particles.forEach(p => {
                     p.angle += p.speed * intensity; // Move in a circle faster based on slider
                     
@@ -450,17 +472,17 @@
                 // Background Gradient
                 let grad = ctx.createLinearGradient(0, 0, w, 0);
                 // Heat color scales with slider intensity
-                grad.addColorStop(0, `rgba(248, 113, 113, ${0.1 + (intensity * 0.15)})`); 
-                grad.addColorStop(1, 'rgba(56, 189, 248, 0.2)'); // Blue (Cold)
+                grad.addColorStop(0, `rgba(220, 38, 38, ${0.06 + (intensity * 0.1)})`);
+                grad.addColorStop(1, 'rgba(2, 132, 199, 0.14)'); // Blue (Cold)
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, w, h);
 
                 // Gradient Labels
-                ctx.fillStyle = '#f87171';
-                ctx.font = 'bold 20px Inter';
+                ctx.fillStyle = '#b91c1c';
+                ctx.font = 'bold 20px Inter, system-ui, sans-serif';
                 ctx.fillText(`HOT (T = ${Math.floor(20 + 80*intensity)}°C)`, 20, h - 30);
-                
-                ctx.fillStyle = '#38bdf8';
+
+                ctx.fillStyle = '#0369a1';
                 ctx.fillText('COLD (T = 20°C)', w - 180, h - 30);
 
                 // Particles (Brownian motion + drift)
@@ -491,14 +513,17 @@
                     if(p.y < 10) { p.y = 10; p.vy *= -1; }
                     if(p.y > h - 10) { p.y = h - 10; p.vy *= -1; }
 
-                    ctx.fillStyle = p.type === 'fast' ? '#38bdf8' : '#f87171';
+                    ctx.fillStyle = p.type === 'fast' ? '#0284c7' : '#dc2626';
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.type === 'fast' ? 6 : 9, 0, Math.PI*2);
                     ctx.fill();
-                    
+                    ctx.strokeStyle = '#ffffff'; // thin outline separates overlapping ions
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+
                     // Labels on ions
-                    ctx.fillStyle = '#0f172a';
-                    ctx.font = '10px Inter';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '10px Inter, system-ui, sans-serif';
                     if(p.type === 'fast') {
                         ctx.fillText('+', p.x - 3, p.y + 3);
                     } else {

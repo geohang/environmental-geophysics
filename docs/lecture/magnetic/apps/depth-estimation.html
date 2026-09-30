@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magnetic Anomaly Interpretation Methods</title>
     <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <!-- Chart.js for graphs -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="../../../assets/vendor/chartjs/chart.min.js"></script>
     <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .card { transition: all 0.3s ease; }
@@ -20,136 +20,136 @@
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page text-slate-800">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Magnetic Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
     <!-- Header -->
-    <header class="bg-teal-700 text-white p-6 shadow-lg">
-        <div class="container mx-auto">
-            <h1 class="text-3xl font-bold"><i class="fas fa-magnet mr-3"></i>Magnetic Interpretation Methods</h1>
-            <p class="mt-2 text-teal-100 text-lg">Interactive demonstrations for Geomagnetic Geophysics</p>
+    <header class="lab-hero">
+        <div class="lab-hero-inner is-7xl">
+            <h1 class="lab-title"><i class="fas fa-magnet lab-icon mr-3"></i><span class="lab-title-accent">Magnetic</span> Interpretation Methods</h1>
+            <p class="lab-subtitle">Interactive demonstrations for Geomagnetic Geophysics</p>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto p-6 space-y-12">
+    <main class="max-w-7xl mx-auto p-6 space-y-12">
 
         <!-- Method 1: Simple Depth Rules -->
-        <section id="method1" class="bg-white p-8 rounded-xl shadow-md card border-l-8 border-teal-500">
-            <div class="flex justify-between items-start mb-6">
+        <section id="method1" class="lab-card card p-5 md:p-8">
+            <div class="flex flex-wrap justify-between items-start gap-3 mb-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-teal-800">1. Simple Depth Rules (Half-Width)</h2>
-                    <p class="text-gray-600 mt-2">Anomaly width contains depth information, but the coefficient depends on source geometry and magnetization.</p>
+                    <h2 class="text-2xl font-bold text-slate-900">1. Simple Depth Rules (Half-Width)</h2>
+                    <p class="text-slate-600 mt-2">Anomaly width contains depth information, but the coefficient depends on source geometry and magnetization.</p>
                 </div>
-                <div class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg font-mono text-sm">
+                <div class="lab-chip whitespace-nowrap">
                     First-pass estimate only
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-1 space-y-4">
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <h3 class="font-bold mb-2 text-lg">Concept</h3>
+                    <div class="lab-note p-4">
+                        <h3 class="lab-note-title font-bold mb-2 text-lg">Concept</h3>
                         <ul class="list-disc pl-5 space-y-2 text-sm">
-                            <li><span class="font-bold text-red-500">Sharp</span> anomaly = <span class="font-bold text-red-500">Shallow</span> source.</li>
-                            <li><span class="font-bold text-blue-500">Broad</span> anomaly = <span class="font-bold text-blue-500">Deep</span> source.</li>
+                            <li><span class="font-bold text-red-600">Sharp</span> anomaly = <span class="font-bold text-red-600">Shallow</span> source.</li>
+                            <li><span class="font-bold text-blue-600">Broad</span> anomaly = <span class="font-bold text-blue-600">Deep</span> source.</li>
                         </ul>
                     </div>
-                    
-                    <div class="p-4 border rounded-lg bg-teal-50">
-                        <label class="block font-bold mb-2">Adjust Source Depth (z):</label>
+
+                    <div class="p-4 border border-slate-200 rounded-lg bg-slate-50">
+                        <label class="block font-bold text-slate-800 mb-2">Adjust Source Depth (z):</label>
                         <div class="slider-container">
-                            <span class="text-xs font-bold">Shallow</span>
-                            <input type="range" id="depthSlider" min="2" max="20" value="5" step="0.5">
-                            <span class="text-xs font-bold">Deep</span>
+                            <span class="text-xs font-bold text-slate-600">Shallow</span>
+                            <input type="range" id="depthSlider" min="2" max="20" value="5" step="0.5" class="lab-range">
+                            <span class="text-xs font-bold text-slate-600">Deep</span>
                         </div>
-                        <p class="text-center mt-2 font-mono text-teal-700">Current Depth: <span id="depthValue">5.0</span> m</p>
+                        <p class="text-center mt-2 font-mono text-sky-700">Current Depth: <span id="depthValue">5.0</span> m</p>
                     </div>
                 </div>
 
-                <div class="md:col-span-2 bg-white border rounded-lg p-2 h-80">
+                <div class="md:col-span-2 lab-stage p-2 h-80">
                     <canvas id="depthChart"></canvas>
                 </div>
             </div>
         </section>
 
         <!-- Method 2: Peters' Half-Slope -->
-        <section id="method2" class="bg-white p-8 rounded-xl shadow-md card border-l-8 border-indigo-500">
-            <div class="flex justify-between items-start mb-6">
+        <section id="method2" class="lab-card card p-5 md:p-8">
+            <div class="flex flex-wrap justify-between items-start gap-3 mb-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-indigo-800">2. Peters' Half-Slope Method</h2>
-                    <p class="text-gray-600 mt-2">A graphical method specifically for dykes using the anomaly slope.</p>
+                    <h2 class="text-2xl font-bold text-slate-900">2. Peters' Half-Slope Method</h2>
+                    <p class="text-slate-600 mt-2">A graphical method specifically for dykes using the anomaly slope.</p>
                 </div>
-                <div class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg font-mono text-sm">
-                    Depth ≈ d / 1.6
+                <div class="lab-chip whitespace-nowrap">
+                    Depth ≈ d / 1.2 (thin dike)
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h3 class="font-bold text-lg mb-4">Steps to Calculate:</h3>
-                    <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                    <h3 class="font-bold text-lg text-slate-900 mb-4">Steps to Calculate:</h3>
+                    <ol class="list-decimal pl-5 space-y-3 text-slate-700">
                         <li>Draw a <strong>tangent</strong> at the point of maximum slope (inflection point).</li>
                         <li>Construct a line with exactly <strong>half the slope</strong> of the tangent.</li>
                         <li>Find where this "half-slope" line is tangent to the anomaly curve at two points (one high, one low).</li>
                         <li>Measure the horizontal distance <strong>'d'</strong> between these two points.</li>
-                        <li>Apply the formula: <span class="bg-indigo-100 px-2 py-1 rounded font-mono">Z = d / 1.6</span></li>
+                        <li>Apply the formula: <span class="bg-sky-50 text-sky-900 border border-sky-100 px-2 py-1 rounded font-mono">Z ≈ d / 1.2</span></li>
                     </ol>
-                    <p class="text-sm text-gray-600 mt-4">The factor 1.6 is empirical and best suited to thin, steeply dipping, strike-extended sources; treat the result as approximate depth to the top.</p>
-                    <button id="toggleLinesBtn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition shadow">
+                    <p class="text-sm text-slate-600 mt-4">Peters' factor ranges from about 1.2 for thin dikes to about 2.0 for thick dikes; 1.6 is a common compromise. For the thin-dike curve drawn here, z ≈ d/1.2. Treat the result as approximate depth to the top.</p>
+                    <button id="toggleLinesBtn" class="mt-6 lab-btn lab-btn-primary">
                         Toggle Construction Lines
                     </button>
                 </div>
 
                 <!-- Canvas for Precise Drawing -->
-                <div class="border rounded-lg bg-gray-50 p-0 flex justify-center relative h-80 overflow-hidden" id="petersContainer">
+                <div class="lab-stage p-0 flex justify-center relative h-80 overflow-hidden" id="petersContainer">
                     <canvas id="petersCanvas"></canvas>
                 </div>
             </div>
         </section>
 
         <!-- Method 3: Reduction to the Pole (RTP) -->
-        <section id="method3" class="bg-white p-8 rounded-xl shadow-md card border-l-8 border-green-500">
-            <div class="flex justify-between items-start mb-6">
+        <section id="method3" class="lab-card card p-5 md:p-8">
+            <div class="flex flex-wrap justify-between items-start gap-3 mb-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-green-800">3. Reduction to the Pole (RTP)</h2>
-                    <p class="text-gray-600 mt-2">Correcting the latitude effect to center anomalies over their sources.</p>
+                    <h2 class="text-2xl font-bold text-slate-900">3. Reduction to the Pole (RTP)</h2>
+                    <p class="text-slate-600 mt-2">Correcting the latitude effect to center anomalies over their sources.</p>
                 </div>
-                <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-mono text-sm">
+                <div class="lab-chip whitespace-nowrap">
                     Filter: Lat → 90° (Pole)
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-1 space-y-4">
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <h3 class="font-bold mb-2 text-lg">Problem & Solution</h3>
+                    <div class="lab-note p-4">
+                        <h3 class="lab-note-title font-bold mb-2 text-lg">Problem & Solution</h3>
                         <p class="text-sm mb-2"><strong>Problem:</strong> At mid-latitudes, induction causes dipoles. The peak is <span class="italic text-red-600">shifted</span> away from the actual source.</p>
                         <p class="text-sm"><strong>Solution (RTP):</strong> A mathematical filter simulates measuring the data at the magnetic pole.</p>
                         <p class="text-sm mt-2 font-bold text-green-700">Ideal induced-only result: anomalies become more symmetric and centered.</p>
-                        <p class="text-xs mt-2 text-gray-600">RTP can be unstable at low magnetic inclination and can misplace sources when remanent magnetization is important.</p>
+                        <p class="text-xs mt-2 text-slate-600">RTP can be unstable at low magnetic inclination and can misplace sources when remanent magnetization is important.</p>
                     </div>
-                    
-                    <div class="p-4 border rounded-lg bg-green-50">
-                        <label class="block font-bold mb-2">Apply RTP Filter:</label>
+
+                    <div class="p-4 border border-slate-200 rounded-lg bg-slate-50">
+                        <label class="block font-bold text-slate-800 mb-2">Apply RTP Filter:</label>
                         <div class="slider-container">
-                            <span class="text-xs font-bold">Raw (Asymmetric)</span>
-                            <input type="range" id="rtpSlider" min="0" max="100" value="0" step="1">
-                            <span class="text-xs font-bold">RTP (Symmetric)</span>
+                            <span class="text-xs font-bold text-slate-600">Raw (Asymmetric)</span>
+                            <input type="range" id="rtpSlider" min="0" max="100" value="0" step="1" class="lab-range">
+                            <span class="text-xs font-bold text-slate-600">RTP (Symmetric)</span>
                         </div>
-                        <p class="text-center mt-2 font-mono text-green-700">Status: <span id="rtpStatus">Raw Data</span></p>
+                        <p class="text-center mt-2 font-mono text-sky-700">Status: <span id="rtpStatus">Raw Data</span></p>
                     </div>
                 </div>
 
-                <div class="md:col-span-2 bg-white border rounded-lg p-2 h-80 relative">
+                <div class="md:col-span-2 lab-stage p-2 h-80 relative">
                     <canvas id="rtpChart"></canvas>
                     <!-- Source Box -->
-                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-gray-800 text-white text-xs flex items-center justify-center rounded-t">
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-slate-200 text-slate-800 border border-b-0 border-slate-400 text-xs font-semibold flex items-center justify-center rounded-t">
                         Source
                     </div>
                 </div>
@@ -158,12 +158,20 @@
 
     </main>
 
-    <footer class="bg-gray-800 text-white text-center p-6 mt-12">
+    <footer class="bg-white border-t border-slate-200 text-slate-600 text-sm text-center p-6 mt-12">
         <p>Interactive Teaching Aid for Geophysics</p>
     </footer>
 
     <!-- Scripts -->
     <script>
+        // Light plot theme: slate text, hairline grid, light tooltips
+        Chart.defaults.color = '#475569';
+        Chart.defaults.borderColor = '#e5eaf1';
+        Object.assign(Chart.defaults.plugins.tooltip, {
+            backgroundColor: '#ffffff', titleColor: '#0f172a', bodyColor: '#334155',
+            borderColor: '#e2e8f0', borderWidth: 1
+        });
+
         // === CHART 1: Simple Depth Rules ===
         const ctxDepth = document.getElementById('depthChart').getContext('2d');
         
@@ -192,8 +200,8 @@
                 datasets: [{
                     label: 'Magnetic Anomaly (nT)',
                     data: initialDepthData.data,
-                    borderColor: 'rgb(20, 184, 166)', // Teal-500
-                    backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                    borderColor: '#0284c7', // Sky-600 (course primary)
+                    backgroundColor: 'rgba(2, 132, 199, 0.12)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
@@ -201,7 +209,7 @@
                 }, {
                     label: 'Half-Max Width',
                     data: [], 
-                    borderColor: 'rgb(239, 68, 68)', 
+                    borderColor: '#dc2626',
                     borderWidth: 2,
                     borderDash: [5, 5],
                     pointRadius: 0,
@@ -213,7 +221,7 @@
                 maintainAspectRatio: false,
                 scales: {
                     y: { beginAtZero: true, max: 110, display: false },
-                    x: { display: true, title: {display: true, text: 'Distance (x)'} }
+                    x: { display: true, title: {display: true, text: 'Distance (x)', color: '#334155'}, ticks: { color: '#64748b' }, grid: { borderColor: '#cbd5e1' } }
                 },
                 plugins: {
                     annotation: { annotations: {} }
@@ -287,7 +295,7 @@
             pCtx.clearRect(0, 0, w, h);
 
             // Draw Grid
-            pCtx.strokeStyle = '#e5e7eb';
+            pCtx.strokeStyle = '#e5eaf1';
             pCtx.lineWidth = 1;
             pCtx.beginPath();
             for(let i=0; i<w; i+=40) { pCtx.moveTo(i,0); pCtx.lineTo(i,h); }
@@ -296,7 +304,7 @@
 
             // Draw Main Curve
             pCtx.beginPath();
-            pCtx.strokeStyle = '#4B5563';
+            pCtx.strokeStyle = '#334155';
             pCtx.lineWidth = 4;
             for(let x=0; x<=w; x++) {
                 const y = getPetersY(x - cx);
@@ -317,8 +325,8 @@
             const maxSlope = getPetersSlope(x_inflect_rel); // This will be negative
 
             // Draw Tangent at Max Slope
-            drawTangent(x_inflect, y_inflect, maxSlope, '#EF4444', 'Max Slope', w, 140);
-            drawPoint(x_inflect, y_inflect, '#EF4444');
+            drawTangent(x_inflect, y_inflect, maxSlope, '#dc2626', 'Max Slope', w, 140);
+            drawPoint(x_inflect, y_inflect, '#dc2626');
 
             // --- 2. Find Points with Half Slope ---
             const targetSlope = maxSlope / 2;
@@ -364,14 +372,14 @@
             const y2 = getPetersY(x2_rel);
 
             // Draw Half Slope Tangents
-            drawTangent(x1, y1, targetSlope, '#3B82F6', '', w, 80);
-            drawTangent(x2, y2, targetSlope, '#3B82F6', 'Half Slope', w, 80);
-            drawPoint(x1, y1, '#3B82F6');
-            drawPoint(x2, y2, '#3B82F6');
+            drawTangent(x1, y1, targetSlope, '#2563eb', '', w, 80);
+            drawTangent(x2, y2, targetSlope, '#2563eb', 'Half Slope', w, 80);
+            drawPoint(x1, y1, '#2563eb');
+            drawPoint(x2, y2, '#2563eb');
 
             // Draw Distance d
             pCtx.beginPath();
-            pCtx.strokeStyle = 'black';
+            pCtx.strokeStyle = '#0f172a';
             pCtx.lineWidth = 2;
             const dY = (y1 + y2) / 2 + 50; // Shift marker down
             
@@ -392,10 +400,11 @@
             drawArrowhead(pCtx, x2, dY - 10, 'right');
 
             // Text d
-            pCtx.fillStyle = 'black';
+            pCtx.fillStyle = '#0f172a';
             pCtx.font = 'bold 18px sans-serif';
             pCtx.textAlign = 'center';
-            pCtx.fillText('d', (x1+x2)/2, dY - 20);
+            // Below the dimension line so it does not collide with the "Half Slope" label
+            pCtx.fillText('d', (x1+x2)/2, dY + 10);
         }
 
         function drawTangent(px, py, slope, color, text, width, length=100) {
@@ -437,7 +446,7 @@
                 ctx.lineTo(x - 8, y - 4);
                 ctx.lineTo(x - 8, y + 4);
             }
-            ctx.fillStyle = 'black';
+            ctx.fillStyle = '#0f172a';
             ctx.fill();
         }
 
@@ -475,8 +484,8 @@
                 datasets: [{
                     label: 'Magnetic Anomaly',
                     data: initialRTP.data,
-                    borderColor: 'rgb(34, 197, 94)', // Green-500
-                    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                    borderColor: '#0284c7', // Sky-600 (course primary)
+                    backgroundColor: 'rgba(2, 132, 199, 0.12)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
@@ -486,9 +495,11 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                // Bottom padding keeps the x tick labels clear of the "Source" marker
+                layout: { padding: { bottom: 28 } },
                 scales: {
                     y: { display: false },
-                    x: { display: true, grid: {display:false} }
+                    x: { display: true, grid: {display:false}, ticks: { color: '#64748b' } }
                 },
                 plugins: {
                     legend: { display: false }

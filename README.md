@@ -7,7 +7,7 @@ Open, interactive course materials for upper-level undergraduate environmental g
 ## What is here
 
 - **8 chapter groups** covering foundations, gravity, magnetics, seismic, electrical/SP/IP, electromagnetic methods (including MT/CSEM), GPR, and borehole geophysics.
-- **35 original interactive lecture and demonstration pages**, with shared navigation, responsive layouts, keyboard support, accessible controls, and explicit scientific assumptions.
+- **34 original interactive lecture and demonstration pages**, with shared navigation, responsive layouts, keyboard support, accessible controls, and explicit scientific assumptions.
 - **Classroom Lab Studio**, with six course-tested workflows, five downloadable synthetic datasets, and a public processing-pipeline review challenge.
 - **Active-Learning Lessons**, with short foundation slides, prediction, linked app exploration, formative practice, discussion, and exit tickets for every module.
 - **Field Data module**, separating real Ashton Prairie observations and quality-controlled downloads from four explicitly synthetic Field Missions; the real-data package includes full five-frequency EM in-phase/quadrature observations, separately named Profile 01–09 geometry, derived inversion results, and a reproducible PyHydroGeophysX notebook.

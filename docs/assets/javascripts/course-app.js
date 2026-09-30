@@ -12,8 +12,11 @@
   }
 
   function softenDarkTheme() {
+    if (document.body.classList.contains('lab-page')) return;
     const match = window.getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g);
     if (!match || match.length < 3) return;
+    // A transparent body says nothing about the page's theme.
+    if (match.length > 3 && Number(match[3]) === 0) return;
     const rgb = match.slice(0, 3).map(Number).map((value) => value / 255);
     const linear = rgb.map((value) => value <= 0.04045
       ? value / 12.92
@@ -128,13 +131,18 @@
     enhanceCanvases();
     enhanceFeedback();
     wrapWideTables();
-    const observer = new MutationObserver(() => window.requestAnimationFrame(() => {
-      enhanceControls();
-      enhanceCanvases();
-      enhanceFeedback();
-      updateCanvasReadouts();
-    }));
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    let enhancementFrame = 0;
+    const observer = new MutationObserver(() => {
+      if (enhancementFrame) return;
+      enhancementFrame = window.requestAnimationFrame(() => {
+        enhancementFrame = 0;
+        enhanceControls();
+        enhanceCanvases();
+        enhanceFeedback();
+        updateCanvasReadouts();
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   if (document.readyState === 'loading') {

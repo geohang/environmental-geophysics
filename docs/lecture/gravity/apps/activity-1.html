@@ -12,124 +12,128 @@
             }
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="../../../assets/vendor/mathjax/tex-mml-chtml.js"></script>
 
     <style>
+        /* Light lab palette (the --lab-* tokens and .lab-* classes come from course-app.css). */
         :root {
-            --primary: #38bdf8; /* Light Blue */
-            --accent: #fbbf24; /* Amber */
-            --bg-dark: #0f172a; /* Deep Navy */
-            --card-bg: #1e293b; /* Slate */
-            --text-main: #f1f5f9;
-            --success: #4ade80;
-            --error: #f87171;
+            --primary: #0284c7;        /* sky-600 */
+            --primary-strong: #0369a1; /* sky-700 */
+            --accent: #d97706;         /* amber-600 */
+            --bg-dark: #f4f7fb;        /* page */
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #5b6b82;
+            --success: #047857;        /* emerald-700, readable as text */
+            --error: #b91c1c;          /* red-700, readable as text */
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            font-family: var(--lab-font);
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            line-height: 1.55;
         }
 
-        .container { max-width: 1000px; margin: 0 auto; }
+        button, input, select { font-family: inherit; }
 
-        header {
-            text-align: center;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
+        .container { max-width: 64rem; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
 
-        h1 { color: var(--primary); margin: 0; }
-        
         .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            border: 1px solid #334155;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
+
+        .card h2 { margin: 0 0 .6rem; color: var(--lab-text); font-size: 1.3rem; }
+        .card p { color: var(--lab-text-2); }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
             font-size: 0.95rem;
+            color: var(--lab-text-2);
         }
 
-        th { 
-            text-align: left; 
-            color: var(--accent); 
-            padding: 12px; 
-            border-bottom: 2px solid #475569; 
-            background: rgba(15, 23, 42, 0.5);
+        th {
+            text-align: left;
+            color: var(--lab-text);
+            font-weight: 700;
+            padding: 12px;
+            border-bottom: 1px solid var(--lab-border-strong);
+            background: var(--lab-surface-2);
         }
-        
-        td { padding: 12px; border-bottom: 1px solid #334155; }
-        
+
+        td { padding: 12px; border-bottom: 1px solid var(--lab-border); }
+
         /* Highlight Base Rows */
-        .base-row { background-color: rgba(56, 189, 248, 0.15); font-weight: bold; color: var(--primary); }
+        .base-row { background-color: #f0f9ff; font-weight: bold; color: var(--primary-strong); }
 
         /* Inputs */
         input[type="number"] {
-            background: #0f172a;
-            border: 1px solid #475569;
-            color: white;
+            background: #ffffff;
+            border: 1px solid var(--lab-border-strong);
+            color: var(--lab-text);
             padding: 8px;
-            border-radius: 6px;
+            border-radius: 8px;
             width: 100px;
-            font-family: 'Courier New', monospace;
+            font-family: var(--lab-mono);
         }
+        input[type="number"]::placeholder { color: #64748b; }
+        input[type="number"]:focus { border-color: var(--primary); }
+        #driftRate { width: 140px; } /* room for the full "e.g. -0.0050" hint */
 
-        input.correct { border: 2px solid var(--success); background-color: rgba(74, 222, 128, 0.1); }
-        input.incorrect { border: 2px solid var(--error); background-color: rgba(248, 113, 113, 0.1); }
+        input.correct { border: 2px solid var(--lab-success); background-color: #ecfdf5; color: #064e3b; }
+        input.incorrect { border: 2px solid var(--lab-danger); background-color: #fef2f2; color: #7f1d1d; }
 
-        .btn {
-            background-color: var(--primary);
-            color: var(--bg-dark);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-top: 20px;
-        }
-        .btn:hover { background-color: #7dd3fc; }
+        .btn { margin-top: 20px; }
 
         .formula-box {
-            background: #000;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #334155;
             margin-bottom: 20px;
             text-align: center;
+        }
+
+        /* Verify feedback: light tints with dark text. */
+        .feedback-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: .2rem .65rem;
+            border: 1px solid;
+            border-radius: 999px;
+            font-size: .9rem;
+        }
+        .feedback-box { padding: .75rem 1rem; border: 1px solid; border-radius: 10px; }
+        .feedback-pill.is-ok, .feedback-box.is-ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+        .feedback-pill.is-bad, .feedback-box.is-bad { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+        @media (max-width: 640px) {
+            .card { padding: 18px; }
+            .card .formula-box { font-size: .85rem; padding: .7rem .75rem; } /* equations fit a phone screen */
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Gravity Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-<div class="container">
-    <header>
-        <h1>Gravity Survey Lab: Multi-Station Loop</h1>
-        <p>Correcting for linear instrument drift over a full morning survey.</p>
-    </header>
+<header class="lab-hero">
+    <div class="lab-hero-inner is-5xl">
+        <h1 class="lab-title"><span class="lab-title-accent">Gravity</span> Survey Lab: Multi-Station Loop</h1>
+        <p class="lab-subtitle">Correcting for linear instrument drift over a full morning survey.</p>
+    </div>
+</header>
 
-    <div class="card">
+<div class="container">
+    <div class="card lab-card">
         <h2>1. Survey Parameters</h2>
         <p>You performed a gravity survey lasting 5 hours. The gravimeter reading at the Base Station <strong>decreased</strong> by the end of the survey due to spring relaxation.</p>
-        
-        <div class="formula-box">
+
+        <div class="formula-box lab-formula">
             $$ \text{Drift Correction} = -(\text{Drift Rate} \times \Delta t) $$
             <br>
             $$ g_{corrected} = g_{obs} + \text{Drift Correction} $$
@@ -139,11 +143,11 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card lab-card">
         <h2>2. Data Reduction Table</h2>
         <p>Calculate the <strong>Time Elapsed ($\Delta t$)</strong>, the specific <strong>Drift Amount</strong>, and the final <strong>Corrected Gravity</strong> for all 5 stations.</p>
-        
-        <div style="margin-bottom: 20px; padding: 15px; background: rgba(251, 191, 36, 0.1); border-radius: 8px;">
+
+        <div style="margin-bottom: 20px; padding: 15px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; color: var(--lab-text);">
             <label><strong>Step 1: Calculate Global Drift Rate (mGal/min):</strong></label>
             <input type="number" id="driftRate" step="0.0001" placeholder="e.g. -0.0050">
             <span id="rateFeedback" style="margin-left: 10px; font-weight: bold;"></span>
@@ -226,7 +230,7 @@
             </tbody>
         </table>
 
-        <button class="btn" onclick="checkAll()">Verify Calculations</button>
+        <button class="btn lab-btn lab-btn-primary" onclick="checkAll()">Verify Calculations</button>
         <p id="finalMsg" style="margin-top: 15px; font-weight: bold;"></p>
     </div>
 </div>
@@ -245,11 +249,11 @@
         
         if (Math.abs(userRate - CORRECT_RATE) < 0.0001) {
             document.getElementById('driftRate').className = 'correct';
-            rateFb.style.color = 'var(--success)';
+            rateFb.className = 'feedback-pill is-ok';
             rateFb.innerText = "✓ Correct Rate";
         } else {
             document.getElementById('driftRate').className = 'incorrect';
-            rateFb.style.color = 'var(--error)';
+            rateFb.className = 'feedback-pill is-bad';
             rateFb.innerText = "✗ Check Rate Calculation";
         }
 
@@ -307,10 +311,10 @@
         // Final Feedback
         const msg = document.getElementById('finalMsg');
         if(allRowsCorrect && Math.abs(userRate - CORRECT_RATE) < 0.0001) {
-            msg.style.color = "var(--success)";
+            msg.className = "feedback-box is-ok";
             msg.innerHTML = "Success! All calculations are correct. You handled the negative drift perfectly.";
         } else {
-            msg.style.color = "var(--error)";
+            msg.className = "feedback-box is-bad";
             msg.innerHTML = "Some values are incorrect. Remember: Corrected = Raw - Drift. (Subtracting a negative number adds to the total).";
         }
     }

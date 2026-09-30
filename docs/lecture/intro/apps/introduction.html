@@ -4,94 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geophysical Method & Spacing Simulator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="../../../assets/vendor/chartjs/chart.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { margin: 0; color: #2c3e50; }
-        p.subtitle { color: #666; font-style: italic; }
+        body { font-family: var(--lab-font); margin: 0; }
+        .container { max-width: 64rem; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
 
-        .controls { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; align-items: center;}
+        .controls { padding: 1.1rem 1.25rem; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center;}
         .control-group { display: flex; flex-direction: column; align-items: center; min-width: 200px; }
-        label { font-weight: bold; margin-bottom: 5px; font-size: 0.9rem;}
+        label { font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; color: var(--lab-text-2); }
         input[type=range] { width: 100%; cursor: pointer; }
-        .val-display { font-size: 0.8rem; color: #777; margin-top: 5px;}
+        .val-display { margin-top: 5px; }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
 
-        .card { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; }
-        .card h3 { text-align: center; font-size: 1rem; margin: 5px 0 10px 0; border-bottom: 2px solid #eee; padding-bottom: 5px; }
-        
-        /* Method Colors */
-        .card.grav { border-top: 4px solid #9b59b6; }
-        .card.mag { border-top: 4px solid #e74c3c; }
-        .card.res { border-top: 4px solid #f1c40f; }
-        .card.seis { border-top: 4px solid #2ecc71; }
+        .card { padding: .75rem 1rem 1rem; position: relative; }
+        .card h3 { display: flex; align-items: center; gap: .55rem; margin: -.75rem -1rem .75rem; padding: .75rem 1rem; border-bottom: 1px solid var(--lab-border); font-size: 1rem; font-weight: 650; color: var(--lab-text); }
+
+        /* Method swatch beside each title, in the color of that card's data series. */
+        .card h3::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--method); }
+        .card.grav { --method: #7c3aed; }
+        .card.mag { --method: #dc2626; }
+        .card.res { --method: #d97706; }
+        .card.seis { --method: #059669; }
 
         canvas { width: 100% !important; height: 200px !important; }
 
-        .lesson { background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 0.9rem; text-align: center;}
+        .lesson { padding: .8rem 1rem; margin-bottom: 1.25rem; font-size: 0.9rem; line-height: 1.55; }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Introduction</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-<div class="container">
-    <header>
-        <h1>Geophysics Simulator: Spacing & Noise</h1>
-        <p class="subtitle">Scenario: 5m Wide Tank at 0m | Power Line at +20m</p>
-    </header>
+<header class="lab-hero">
+    <div class="lab-hero-inner is-5xl">
+        <h1 class="lab-title"><span class="lab-title-accent">Geophysics</span> Simulator: Spacing & Noise</h1>
+        <p class="lab-subtitle">Scenario: 5m Wide Tank at 0m | Power Line at +20m</p>
+    </div>
+</header>
 
-    <div class="lesson">
-        <strong>The Spacing Lesson:</strong> The target is <strong>5m wide</strong>. If your spacing is > 2.5m, you risk "Aliasing" (misrepresenting the shape). If spacing is <strong>10m</strong>, you might miss it entirely!
+<div class="container">
+    <div class="lesson lab-note">
+        <strong class="lab-note-title">The Spacing Lesson:</strong> The target is <strong>5m wide</strong>. If your spacing is > 2.5m, you risk "Aliasing" (misrepresenting the shape). If spacing is <strong>10m</strong>, you might miss it entirely!
     </div>
 
-    <div class="controls">
+    <div class="controls lab-card">
         <div class="control-group">
             <label for="spacingSlider">Grid Spacing (Resolution)</label>
-            <input type="range" id="spacingSlider" min="1" max="20" value="1">
-            <span class="val-display" id="spacingVal">0.5 m</span>
+            <input type="range" id="spacingSlider" class="lab-range" min="1" max="20" value="1">
+            <span class="val-display lab-chip" id="spacingVal">0.5 m</span>
         </div>
 
         <div class="control-group">
             <label for="noiseSlider">Random Noise</label>
-            <input type="range" id="noiseSlider" min="0" max="10" value="1">
-            <span class="val-display" id="noiseVal">Low</span>
+            <input type="range" id="noiseSlider" class="lab-range" min="0" max="10" value="1">
+            <span class="val-display lab-chip" id="noiseVal">Low</span>
         </div>
 
         <div class="control-group">
             <label for="powerSlider">Power Line Interference</label>
-            <input type="range" id="powerSlider" min="0" max="50" value="0">
-            <span class="val-display" id="powerVal">None</span>
+            <input type="range" id="powerSlider" class="lab-range" min="0" max="50" value="0">
+            <span class="val-display lab-chip" id="powerVal">None</span>
         </div>
     </div>
 
     <div class="grid">
-        <div class="card grav">
+        <div class="card grav lab-card">
             <h3>1. Micro-Gravity (Density)</h3>
             <canvas id="chartGrav"></canvas>
         </div>
 
-        <div class="card mag">
+        <div class="card mag lab-card">
             <h3>2. Magnetometry (Magnetic)</h3>
             <canvas id="chartMag"></canvas>
         </div>
 
-        <div class="card res">
+        <div class="card res lab-card">
             <h3>3. EM / Conductivity</h3>
             <canvas id="chartRes"></canvas>
         </div>
 
-        <div class="card seis">
+        <div class="card seis lab-card">
             <h3>4. Seismic (Stiffness)</h3>
             <canvas id="chartSeis"></canvas>
         </div>
@@ -104,16 +103,30 @@
     const ctxRes = document.getElementById('chartRes').getContext('2d');
     const ctxSeis = document.getElementById('chartSeis').getContext('2d');
 
+    // Light plot styling: slate text, hairline grid, white tooltips.
+    Chart.defaults.color = '#475569';
+    Chart.defaults.borderColor = '#e5eaf1';
+    Chart.defaults.font.family = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    Object.assign(Chart.defaults.plugins.tooltip, {
+        backgroundColor: '#ffffff',
+        titleColor: '#0f172a',
+        bodyColor: '#334155',
+        borderColor: '#e2e8f0',
+        borderWidth: 1
+    });
+
     // Chart Configuration
     const commonOptions = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-            x: { 
-                type: 'linear', 
-                min: -20, max: 20, 
-                title: { display: true, text: 'Distance (m)' } 
+            x: {
+                type: 'linear',
+                min: -20, max: 20,
+                title: { display: true, text: 'Distance (m)', color: '#334155', font: { size: 12, weight: '600' } },
+                grid: { color: '#e5eaf1', borderColor: '#cbd5e1' },
+                ticks: { color: '#64748b', font: { size: 11 } }
             },
             y: { display: false } // Hide Y axis for cleaner look
         }
@@ -139,10 +152,11 @@
         });
     }
 
-    let chartGrav = createChart(ctxGrav, '#9b59b6');
-    let chartMag = createChart(ctxMag, '#e74c3c');
-    let chartRes = createChart(ctxRes, '#f1c40f');
-    let chartSeis = createChart(ctxSeis, '#2ecc71');
+    // Series colors match the method swatches in the card titles.
+    let chartGrav = createChart(ctxGrav, '#7c3aed');
+    let chartMag = createChart(ctxMag, '#dc2626');
+    let chartRes = createChart(ctxRes, '#d97706');
+    let chartSeis = createChart(ctxSeis, '#059669');
 
     function updateCharts() {
         // Get Slider Values

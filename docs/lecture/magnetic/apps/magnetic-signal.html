@@ -6,50 +6,42 @@
     <title>Interactive Geomagnetic Anomaly Simulator</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --ground: #f4f4f4;
-            --text: #333;
+            --primary: #0f172a;
+            --accent: #0369a1;
+            --ground: #efe4cf;
+            --text: #334155;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #ecf0f1;
             color: var(--text);
         }
 
-        h1 {
-            color: var(--primary);
-            margin-bottom: 10px;
+        /* Same 56rem width and 1.5rem gutter as the lab-hero-inner.is-4xl title */
+        .app-main {
+            max-width: 56rem;
+            margin: 0 auto;
+            padding: 1.5rem 1.5rem 2.5rem;
         }
 
         .container {
             display: flex;
             flex-direction: column;
-            background: white;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 900px;
             width: 100%;
         }
 
         .canvas-wrapper {
             position: relative;
             margin-bottom: 20px;
-            border: 2px solid #bdc3c7;
-            border-radius: 4px;
             overflow: hidden;
-            background: white;
         }
 
         canvas {
             display: block;
+            width: 100%;
+            height: auto;
             cursor: crosshair;
         }
 
@@ -58,9 +50,9 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
         }
 
         .control-group {
@@ -72,7 +64,7 @@
             font-size: 0.9em;
             font-weight: 600;
             margin-bottom: 5px;
-            color: #555;
+            color: #334155;
         }
 
         input[type="range"] {
@@ -108,28 +100,35 @@
 
         .instructions {
             margin-top: 15px;
-            padding: 10px;
-            background: #e8f4fc;
-            border-left: 4px solid var(--accent);
+            padding: 10px 14px;
             font-size: 0.9em;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 12px; }
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Magnetic Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <h1>Geomagnetic Anomaly Simulator</h1>
+    <header class="lab-hero">
+        <div class="lab-hero-inner is-4xl">
+            <h1 class="lab-title"><span class="lab-title-accent">Geomagnetic</span> Anomaly Simulator</h1>
+        </div>
+    </header>
 
-    <div class="container">
-        
+    <main class="app-main">
+    <div class="container lab-card">
+
         <!-- Viewport for Physical Model & Graph -->
-        <div class="canvas-wrapper">
+        <div class="canvas-wrapper lab-stage">
             <!-- Increased height to 750 to accommodate larger graph -->
             <canvas id="simCanvas" width="800" height="750"></canvas>
         </div>
@@ -138,31 +137,32 @@
         <div class="controls">
             <div class="control-group">
                 <label for="inclination">Earth Field Inclination (I)</label>
-                <input type="range" id="inclination" min="-90" max="90" value="60">
+                <input type="range" id="inclination" min="-90" max="90" value="60" class="lab-range">
                 <div class="value-display">Value: <span id="val-inc">60</span>°</div>
             </div>
             <div class="control-group">
                 <label for="bodyDip">Magnetization Angle (α)</label>
-                <input type="range" id="bodyDip" min="0" max="360" value="60">
+                <input type="range" id="bodyDip" min="0" max="360" value="60" class="lab-range">
                 <div class="value-display">Value: <span id="val-dip">60</span>°</div>
             </div>
             <div class="control-group">
                 <label for="magStrength">Magnetic Moment (M)</label>
-                <input type="range" id="magStrength" min="1000" max="10000" value="5000">
+                <input type="range" id="magStrength" min="1000" max="10000" value="5000" class="lab-range">
                 <div class="value-display">Value: <span id="val-str">5000</span></div>
             </div>
         </div>
 
         <div class="legend">
-            <div class="legend-item"><div class="dot" style="background:black;"></div>Anomaly Profile (ΔT)</div>
-            <div class="legend-item"><div class="dot" style="background:#3498db;"></div>Field Lines</div>
-            <div class="legend-item"><div class="dot" style="background:#e74c3c;"></div>Magnetized Body</div>
+            <div class="legend-item"><div class="dot" style="background:#0f172a;"></div>Anomaly Profile (ΔT)</div>
+            <div class="legend-item"><div class="dot" style="background:#2563eb;"></div>Field Lines</div>
+            <div class="legend-item"><div class="dot" style="background:#dc2626;"></div>Magnetized Body</div>
         </div>
 
-        <div class="instructions">
+        <div class="instructions lab-note">
             <strong>How to use:</strong> Click and drag the red rectangle (the magnetic body) inside the view area to move it underground. Observe how the magnetic field lines distort and how the anomaly curve graph (top/middle) changes shape and amplitude.
         </div>
     </div>
+    </main>
 
 <script>
     // --- Configuration ---
@@ -203,9 +203,10 @@
     // --- Interaction Handlers ---
     function getMousePos(evt) {
         const rect = canvas.getBoundingClientRect();
+        // The canvas is scaled to its frame by CSS; map CSS pixels to canvas pixels.
         return {
-            x: evt.clientX - rect.left,
-            y: evt.clientY - rect.top
+            x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+            y: (evt.clientY - rect.top) * (canvas.height / rect.height)
         };
     }
 
@@ -303,16 +304,16 @@
         ctx.clearRect(0, 0, state.width, state.height);
         
         // 1. Draw Sky & Ground
-        ctx.fillStyle = "#e0f7fa"; // Sky
+        ctx.fillStyle = "#f8fafc"; // Sky
         ctx.fillRect(0, 0, state.width, state.groundLevel);
-        ctx.fillStyle = "#ecf0f1"; // Ground
+        ctx.fillStyle = "#efe4cf"; // Ground
         ctx.fillRect(0, state.groundLevel, state.width, state.height - state.groundLevel);
-        
+
         // Surface Line
         ctx.beginPath();
         ctx.moveTo(0, state.groundLevel);
         ctx.lineTo(state.width, state.groundLevel);
-        ctx.strokeStyle = "#7f8c8d";
+        ctx.strokeStyle = "#a8906a";
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -325,7 +326,7 @@
         ctx.rotate(rad(state.params.alpha)); // Rotate visuals to match mag angle
         
         // Body shape
-        ctx.fillStyle = "#e74c3c";
+        ctx.fillStyle = "#dc2626";
         ctx.fillRect(-b.width/2, -b.height/2, b.width, b.height);
         
         // Magnet Arrow
@@ -352,24 +353,24 @@
     }
 
     function drawEarthFieldIndicator() {
-        const x = 60;
+        const x = 140; // Right of the nT axis labels so the two do not overlap
         const y = 60;
         const len = 40;
         const I = state.params.I;
-        
+
         ctx.save();
         ctx.translate(x, y);
-        
+
         // Label
-        ctx.fillStyle = "#2c3e50";
+        ctx.fillStyle = "#334155";
         ctx.font = "12px sans-serif";
         ctx.fillText("Earth's Field", -30, -25);
-        
+
         // Ground line ref
         ctx.beginPath();
         ctx.moveTo(-20, 0);
         ctx.lineTo(20, 0);
-        ctx.strokeStyle = "#95a5a6";
+        ctx.strokeStyle = "#94a3b8";
         ctx.setLineDash([2, 2]);
         ctx.lineWidth = 1;
         ctx.stroke();
@@ -382,7 +383,7 @@
         const dx = len * Math.cos(rad(I));
         const dy = len * Math.sin(rad(I)); 
         ctx.lineTo(dx, dy);
-        ctx.strokeStyle = "#2980b9";
+        ctx.strokeStyle = "#0369a1";
         ctx.lineWidth = 3;
         ctx.stroke();
         
@@ -392,7 +393,7 @@
         ctx.moveTo(dx, dy);
         ctx.lineTo(dx - 10 * Math.cos(angle - Math.PI/6), dy - 10 * Math.sin(angle - Math.PI/6));
         ctx.lineTo(dx - 10 * Math.cos(angle + Math.PI/6), dy - 10 * Math.sin(angle + Math.PI/6));
-        ctx.fillStyle = "#2980b9";
+        ctx.fillStyle = "#0369a1";
         ctx.fill();
 
         ctx.restore();
@@ -402,7 +403,7 @@
         ctx.save();
         ctx.lineWidth = 1.5;
         // Make field lines solid (continuous) and slightly transparent
-        ctx.strokeStyle = "rgba(52, 152, 219, 0.6)"; 
+        ctx.strokeStyle = "rgba(37, 99, 235, 0.7)";
         
         const mVec = { x: Math.cos(rad(alpha)), y: Math.sin(rad(alpha)) };
 
@@ -485,14 +486,13 @@
         ctx.beginPath();
         ctx.moveTo(0, gCenterY);
         ctx.lineTo(state.width, gCenterY);
-        ctx.strokeStyle = "#95a5a6";
+        ctx.strokeStyle = "#94a3b8";
         ctx.lineWidth = 1;
         ctx.stroke();
 
         // Draw Grid lines (Approximate)
         ctx.save();
-        ctx.strokeStyle = "#ecf0f1";
-        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = "#e5eaf1";
         ctx.beginPath();
         // Positive Limit Line
         const pLine = gCenterY - (displayRange * scaleFactor);
@@ -504,16 +504,17 @@
         ctx.restore();
 
         // Text Labels
-        ctx.fillStyle = "#7f8c8d";
+        ctx.fillStyle = "#64748b";
         ctx.font = "12px Arial";
         ctx.fillText("0 nT", 10, gCenterY - 5);
         ctx.fillText(`+${Math.round(displayRange)} nT`, 10, gTop + 12);
         ctx.fillText(`-${Math.round(displayRange)} nT`, 10, gBottom - 5);
+        ctx.fillStyle = "#334155";
         ctx.fillText("Magnetic Anomaly Profile (ΔT)", state.width - 180, gTop + 20);
 
         // Draw Curve
         ctx.beginPath();
-        ctx.strokeStyle = "#2c3e50";
+        ctx.strokeStyle = "#0f172a";
         ctx.lineWidth = 3;
         ctx.lineJoin = 'round';
 
@@ -531,7 +532,7 @@
         // Draw Dashed line from body center to graph
         ctx.beginPath();
         ctx.setLineDash([4, 4]);
-        ctx.strokeStyle = "#e74c3c";
+        ctx.strokeStyle = "#dc2626";
         ctx.moveTo(state.body.x, state.body.y - state.body.height/2);
         ctx.lineTo(state.body.x, gBottom);
         ctx.stroke();

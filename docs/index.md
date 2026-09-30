@@ -19,6 +19,9 @@ Instructor: **Dr. Hang Chen** · School of Earth, Environment, and Sustainabilit
 
 Environmental geophysics investigates the subsurface by measuring physical fields at or near the ground surface. This course covers the theory and practice of the major near-surface methods, with applications to groundwater exploration, contamination mapping, archaeological investigation, geohazard assessment, and mineral resource exploration. Field exercises, interactive simulators, and case studies connect each method to real problems.
 
+!!! info "Course logistics for enrolled students"
+    This public site supports **SEES:4800 Environmental Geophysics** and its **SEES:5800 graduate enrollment**. The official syllabus, semester schedule, grading policies, office hours, announcements, accommodations, assignment submission, and current meeting information are maintained in [University of Iowa ICON](https://icon.uiowa.edu/). Graduate students should also complete the clearly marked **Graduate Extension** work in each module.
+
 ## Course Modules
 
 <div class="grid cards" markdown>
@@ -85,7 +88,7 @@ The methods in this course are the same ones used to monitor groundwater and ima
 
 ## How This Site Works
 
-Every module page offers four kinds of material:
+Across the module pages, the site offers six kinds of material:
 
 | Section | What You Get |
 |---|---|

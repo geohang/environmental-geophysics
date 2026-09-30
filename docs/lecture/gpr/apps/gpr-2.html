@@ -4,82 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPR Interactive Simulator</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
+    <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
-        body { display: grid !important; grid-template-columns: minmax(0, 1fr); align-items: start !important; justify-items: center; }
-        #course-nav-bar { grid-column: 1; }
-        body > div:not(#course-nav-bar) { min-width: 0; max-width: 100%; }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
-        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
-            color: #0f172a;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
-        
+
         .math-font {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
         }
 
         canvas {
             display: block;
             width: 100%;
-            border-radius: 0.5rem;
             background-color: #fff;
-            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
         }
 
+        /* Grayscale radargram on a white field. */
         .radargram-canvas {
-            background-color: #000;
-        }
-
-        /* Custom range slider styling */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            margin-top: -6px;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: #cbd5e1;
-            border-radius: 2px;
+            background-color: #fff;
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="p-6 min-h-screen flex items-center justify-center">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Ground-Penetrating Radar</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <div class="max-w-6xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-slate-200">
-        
-        <!-- Left Panel: Controls & Instructions -->
-        <div class="w-full md:w-1/3 bg-slate-50 p-6 border-r border-slate-200 flex flex-col gap-6 h-[800px] overflow-y-auto">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-satellite-dish text-blue-600"></i> GPR Simulator
-                </h1>
-                <p class="text-sm text-slate-500 mt-1">Class Activity: Hyperbola Formation</p>
-            </div>
+    <header class="lab-hero">
+        <div class="lab-hero-inner">
+            <h1 class="lab-title"><span class="lab-title-accent">GPR</span> Simulator</h1>
+            <p class="lab-subtitle">Class Activity: Hyperbola Formation</p>
+        </div>
+    </header>
 
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="font-semibold text-slate-800 mb-3"><i class="fa-solid fa-sliders text-slate-400 mr-2"></i> Environment Controls</h2>
+    <main class="max-w-6xl mx-auto px-6 py-6">
+    <div class="w-full flex flex-col md:flex-row gap-6 items-start">
+
+        <!-- Left Panel: Controls & Instructions -->
+        <div class="w-full md:w-1/3 flex flex-col gap-6">
+
+            <div class="lab-card p-4">
+                <h2 class="font-semibold text-slate-800 mb-3"><i class="fa-solid fa-sliders lab-icon mr-2"></i> Environment Controls</h2>
                 
                 <!-- Material Dropdown -->
                 <div class="mb-4">
@@ -88,58 +59,59 @@
                         <option value="1">Air (&epsilon;r = 1, V = 0.30 m/ns)</option>
                         <option value="4" selected>Dry Sand (&epsilon;r = 4, V = 0.15 m/ns)</option>
                         <option value="9">Dry Concrete (&epsilon;r = 9, V = 0.10 m/ns)</option>
+                        <option value="16">Wet Sand (&epsilon;r = 16, V = 0.075 m/ns)</option>
                         <option value="25">Wet Soil (&epsilon;r = 25, V = 0.06 m/ns)</option>
                         <option value="80">Fresh Water (&epsilon;r = 80, V = 0.03 m/ns)</option>
                     </select>
                 </div>
 
                 <!-- Custom Target Instructions -->
-                <div class="mb-4 bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    <p class="text-sm text-blue-700 font-medium flex items-center gap-2">
-                        <i class="fa-solid fa-hand-pointer"></i> Click on the Physical World canvas to bury new targets!
+                <div class="mb-4 lab-note p-3">
+                    <p class="text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-hand-pointer lab-icon"></i> Click on the Physical World canvas to bury new targets!
                     </p>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex flex-wrap gap-2 mt-6">
-                    <button id="startBtn" class="flex-1 min-w-[120px] bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <button id="startBtn" class="lab-btn lab-btn-primary flex-1 min-w-[120px]">
                         <i class="fa-solid fa-play"></i> Scan
                     </button>
-                    <button id="resetBtn" title="Reset Scan" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-medium py-2 px-4 rounded-lg transition-colors">
+                    <button id="resetBtn" title="Reset Scan" class="lab-btn">
                         <i class="fa-solid fa-rotate-left"></i>
                     </button>
-                    <button id="clearBtn" title="Clear All Targets" class="bg-red-100 hover:bg-red-200 text-red-700 font-medium py-2 px-4 rounded-lg transition-colors">
-                        <i class="fa-solid fa-trash-can"></i>
+                    <button id="clearBtn" title="Clear All Targets" class="lab-btn">
+                        <i class="fa-solid fa-trash-can text-red-600"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Real-time Math Display -->
-            <div class="bg-slate-800 text-slate-100 p-4 rounded-xl shadow-sm">
-                <h2 class="font-semibold text-slate-300 mb-3 text-sm uppercase tracking-wider">Real-Time Data</h2>
+            <div class="lab-card p-4">
+                <h2 class="lab-kicker mb-3">Real-Time Data</h2>
                 <div class="space-y-2 text-sm math-font">
                     <div class="flex justify-between">
-                        <span class="text-slate-400">Velocity (v):</span>
-                        <span id="velDisplay" class="text-green-400">0.150 m/ns</span>
+                        <span class="text-slate-600">Velocity (v):</span>
+                        <span id="velDisplay" class="text-emerald-700 font-semibold">0.150 m/ns</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-400">Cart Dist (x):</span>
-                        <span id="xDisplay" class="text-yellow-400">0.00 m</span>
+                        <span class="text-slate-600">Cart Dist (x):</span>
+                        <span id="xDisplay" class="text-amber-700 font-semibold">0.00 m</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-400">Nearest (d):</span>
-                        <span id="dDisplay" class="text-yellow-400">0.00 m</span>
+                        <span class="text-slate-600">Nearest (d):</span>
+                        <span id="dDisplay" class="text-amber-700 font-semibold">0.00 m</span>
                     </div>
-                    <div class="flex justify-between border-t border-slate-600 pt-2 mt-2">
-                        <span class="text-slate-400">Nearest TWT:</span>
-                        <span id="twtDisplay" class="text-white font-bold">0.0 ns</span>
+                    <div class="flex justify-between border-t border-slate-200 pt-2 mt-2">
+                        <span class="text-slate-600">Nearest TWT:</span>
+                        <span id="twtDisplay" class="text-slate-900 font-bold">0.0 ns</span>
                     </div>
                 </div>
             </div>
 
             <!-- Educational Notes -->
-            <div class="text-sm text-slate-600 bg-blue-50 p-4 rounded-xl border border-blue-100 mt-auto">
-                <p class="font-semibold text-blue-800 mb-1"><i class="fa-solid fa-lightbulb"></i> Class Activity</p>
+            <div class="lab-note text-sm p-4">
+                <p class="lab-note-title font-semibold mb-1"><i class="fa-solid fa-lightbulb lab-icon"></i> Class Activity</p>
                 <p class="mb-2">1. Note the shape of the hyperbola.</p>
                 <p class="mb-2">2. Change the soil to <strong>Wet Soil</strong>. Run the scan again. Why is the hyperbola steeper and deeper?</p>
                 <p><em>(Hint: Look at the velocity and TWT!)</em></p>
@@ -147,28 +119,29 @@
         </div>
 
         <!-- Right Panel: Visualizations -->
-        <div class="w-full md:w-2/3 p-6 flex flex-col gap-4 h-[800px]">
-            
+        <div class="w-full md:w-2/3 lab-card p-6 flex flex-col gap-4 h-[800px]">
+
             <!-- Physical World Canvas -->
-            <div class="flex-1 flex flex-col relative">
-                <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Physical World</h3>
-                <div class="relative flex-1 rounded-xl overflow-hidden border-2 border-slate-200">
+            <div class="flex-1 min-h-0 flex flex-col relative">
+                <h3 class="lab-kicker mb-2">Physical World</h3>
+                <div class="relative flex-1 min-h-0 rounded-xl overflow-hidden border border-slate-200">
                     <canvas id="physicalCanvas"></canvas>
-                    <div class="absolute top-2 left-2 bg-white/80 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-slate-600">Cross-Section (Depth: 0m to 5m)</div>
+                    <div class="absolute top-2 left-2 bg-white/85 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-slate-600 border border-slate-200">Cross-Section (Depth: 0m to 5m)</div>
                 </div>
             </div>
 
             <!-- Radargram Canvas -->
-            <div class="flex-1 flex flex-col relative">
-                <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Radargram (B-Scan)</h3>
-                <div class="relative flex-1 rounded-xl overflow-hidden border-2 border-slate-800 bg-black">
+            <div class="flex-1 min-h-0 flex flex-col relative">
+                <h3 class="lab-kicker mb-2">Radargram (B-Scan)</h3>
+                <div class="relative flex-1 min-h-0 rounded-xl overflow-hidden border border-slate-200 bg-white">
                     <canvas id="radargramCanvas" class="radargram-canvas"></canvas>
-                    <div class="absolute top-2 left-2 bg-black/80 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-slate-400 border border-slate-700">Time (0ns to 100ns)</div>
+                    <div class="absolute top-2 left-2 bg-white/85 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-slate-600 border border-slate-200">Time (0ns to 100ns)</div>
                 </div>
             </div>
 
         </div>
     </div>
+    </main>
 
     <script>
         // --- CONSTANTS & CONFIG ---
@@ -236,11 +209,12 @@
 
             // 1. Draw Soil Background (color based on dielectric)
             let soilColor = '#e2e8f0';
-            if(dielectric == 4) soilColor = '#fde68a'; // Sand
-            if(dielectric == 9) soilColor = '#cbd5e1'; // Concrete
-            if(dielectric == 25) soilColor = '#a1a1aa'; // Wet Soil
-            if(dielectric == 80) soilColor = '#bae6fd'; // Water
-            if(dielectric == 1) soilColor = '#ffffff'; // Air
+            if(dielectric == 4) soilColor = '#efe4cf'; // Sand
+            if(dielectric == 9) soilColor = '#d6d3d1'; // Concrete
+            if(dielectric == 16) soilColor = '#d6c09a'; // Wet sand
+            if(dielectric == 25) soilColor = '#a8a29e'; // Wet Soil
+            if(dielectric == 80) soilColor = '#bfdbfe'; // Water
+            if(dielectric == 1) soilColor = '#f8fafc'; // Air
 
             pCtx.fillStyle = soilColor;
             pCtx.fillRect(0, mToPxY(0, physicalCanvas), physicalCanvas.width, physicalCanvas.height);
@@ -260,7 +234,7 @@
                 
                 pCtx.beginPath();
                 pCtx.arc(tPxX, tPxY, 15, 0, Math.PI * 2);
-                pCtx.fillStyle = '#ef4444'; // Red pipe
+                pCtx.fillStyle = '#dc2626'; // Red pipe
                 pCtx.fill();
                 pCtx.strokeStyle = '#991b1b';
                 pCtx.lineWidth = 3;
@@ -277,7 +251,7 @@
                 pCtx.moveTo(cartPxX, cartPxY);
                 pCtx.lineTo(cartPxX - 150, physicalCanvas.height);
                 pCtx.lineTo(cartPxX + 150, physicalCanvas.height);
-                pCtx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+                pCtx.fillStyle = 'rgba(2, 132, 199, 0.10)';
                 pCtx.fill();
 
                 // Find closest target to draw the connecting line
@@ -300,7 +274,7 @@
                     pCtx.beginPath();
                     pCtx.moveTo(cartPxX, cartPxY);
                     pCtx.lineTo(tPxX, tPxY);
-                    pCtx.strokeStyle = 'rgba(59, 130, 246, 0.5)';
+                    pCtx.strokeStyle = 'rgba(37, 99, 235, 0.8)';
                     pCtx.setLineDash([5, 5]);
                     pCtx.lineWidth = 2;
                     pCtx.stroke();
@@ -309,30 +283,30 @@
             }
 
             // 4. Draw GPR Cart
-            pCtx.fillStyle = '#1e293b';
+            pCtx.fillStyle = '#334155';
             pCtx.fillRect(cartPxX - 20, cartPxY - 20, 40, 20); // Body
-            pCtx.fillStyle = '#fbbf24';
+            pCtx.fillStyle = '#f59e0b';
             pCtx.fillRect(cartPxX - 15, cartPxY, 30, 10); // Antenna
-            
+
             // Wheels
-            pCtx.beginPath(); pCtx.arc(cartPxX - 12, cartPxY + 10, 6, 0, Math.PI*2); pCtx.fillStyle='#334155'; pCtx.fill();
+            pCtx.beginPath(); pCtx.arc(cartPxX - 12, cartPxY + 10, 6, 0, Math.PI*2); pCtx.fillStyle='#1e293b'; pCtx.fill();
             pCtx.beginPath(); pCtx.arc(cartPxX + 12, cartPxY + 10, 6, 0, Math.PI*2); pCtx.fill();
         }
 
         function drawRadargram() {
             // Draw background
-            rCtx.fillStyle = '#0f172a';
+            rCtx.fillStyle = '#ffffff';
             rCtx.fillRect(0, 0, radargramCanvas.width, radargramCanvas.height);
 
             // Draw grid lines
-            rCtx.strokeStyle = '#1e293b';
+            rCtx.strokeStyle = '#e5eaf1';
             rCtx.lineWidth = 1;
             for(let i = 0; i <= maxTimeNs; i += 20) {
                 const y = nsToPxY(i, radargramCanvas);
                 rCtx.beginPath(); rCtx.moveTo(0, y); rCtx.lineTo(radargramCanvas.width, y); rCtx.stroke();
                 if(i > 0) {
-                    rCtx.fillStyle = '#475569';
-                    rCtx.font = '10px Arial';
+                    rCtx.fillStyle = '#64748b';
+                    rCtx.font = '11px system-ui, sans-serif';
                     rCtx.fillText(i + ' ns', 5, y - 5);
                 }
             }
@@ -347,13 +321,13 @@
                     const pxY = nsToPxY(ref.twt, radargramCanvas);
 
                     // Draw standard GPR wavelet representation (black/white/black dot)
-                    rCtx.fillStyle = `rgba(255, 255, 255, ${ref.intensity})`;
+                    rCtx.fillStyle = `rgba(15, 23, 42, ${ref.intensity})`;
                     rCtx.beginPath();
                     rCtx.arc(pxX, pxY, 3, 0, Math.PI*2);
                     rCtx.fill();
 
                     // Add slight ringing (typical GPR artifact)
-                    rCtx.fillStyle = `rgba(100, 149, 237, ${ref.intensity * 0.5})`;
+                    rCtx.fillStyle = `rgba(100, 116, 139, ${ref.intensity * 0.5})`;
                     rCtx.beginPath();
                     rCtx.arc(pxX, pxY + 4, 2, 0, Math.PI*2);
                     rCtx.fill();
@@ -363,7 +337,7 @@
             // Draw current scan line (red vertical line)
             if (cartX > 0 && cartX < worldWidthMeters && isPlaying) {
                 const currentPxX = mToPxX(cartX, radargramCanvas);
-                rCtx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+                rCtx.strokeStyle = 'rgba(220, 38, 38, 0.7)';
                 rCtx.lineWidth = 2;
                 rCtx.beginPath();
                 rCtx.moveTo(currentPxX, 0);
@@ -382,8 +356,7 @@
             if (cartX >= worldWidthMeters) {
                 isPlaying = false;
                 document.getElementById('startBtn').innerHTML = '<i class="fa-solid fa-play"></i> Scan';
-                document.getElementById('startBtn').classList.replace('bg-amber-500', 'bg-blue-600');
-                document.getElementById('startBtn').classList.replace('hover:bg-amber-600', 'hover:bg-blue-700');
+                document.getElementById('startBtn').classList.add('lab-btn-primary');
             } else {
                 let reflections = [];
                 let minTwt = 0;
@@ -451,13 +424,11 @@
             const btn = document.getElementById('startBtn');
             if (isPlaying) {
                 btn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
-                btn.classList.replace('bg-blue-600', 'bg-amber-500');
-                btn.classList.replace('hover:bg-blue-700', 'hover:bg-amber-600');
+                btn.classList.remove('lab-btn-primary');
                 update();
             } else {
                 btn.innerHTML = '<i class="fa-solid fa-play"></i> Resume';
-                btn.classList.replace('bg-amber-500', 'bg-blue-600');
-                btn.classList.replace('hover:bg-amber-600', 'hover:bg-blue-700');
+                btn.classList.add('lab-btn-primary');
                 cancelAnimationFrame(animationId);
             }
         });
@@ -470,8 +441,7 @@
             
             const btn = document.getElementById('startBtn');
             btn.innerHTML = '<i class="fa-solid fa-play"></i> Scan';
-            btn.classList.replace('bg-amber-500', 'bg-blue-600');
-            btn.classList.replace('hover:bg-amber-600', 'hover:bg-blue-700');
+            btn.classList.add('lab-btn-primary');
             
             document.getElementById('xDisplay').textContent = '0.00 m';
             document.getElementById('dDisplay').textContent = '0.00 m';

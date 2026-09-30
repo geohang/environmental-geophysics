@@ -1,8 +1,10 @@
 /* Shared safety layer for all standalone course applications. */
+/* clip, not hidden: hidden makes body a scroll container and breaks sticky bars. */
 html,
 body {
   max-width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 *,
@@ -107,6 +109,250 @@ body.course-soft-dark [class*="bg-[#1"] {
   background-color: #2d455c !important;
 }
 
+/*
+ * Light lab theme shared by the topic apps. The tokens mirror the light
+ * palette in demo.css so topic apps and demos read as one course. They carry
+ * a --lab- prefix so they never collide with variables an app defines itself.
+ */
+:root {
+  --lab-bg: #f4f7fb;
+  --lab-surface: #ffffff;
+  --lab-surface-2: #f1f5f9;
+  --lab-border: #e2e8f0;
+  --lab-border-strong: #cbd5e1;
+  --lab-text: #0f172a;
+  --lab-text-2: #334155;
+  --lab-muted: #5b6b82;
+  --lab-grid: #e5eaf1;
+  --lab-primary: #0284c7;
+  --lab-primary-strong: #0369a1;
+  --lab-primary-soft: rgb(2 132 199 / .10);
+  --lab-accent: #d97706;
+  --lab-danger: #dc2626;
+  --lab-success: #059669;
+  --lab-shadow: 0 1px 2px rgb(15 23 42 / .06), 0 8px 24px rgb(15 23 42 / .06);
+  --lab-radius: 14px;
+  --lab-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --lab-mono: ui-monospace, "Cascadia Code", Consolas, "Courier New", monospace;
+}
+
+body.lab-page {
+  background: var(--lab-bg);
+  color: var(--lab-text);
+}
+
+/* Topic apps carry the id; demos style the class through demo.css. */
+#course-nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+  padding: .3rem 1.1rem;
+  background: rgb(255 255 255 / .88);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--lab-border);
+  font-family: var(--lab-font);
+  font-size: .85rem;
+  line-height: 1.4;
+}
+
+#course-nav-bar a {
+  color: var(--lab-muted);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#course-nav-bar a:hover { color: var(--lab-primary); }
+
+/* In-page anchors land below the sticky bar; a page with a second sticky bar sets its own. */
+:where(html:has(#course-nav-bar)) { scroll-padding-top: calc(44px + 1.1rem + 1px); }
+
+#course-nav-bar .spacer {
+  margin-left: auto;
+  color: var(--lab-muted);
+  opacity: .8;
+}
+
+.lab-hero {
+  background:
+    radial-gradient(1200px 220px at 50% -60px, var(--lab-primary-soft), transparent),
+    var(--lab-bg);
+  border-bottom: 1px solid var(--lab-border);
+  color: var(--lab-text);
+  padding: 1.6rem 0 1.35rem;
+}
+
+.lab-hero-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.lab-hero-inner.is-4xl { max-width: 56rem; }
+.lab-hero-inner.is-5xl { max-width: 64rem; }
+.lab-hero-inner.is-7xl { max-width: 80rem; }
+.lab-hero-inner.is-full { max-width: none; }
+
+.lab-hero.center { text-align: center; }
+
+.lab-title {
+  margin: 0;
+  color: var(--lab-text);
+  font-size: 1.75rem;
+  font-weight: 750;
+  letter-spacing: -.015em;
+  line-height: 1.2;
+}
+
+.lab-title-accent { color: var(--lab-primary); }
+
+.lab-subtitle {
+  margin: .35rem 0 0;
+  color: var(--lab-muted);
+  font-size: .95rem;
+}
+
+.lab-card {
+  background: var(--lab-surface);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius);
+  box-shadow: var(--lab-shadow);
+}
+
+.lab-note {
+  background: #f0f7fc;
+  border: 1px solid #cfe3f1;
+  border-left: 4px solid var(--lab-primary);
+  border-radius: 12px;
+  color: var(--lab-text-2);
+}
+
+.lab-note-title { color: var(--lab-text); }
+
+.lab-icon { color: var(--lab-primary); }
+
+.lab-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: .3rem .65rem;
+  border: 1px solid var(--lab-border);
+  border-radius: 999px;
+  background: var(--lab-surface-2);
+  color: var(--lab-muted);
+  font: 600 .75rem/1.2 var(--lab-mono);
+}
+
+.lab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--lab-border-strong);
+  border-radius: 10px;
+  background: var(--lab-surface);
+  color: var(--lab-text-2);
+  font-family: inherit;
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+.lab-btn:hover {
+  border-color: #94a3b8;
+  background: var(--lab-surface-2);
+  color: var(--lab-text);
+}
+
+.lab-btn-primary {
+  border-color: var(--lab-primary);
+  background: var(--lab-primary);
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgb(2 132 199 / .25);
+}
+
+.lab-btn-primary:hover {
+  border-color: var(--lab-primary-strong);
+  background: var(--lab-primary-strong);
+  color: #ffffff;
+}
+
+.lab-btn:disabled,
+.lab-btn[aria-disabled="true"] {
+  border-color: var(--lab-border);
+  background: var(--lab-surface-2);
+  color: #94a3b8;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* Plot and animation areas: a white field with a hairline frame. */
+.lab-stage {
+  background: var(--lab-surface);
+  border: 1px solid var(--lab-border);
+  border-radius: 12px;
+}
+
+.lab-formula {
+  padding: .8rem 1rem;
+  border-left: 4px solid var(--lab-primary);
+  border-radius: 8px;
+  background: var(--lab-primary-soft);
+  color: var(--lab-text-2);
+}
+
+.lab-kicker {
+  color: var(--lab-muted);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Tabs and step buttons; mark the current one with .is-active or aria-selected. */
+.lab-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .5rem .9rem;
+  border: 1px solid var(--lab-border);
+  border-radius: 10px;
+  background: var(--lab-surface);
+  color: var(--lab-text-2);
+  font-family: inherit;
+  font-size: .875rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.lab-tab:hover {
+  border-color: var(--lab-border-strong);
+  background: var(--lab-surface-2);
+  color: var(--lab-text);
+}
+
+.lab-tab.is-active,
+.lab-tab[aria-selected="true"] {
+  border-color: var(--lab-primary);
+  background: var(--lab-primary-soft);
+  color: var(--lab-primary-strong);
+}
+
+/* Native track and thumb, tinted like the demo sliders. */
+input[type="range"].lab-range {
+  width: 100%;
+  background: transparent;
+  accent-color: var(--lab-primary);
+  cursor: pointer;
+}
+
 #course-nav-bar,
 .course-nav-bar {
   width: 100%;
@@ -122,8 +368,12 @@ body.course-soft-dark [class*="bg-[#1"] {
 }
 
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 3px solid #fbbf24 !important;
+  outline: 3px solid #0369a1 !important;
   outline-offset: 3px !important;
+}
+
+body.course-soft-dark :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: #fbbf24 !important;
 }
 
 button,
@@ -140,9 +390,13 @@ label:has(input[type="radio"]),
 label:has(input[type="checkbox"]) {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* Zero specificity so a page's own flex or block layout on the label wins. */
+:where(label:has(input[type="radio"]), label:has(input[type="checkbox"])) {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 input[type="radio"],
@@ -165,9 +419,7 @@ input[type="checkbox"] {
 
 button { touch-action: manipulation; }
 
-canvas,
-svg,
-img {
+:where(canvas, svg, img) {
   max-width: 100%;
 }
 
@@ -197,7 +449,8 @@ mjx-container,
   line-height: 1.55;
 }
 
-.science-caveat strong { color: #fbbf24; }
+.science-caveat strong { color: #b45309; }
+body.course-soft-dark .science-caveat strong { color: #fbbf24; }
 
 .sr-only {
   position: absolute !important;

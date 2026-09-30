@@ -4,62 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deep EM Methods - Interactive Visualizer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+
+    <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     
     <style>
+        /* Light lab theme: page chrome uses the --lab-* tokens from course-app.css;
+           scene colors live in the PAL object at the top of the script. */
         :root {
-            --bg-main: #0f172a;        
-            --bg-panel: #1e293b;       
-            --bg-panel-light: #334155; 
-            --text-main: #f8fafc;      
-            --text-muted: #94a3b8;     
-            --accent-blue: #38bdf8;    
-            --accent-orange: #f59e0b;  
-            --accent-green: #10b981;   
-            --accent-red: #ef4444;
-            --border-color: #334155;
-            
-            /* Earth Colors */
-            --sky-top: #020617;
-            --sky-bottom: #1e293b;
-            --earth-surface: #451a03;
-            --earth-deep: #170500;
-            --ocean-top: #0284c7;
-            --ocean-bottom: #082f49;
+            --text-main: #0f172a;
+            --text-muted: #5b6b82;
+            --accent-blue: #0369a1;
         }
 
         * { box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             margin: 0;
-            padding: 2vh 2vw;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr);
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
         }
 
-        #course-nav-bar { grid-column: 1; }
-
         .dashboard {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 350px minmax(0, 1fr);
             gap: 24px;
             width: 100%;
-            max-width: 1400px;
-            background-color: var(--bg-panel);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            max-width: 80rem;
             min-width: 0;
             margin: 0 auto;
+            padding: 24px 1.5rem 40px;
         }
 
         /* --- SIDEBAR --- */
@@ -70,81 +45,42 @@
             min-width: 0;
         }
 
-        .header h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 26px;
-            margin: 0 0 8px 0;
-            background: linear-gradient(to right, var(--accent-blue), var(--accent-green));
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        
-        .header p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin: 0;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
         .method-selector {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .btn-method {
-            background-color: var(--bg-main);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 16px;
+        /* Mode buttons use .lab-tab; setMethod() toggles .is-active together with .active. */
+        .method-selector .btn-method {
+            gap: 14px;
+            padding: 14px 16px;
             border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
+            font-family: inherit;
             font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            text-align: left;
+            box-shadow: 0 1px 2px rgb(15 23 42 / .04);
         }
 
-        .btn-method i { font-size: 20px; width: 24px; text-align: center; }
-        
-        .btn-method:hover {
-            border-color: var(--accent-blue);
-            color: var(--text-main);
-            background-color: rgba(56, 189, 248, 0.05);
-        }
+        .btn-method i { font-size: 18px; width: 24px; text-align: center; color: #64748b; }
+        .btn-method.is-active i { color: var(--lab-primary); }
 
-        .btn-method.active {
-            border-color: var(--accent-orange);
-            background-color: rgba(245, 158, 11, 0.1);
-            color: var(--accent-orange);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
-        }
-
-        .educational-card {
-            background-color: var(--bg-main);
-            border-radius: 16px;
+        .sidebar .educational-card {
             padding: 20px;
-            border-top: 4px solid var(--accent-blue);
+            border-top: 4px solid var(--lab-primary);
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
         .educational-card h3 {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-main);
-            margin: 0 0 12px 0;
-            font-size: 20px;
+            color: var(--lab-text);
+            margin: 0 0 10px 0;
+            font-size: 19px;
+            font-weight: 700;
         }
 
         .educational-card p {
-            color: var(--text-muted);
+            color: var(--lab-text-2);
             font-size: 14px;
             line-height: 1.6;
             margin: 0 0 16px 0;
@@ -158,12 +94,13 @@
         }
 
         .tag {
-            background-color: var(--bg-panel-light);
-            padding: 6px 10px;
-            border-radius: 6px;
+            background-color: var(--lab-primary-soft);
+            border: 1px solid rgb(2 132 199 / .2);
+            padding: 5px 10px;
+            border-radius: 999px;
             font-size: 12px;
             font-weight: 600;
-            color: var(--accent-blue);
+            color: var(--lab-primary-strong);
         }
 
         /* --- MAIN VIEW --- */
@@ -175,11 +112,8 @@
         }
 
         .canvas-container {
-            background-color: var(--bg-main);
-            border-radius: 16px;
             overflow: hidden;
             position: relative;
-            border: 1px solid var(--border-color);
             flex-grow: 1;
             min-height: 500px;
             display: flex;
@@ -197,25 +131,28 @@
         /* Floating Overlays on Canvas */
         .overlay-panel {
             position: absolute;
-            background-color: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 12px 16px;
+            background-color: rgb(255 255 255 / .92);
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+            padding: 10px 14px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--lab-border);
+            box-shadow: 0 1px 2px rgb(15 23 42 / .06), 0 4px 12px rgb(15 23 42 / .06);
+            color: var(--lab-text-2);
         }
 
         .legend-overlay { top: 20px; right: 20px; }
-        
+
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 7px;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
         }
         .legend-item:last-child { margin-bottom: 0; }
-        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+        .legend-color { width: 14px; height: 14px; border-radius: 4px; flex: 0 0 auto; }
 
         .scale-overlay {
             top: 20px;
@@ -225,30 +162,27 @@
             align-items: center;
             gap: 5px;
         }
-        .scale-line { width: 2px; height: 60px; background: linear-gradient(to bottom, transparent, var(--text-muted), transparent); }
-        .scale-text { font-size: 12px; font-weight: bold; color: var(--accent-blue); letter-spacing: 1px;}
+        .scale-line { width: 2px; height: 60px; border-radius: 1px; background: linear-gradient(to bottom, #cbd5e1, #475569); }
+        .scale-text { font-size: 12px; font-weight: 700; color: var(--lab-primary-strong); letter-spacing: .5px; }
 
         /* Controls Bar */
         .playback-controls {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: var(--bg-main);
-            padding: 16px 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            padding: 14px 20px;
         }
 
         .control-group {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .btn-icon {
-            background-color: var(--bg-panel-light);
-            border: none;
-            color: var(--text-main);
+            background-color: var(--lab-surface-2);
+            border: 1px solid var(--lab-border-strong);
+            color: var(--lab-text-2);
             width: 44px;
             height: 44px;
             border-radius: 50%;
@@ -256,92 +190,77 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            transition: all 0.2s;
+            font-size: 16px;
+            transition: background-color .15s ease, border-color .15s ease, color .15s ease;
         }
-        .btn-icon:hover { background-color: var(--accent-blue); color: #000; }
+        .btn-icon:hover { background-color: var(--lab-primary); border-color: var(--lab-primary); color: #ffffff; }
 
         .slider-container {
             display: flex;
             align-items: center;
             gap: 12px;
             font-size: 14px;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-weight: 600;
+            color: var(--lab-text-2);
         }
 
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 150px;
-            background: var(--bg-panel-light);
-            height: 6px;
-            border-radius: 3px;
-            outline: none;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--accent-blue);
-            cursor: pointer;
-        }
+        .playback-controls .slider-container input[type=range] { width: 150px; }
 
         @media (max-width: 1024px) {
-            .dashboard { grid-template-columns: 1fr; }
+            .dashboard { grid-template-columns: minmax(0, 1fr); }
             .sidebar { flex-direction: row; flex-wrap: wrap; }
-            .header { width: 100%; }
             .method-selector { flex-direction: row; width: 100%; flex-wrap: wrap; }
             .btn-method { flex: 1; min-width: 200px; }
             .canvas-container { min-height: 400px; }
         }
         @media (max-width: 520px) {
-            body { padding: 10px; }
-            .dashboard { gap: 12px; }
-            .sidebar { padding: 14px; }
-            .method-selector { display: grid; grid-template-columns: 1fr; }
+            .dashboard { gap: 12px; padding-top: 16px; padding-bottom: 28px; }
+            .method-selector { display: grid; grid-template-columns: minmax(0, 1fr); }
             .btn-method { min-width: 0; width: 100%; }
             .canvas-container { min-height: 360px; }
             .playback-controls, .control-group, .slider-container { flex-wrap: wrap; }
             .playback-controls { gap: 12px; padding: 14px; }
             .slider-container { width: 100%; min-width: 0; }
-            .slider-container input[type="range"] { width: min(100%, 190px); }
+            .playback-controls .slider-container input[type="range"] { width: min(100%, 190px); }
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body>
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Magnetotellurics</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
+
+    <header class="lab-hero">
+        <div class="lab-hero-inner is-7xl">
+            <h1 class="lab-title"><span class="lab-title-accent">Deep EM</span> Visualizer</h1>
+            <p class="lab-subtitle">Interactive Physics Dashboard</p>
+        </div>
+    </header>
 
     <div class="dashboard">
         <!-- Sidebar -->
         <div class="sidebar">
-            <div class="header">
-                <h1>Deep EM Visualizer</h1>
-                <p>Interactive Physics Dashboard</p>
-            </div>
 
             <div class="method-selector">
-                <button class="btn-method active" onclick="setMethod('GMS')" id="btn-GMS">
+                <button class="btn-method lab-tab active is-active" onclick="setMethod('GMS')" id="btn-GMS">
                     <i class="fa-solid fa-earth-americas"></i> GMS (Mantle)
                 </button>
-                <button class="btn-method" onclick="setMethod('MT')" id="btn-MT">
+                <button class="btn-method lab-tab" onclick="setMethod('MT')" id="btn-MT">
                     <i class="fa-solid fa-bolt"></i> MT (Deep Crust)
                 </button>
-                <button class="btn-method" onclick="setMethod('CSEM')" id="btn-CSEM">
+                <button class="btn-method lab-tab" onclick="setMethod('CSEM')" id="btn-CSEM">
                     <i class="fa-solid fa-ship"></i> CSEM (Marine)
                 </button>
-                <button class="btn-method" onclick="setMethod('TEM')" id="btn-TEM">
+                <button class="btn-method lab-tab" onclick="setMethod('TEM')" id="btn-TEM">
                     <i class="fa-solid fa-stopwatch"></i> TEM (Minerals)
                 </button>
             </div>
 
-            <div class="educational-card">
+            <div class="educational-card lab-card">
                 <h3 id="infoTitle">Geomagnetic Sounding (GMS)</h3>
                 <p id="infoDesc">...</p>
                 <div class="tags" id="infoTags"></div>
@@ -350,7 +269,7 @@
 
         <!-- Main Content -->
         <div class="main-view">
-            <div class="canvas-container">
+            <div class="canvas-container lab-card">
                 <canvas id="emCanvas" width="1000" height="600"></canvas>
                 
                 <!-- Legend -->
@@ -365,7 +284,7 @@
             </div>
 
             <!-- Playback Controls -->
-            <div class="playback-controls">
+            <div class="playback-controls lab-card">
                 <div class="control-group">
                     <button class="btn-icon" onclick="togglePlay()" id="playBtn">
                         <i class="fa-solid fa-pause"></i>
@@ -375,7 +294,7 @@
                 
                 <div class="slider-container">
                     <i class="fa-solid fa-turtle"></i>
-                    <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
+                    <input type="range" class="lab-range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
                     <i class="fa-solid fa-rabbit-running"></i>
                     <span>Animation Speed</span>
                 </div>
@@ -384,6 +303,30 @@
     </div>
 
     <script>
+        // --- LIGHT SCENE PALETTE ---
+        // Marks, fields and targets use 600-level tones that read on a light scene; canvas
+        // text uses 700/800 tones; the ground warms from light tan to soft orange with depth.
+        // Every legend swatch below uses the same PAL entry as the item it labels.
+        const FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+        const PAL = {
+            skyTop: '#e6f1fa', skyBottom: '#f8fafc',
+            oceanTop: '#dbeafe', oceanBottom: '#bfdbfe',
+            earthBands: [[0, '#f1e6d1'], [0.22, '#eee0c6'], [0.25, '#e8d5b3'], [0.47, '#e6cfa9'],
+                         [0.5, '#eec79d'], [0.72, '#efbd8f'], [0.75, '#f2b07f'], [1, '#f3a472']],
+            groundLine: '#b08a5a', seafloor: '#7c9cb8', depthGrid: 'rgba(120, 83, 40, 0.12)',
+            ink: '#0f172a', labelBg: 'rgba(255, 255, 255, 0.88)', labelFont: '600 12px ' + FONT,
+            hudBg: 'rgba(255, 255, 255, 0.94)', hudLine: '#cbd5e1', hudTitle: '#334155', hudFont: '600 11px ' + FONT,
+            source: '#d97706', sourceText: '#92400e',
+            fieldLine: 'rgba(51, 65, 85, 0.35)', fieldDot: 'rgba(51, 65, 85, 0.75)',
+            red: '#dc2626', redText: '#b91c1c',
+            eField: '#0891b2', eText: '#0e7490', hField: '#c026d3', hText: '#a21caf',
+            instrument: '#64748b', logger: '#475569', hull: '#475569',
+            primary: '#0284c7', primaryText: '#0369a1',
+            green: '#059669', greenText: '#047857',
+            oil: '#92400e', oilFill: 'rgba(146, 64, 14, 0.3)', oilText: '#78350f',
+            ore: '#2563eb', oreText: '#1e40af'
+        };
+
         // --- CONTENT DATA ---
         const methodData = {
             'GMS': {
@@ -391,11 +334,11 @@
                 desc: 'Uses variations in the Earth\'s natural magnetic field caused by the solar wind. By measuring only the magnetic field (H) at the surface, we detect ultra-deep massive conductors like mantle plumes.',
                 tags: ['Natural Source', 'Magnetic Only', 'Depth: 500-2000 km'],
                 scaleScale: '1000 km',
-                colorTop: '#38bdf8', colorAcc: '#ef4444',
+                colorTop: PAL.primary, colorAcc: PAL.red,
                 legend: [
-                    { color: 'rgba(255, 200, 0, 0.8)', label: 'Solar Wind B-Field' },
-                    { color: '#ef4444', label: 'Conductive Plume' },
-                    { color: '#94a3b8', label: 'Magnetometer' }
+                    { color: PAL.source, label: 'Solar Wind B-Field' },
+                    { color: PAL.red, label: 'Conductive Plume' },
+                    { color: PAL.instrument, label: 'Magnetometer' }
                 ]
             },
             'MT': {
@@ -403,12 +346,12 @@
                 desc: 'Uses natural sources (lightning & solar wind) to induce both Electric (E) and Magnetic (H) fields. The ratio of E to H gives us rock resistivity. Excellent for finding geothermal reservoirs.',
                 tags: ['Natural Source', 'E & H Fields', 'Depth: 5-100 km'],
                 scaleScale: '50 km',
-                colorTop: '#f59e0b', colorAcc: '#10b981',
+                colorTop: PAL.source, colorAcc: PAL.green,
                 legend: [
-                    { color: '#f59e0b', label: 'EM Plane Waves' },
-                    { color: '#00ffff', label: 'Electric Field (E)' },
-                    { color: '#ff00ff', label: 'Magnetic Field (H)' },
-                    { color: '#ef4444', label: 'Geothermal Fluid' }
+                    { color: PAL.source, label: 'EM Plane Waves' },
+                    { color: PAL.eField, label: 'Electric Field (E)' },
+                    { color: PAL.hField, label: 'Magnetic Field (H)' },
+                    { color: PAL.red, label: 'Geothermal Fluid' }
                 ]
             },
             'CSEM': {
@@ -416,11 +359,11 @@
                 desc: 'A ship tows a low-frequency electric dipole transmitter above seafloor receivers. At these frequencies the field is diffusive: a resistive reservoir changes the received amplitude and phase relative to a conductive background. Interpretation requires forward modeling and inversion.',
                 tags: ['Active Source', 'Frequency Domain', 'Depth: 1-5 km'],
                 scaleScale: '3 km',
-                colorTop: '#38bdf8', colorAcc: '#f59e0b',
+                colorTop: PAL.primary, colorAcc: PAL.source,
                 legend: [
-                    { color: 'rgba(56, 189, 248, 0.8)', label: 'Primary Field' },
-                    { color: 'rgba(245, 158, 11, 0.8)', label: 'Reservoir-perturbed Field' },
-                    { color: '#f59e0b', label: 'Resistive Oil' }
+                    { color: PAL.primary, label: 'Primary Field' },
+                    { color: PAL.source, label: 'Reservoir-perturbed Field' },
+                    { color: PAL.oil, label: 'Resistive Oil' }
                 ]
             },
             'TEM': {
@@ -428,11 +371,11 @@
                 desc: 'We pulse a strong current through a ground loop, then turn it off. This abrupt change creates secondary "smoke rings" of current in the earth. Conductive mineral ores prolong this decay, acting like an echo.',
                 tags: ['Active Source', 'Time Domain (Pulsed)', 'Depth: 0-1 km'],
                 scaleScale: '1 km',
-                colorTop: '#10b981', colorAcc: '#ef4444',
+                colorTop: PAL.green, colorAcc: PAL.red,
                 legend: [
-                    { color: '#10b981', label: 'Primary Pulse (ON)' },
-                    { color: '#ef4444', label: 'Secondary Decay (OFF)' },
-                    { color: '#38bdf8', label: 'Conductive Ore' }
+                    { color: PAL.red, label: 'Primary Pulse (ON)' },
+                    { color: PAL.green, label: 'Secondary Decay (OFF)' },
+                    { color: PAL.ore, label: 'Conductive Ore' }
                 ]
             }
         };
@@ -455,8 +398,8 @@
             animationTime = 0;
             
             // Buttons
-            document.querySelectorAll('.btn-method').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${method}`).classList.add('active');
+            document.querySelectorAll('.btn-method').forEach(btn => btn.classList.remove('active', 'is-active'));
+            document.getElementById(`btn-${method}`).classList.add('active', 'is-active');
 
             // Data Population
             const data = methodData[method];
@@ -493,8 +436,8 @@
         }
 
         // --- DRAWING HELPERS ---
-        function drawLabel(x, y, text, color = '#ffffff', bgColor = 'rgba(15, 23, 42, 0.7)') {
-            ctx.font = '12px Inter';
+        function drawLabel(x, y, text, color = PAL.ink, bgColor = PAL.labelBg) {
+            ctx.font = PAL.labelFont;
             ctx.fontWeight = '600';
             const metrics = ctx.measureText(text);
             const padX = 8, padY = 6;
@@ -511,23 +454,22 @@
         function drawBackground() {
             // Sky Gradient
             let sky = ctx.createLinearGradient(0, 0, 0, GROUND_LEVEL);
-            sky.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--sky-top'));
-            sky.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--sky-bottom'));
+            sky.addColorStop(0, PAL.skyTop);
+            sky.addColorStop(1, PAL.skyBottom);
             ctx.fillStyle = sky;
             ctx.fillRect(0, 0, canvas.width, GROUND_LEVEL);
 
             // Earth Gradient
             let earth = ctx.createLinearGradient(0, GROUND_LEVEL, 0, canvas.height);
-            earth.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--earth-surface'));
-            earth.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--earth-deep'));
+            PAL.earthBands.forEach(([stop, color]) => earth.addColorStop(stop, color));
 
             if(currentMethod === 'CSEM') {
                 ctx.fillStyle = sky;
                 ctx.fillRect(0, 0, canvas.width, SEA_LEVEL);
                 
                 let ocean = ctx.createLinearGradient(0, SEA_LEVEL, 0, GROUND_LEVEL);
-                ocean.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--ocean-top'));
-                ocean.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--ocean-bottom'));
+                ocean.addColorStop(0, PAL.oceanTop);
+                ocean.addColorStop(1, PAL.oceanBottom);
                 ctx.fillStyle = ocean;
                 ctx.fillRect(0, SEA_LEVEL, canvas.width, GROUND_LEVEL - SEA_LEVEL);
             }
@@ -539,12 +481,12 @@
             ctx.beginPath();
             ctx.moveTo(0, GROUND_LEVEL);
             ctx.lineTo(canvas.width, GROUND_LEVEL);
-            ctx.strokeStyle = (currentMethod === 'CSEM') ? '#0c4a6e' : '#78350f';
+            ctx.strokeStyle = (currentMethod === 'CSEM') ? PAL.seafloor : PAL.groundLine;
             ctx.lineWidth = 6;
             ctx.stroke();
             
             // Grid lines for depth context
-            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.strokeStyle = PAL.depthGrid;
             ctx.lineWidth = 1;
             for(let y = GROUND_LEVEL + 50; y < canvas.height; y += 50) {
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
@@ -556,14 +498,14 @@
         function drawGMS(t) {
             // Ionosphere / Solar Wind Band
             let ionosphere = ctx.createLinearGradient(0, 0, 0, 80);
-            ionosphere.addColorStop(0, 'rgba(245, 158, 11, 0.4)');
-            ionosphere.addColorStop(1, 'transparent');
+            ionosphere.addColorStop(0, 'rgba(217, 119, 6, 0.22)');
+            ionosphere.addColorStop(1, 'rgba(217, 119, 6, 0)');
             ctx.fillStyle = ionosphere;
             ctx.fillRect(0, 0, canvas.width, 80);
-            drawLabel(canvas.width/2 - 60, 40, "Solar Wind / Ionosphere", "#f59e0b", "transparent");
+            drawLabel(canvas.width/2 - 60, 40, "Solar Wind / Ionosphere", PAL.sourceText, "transparent");
 
             // Source Waves moving in sky
-            ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+            ctx.strokeStyle = 'rgba(217, 119, 6, 0.75)';
             ctx.lineWidth = 2;
             for(let i=0; i<3; i++) {
                 ctx.beginPath();
@@ -578,15 +520,15 @@
             let plumeX = canvas.width/2 + 100;
             let plumeY = canvas.height + 80;
             let plumeGrad = ctx.createRadialGradient(plumeX, plumeY, 20, plumeX, plumeY, 250);
-            plumeGrad.addColorStop(0, 'rgba(239, 68, 68, 0.9)'); // Red core
-            plumeGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.4)');
-            plumeGrad.addColorStop(1, 'transparent');
+            plumeGrad.addColorStop(0, 'rgba(220, 38, 38, 0.8)'); // Red core
+            plumeGrad.addColorStop(0.5, 'rgba(234, 88, 12, 0.35)');
+            plumeGrad.addColorStop(1, 'rgba(234, 88, 12, 0)');
             ctx.fillStyle = plumeGrad;
             ctx.beginPath(); ctx.arc(plumeX, plumeY, 250, 0, Math.PI*2); ctx.fill();
-            drawLabel(plumeX - 40, canvas.height - 50, "Hot Mantle Plume", "#fca5a5");
+            drawLabel(plumeX - 40, canvas.height - 50, "Hot Mantle Plume", PAL.redText);
 
             // Penetrating Magnetic Fields (B)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.strokeStyle = PAL.fieldLine;
             ctx.lineWidth = 3;
             for(let i=1; i<=7; i++) {
                 let startX = (canvas.width/8) * i;
@@ -604,16 +546,16 @@
                 let dotProgress = ((t*0.5 + i*20) % 100) / 100;
                 let dotX = startX + (endX - startX) * dotProgress;
                 let dotY = 80 + (canvas.height - 80) * dotProgress; // simplified lerp
-                ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                ctx.fillStyle = PAL.fieldDot;
                 ctx.beginPath(); ctx.arc(dotX, dotY, 3, 0, Math.PI*2); ctx.fill();
             }
 
             // Surface Magnetometer (Rx)
-            ctx.fillStyle = '#94a3b8';
+            ctx.fillStyle = PAL.instrument;
             ctx.fillRect(canvas.width/2 - 15, GROUND_LEVEL - 20, 30, 20);
-            ctx.fillStyle = '#ef4444'; // blinking light
+            ctx.fillStyle = PAL.red; // blinking light
             if(Math.floor(t/10) % 2 === 0) ctx.fillRect(canvas.width/2 - 3, GROUND_LEVEL - 25, 6, 5);
-            drawLabel(canvas.width/2 - 45, GROUND_LEVEL - 35, "Magnetometer (Rx)", "#fff");
+            drawLabel(canvas.width/2 - 45, GROUND_LEVEL - 35, "Magnetometer (Rx)", PAL.ink);
 
             // --- HUD GRAPHIC FOR GMS OBSERVATION ---
             drawGMSGraph(t);
@@ -623,17 +565,17 @@
             // Source: Lightning & Plane Waves
             if (t % 120 < 10) {
                 // Lightning flash
-                ctx.strokeStyle = '#fef08a';
+                ctx.strokeStyle = PAL.source;
                 ctx.lineWidth = 4;
                 ctx.beginPath(); ctx.moveTo(150, 0); ctx.lineTo(170, 50); ctx.lineTo(140, 90); ctx.lineTo(180, GROUND_LEVEL); ctx.stroke();
                 
                 // Flash glow
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.fillStyle = 'rgba(245, 158, 11, 0.12)';
                 ctx.fillRect(0,0, canvas.width, GROUND_LEVEL);
             }
 
             // Plane waves descending
-            ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)'; // Orangeish
+            ctx.strokeStyle = 'rgba(217, 119, 6, 0.35)'; // Orangeish
             ctx.lineWidth = 2;
             let waveGap = 80;
             let waveSpeed = 1.5;
@@ -646,7 +588,7 @@
 
             // Target: Geothermal Fault (Conductive)
             let faultX = canvas.width/2 + 80;
-            ctx.fillStyle = 'rgba(239, 68, 68, 0.4)'; // Reddish fluid
+            ctx.fillStyle = 'rgba(220, 38, 38, 0.28)'; // Reddish fluid
             ctx.beginPath();
             ctx.moveTo(faultX, GROUND_LEVEL + 50);
             ctx.lineTo(faultX + 40, canvas.height);
@@ -654,41 +596,41 @@
             ctx.fill();
             
             // Draw fracture lines
-            ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+            ctx.strokeStyle = 'rgba(220, 38, 38, 0.9)';
             ctx.lineWidth = 2;
             ctx.beginPath(); ctx.moveTo(faultX, GROUND_LEVEL+50); ctx.lineTo(faultX+20, GROUND_LEVEL+150); ctx.lineTo(faultX, GROUND_LEVEL+200); ctx.stroke();
-            drawLabel(faultX + 30, GROUND_LEVEL + 150, "Hot Geothermal Fluids", "#fca5a5");
+            drawLabel(faultX + 30, GROUND_LEVEL + 150, "Hot Geothermal Fluids", PAL.redText);
 
             // Propagating E and H fields
             let fieldY = GROUND_LEVEL + ((t * 1.5) % (canvas.height - GROUND_LEVEL));
             if(fieldY > GROUND_LEVEL + 20) {
                 // E Field (Horizontal - Cyan)
-                ctx.strokeStyle = '#00ffff'; ctx.lineWidth = 3;
+                ctx.strokeStyle = PAL.eField; ctx.lineWidth = 3;
                 ctx.beginPath(); ctx.moveTo(canvas.width/3 - 40, fieldY); ctx.lineTo(canvas.width/3 + 40, fieldY); ctx.stroke();
-                ctx.fillStyle = '#00ffff'; ctx.fillText("E-Field", canvas.width/3 + 45, fieldY + 4);
+                ctx.fillStyle = PAL.eText; ctx.fillText("E-Field", canvas.width/3 + 45, fieldY + 4);
 
                 // H Field (Diagonal simulating into-page - Magenta)
-                ctx.strokeStyle = '#ff00ff';
+                ctx.strokeStyle = PAL.hField;
                 ctx.beginPath(); ctx.moveTo(canvas.width/3, fieldY); ctx.lineTo(canvas.width/3 - 25, fieldY - 20); ctx.stroke();
-                ctx.fillStyle = '#ff00ff'; ctx.fillText("H-Field", canvas.width/3 - 65, fieldY - 25);
+                ctx.fillStyle = PAL.hText; ctx.fillText("H-Field", canvas.width/3 - 65, fieldY - 25);
             }
 
             // Current concentration in fault
             let currentPulse = Math.sin(t*0.1)*0.5 + 0.5;
-            ctx.fillStyle = `rgba(0, 255, 255, ${currentPulse * 0.5})`;
+            ctx.fillStyle = `rgba(8, 145, 178, ${currentPulse * 0.35})`;
             ctx.beginPath(); ctx.arc(faultX + 10, canvas.height - 100, 30 + currentPulse*10, 0, Math.PI*2); ctx.fill();
 
             // Sensors (Electric Dipole + Magnetic Coil)
             // Wires
-            ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2;
+            ctx.strokeStyle = PAL.instrument; ctx.lineWidth = 2;
             ctx.beginPath(); ctx.moveTo(canvas.width/2 - 80, GROUND_LEVEL - 5); ctx.lineTo(canvas.width/2 + 80, GROUND_LEVEL - 5); ctx.stroke();
             // Electrodes
-            ctx.fillStyle = '#f59e0b';
+            ctx.fillStyle = PAL.source;
             ctx.fillRect(canvas.width/2 - 85, GROUND_LEVEL - 15, 10, 15);
             ctx.fillRect(canvas.width/2 + 75, GROUND_LEVEL - 15, 10, 15);
             // Logger
-            ctx.fillStyle = '#1e293b'; ctx.fillRect(canvas.width/2 - 15, GROUND_LEVEL - 20, 30, 20);
-            drawLabel(canvas.width/2 - 40, GROUND_LEVEL - 30, "MT Station (Ex, Ey, Hx, Hy)", "#fff");
+            ctx.fillStyle = PAL.logger; ctx.fillRect(canvas.width/2 - 15, GROUND_LEVEL - 20, 30, 20);
+            drawLabel(canvas.width/2 - 40, GROUND_LEVEL - 30, "MT Station (Ex, Ey, Hx, Hy)", PAL.ink);
 
             // --- HUD GRAPHIC FOR MT OBSERVATION ---
             drawMTGraph(t);
@@ -698,23 +640,23 @@
             // Target: Oil Reservoir (Resistive)
             let resX = canvas.width/2 + 150;
             let resY = GROUND_LEVEL + 180;
-            ctx.fillStyle = 'rgba(245, 158, 11, 0.4)'; // Gold/Oil
-            ctx.strokeStyle = '#d97706';
+            ctx.fillStyle = PAL.oilFill; // Oil
+            ctx.strokeStyle = PAL.oil;
             ctx.lineWidth = 3;
             ctx.beginPath(); ctx.ellipse(resX, resY, 160, 50, 0, 0, 2 * Math.PI);
             ctx.fill(); ctx.stroke();
             
             // Texture inside reservoir
-            ctx.strokeStyle = 'rgba(245, 158, 11, 0.2)';
+            ctx.strokeStyle = 'rgba(146, 64, 14, 0.25)';
             for(let i=-120; i<120; i+=20) {
                 ctx.beginPath(); ctx.moveTo(resX+i, resY-30); ctx.lineTo(resX+i, resY+30); ctx.stroke();
             }
-            drawLabel(resX - 40, resY + 5, "Resistive Oil Reservoir", "#fde68a");
+            drawLabel(resX - 40, resY + 5, "Resistive Oil Reservoir", PAL.oilText);
 
             // Survey Ship
             let shipX = (t * 0.8) % (canvas.width + 300) - 100;
             
-            ctx.fillStyle = '#cbd5e1';
+            ctx.fillStyle = PAL.hull;
             ctx.beginPath();
             ctx.moveTo(shipX - 60, SEA_LEVEL);
             ctx.lineTo(shipX + 70, SEA_LEVEL); // Bow
@@ -725,7 +667,7 @@
             ctx.fillStyle = '#94a3b8';
             ctx.fillRect(shipX - 30, SEA_LEVEL - 30, 40, 30);
             ctx.fillRect(shipX - 10, SEA_LEVEL - 50, 10, 20);
-            drawLabel(shipX - 30, SEA_LEVEL - 60, "Survey Vessel", "#fff");
+            drawLabel(shipX - 30, SEA_LEVEL - 60, "Survey Vessel", PAL.ink);
 
             // Tow Cable & Transmitter
             let txX = shipX - 180;
@@ -734,28 +676,27 @@
             ctx.beginPath(); ctx.moveTo(shipX - 50, SEA_LEVEL); ctx.lineTo(txX, txY); ctx.stroke();
             
             // Transmitter Body
-            ctx.fillStyle = '#38bdf8'; // Blue glowing TX
-            ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 15;
+            ctx.fillStyle = PAL.primary; // Tx body, flat fill (no glow)
             ctx.fillRect(txX - 30, txY - 8, 60, 16);
             ctx.shadowBlur = 0; // reset
-            drawLabel(txX - 40, txY - 20, "Transmitter (Tx)", "#38bdf8");
+            drawLabel(txX - 40, txY - 20, "Transmitter (Tx)", PAL.primaryText);
 
             // Seafloor Receivers
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = PAL.green;
             for(let i=0; i<4; i++) {
                 let rxX = 350 + i*140;
                 ctx.fillRect(rxX, GROUND_LEVEL - 15, 20, 15);
-                if(i===2) drawLabel(rxX - 30, GROUND_LEVEL - 25, "Receivers (Rx)", "#10b981");
+                if(i===2) drawLabel(rxX - 30, GROUND_LEVEL - 25, "Receivers (Rx)", PAL.greenText);
             }
 
             // Continuous EM Wave Propagation
-            ctx.globalCompositeOperation = 'screen';
+            ctx.globalCompositeOperation = 'source-over';
             for(let i=0; i<6; i++) {
                 let radius = ((t * 2.5) + i * 50) % 400;
                 
                 if (radius > 10) {
                     // Primary descending wave
-                    ctx.strokeStyle = `rgba(56, 189, 248, ${1 - radius/400})`;
+                    ctx.strokeStyle = `rgba(2, 132, 199, ${1 - radius/400})`;
                     ctx.lineWidth = 3;
                     ctx.beginPath(); ctx.arc(txX, txY, radius, 0, Math.PI); ctx.stroke();
 
@@ -764,7 +705,7 @@
                         let hitDist = Math.abs((txX + radius) - (resX - 100));
                         if(hitDist < 150) {
                             // Secondary returning wave (guided by reservoir)
-                            ctx.strokeStyle = `rgba(245, 158, 11, ${1 - radius/400})`;
+                            ctx.strokeStyle = `rgba(217, 119, 6, ${1 - radius/400})`;
                             ctx.beginPath(); 
                             ctx.arc(resX, resY, radius/2, Math.PI, 2*Math.PI); 
                             ctx.stroke();
@@ -782,26 +723,26 @@
             // Target: Conductive Massive Sulfide Ore
             let oreX = canvas.width/2 + 60;
             let oreY = GROUND_LEVEL + 160;
-            ctx.fillStyle = '#10b981'; // Green ore
+            ctx.fillStyle = PAL.ore; // Conductive ore, drawn in its legend color
             ctx.beginPath();
             ctx.moveTo(oreX, oreY - 40); ctx.lineTo(oreX + 120, oreY - 20);
             ctx.lineTo(oreX + 80, oreY + 80); ctx.lineTo(oreX - 20, oreY + 60);
             ctx.fill();
-            drawLabel(oreX + 10, oreY + 20, "Highly Conductive Ore (Ni/Cu)", "#a7f3d0", "rgba(0,0,0,0.5)");
+            drawLabel(oreX - 20, oreY + 100, "Highly Conductive Ore (Ni/Cu)", PAL.oreText); // below the ore, clear of the moving echo label
 
             // Source Loop (Tx) on ground
-            ctx.strokeStyle = '#ef4444'; // Red loop
+            ctx.strokeStyle = PAL.red; // Red loop
             ctx.lineWidth = 6;
             ctx.beginPath();
             // Isometric ellipse for loop
             ctx.ellipse(canvas.width/2 - 100, GROUND_LEVEL, 120, 20, 0, 0, 2*Math.PI);
             ctx.stroke();
-            drawLabel(canvas.width/2 - 250, GROUND_LEVEL - 10, "Tx Loop", "#ef4444");
+            drawLabel(canvas.width/2 - 250, GROUND_LEVEL - 10, "Tx Loop", PAL.redText);
 
             // Receiver Coil (Rx) inside loop
-            ctx.fillStyle = '#38bdf8';
+            ctx.fillStyle = PAL.primary;
             ctx.fillRect(canvas.width/2 - 110, GROUND_LEVEL - 15, 20, 15);
-            drawLabel(canvas.width/2 - 110, GROUND_LEVEL - 25, "Rx", "#38bdf8", "transparent");
+            drawLabel(canvas.width/2 - 110, GROUND_LEVEL - 25, "Rx", PAL.primaryText, "transparent");
 
             // Timing logic
             let cycleLength = 300;
@@ -815,7 +756,7 @@
             if (isPulseOn) {
                 // STATE 1: CURRENT ON (Building Primary Field)
                 let buildUp = cycle / pulseDuration;
-                ctx.strokeStyle = `rgba(239, 68, 68, ${0.3 + buildUp*0.5})`; // Reddish primary field
+                ctx.strokeStyle = `rgba(220, 38, 38, ${0.3 + buildUp*0.5})`; // Reddish primary field
                 ctx.lineWidth = 4;
                 for(let i=1; i<=4; i++) {
                     ctx.beginPath();
@@ -824,7 +765,7 @@
                 }
                 
                 // Visual Indicator
-                drawLabel(canvas.width/2 - 150, GROUND_LEVEL + 50, "STATE: Primary Field Charging", "#fca5a5", "rgba(239,68,68,0.2)");
+                drawLabel(canvas.width/2 - 150, GROUND_LEVEL + 50, "STATE: Primary Field Charging", '#991b1b', 'rgba(254, 226, 226, 0.92)');
             } else {
                 // STATE 2: CURRENT OFF (Secondary field decay)
                 let decayTime = cycle - pulseDuration;
@@ -835,7 +776,7 @@
                 let ringWidth = 240 + decayTime * 1.5;
                 
                 let alpha = 1 - (decayTime / maxDecay);
-                ctx.strokeStyle = `rgba(16, 185, 129, ${alpha})`; // Greenish secondary
+                ctx.strokeStyle = `rgba(5, 150, 105, ${alpha})`; // Greenish secondary
                 ctx.lineWidth = 5;
                 ctx.beginPath();
                 ctx.ellipse(canvas.width/2 - 100, ringDepth, ringWidth/2, 30 + decayTime/4, 0, 0, 2*Math.PI);
@@ -851,13 +792,13 @@
                     ctx.fill();
 
                     // Echo field returning to surface Rx
-                    ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+                    ctx.strokeStyle = `rgba(2, 132, 199, ${alpha})`;
                     ctx.lineWidth = 2;
                     ctx.beginPath(); ctx.moveTo(oreX + 40, ringDepth); ctx.lineTo(canvas.width/2 - 100, GROUND_LEVEL); ctx.stroke();
-                    drawLabel(oreX + 50, ringDepth - 20, "Secondary 'Echo'", "#38bdf8", "transparent");
+                    drawLabel(oreX + 50, ringDepth - 20, "Secondary 'Echo'", PAL.primaryText);
                 }
 
-                drawLabel(canvas.width/2 - 150, GROUND_LEVEL + 50, "STATE: Listening to Decay", "#6ee7b7", "rgba(16,185,129,0.2)");
+                drawLabel(canvas.width/2 - 150, GROUND_LEVEL + 50, "STATE: Listening to Decay", '#065f46', 'rgba(209, 250, 229, 0.92)');
             }
         }
 
@@ -865,13 +806,13 @@
             let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
             
             // Background
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fillStyle = PAL.hudBg;
+            ctx.beginPath(); ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+            ctx.strokeStyle = PAL.hudLine; ctx.stroke();
 
             // Label
-            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillStyle = PAL.hudTitle; ctx.font = PAL.hudFont;
             ctx.fillText("Observed Magnetic Field (Bz)", gX + 10, gY + 20);
 
             // Axes
@@ -879,7 +820,7 @@
             ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
 
             // Plot scrolling sine wave
-            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+            ctx.strokeStyle = PAL.source; ctx.lineWidth = 2;
             ctx.beginPath();
             for(let i=0; i<gW-20; i++) {
                 let historyT = t - (gW - 20 - i);
@@ -891,19 +832,19 @@
             ctx.stroke();
             
             // Current value dot
-            ctx.fillStyle = '#ef4444';
+            ctx.fillStyle = PAL.red;
             ctx.beginPath(); ctx.arc(gX + gW - 10, gY + 60 + Math.sin(t*0.05)*20, 4, 0, Math.PI*2); ctx.fill();
         }
 
         function drawMTGraph(t) {
             let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
             
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fillStyle = PAL.hudBg;
+            ctx.beginPath(); ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+            ctx.strokeStyle = PAL.hudLine; ctx.stroke();
 
-            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillStyle = PAL.hudTitle; ctx.font = PAL.hudFont;
             ctx.fillText("MT Time Series (E & H)", gX + 10, gY + 20);
 
             // Axes
@@ -912,7 +853,7 @@
 
             // E and H Waves
             ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.strokeStyle = '#00ffff'; // E-field
+            ctx.beginPath(); ctx.strokeStyle = PAL.eField; // E-field
             for(let i=0; i<gW-20; i++) {
                 let historyT = t - (gW - 20 - i);
                 let val = Math.sin(historyT*0.1) * 15;
@@ -920,7 +861,7 @@
             }
             ctx.stroke();
 
-            ctx.beginPath(); ctx.strokeStyle = '#ff00ff'; // H-field
+            ctx.beginPath(); ctx.strokeStyle = PAL.hField; // H-field
             for(let i=0; i<gW-20; i++) {
                 let historyT = t - (gW - 20 - i);
                 let val = Math.sin(historyT*0.1 - Math.PI/4) * 20; // Phase shifted
@@ -929,7 +870,7 @@
             ctx.stroke();
             
             // Apparent Resistivity readout
-            ctx.fillStyle = '#10b981'; ctx.font = 'bold 11px Inter';
+            ctx.fillStyle = PAL.greenText; ctx.font = 'bold 11px ' + FONT;
             let rhoA = 120 + Math.sin(t*0.05)*5; // Simulated fluctuation
             ctx.fillText(`Apparent ρ ≈ ${rhoA.toFixed(1)} Ω·m`, gX + 10, gY + gH + 30);
         }
@@ -937,12 +878,12 @@
         function drawCSEMGraph(t, shipX, resX) {
             let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
             
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fillStyle = PAL.hudBg;
+            ctx.beginPath(); ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+            ctx.strokeStyle = PAL.hudLine; ctx.stroke();
 
-            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillStyle = PAL.hudTitle; ctx.font = PAL.hudFont;
             ctx.fillText("Magnitude vs Offset (MVO)", gX + 10, gY + 20);
 
             // Axes
@@ -950,12 +891,12 @@
             ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
             
             // Labels
-            ctx.fillStyle = '#94a3b8'; ctx.font = '9px Inter';
+            ctx.fillStyle = PAL.hudTitle; ctx.font = '600 10px ' + FONT;
             ctx.fillText("Offset (Ship Pos)", gX + gW/2 - 20, gY + gH + 25);
             ctx.save(); ctx.translate(gX-5, gY+gH/2+20); ctx.rotate(-Math.PI/2); ctx.fillText("Amplitude", 0, 0); ctx.restore();
 
             // Baseline curve (exponential decay)
-            ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1;
+            ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1;
             ctx.beginPath();
             for(let x=0; x<gW-20; x++) {
                 let y = gY + 35 + (x*x)/500; // quadratic/exp decay shape
@@ -965,7 +906,7 @@
             ctx.stroke();
 
             // Anomaly curve
-            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+            ctx.strokeStyle = PAL.source; ctx.lineWidth = 2;
             ctx.beginPath();
             // Map reservoir position to graph width
             let anomalyCenterPoint = (resX / canvas.width) * (gW - 20); 
@@ -988,7 +929,7 @@
                 let dotY = gY + base_y - anomaly;
                 if(dotY > gY+gH+10) dotY = gY+gH+10;
 
-                ctx.fillStyle = '#38bdf8';
+                ctx.fillStyle = PAL.primary;
                 ctx.beginPath(); ctx.arc(dotX, dotY, 4, 0, Math.PI*2); ctx.fill();
             }
         }
@@ -997,13 +938,13 @@
             let gX = 30, gY = canvas.height - 150, gW = 220, gH = 80;
 
             // Background
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-            ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
+            ctx.fillStyle = PAL.hudBg;
+            ctx.beginPath(); ctx.roundRect(gX, gY, gW + 20, gH + 40, 8);
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.stroke();
+            ctx.strokeStyle = PAL.hudLine; ctx.stroke();
 
             // Label
-            ctx.fillStyle = '#fff'; ctx.font = '11px Inter';
+            ctx.fillStyle = PAL.hudTitle; ctx.font = PAL.hudFont;
             ctx.fillText("TEM Observations", gX + 10, gY + 20);
 
             // Axes
@@ -1011,14 +952,14 @@
             ctx.beginPath(); ctx.moveTo(gX+10, gY+gH+10); ctx.lineTo(gX+10, gY+30); ctx.stroke(); // Y
             
             // Legend
-            ctx.fillStyle = '#ef4444'; ctx.fillText("Tx (I)", gX + 140, gY + 20);
-            ctx.fillStyle = '#10b981'; ctx.fillText("Rx (dB/dt)", gX + 180, gY + 20);
+            ctx.fillStyle = PAL.red; ctx.fillText("Tx (I)", gX + 140, gY + 20);
+            ctx.fillStyle = PAL.greenText; ctx.fillText("Rx (dB/dt)", gX + 180, gY + 20);
 
             // The waveform (Square pulse)
             let pulseW = (pulseDuration / cycleLength) * (gW - 20);
             
             // 1. Draw Tx Current (I)
-            ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)'; ctx.lineWidth = 2;
+            ctx.strokeStyle = 'rgba(220, 38, 38, 0.7)'; ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(gX+10, gY+gH+5); // Start 0
             ctx.lineTo(gX+10, gY+40); // Up
@@ -1028,7 +969,7 @@
             ctx.stroke();
 
             // 2. Draw Rx Voltage (dB/dt)
-            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+            ctx.strokeStyle = PAL.green; ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(gX+10, gY+gH+10);
             ctx.lineTo(gX+10+pulseW, gY+gH+10); // 0 during ON time
@@ -1043,7 +984,7 @@
 
             // Progress dot/line
             let progressX = gX + 10 + (cycle / cycleLength) * (gW - 20);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.strokeStyle = '#475569';
             ctx.setLineDash([2, 2]);
             ctx.beginPath(); ctx.moveTo(progressX, gY+30); ctx.lineTo(progressX, gY+gH+15); ctx.stroke();
             ctx.setLineDash([]);

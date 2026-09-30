@@ -4,85 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SP Method Applications</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
+
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
-        .app-btn {
-            transition: all 0.2s ease-in-out;
+        /* Application tabs: light lab tabs laid out as full-width cards. */
+        .app-btn.lab-tab {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
         }
-        .app-btn.active {
-            background-color: #1e293b;
-            border-left: 4px solid #10b981; /* Emerald green */
+        .app-btn.lab-tab.is-active {
+            box-shadow: inset 4px 0 0 var(--lab-primary);
         }
         canvas {
-            background-color: #1e293b;
+            background-color: #f8fafc;
             border-radius: 0.5rem;
-            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
             cursor: crosshair;
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page min-h-screen">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Electrical Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <div class="max-w-6xl w-full">
-        <!-- Header -->
-        <header class="mb-8 text-center md:text-left">
-            <h1 class="text-3xl md:text-5xl font-bold text-emerald-400 mb-2">Field Applications of SP</h1>
-            <p class="text-slate-400 text-lg">Interactive surveys: How geophysicists use Spontaneous Potential in the real world.</p>
-        </header>
+    <!-- Header -->
+    <header class="lab-hero">
+        <div class="lab-hero-inner">
+            <h1 class="lab-title">Field Applications of <span class="lab-title-accent">SP</span></h1>
+            <p class="lab-subtitle">Interactive surveys: How geophysicists use Spontaneous Potential in the real world.</p>
+        </div>
+    </header>
 
+    <div class="max-w-6xl w-full mx-auto p-6 pb-12">
         <!-- Main Content -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
+
             <!-- Left Column: Navigation and Descriptions -->
             <div class="space-y-4 lg:col-span-1 flex flex-col">
-                
+
                 <div class="space-y-2">
                     <!-- Application 1 -->
-                    <button onclick="switchTab(1)" id="btn-1" class="w-full app-btn active text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
-                        <h2 class="text-lg font-bold text-emerald-400">1. Mineral Exploration</h2>
-                        <p class="text-xs text-slate-400 mt-1">Locating massive sulfide ore bodies.</p>
+                    <button onclick="switchTab(1)" id="btn-1" class="lab-tab app-btn is-active">
+                        <h2 class="text-lg font-bold">1. Mineral Exploration</h2>
+                        <p class="text-xs text-slate-600 mt-1">Locating massive sulfide ore bodies.</p>
                     </button>
 
                     <!-- Application 2 -->
-                    <button onclick="switchTab(2)" id="btn-2" class="w-full app-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
-                        <h2 class="text-lg font-bold text-emerald-400">2. Dam Seepage Detection</h2>
-                        <p class="text-xs text-slate-400 mt-1">Finding dangerous leaks in earthen dams.</p>
+                    <button onclick="switchTab(2)" id="btn-2" class="lab-tab app-btn">
+                        <h2 class="text-lg font-bold">2. Dam Seepage Detection</h2>
+                        <p class="text-xs text-slate-600 mt-1">Finding dangerous leaks in earthen dams.</p>
                     </button>
 
                     <!-- Application 3 -->
-                    <button onclick="switchTab(3)" id="btn-3" class="w-full app-btn text-left p-4 rounded-lg border border-slate-700 hover:bg-slate-800">
-                        <h2 class="text-lg font-bold text-emerald-400">3. Geothermal Mapping</h2>
-                        <p class="text-xs text-slate-400 mt-1">Finding upwelling hot water sources.</p>
+                    <button onclick="switchTab(3)" id="btn-3" class="lab-tab app-btn">
+                        <h2 class="text-lg font-bold">3. Geothermal Mapping</h2>
+                        <p class="text-xs text-slate-600 mt-1">Finding upwelling hot water sources.</p>
                     </button>
                 </div>
 
                 <!-- Concept Explanation Card -->
-                <div class="bg-slate-800 p-5 rounded-lg border border-slate-600 shadow-lg mt-2 flex-grow">
-                    <h3 class="text-sm font-bold text-sky-400 mb-2 uppercase tracking-wider flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                <div class="lab-card p-5 mt-2 flex-grow">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2 uppercase tracking-wider flex items-center">
+                        <svg class="w-4 h-4 mr-2 lab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
                         Survey Briefing
                     </h3>
-                    <p id="concept-text" class="text-slate-300 text-sm leading-relaxed mb-4">
+                    <p id="concept-text" class="text-slate-700 text-sm leading-relaxed mb-4">
                         <!-- Populated by JS -->
                     </p>
-                    
-                    <div id="interactive-controls" class="border-t border-slate-700 pt-4 mt-4 hidden">
-                        <label id="slider-label" class="block text-sm font-semibold text-emerald-300 mb-2">Adjust Variable</label>
-                        <input type="range" id="interactive-slider" min="0" max="100" value="50" class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer">
-                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+
+                    <div id="interactive-controls" class="border-t border-slate-200 pt-4 mt-4 hidden">
+                        <label id="slider-label" class="block text-sm font-semibold text-slate-800 mb-2">Adjust Variable</label>
+                        <input type="range" id="interactive-slider" min="0" max="100" value="50" class="lab-range">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
                             <span id="slider-min">Low</span>
                             <span id="slider-max">High</span>
                         </div>
@@ -90,26 +92,26 @@
                 </div>
 
                 <!-- Voltmeter Readout -->
-                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 flex items-center justify-between">
+                <div class="lab-card p-4 flex items-center justify-between">
                     <div>
-                        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Live Sensor Reading</h3>
+                        <h3 class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Live Sensor Reading</h3>
                         <p class="text-xs text-slate-500">Move mouse to survey</p>
                     </div>
                     <div class="text-right">
-                        <span id="live-voltage" class="text-3xl font-mono font-bold text-white">0</span>
-                        <span class="text-slate-400 font-mono"> mV</span>
+                        <span id="live-voltage" class="text-3xl font-mono font-bold text-slate-900">0</span>
+                        <span class="text-slate-500 font-mono"> mV</span>
                     </div>
                 </div>
 
             </div>
 
             <!-- Right Column: Canvas Animation -->
-            <div class="lg:col-span-2 relative h-[500px] lg:h-[600px] border border-slate-700 rounded-xl overflow-hidden bg-slate-800 flex flex-col">
-                
+            <div class="lab-card lg:col-span-2 relative h-[500px] lg:h-[600px] overflow-hidden flex flex-col">
+
                 <!-- Educational overlay text -->
-                <div class="absolute top-4 left-4 z-10 pointer-events-none drop-shadow-md">
-                    <h3 id="canvas-title" class="text-2xl font-bold text-white">Massive Sulfide Exploration</h3>
-                    <p id="canvas-subtitle" class="text-emerald-300 text-sm">Drag your mouse across the surface to survey</p>
+                <div class="absolute top-4 left-4 z-10 pointer-events-none">
+                    <h3 id="canvas-title" class="text-2xl font-bold text-slate-900">Massive Sulfide Exploration</h3>
+                    <p id="canvas-subtitle" class="text-slate-600 text-sm">Drag your mouse across the surface to survey</p>
                 </div>
                 
                 <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
@@ -192,8 +194,8 @@
             document.getElementById('interactive-slider').value = 50;
             
             // Update buttons
-            document.querySelectorAll('.app-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${tabId}`).classList.add('active');
+            document.querySelectorAll('.app-btn').forEach(btn => btn.classList.remove('is-active'));
+            document.getElementById(`btn-${tabId}`).classList.add('is-active');
 
             // Update text
             document.getElementById('canvas-title').innerText = apps[tabId-1].title;
@@ -275,21 +277,24 @@
             time++;
 
             // 1. DRAW GRAPH BACKGROUND
-            ctx.fillStyle = '#0f172a';
+            ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, w, groundY);
-            
+
             // Draw Graph Grid & Zero Line
-            ctx.strokeStyle = '#334155';
+            ctx.strokeStyle = '#cbd5e1';
             ctx.lineWidth = 1;
             ctx.beginPath();
             let zeroY = groundY / 2;
             ctx.moveTo(0, zeroY); ctx.lineTo(w, zeroY); ctx.stroke();
-            
+
             ctx.fillStyle = '#64748b';
-            ctx.font = '12px Inter';
+            ctx.font = '12px Inter, system-ui, sans-serif';
             ctx.fillText('0 mV', 10, zeroY - 5);
-            ctx.fillText('+ SP', 10, 20);
-            ctx.fillText('- SP', 10, groundY - 10);
+            // Polarity labels sit at the right edge so the title overlay no longer hides "+ SP".
+            ctx.textAlign = 'right';
+            ctx.fillText('+ SP', w - 10, 20);
+            ctx.fillText('- SP', w - 10, groundY - 10);
+            ctx.textAlign = 'left';
 
             // 2. DRAW GEOLOGY
             ctx.save();
@@ -298,13 +303,13 @@
 
             if (currentTab === 1) { // Mineral
                 // Soil / Rock
-                ctx.fillStyle = '#475569';
+                ctx.fillStyle = '#e3d3b3';
                 ctx.fillRect(0, 0, w, geoH);
-                
+
                 // Water Table
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+                ctx.fillStyle = '#dbeafe';
                 ctx.fillRect(0, geoH*0.3, w, geoH*0.7);
-                ctx.strokeStyle = '#38bdf8';
+                ctx.strokeStyle = '#0284c7';
                 ctx.setLineDash([5, 5]);
                 ctx.beginPath(); ctx.moveTo(0, geoH*0.3); ctx.lineTo(w, geoH*0.3); ctx.stroke();
                 ctx.setLineDash([]);
@@ -314,26 +319,32 @@
                 ctx.save();
                 ctx.translate(oreX, geoH*0.5);
                 ctx.rotate(-Math.PI / 8);
-                ctx.fillStyle = '#1e293b';
+                ctx.fillStyle = '#475569';
                 ctx.fillRect(-30, -geoH*0.4, 60, geoH*0.8);
-                
-                ctx.fillStyle = '#f87171';
-                ctx.font = 'bold 24px Inter';
+
+                // Charge signs with a white halo so they read on the grey ore body
+                ctx.font = 'bold 24px Inter, system-ui, sans-serif';
+                ctx.lineWidth = 4;
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = '#ffffff';
+                ctx.fillStyle = '#dc2626';
+                ctx.strokeText('-', -5, -geoH*0.3);
                 ctx.fillText('-', -5, -geoH*0.3);
-                ctx.fillStyle = '#38bdf8';
+                ctx.fillStyle = '#0284c7';
+                ctx.strokeText('+', -5, geoH*0.3);
                 ctx.fillText('+', -5, geoH*0.3);
                 ctx.restore();
             } 
             else if (currentTab === 2) { // Dam
-                ctx.fillStyle = '#1e293b';
+                ctx.fillStyle = '#eef6fc'; // open air around the dam
                 ctx.fillRect(0, 0, w, geoH);
 
                 // Reservoir Water
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+                ctx.fillStyle = '#bfdbfe';
                 ctx.fillRect(0, geoH*0.2, w*0.3, geoH*0.8);
 
                 // Dam structure
-                ctx.fillStyle = '#78350f';
+                ctx.fillStyle = '#d6c09a';
                 ctx.beginPath();
                 ctx.moveTo(w*0.3, geoH);
                 ctx.lineTo(w*0.3, geoH*0.2);
@@ -343,11 +354,11 @@
                 ctx.fill();
 
                 // Base
-                ctx.fillStyle = '#451a03';
+                ctx.fillStyle = '#a8a29e';
                 ctx.fillRect(0, geoH - 20, w, 20);
 
                 // Seepage Water particles
-                ctx.fillStyle = '#38bdf8';
+                ctx.fillStyle = '#0284c7';
                 particles.forEach(p => {
                     p.progress += p.speed;
                     if(p.progress > 1) p.progress = 0;
@@ -367,34 +378,37 @@
 
                 // Indicate Leak Exit
                 if (sliderValue > 10) {
-                    ctx.fillStyle = `rgba(56, 189, 248, ${sliderValue/100})`;
+                    ctx.fillStyle = `rgba(2, 132, 199, ${sliderValue/100})`;
                     ctx.beginPath();
                     ctx.arc(w*0.7, geoH-20, 10 + (sliderValue/10)*2, 0, Math.PI*2);
                     ctx.fill();
-                    ctx.fillStyle = '#fff';
-                    ctx.font = '10px Inter';
-                    ctx.fillText('LEAK EXIT', w*0.7 + 20, geoH - 25);
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = 'bold 10px Inter, system-ui, sans-serif';
+                    // Placed just outside the exit circle so the growing circle never covers it.
+                    ctx.fillText('LEAK EXIT', w*0.7 + 16 + 10 + (sliderValue/10)*2, geoH - 25);
                 }
             }
             else if (currentTab === 3) { // Geothermal
-                ctx.fillStyle = '#334155';
+                ctx.fillStyle = '#d6d3d1';
                 ctx.fillRect(0, 0, w, geoH);
 
                 let intensity = sliderValue / 100;
                 let grad = ctx.createRadialGradient(w/2, geoH + 50, 0, w/2, geoH + 50, 200 + (100*intensity));
-                grad.addColorStop(0, `rgba(248, 113, 113, ${0.8 + 0.2*intensity})`);
-                grad.addColorStop(1, 'rgba(248, 113, 113, 0)');
+                grad.addColorStop(0, `rgba(239, 68, 68, ${0.6 + 0.2*intensity})`);
+                grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
                 ctx.fillStyle = grad;
-                ctx.fillRect(0, geoH*0.5, w, geoH*0.5);
+                ctx.fillRect(0, 0, w, geoH); // whole section, so the glow fades out without a hard top edge
 
-                ctx.strokeStyle = '#0f172a';
+                ctx.strokeStyle = '#44403c';
                 ctx.lineWidth = 4;
                 ctx.beginPath();
                 ctx.moveTo(w*0.5, 0);
                 ctx.lineTo(w*0.5, geoH);
                 ctx.stroke();
 
-                ctx.fillStyle = '#fca5a5';
+                ctx.fillStyle = '#dc2626';
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1;
                 particles.forEach(p => {
                     p.y -= p.speed;
                     if(p.y < 0) p.y = geoH;
@@ -403,11 +417,12 @@
                     ctx.beginPath();
                     ctx.arc(pX, p.y, 3, 0, Math.PI*2);
                     ctx.fill();
+                    ctx.stroke();
                 });
             }
 
             // Ground Line
-            ctx.strokeStyle = '#10b981';
+            ctx.strokeStyle = '#059669';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(0, 0); ctx.lineTo(w, 0); ctx.stroke();
@@ -415,10 +430,8 @@
             ctx.restore();
 
             // 3. DRAW SP GRAPH
-            ctx.strokeStyle = '#38bdf8';
+            ctx.strokeStyle = '#0284c7';
             ctx.lineWidth = 3;
-            ctx.shadowColor = '#38bdf8';
-            ctx.shadowBlur = 10;
             ctx.beginPath();
             
             for(let x=0; x<w; x+=5) {
@@ -430,7 +443,6 @@
                 else ctx.lineTo(x, graphY);
             }
             ctx.stroke();
-            ctx.shadowBlur = 0;
 
             // 4. DRAW VIRTUAL SENSOR
             let currentV = getSPValue(mouseX, currentTab, w);
@@ -439,11 +451,11 @@
 
             document.getElementById('live-voltage').innerText = Math.round(currentV);
             const readout = document.getElementById('live-voltage');
-            if(currentV < -50) readout.className = "text-3xl font-mono font-bold text-red-400";
-            else if(currentV > 50) readout.className = "text-3xl font-mono font-bold text-sky-400";
-            else readout.className = "text-3xl font-mono font-bold text-white";
+            if(currentV < -50) readout.className = "text-3xl font-mono font-bold text-red-600";
+            else if(currentV > 50) readout.className = "text-3xl font-mono font-bold text-sky-700";
+            else readout.className = "text-3xl font-mono font-bold text-slate-900";
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.strokeStyle = 'rgba(15, 23, 42, 0.35)';
             ctx.lineWidth = 1;
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
@@ -452,9 +464,12 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
-            ctx.fillStyle = '#fbbf24';
+            ctx.fillStyle = '#f59e0b';
             ctx.fillRect(mouseX - 6, groundY - 12, 12, 12);
-            ctx.fillStyle = '#0f172a';
+            ctx.strokeStyle = '#b45309';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(mouseX - 6, groundY - 12, 12, 12);
+            ctx.fillStyle = '#334155';
             ctx.beginPath();
             ctx.moveTo(mouseX - 6, groundY);
             ctx.lineTo(mouseX + 6, groundY);
@@ -465,16 +480,17 @@
             ctx.beginPath();
             ctx.arc(mouseX, activeGraphY, 6, 0, Math.PI*2);
             ctx.fill();
-            ctx.strokeStyle = '#38bdf8';
+            ctx.strokeStyle = '#0284c7';
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            ctx.fillStyle = '#1e293b';
+            ctx.fillStyle = '#ffffff';
             ctx.fillRect(mouseX + 15, activeGraphY - 25, 60, 24);
-            ctx.strokeStyle = '#475569';
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1;
             ctx.strokeRect(mouseX + 15, activeGraphY - 25, 60, 24);
-            ctx.fillStyle = '#fff';
-            ctx.font = '12px font-mono';
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '12px ui-monospace, "Cascadia Code", Consolas, monospace';
             ctx.fillText(`${Math.round(currentV)} mV`, mouseX + 22, activeGraphY - 9);
 
             animationFrameId = requestAnimationFrame(draw);

@@ -4,21 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How Do Rocks Conduct Electricity?</title>
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f131f; /* Matches image background */
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
         .canvas-container {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            border-radius: 0.5rem;
+            border-radius: 12px;
             overflow: hidden;
-            background-color: #1a202c;
-            border: 2px solid #2d3748;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
         }
         canvas {
             position: absolute;
@@ -31,10 +29,10 @@
         /* Custom Toggle Switch */
         .toggle-checkbox:checked {
             right: 0;
-            border-color: #38bdf8;
+            border-color: #0284c7;
         }
         .toggle-checkbox:checked + .toggle-label {
-            background-color: #38bdf8;
+            background-color: #0284c7;
         }
         .toggle-checkbox:checked + .toggle-label:after {
             transform: translateX(100%);
@@ -43,40 +41,43 @@
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
 </head>
-<body class="text-slate-300 antialiased min-h-screen p-6 md:p-12">
-<div id="course-nav-bar" style="position:sticky;top:0;z-index:2000;display:flex;gap:1.5rem;align-items:center;padding:.45rem 1rem;background:#0b1220;border-bottom:1px solid #334155;font-family:'Segoe UI',Tahoma,sans-serif;font-size:.85rem;">
-  <a href="../../../" style="color:#94a3b8;text-decoration:none;">&#8592; Course Home</a>
-  <a href="../" style="color:#94a3b8;text-decoration:none;">Module Page</a>
-  <span style="margin-left:auto;color:#475569;">Environmental Geophysics</span>
+<body class="lab-page antialiased min-h-screen">
+<div id="course-nav-bar" class="course-nav-bar">
+  <a href="../../../">&#8592; Course Home</a>
+  <a href="../">Electrical Methods</a>
+  <span class="spacer">Environmental Geophysics</span>
 </div>
 
 
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <header class="mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-[#38bdf8] mb-4 tracking-tight">How Do Rocks Conduct Electricity?</h1>
-            <p class="text-xl md:text-2xl text-slate-200">Three mechanisms transport electric charge through earth materials:</p>
-        </header>
+    <!-- Header -->
+    <header class="lab-hero">
+        <div class="lab-hero-inner">
+            <h1 class="lab-title">How Do Rocks Conduct <span class="lab-title-accent">Electricity</span>?</h1>
+            <p class="lab-subtitle">Three ways earth materials respond to an electric field:</p>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-6 py-8 md:py-10">
 
         <!-- Mechanisms Grid -->
-        <div class="space-y-12">
+        <div class="space-y-8">
 
             <!-- 1. Electrolytic -->
-            <section class="bg-[#1e2536] rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
+            <section class="lab-card p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
                 <div class="w-full md:w-1/2 space-y-4">
-                    <h2 class="text-3xl font-bold text-[#38bdf8]">1. Electrolytic</h2>
-                    <p class="text-lg">Ions move through pore water (dominant in most rocks).</p>
-                    
-                    <div class="mt-6 bg-[#0f131f] p-4 rounded-lg border border-slate-700">
+                    <h2 class="text-2xl font-bold text-slate-900">1. Electrolytic</h2>
+                    <p class="text-lg text-slate-700">Ions move through pore water (dominant in most rocks).</p>
+
+                    <div class="mt-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="font-semibold text-white">Apply Electric Field</span>
+                            <span class="font-semibold text-slate-900">Apply Electric Field</span>
                             <!-- Toggle -->
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" id="toggle-elec" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
-                                <label for="toggle-elec" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                                <input type="checkbox" id="toggle-elec" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-slate-400 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                                <label for="toggle-elec" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200 ease-in-out"></label>
                             </div>
                         </div>
-                        <p class="text-sm text-slate-400">Notice how the large, slow <span class="text-red-400 font-bold">positive (+)</span> and <span class="text-blue-400 font-bold">negative (-)</span> ions migrate through the fluid-filled pores.</p>
+                        <p class="text-sm text-slate-600">Notice how the large, slow <span class="text-red-600 font-bold">positive (+)</span> and <span class="text-blue-600 font-bold">negative (-)</span> ions migrate through the fluid-filled pores.</p>
                     </div>
                 </div>
                 <div class="w-full md:w-1/2">
@@ -87,20 +88,20 @@
             </section>
 
             <!-- 2. Electronic -->
-            <section class="bg-[#1e2536] rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
+            <section class="lab-card p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
                 <div class="w-full md:w-1/2 space-y-4 md:order-2">
-                    <h2 class="text-3xl font-bold text-[#38bdf8]">2. Electronic</h2>
-                    <p class="text-lg">Electrons move through conductive minerals (metals, graphite).</p>
-                    
-                    <div class="mt-6 bg-[#0f131f] p-4 rounded-lg border border-slate-700">
+                    <h2 class="text-2xl font-bold text-slate-900">2. Electronic</h2>
+                    <p class="text-lg text-slate-700">Electrons move through conductive minerals (metals, graphite).</p>
+
+                    <div class="mt-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="font-semibold text-white">Apply Electric Field</span>
+                            <span class="font-semibold text-slate-900">Apply Electric Field</span>
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" id="toggle-electronic" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
-                                <label for="toggle-electronic" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                                <input type="checkbox" id="toggle-electronic" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-slate-400 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                                <label for="toggle-electronic" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200 ease-in-out"></label>
                             </div>
                         </div>
-                        <p class="text-sm text-slate-400">Tiny <span class="text-yellow-400 font-bold">electrons (e⁻)</span> zip rapidly through a continuous solid vein of conductive mineral.</p>
+                        <p class="text-sm text-slate-600">Tiny <span class="text-amber-700 font-bold">electrons (e⁻)</span> zip rapidly through a continuous solid vein of conductive mineral.</p>
                     </div>
                 </div>
                 <div class="w-full md:w-1/2 md:order-1">
@@ -111,20 +112,20 @@
             </section>
 
             <!-- 3. Dielectric -->
-            <section class="bg-[#1e2536] rounded-2xl p-6 md:p-8 shadow-2xl border border-slate-700 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
+            <section class="lab-card p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center transition-transform hover:-translate-y-1">
                 <div class="w-full md:w-1/2 space-y-4">
-                    <h2 class="text-3xl font-bold text-[#38bdf8]">3. Dielectric</h2>
-                    <p class="text-lg">Polarization effects (important for SIP).</p>
-                    
-                    <div class="mt-6 bg-[#0f131f] p-4 rounded-lg border border-slate-700">
+                    <h2 class="text-2xl font-bold text-slate-900">3. Dielectric</h2>
+                    <p class="text-lg text-slate-700">Bound charges polarize; dominant at high frequency (GPR, dielectric sensors). IP/SIP instead measures interfacial polarization at grain surfaces.</p>
+
+                    <div class="mt-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="font-semibold text-white">Apply Electric Field</span>
+                            <span class="font-semibold text-slate-900">Apply Electric Field</span>
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" id="toggle-dielectric" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
-                                <label for="toggle-dielectric" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-600 cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                                <input type="checkbox" id="toggle-dielectric" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-slate-400 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out"/>
+                                <label for="toggle-dielectric" class="toggle-label touch-label block overflow-visible h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200 ease-in-out"></label>
                             </div>
                         </div>
-                        <p class="text-sm text-slate-400">Charges do not flow continuously. Instead, molecules <span class="text-[#38bdf8] font-bold">polarize</span> (stretch and align) in response to the field.</p>
+                        <p class="text-sm text-slate-600">Charges do not flow continuously. Instead, molecules <span class="text-sky-700 font-bold">polarize</span> (stretch and align) in response to the field.</p>
                     </div>
                 </div>
                 <div class="w-full md:w-1/2">
@@ -154,17 +155,27 @@
             return { canvas, ctx };
         }
 
-        // Draw an Electric Field Indicator Arrow
+        // Brighten the background while the electric field is on
         function drawEField(ctx, isActive) {
             if (!isActive) return;
             ctx.save();
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
             ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            
+            ctx.restore();
+        }
+
+        // Electric Field Indicator label, drawn last so grains and molecules never cover it
+        function drawEFieldLabel(ctx, isActive) {
+            if (!isActive) return;
+            ctx.save();
             ctx.font = 'bold 32px Inter, sans-serif';
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
             ctx.textAlign = 'center';
-                ctx.fillText('Electric Field (E) →', CANVAS_WIDTH / 2, 40);
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.strokeText('Electric Field (E) →', CANVAS_WIDTH / 2, 40);
+            ctx.fillStyle = '#0369a1';
+            ctx.fillText('Electric Field (E) →', CANVAS_WIDTH / 2, 40);
             ctx.restore();
         }
 
@@ -201,14 +212,14 @@
                 ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
                 
                 // Draw background fluid
-                ctx.fillStyle = '#0f172a'; // dark water
+                ctx.fillStyle = '#dbeafe'; // pore water
                 ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
                 drawEField(ctx, isActive);
 
                 // Draw Grains
-                ctx.fillStyle = '#334155'; // rock color
-                ctx.strokeStyle = '#475569';
+                ctx.fillStyle = '#e3d3b3'; // sand-grain tan
+                ctx.strokeStyle = '#c4a67a';
                 ctx.lineWidth = 4;
                 grains.forEach(grain => {
                     ctx.beginPath();
@@ -238,7 +249,7 @@
                     // Draw ion
                     ctx.beginPath();
                     ctx.arc(ion.x, ion.y, 12, 0, Math.PI * 2);
-                    ctx.fillStyle = ion.charge > 0 ? '#ef4444' : '#3b82f6'; // Red for +, Blue for -
+                    ctx.fillStyle = ion.charge > 0 ? '#dc2626' : '#2563eb'; // Red for +, Blue for -
                     ctx.fill();
                     ctx.strokeStyle = 'white';
                     ctx.lineWidth = 2;
@@ -251,6 +262,8 @@
                     ctx.textBaseline = 'middle';
                     ctx.fillText(ion.charge > 0 ? '+' : '-', ion.x, ion.y);
                 });
+
+                drawEFieldLabel(ctx, isActive);
 
                 requestAnimationFrame(draw);
             }
@@ -292,9 +305,9 @@
                 ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
                 
                 // Rock background
-                ctx.fillStyle = '#1e293b'; 
+                ctx.fillStyle = '#efe4cf';
                 ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-                
+
                 drawEField(ctx, isActive);
 
                 // Draw metallic vein
@@ -317,8 +330,9 @@
                 // Draw and update electrons
                 electrons.forEach(el => {
                     if (isActive) {
-                        el.progress += el.speed;
-                        if (el.progress > CANVAS_WIDTH) el.progress = 0;
+                        // Electrons carry negative charge, so they drift against E (leftward)
+                        el.progress -= el.speed;
+                        if (el.progress < 0) el.progress = CANVAS_WIDTH;
                     }
                     
                     let x = el.progress;
@@ -326,13 +340,14 @@
 
                     ctx.beginPath();
                     ctx.arc(x, y, 4, 0, Math.PI * 2);
-                    ctx.fillStyle = '#fde047'; // Bright yellow
+                    ctx.fillStyle = '#f59e0b'; // Amber
                     ctx.fill();
-                    ctx.shadowColor = '#fde047';
-                    ctx.shadowBlur = isActive ? 10 : 0;
+                    ctx.strokeStyle = '#78350f'; // thin dark outline against the vein
+                    ctx.lineWidth = 1.5;
                     ctx.stroke();
-                    ctx.shadowBlur = 0; // reset
                 });
+
+                drawEFieldLabel(ctx, isActive);
 
                 requestAnimationFrame(draw);
             }
@@ -366,9 +381,9 @@
                 ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
                 
                 // Rock background
-                ctx.fillStyle = '#1e293b'; 
+                ctx.fillStyle = '#efe4cf';
                 ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-                
+
                 drawEField(ctx, isActive);
 
                 const maxSeparation = 15;
@@ -387,17 +402,20 @@
                     // Draw electron cloud (negative, shifts left against E-field)
                     ctx.beginPath();
                     ctx.ellipse(mol.baseX - currentSep*0.5, mol.baseY, 30 + currentSep*0.5, 30 - currentSep*0.2, 0, 0, Math.PI*2);
-                    ctx.fillStyle = `rgba(56, 189, 248, ${0.2 + mol.polarization*0.1})`;
+                    ctx.fillStyle = `rgba(186, 230, 253, ${0.8 + mol.polarization*0.15})`;
                     ctx.fill();
-                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+                    ctx.strokeStyle = 'rgba(2, 132, 199, 0.75)';
                     ctx.lineWidth = 2;
                     ctx.stroke();
 
                     // Draw Center Nucleus (positive, shifts right with E-field)
                     ctx.beginPath();
                     ctx.arc(mol.baseX + currentSep, mol.baseY, 8, 0, Math.PI*2);
-                    ctx.fillStyle = '#ef4444'; // Red for positive
+                    ctx.fillStyle = '#dc2626'; // Red for positive
                     ctx.fill();
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
 
                     // Draw symbols
                     ctx.fillStyle = 'white';
@@ -405,11 +423,13 @@
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.fillText('+', mol.baseX + currentSep, mol.baseY);
-                    
+
                     // Draw negative symbol on the cloud
-                    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                    ctx.fillStyle = '#075985';
                     ctx.fillText('-', mol.baseX - currentSep - 10, mol.baseY);
                 });
+
+                drawEFieldLabel(ctx, isActive);
 
                 requestAnimationFrame(draw);
             }

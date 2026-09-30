@@ -73,3 +73,6 @@ Rocks acquire magnetization from magnetic minerals, magnetite above all, and tha
 
 - 📊 Datasets live in the [Data area](../../data/index.md).
 - 🚀 Python exercises are in [Notebooks](../../notebooks/index.md).
+
+??? info "PyHydroGeophysX Research Code"
+    Gravity and magnetic observations can be inverted together for subsurface density and susceptibility structure. [PyHydroGeophysX](https://github.com/geohang/PyHydroGeophysX), developed in Dr. Chen's group, includes a [gravity and magnetics inversion example (source)](https://github.com/geohang/PyHydroGeophysX/blob/main/examples/Ex_gravity_magnetics_inversion.py) alongside its electrical, seismic, and electromagnetic workflows.

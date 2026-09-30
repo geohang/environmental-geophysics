@@ -88,6 +88,7 @@ def audit_html() -> list[str]:
     errors: list[str] = []
     files = sorted(DOCS.rglob("*.html"))
     canvas_total = 0
+    tailwind_total = 0
     forbidden_dependencies = {
         "react.development": "development React build",
         "@babel/standalone": "runtime Babel",
@@ -100,6 +101,13 @@ def audit_html() -> list[str]:
     for path in files:
         relative = path.relative_to(ROOT).as_posix()
         text = path.read_text(encoding="utf-8")
+        if "assets/stylesheets/tailwind-course.css" in text:
+            tailwind_total += 1
+        if relative != "docs/apps/field-data.html" and (
+            re.search(r"<(?:script\b[^>]*\bsrc|link\b[^>]*\bhref)\s*=\s*['\"]https?://", text, re.I)
+            or re.search(r"@import\s+url\(['\"]?https?://", text, re.I)
+        ):
+            errors.append(f"{relative}: external runtime dependency must be self-hosted")
         parser = CourseHTMLParser()
         try:
             parser.feed(text)
@@ -146,8 +154,23 @@ def audit_html() -> list[str]:
                 errors.append(f"{relative}: standalone app missing course-app.css")
             if not progressive:
                 errors.append(f"{relative}: standalone app missing course-app.js")
-    if canvas_total != 46:
-        errors.append(f"Expected 46 parsed canvas elements, found {canvas_total}")
+    if canvas_total != 47:
+        errors.append(f"Expected 47 parsed canvas elements, found {canvas_total}")
+    if tailwind_total != 14:
+        errors.append(f"Expected 14 apps to use the precompiled Tailwind stylesheet, found {tailwind_total}")
+    vendor_files = [
+        DOCS / "assets" / "stylesheets" / "tailwind-course.css",
+        DOCS / "assets" / "vendor" / "chartjs" / "chart.min.js",
+        DOCS / "assets" / "vendor" / "react" / "react.production.min.js",
+        DOCS / "assets" / "vendor" / "react" / "react-dom.production.min.js",
+        DOCS / "assets" / "vendor" / "fontawesome" / "css" / "all.min.css",
+        DOCS / "assets" / "vendor" / "fontawesome" / "webfonts" / "fa-solid-900.woff2",
+        DOCS / "assets" / "vendor" / "mathjax" / "tex-mml-chtml.js",
+        DOCS / "assets" / "vendor" / "mathjax" / "output" / "chtml" / "fonts" / "woff-v2" / "MathJax_Main-Regular.woff",
+    ]
+    for vendor_file in vendor_files:
+        if not vendor_file.exists() or vendor_file.stat().st_size == 0:
+            errors.append(f"Missing self-hosted runtime asset: {vendor_file.relative_to(ROOT).as_posix()}")
     return errors
 
 
@@ -166,6 +189,25 @@ def audit_assessments() -> list[str]:
     invalid_levels = sorted({level for _, _, level in ids} - allowed_levels)
     if invalid_levels:
         errors.append(f"Practice Lab: invalid levels: {', '.join(invalid_levels)}")
+    practice_answers = [int(value) for value in re.findall(r"\{id:'[^']+'.*?,a:(\d+),e:", practice)]
+    answer_counts = Counter(practice_answers)
+    if len(practice_answers) != 45 or any(answer_counts[index] < 10 for index in range(3)):
+        errors.append(f"Practice Lab: correct-answer indices are degenerate: {dict(answer_counts)}")
+    for required in ("shuffledIndices", "optionOrders", "localStorage", "answer-prompt"):
+        if required not in practice:
+            errors.append(f"Practice Lab: missing randomized/persistent assessment feature {required}")
+
+    missions = (DOCS / "apps" / "field-missions.html").read_text(encoding="utf-8")
+    mission_answers = [
+        int(value)
+        for value in re.findall(r",(?:method|signal|interpretation):(\d+)", missions)
+    ]
+    mission_counts = Counter(mission_answers)
+    if len(mission_answers) != 12 or any(mission_counts[index] < 3 for index in range(3)):
+        errors.append(f"Field Missions: correct-answer indices are degenerate: {dict(mission_counts)}")
+    for required in ("shuffledIndices", "choiceOrders", "choiceMarkup(current"):
+        if required not in missions:
+            errors.append(f"Field Missions: missing randomized assessment feature {required}")
     if (DOCS / "instructor").exists():
         errors.append("Private instructor materials must not exist inside docs/")
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
@@ -237,6 +279,129 @@ def audit_numerical_benchmarks() -> list[str]:
     apparent = abs(impedance) ** 2 / (mu0 * omega)
     check("uniform half-space MT resistivity", apparent, rho, 1e-10)
     check("uniform half-space MT phase", math.degrees(math.atan2(impedance.imag, impedance.real)), 45.0, 1e-10)
+
+    # Layered-earth DC: parse the browser solver's filter and reproduce its
+    # physical potential calculation. Reference H-model values were verified
+    # independently against pyGIMLi 1.6.0 DC1dModelling.
+    dc1d_path = DOCS / "assets" / "javascripts" / "dc1d-forward.js"
+    dc1d_text = dc1d_path.read_text(encoding="utf-8") if dc1d_path.exists() else ""
+    arrays = re.findall(r"const filter(?:Abscissae|Weights) = \[([^\]]+)\];", dc1d_text)
+    if len(arrays) != 2:
+        errors.append("Layered-earth DC solver is missing its digital-linear-filter arrays")
+    else:
+        abscissae, weights = ([float(value) for value in array.split(",")] for array in arrays)
+        if len(abscissae) != 801 or len(weights) != 801:
+            errors.append(
+                f"Layered-earth DC solver filter must have 801 points, found {len(abscissae)} and {len(weights)}"
+            )
+        else:
+            def kernel(wavenumber: float, resistivities: list[float], thicknesses: list[float]) -> float:
+                transform = resistivities[-1]
+                reflection = 0.0
+                for layer in range(len(resistivities) - 2, -1, -1):
+                    layer_rho = resistivities[layer]
+                    reflection = (transform - layer_rho) / (transform + layer_rho)
+                    hyperbolic = math.tanh(wavenumber * thicknesses[layer])
+                    transform = layer_rho * (transform + hyperbolic * layer_rho) / (
+                        transform * hyperbolic + layer_rho
+                    )
+                decay = math.exp(-2.0 * wavenumber * thicknesses[0])
+                return resistivities[0] * decay * reflection / (1.0 - reflection * decay) / (2.0 * math.pi)
+
+            def potential(distance: float, resistivities: list[float], thicknesses: list[float]) -> float:
+                return sum(
+                    weight * kernel(point / distance, resistivities, thicknesses) * 2.0
+                    for point, weight in zip(abscissae, weights)
+                ) / distance
+
+            def dc_response(array: str, spacing: float, resistivities: list[float], thicknesses: list[float]) -> float:
+                if array == "wenner":
+                    am, an, bm, bn = spacing, 2.0 * spacing, 2.0 * spacing, spacing
+                else:
+                    mn2 = spacing / 10.0
+                    am, an, bm, bn = spacing - mn2, spacing + mn2, spacing + mn2, spacing - mn2
+                factor = 2.0 * math.pi / (1.0 / am - 1.0 / an - 1.0 / bm + 1.0 / bn)
+                correction = potential(am, resistivities, thicknesses) - potential(an, resistivities, thicknesses)
+                correction -= potential(bm, resistivities, thicknesses)
+                correction += potential(bn, resistivities, thicknesses)
+                return resistivities[0] + factor * correction
+
+            uniform = [100.0, 100.0, 100.0]
+            h_model = [100.0, 10.0, 500.0]
+            layers = [5.0, 15.0]
+            check("DC1D uniform Wenner", dc_response("wenner", 10.0, uniform, layers), 100.0, 1e-10)
+            check("DC1D uniform Schlumberger", dc_response("schlumberger", 10.0, uniform, layers), 100.0, 1e-10)
+            check("DC1D H-model Wenner 10 m", dc_response("wenner", 10.0, h_model, layers), 35.364862277718316, 1e-9)
+            check("DC1D H-model Wenner 100 m", dc_response("wenner", 100.0, h_model, layers), 76.67107910027588, 1e-9)
+            check("DC1D H-model Schlumberger 10 m", dc_response("schlumberger", 10.0, h_model, layers), 52.65667064599507, 1e-9)
+            check("DC1D H-model Schlumberger 100 m", dc_response("schlumberger", 100.0, h_model, layers), 57.3866568858056, 1e-9)
+    return errors
+
+
+def audit_course_consistency() -> list[str]:
+    """Check navigation, accessibility regressions, and public count statements."""
+    errors: list[str] = []
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    home = (DOCS / "index.md").read_text(encoding="utf-8")
+    lecture_index = (DOCS / "lecture" / "index.md").read_text(encoding="utf-8")
+    magnetic = (DOCS / "lecture" / "magnetic" / "index.md").read_text(encoding="utf-8")
+    data_index = (DOCS / "data" / "index.md").read_text(encoding="utf-8")
+    navigation = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+    classroom = (DOCS / "apps" / "classroom-labs.html").read_text(encoding="utf-8")
+    frameworks = (DOCS / "apps" / "lecture-frameworks.html").read_text(encoding="utf-8")
+    progressive = (DOCS / "assets" / "javascripts" / "course-app.js").read_text(encoding="utf-8")
+    refraction = (DOCS / "lecture" / "seismic" / "apps" / "seismic-refraction.html").read_text(encoding="utf-8")
+    refraction_demo = (DOCS / "lecture" / "seismic" / "apps" / "demo-refraction-traveltime.html").read_text(encoding="utf-8")
+    mt_demo = (DOCS / "lecture" / "mt" / "apps" / "demo-mt-sounding.html").read_text(encoding="utf-8")
+    gpr_simulator = (DOCS / "lecture" / "gpr" / "apps" / "gpr-2.html").read_text(encoding="utf-8")
+    ves = (DOCS / "lecture" / "electrical" / "apps" / "ert-2.html").read_text(encoding="utf-8")
+
+    expected_terms = {
+        "README lecture count": ("34 original interactive lecture and demonstration pages", readme),
+        "six material types": ("site offers six kinds of material", home),
+        "graduate enrollment logistics": ("SEES:5800", home),
+        "ICON logistics": ("https://icon.uiowa.edu/", home),
+        "EM material count": ("4 apps + 2 demos", lecture_index),
+        "magnetic research code": ("PyHydroGeophysX Research Code", magnetic),
+        "APLL inversion path": ("packages/em/2026-05-02_gem2_survey/inversion/", data_index),
+        "course-guide navigation": ("- Course Guide: apps/course-guide.html", navigation),
+        "classroom tab arrow navigation": ("event.key==='ArrowRight'||event.key==='ArrowDown'", classroom),
+        "framework button arrow navigation": ("active.tagName!=='BUTTON'", frameworks),
+        "framework fullscreen timer": ('id="fullscreen-timer"', frameworks),
+        "framework blackout overlay": ('id="blackout"', frameworks),
+        "framework blackout shortcut": ("key==='b'||event.key==='.'", frameworks),
+        "framework shortcut-help dialog": ('id="shortcut-help"', frameworks),
+        "framework touch-swipe threshold": ("Math.abs(dx)>=40", frameworks),
+        "framework speaker synchronization": ("new BroadcastChannel('lesson-sync')", frameworks),
+        "framework speaker state payload": ("{chapter,slideIndex,secondsRemaining:seconds}", frameworks),
+        "framework annotation canvas": ('id="annotation-canvas"', frameworks),
+        "framework annotation persistence": ("sessionStorage.setItem(annotationStorageKey", frameworks),
+        "framework print stylesheet": ("print-handout stylesheet marker", frameworks),
+        "framework print URL mode": ("params.get('print')==='1'", frameworks),
+        "framework progress dots": ('id="progress-dots"', frameworks),
+        "framework active progress dot": ("aria-current','step'", frameworks),
+        "refraction velocity inversion control": ('label: "Velocity (v2)", value: v2, min: 500', refraction),
+        "refraction nonempty path guard": ("graphData.some((p) => p.refract1 !== null)", refraction),
+        "refraction no-head-wave notice": ("No head wave: v2 <= v1 (velocity inversion)", refraction_demo),
+        "MT static-shift control": ('id="staticShift"', mt_demo),
+        "GPR wet-sand preset": ('value="16">Wet Sand', gpr_simulator),
+        "physical DC solver": ("DC1D.apparentResistivity", ves),
+        "VES model assumptions": ("MN/AB = 0.1", ves),
+    }
+    for name, (term, text) in expected_terms.items():
+        if term not in text:
+            errors.append(f"Course consistency: missing {name}")
+    if "characterData: true" in progressive:
+        errors.append("Course accessibility observer must not watch all character-data mutations")
+    if "Math.max(V2raw,V1+50)" in refraction_demo:
+        errors.append("Refraction travel-time demo must not silently clamp the lower-layer velocity")
+    if frameworks.count("notes:[") != 9:
+        errors.append("Every active-learning lesson must declare a speaker-notes array")
+    if frameworks.count("Prediction debrief:") < 2:
+        errors.append("Intro and seismic lessons must retain their seeded speaker notes")
+    for forbidden in ("Educational Approximation", "smooth logistical", "perfectly mimics"):
+        if forbidden in ves:
+            errors.append(f"VES forward model still contains proxy language: {forbidden}")
     return errors
 
 
@@ -591,6 +756,7 @@ def main() -> int:
         audit_html()
         + audit_assessments()
         + audit_numerical_benchmarks()
+        + audit_course_consistency()
         + audit_classroom_datasets()
         + audit_ashton_field_data()
     )
@@ -602,7 +768,7 @@ def main() -> int:
     html_count = sum(1 for _ in DOCS.rglob("*.html"))
     print(
         f"Course audit passed: {html_count} source HTML apps/pages, 45 practice questions, "
-        "9 active-learning lessons, 7 numerical benchmarks, 5 classroom dataset suites, "
+        "9 active-learning lessons, 14 numerical benchmarks, 5 classroom dataset suites, "
         "and the Ashton field-data release."
     )
     return 0

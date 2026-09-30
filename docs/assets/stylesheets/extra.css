@@ -2,6 +2,8 @@
 
 /* ---- Brand colors: a sky-blue identity that matches the interactive demos ---- */
 :root {
+  --md-text-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --md-code-font: ui-monospace, "Cascadia Code", Consolas, monospace;
   --md-primary-fg-color:        #134e6f;
   --md-primary-fg-color--light: #1c6a94;
   --md-primary-fg-color--dark:  #0d3b54;

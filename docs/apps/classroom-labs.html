@@ -239,12 +239,30 @@
 <script>
 const tabs=[...document.querySelectorAll('.lab-tab')];
 const views=[...document.querySelectorAll('.lab-view')];
+tabs.forEach(tab=>{
+  tab.id=`tab-${tab.dataset.lab}`;
+  tab.setAttribute('aria-controls',tab.dataset.lab);
+  document.getElementById(tab.dataset.lab)?.setAttribute('aria-labelledby',tab.id);
+});
 function showLab(id,updateHash=true){
   tabs.forEach(tab=>{const active=tab.dataset.lab===id;tab.classList.toggle('active',active);tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;});
   views.forEach(view=>view.classList.toggle('active',view.id===id));
   if(updateHash)history.replaceState(null,'',`#${id}`);
 }
-tabs.forEach(tab=>tab.addEventListener('click',()=>showLab(tab.dataset.lab)));
+tabs.forEach((tab,index)=>{
+  tab.addEventListener('click',()=>showLab(tab.dataset.lab));
+  tab.addEventListener('keydown',event=>{
+    let target=index;
+    if(event.key==='ArrowRight'||event.key==='ArrowDown')target=(index+1)%tabs.length;
+    else if(event.key==='ArrowLeft'||event.key==='ArrowUp')target=(index-1+tabs.length)%tabs.length;
+    else if(event.key==='Home')target=0;
+    else if(event.key==='End')target=tabs.length-1;
+    else return;
+    event.preventDefault();
+    showLab(tabs[target].dataset.lab);
+    tabs[target].focus();
+  });
+});
 
 const pipelines={
   gravity:[

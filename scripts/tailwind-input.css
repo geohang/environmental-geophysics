@@ -1,0 +1,8 @@
+/*
+ * Source for the precompiled utility stylesheet used by standalone course apps.
+ * Rebuild from the repository root with:
+ * pnpm dlx tailwindcss@3.4.17 -i scripts/tailwind-input.css -o docs/assets/stylesheets/tailwind-course.css --content "docs/**/*.html" --minify
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
