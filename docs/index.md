@@ -9,7 +9,7 @@
 [Start with Introduction →](lecture/intro/index.md){ .md-button .md-button--primary }
 [Browse all modules](lecture/index.md){ .md-button }
 
-Also: [Course guide](apps/course-guide.html) · [Active-learning lessons](apps/lecture-frameworks.html) · [Classroom labs](apps/classroom-labs.html) · [APLL field data](apps/field-data.html) · [Practice lab](apps/practice-lab.html)
+Also: [Course guide](apps/course-guide.html) · [Active-learning lessons](apps/lecture-frameworks.html) · [Classroom labs](apps/classroom-labs.html) · [APLL field data](apps/field-data.html) · [Practice questions](apps/practice-lab.html)
 { .hero-links }
 
 </div>

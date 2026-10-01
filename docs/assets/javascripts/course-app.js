@@ -117,21 +117,21 @@
       ['activity-3.html', 'Activity 3 · Depth Detective', 'Activity'],
     ] },
     { id: 'magnetic', name: 'Magnetic Methods', apps: [
-      ['magnetic-methods.html', 'GeoMag Lab: Rock Magnetism', 'Activity'],
-      ['demo-dipole-inclination.html', 'Dipole Anomaly vs. Inclination', 'Demo'],
+      ['magnetic-methods.html', 'GeoMag · Rock Magnetism', 'Activity'],
+      ['demo-dipole-inclination.html', 'Dipole Anomaly vs. Magnetic Inclination', 'Demo'],
       ['magnetic-signal.html', 'Geomagnetic Anomaly Simulator', 'Interactive lecture'],
-      ['continuation.html', 'Continuation Simulator', 'Interactive lecture'],
+      ['continuation.html', 'Magnetic Continuation Simulator', 'Interactive lecture'],
       ['depth-estimation.html', 'Magnetic Interpretation Methods', 'Interactive lecture'],
     ] },
     { id: 'seismic', name: 'Seismic Methods', apps: [
       ['stress-and-strain.html', 'Elasticity & Seismic Waves', 'Interactive lecture'],
       ['demo-refraction-traveltime.html', 'Refraction Travel-Time Curve Builder', 'Demo'],
-      ['seismic-refraction.html', 'Seismic Refraction Lab', 'Interactive lecture'],
+      ['seismic-refraction.html', 'Seismic Refraction Simulator', 'Interactive lecture'],
     ] },
     { id: 'electrical', name: 'Electrical Methods', apps: [
       ['electrical-methods.html', 'How Do Rocks Conduct Electricity?', 'Interactive lecture'],
       ['ert.html', 'ERT · Geometric Factor K', 'Interactive lecture'],
-      ['ert-2.html', 'ERT · 3-Layer VES Forward Model', 'Interactive lecture'],
+      ['ert-2.html', 'VES · 3-Layer Forward Model', 'Interactive lecture'],
       ['demo-pseudosection.html', 'Apparent-Resistivity Pseudosection Builder', 'Demo'],
       ['sp.html', 'SP · Signal Mechanisms', 'Interactive lecture'],
       ['sp-2.html', 'SP · Field Applications', 'Activity'],
@@ -151,7 +151,7 @@
     { id: 'gpr', name: 'Ground-Penetrating Radar', apps: [
       ['gpr.html', 'Conduction vs. Displacement Currents', 'Interactive lecture'],
       ['gpr-2.html', 'GPR Simulator', 'Interactive lecture'],
-      ['demo-hyperbola.html', 'Hyperbola Velocity Estimator', 'Demo'],
+      ['demo-hyperbola.html', 'GPR Hyperbola Velocity Estimator', 'Demo'],
     ] },
     { id: 'borehole', name: 'Borehole Geophysics', apps: [
       ['borehole-geophysics.html', 'Borehole Logging Dashboard', 'Interactive lecture'],

@@ -8,7 +8,7 @@ The course walks through the subsurface geophysical toolbox one method at a time
 |---|---|---|
 | [Introduction](intro/index.md) | Method and spacing simulator + demo | Choosing a method, depth vs. resolution |
 | [Gravity Methods](gravity/index.md) | Lecture app + 3 activities + demo | Density contrasts, data reduction, interpretation |
-| [Magnetic Methods](magnetic/index.md) | Rock magnetism lab + 3 topic apps + demo | Anomaly shape, continuation, depth rules |
+| [Magnetic Methods](magnetic/index.md) | Rock magnetism activity + 3 topic apps + demo | Anomaly shape, continuation, depth rules |
 | [Seismic Methods](seismic/index.md) | 2 topic apps + demo | Elasticity, refraction travel times |
 | [Electrical Methods](electrical/index.md) | Lecture app + 6 topic apps + demo | Conduction, Archie's law, VES/ERT arrays, SP, IP |
 | [Electromagnetic Methods](em/index.md), including [Magnetotellurics & Deep EM](mt/index.md) | 4 apps + 2 demos | Induction, FDEM, TEM, MT impedance, apparent resistivity, and phase |

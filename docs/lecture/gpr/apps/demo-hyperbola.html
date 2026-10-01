@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hyperbola Velocity Estimator</title>
+<title>GPR Hyperbola Velocity Estimator</title>
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
@@ -21,6 +21,21 @@
   <div class="subtitle">A buried point target makes a diffraction hyperbola. Match your fit curve to it to recover wave velocity and target depth.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>With the apex locked at t₀ = 30.0 ns, what happens to the implied depth when the fit velocity doubles: no change, it doubles, or it quadruples?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>Set the fit velocity v to 0.050 m/ns and note the implied depth and implied εᵣ.</li>
+        <li>Raise it to 0.100 m/ns and compare both readouts.</li>
+        <li>Adjust v until the amber curve overlies the hyperbola, then press Reveal true velocity.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>Why do the hyperbola's limbs constrain the velocity when the apex time alone cannot?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <div class="hint">The radargram below has one buried object (its true velocity is hidden). Adjust your fit until the amber curve overlies the hyperbola.</div>
     <canvas id="cv" width="1040" height="420"></canvas>
@@ -36,11 +51,20 @@
       <div class="stat" id="s3"><div class="v" id="depthout">–</div><div class="l">implied depth d = v·t₀/2 (m)</div></div>
     </div>
     <div class="formula" id="fbox">
-      Fit curve with its apex locked to the observed apex $(x_0, t_0)$: $t(x)=\sqrt{t_0^2+\left(\dfrac{2(x-x_0)}{v}\right)^2}$. Only the limbs change with $v$: too slow a velocity makes them too steep, too fast makes them too flat. Implied depth $d=v\,t_0/2$. Relative permittivity from velocity: $\varepsilon_r=\left(\dfrac{c}{v}\right)^2$ with $c=0.30$ m/ns. This fit assumes constant velocity, a point-like target, zero time offset, and negligible antenna separation.
+      Fit curve with its apex locked to the observed apex $(x_0, t_0)$: $t(x)=\sqrt{t_0^2+\left(\dfrac{2(x-x_0)}{v}\right)^2}$. Only the limbs change with $v$: too slow a velocity makes them too steep, too fast makes them too flat. Implied depth $d=v\,t_0/2$. Relative permittivity from velocity: $\varepsilon_r=\left(\dfrac{c}{v}\right)^2$ with $c=0.30$ m/ns.
     </div>
     <button id="reveal" class="btn" style="margin-top:14px;">Reveal true velocity</button>
     <span id="truth" style="margin-left:12px;color:var(--text-muted);"></span>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>The radargram holds one point diffractor in a uniform medium, recorded with a zero-offset antenna: t(x) = 2√(d² + (x − x₀)²)/v, the same law the fit curve uses.</li>
+      <li>The fit assumes constant velocity, a point-like target, zero time offset, and negligible antenna separation.</li>
+      <li>The reflection is drawn with the same strength at every antenna position: there is no geometric spreading, attenuation, antenna pattern, or noise, so the limbs end only where they leave the 60 ns window.</li>
+      <li>εᵣ = (c/v)² assumes a low-loss, non-magnetic medium.</li>
+    </ul>
+  </details>
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');

@@ -41,6 +41,8 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
 </div>
 
+**How the TEM apps connect.** Time-domain EM (TEM) appears in three apps. CW vs. TEM Waveforms (app 2) introduces the switched-off transmitter current and the decaying receiver voltage. The 1D EM Response Explorer (app 4) shows how that decay depends on a layered earth. The TEM mode of the [Deep EM Visualizer](../mt/apps/mt.html) in the next module applies it to a conductive ore body.
+
 **After the path:** [practice questions](../../apps/practice-lab.html#em) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab

@@ -35,6 +35,8 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
 </div>
 
+**How the apps connect.** The Deep EM Visualizer compares what four deep methods sense; the Sounding Explorer then turns its MT mode into apparent-resistivity and phase curves you can model layer by layer. The Visualizer's TEM mode builds on [CW vs. TEM Waveforms](../em/apps/electromagnetic-methods-2.html) and the [1D EM Response Explorer](../em/apps/fdem-tem.html) from the Electromagnetic Methods module.
+
 **After the path:** [practice questions](../../apps/practice-lab.html#mt) · [data and notebooks](#data-and-notebooks).
 
 ## Data and Notebooks

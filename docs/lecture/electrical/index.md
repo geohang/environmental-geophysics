@@ -31,7 +31,7 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
     Geometric factors of the Wenner, Schlumberger, and dipole–dipole arrays, and why a larger K means a smaller measured voltage.
 
-3.  **[ERT · 3-Layer VES Forward Model](apps/ert-2.html)** <span class="lp-type">Interactive lecture</span>
+3.  **[VES · 3-Layer Forward Model](apps/ert-2.html)** <span class="lp-type">Interactive lecture</span>
 
     Build layered models and generate vertical electrical sounding curves.
 

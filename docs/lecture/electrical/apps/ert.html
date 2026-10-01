@@ -88,14 +88,29 @@
     <!-- Header -->
     <header class="lab-hero">
         <div class="lab-hero-inner is-5xl">
-            <h1 class="lab-title">Geometric Factor <span class="lab-title-accent">K</span> for Common Arrays</h1>
-            <p class="lab-subtitle">K derived from potential of point source on half-space:
+            <h1 class="lab-title"><span class="lab-title-accent">ERT</span> · Geometric Factor K</h1>
+            <p class="lab-subtitle">K for common arrays, derived from the potential of a point source on a half-space:
                 <span class="font-mono bg-white border border-slate-200 text-slate-800 px-2 py-1 rounded">K = 2&pi; / (1/r<sub class="text-xs">AM</sub> - 1/r<sub class="text-xs">BM</sub> - 1/r<sub class="text-xs">AN</sub> + 1/r<sub class="text-xs">BN</sub>)</span>
             </p>
         </div>
     </header>
 
     <div class="max-w-5xl w-full mx-auto px-6 pt-8 pb-10">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>Wenner at a = 25 and Dipole-Dipole at a = 10, n = 6 spread their electrodes over nearly the same length. Which has the larger K, and by about 2, 10, or 60 times?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>On Wenner (a), set Spacing (a) to 25 and compute K = 2πa.</li>
+                    <li>Choose Dipole-Dipole, set Dipole Length (a) to 10 and Separation Multiplier (n) to 6, and compute K from the Geometric Factor Formula.</li>
+                    <li>Lower Separation Multiplier (n) to 1 and compute K again.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>How does the voltage between M and N change as they move away from A and B, and why does that set K?</dd>
+            </dl>
+        </aside>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
@@ -168,6 +183,16 @@
         <div class="mt-8 text-center text-slate-600 text-sm border-t border-slate-200 pt-6">
             <p>Larger K &rarr; smaller &Delta;V signal &rarr; more sensitive to noise. Array choice = trade-off between depth, resolution, and signal strength.</p>
         </div>
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>K comes from the potential of a point current source on the flat surface of a uniform half-space (the equation under the title); the four electrodes are points on one straight line.</li>
+                <li>The app shows geometry and formulas only: it does not compute a current, a voltage, or an apparent resistivity, and there is no noise.</li>
+                <li>Spacings are unitless slider values; K has the unit of the spacing (metres when the spacings are in metres).</li>
+                <li>The side view spans 100 spacing units, so Dipole-Dipole layouts longer than that (a(n + 2) &gt; 100, for example a = 15 with n = 5 or 6) run past the edge of the view.</li>
+            </ul>
+        </details>
     </div>
 
     <script>
@@ -192,7 +217,7 @@
             schlumberger: {
                 title: 'Schlumberger',
                 desc: 'The potential electrodes (M,N) are closely spaced compared to the current electrodes (A,B). <span class="font-mono">MN &Lt; AB</span>.',
-                formula: 'K &approx; &pi;(L&sup2; - l&sup2;) / 2l',
+                formula: 'K = &pi;(L&sup2; - l&sup2;) / 2l',
                 subtext: 'half-spacing L = AB/2<br>l = MN/2'
             },
             dipole: {

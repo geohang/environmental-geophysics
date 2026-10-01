@@ -38,12 +38,28 @@
     <!-- Header -->
     <header class="lab-hero">
         <div class="lab-hero-inner">
-            <h1 class="lab-title">Three Mechanisms Generate <span class="lab-title-accent">SP</span> Signals</h1>
-            <p class="lab-subtitle">Interactive physical models of Spontaneous Potential generation.</p>
+            <h1 class="lab-title"><span class="lab-title-accent">SP</span> · Signal Mechanisms</h1>
+            <p class="lab-subtitle">Three mechanisms generate spontaneous potential (SP) signals. Explore each with an interactive physical model.</p>
         </div>
     </header>
 
     <div class="max-w-6xl w-full mx-auto p-6 pb-12">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>Fast flow collects excess positive charge on the downstream side. If you then slow the flow, will that charge stay, keep growing, or drain away?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>On 1. Electrokinetic (Streaming), drag Fluid Flow Speed to High and wait until the ringed + ions stop building up at the right edge.</li>
+                    <li>Drag Fluid Flow Speed to Low and watch the right edge for about 10 seconds.</li>
+                    <li>Set the slider to the middle and see where the amount settles.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>What sets how much charge the downstream side holds at a given flow speed?</dd>
+            </dl>
+        </aside>
+
         <!-- Main Content -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -108,18 +124,29 @@
                     <p id="canvas-subtitle" class="text-slate-600 text-sm">Drag of the electrical double layer</p>
                 </div>
 
-                <!-- Voltage Indicator -->
-                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 px-6 py-2 rounded-full border border-slate-200 shadow-sm flex items-center space-x-4 w-max max-w-[calc(100%-2rem)]">
-                    <span id="volt-left" class="text-red-600 font-bold text-lg">-</span>
-                    <div class="w-32 h-2 bg-slate-200 rounded-full overflow-hidden relative shrink-0">
+                <!-- Voltage Indicator: one line at every width; on phones the labels shrink so the pill does not cover the flow label -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-white/90 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full border border-slate-200 shadow-sm flex items-center space-x-2 sm:space-x-4 w-max max-w-[calc(100%-2rem)]">
+                    <span id="volt-left" class="text-red-600 font-bold text-xs sm:text-lg whitespace-nowrap">-</span>
+                    <div class="w-12 sm:w-32 h-2 bg-slate-200 rounded-full overflow-hidden relative shrink-0">
                         <div id="volt-meter" class="absolute top-0 left-0 h-full bg-gradient-to-r from-red-600 to-sky-600 w-full transition-all duration-500"></div>
                     </div>
-                    <span id="volt-right" class="text-sky-700 font-bold text-lg">+</span>
+                    <span id="volt-right" class="text-sky-700 font-bold text-xs sm:text-lg whitespace-nowrap">+</span>
                 </div>
 
                 <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
             </div>
         </div>
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>The animations are qualitative, in relative units: no electric potential is computed, and the voltage bar only labels the polarity; its length does not change with the slider.</li>
+                <li>Streaming: grains are 2-D circles with a fixed negative surface charge. Bulk positive and negative ions move with the water at the same speed, so only the extra positive ions of the diffuse layer carry net charge downstream, at a rate that grows with Fluid Flow Speed.</li>
+                <li>The return conduction current is represented by collected ions jumping back to the upstream side of a grain: each has a fixed chance per frame, so the return grows with the collected charge.</li>
+                <li>Redox: the ore body is a tilted rectangle, and the electron path and the two circular ion-current loops are drawn paths whose speed follows Chemical Reaction Rate; the current distribution around the body is not computed.</li>
+                <li>Thermoelectric: two ion types with fixed drift strengths, the faster one positive (like H⁺); the hot-side label follows the slider from 28 °C to 180 °C while the cold side stays at 20 °C.</li>
+            </ul>
+        </details>
     </div>
 
     <script>

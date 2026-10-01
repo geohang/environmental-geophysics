@@ -43,7 +43,7 @@
         /* Part navigation */
         html { scroll-padding-top: 8.5rem; }
 
-        nav {
+        nav:not(.course-next-card) {
             background-color: rgb(255 255 255 / .92);
             -webkit-backdrop-filter: blur(6px);
             backdrop-filter: blur(6px);
@@ -60,7 +60,7 @@
             gap: .35rem;
         }
 
-        nav a {
+        nav:not(.course-next-card) a {
             display: inline-flex;
             align-items: center;
             min-height: 40px;
@@ -74,7 +74,7 @@
             transition: color .15s, background-color .15s, border-color .15s;
         }
 
-        nav a:hover { color: var(--primary-strong); background: var(--lab-primary-soft); border-color: #bae6fd; }
+        nav:not(.course-next-card) a:hover { color: var(--primary-strong); background: var(--lab-primary-soft); border-color: #bae6fd; }
 
         h2 {
             color: var(--lab-text);
@@ -210,7 +210,7 @@
             .card { padding: 18px; }
             .demo-container { flex-direction: column; padding: 12px; }
             .readout { grid-template-columns: 1fr; }
-            nav { flex-wrap: wrap; }
+            nav:not(.course-next-card) { flex-wrap: wrap; }
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
@@ -225,20 +225,36 @@
 
 <header class="lab-hero">
     <div class="lab-hero-inner">
-        <h1 class="lab-title"><span class="lab-title-accent">Gravity</span> Exploration</h1>
-        <p class="lab-subtitle">From Planetary Physics to Data Reduction & Anomalies</p>
+        <h1 class="lab-title"><span class="lab-title-accent">Gravity</span> Exploration & Data Reduction</h1>
+        <p class="lab-subtitle">From the shape of the Earth to corrections and anomaly interpretation</p>
     </div>
 </header>
 
 <nav>
     <a href="#geoid">Part 1: The Geoid</a>
-    <a href="#latitude-lab">Latitude Lab</a>
+    <a href="#latitude-lab">Latitude Explorer</a>
     <a href="#corrections">Part 2: Corrections</a>
     <a href="#toolkit">Part 3: Toolkit</a>
     <a href="#resources">Resources</a>
 </nav>
 
 <div class="container">
+
+    <aside class="try-this" aria-label="Try this">
+        <p class="try-this-title">Try this</p>
+        <dl>
+            <dt>Predict</dt>
+            <dd>Travelling from the equator to the North Pole, does theoretical gravity rise or fall, and by roughly 50, 500, or 5000 mGal?</dd>
+            <dt>Do</dt>
+            <dd><ol>
+                <li>In the Latitude Effects explorer below, start at Lat (φ) = 0° and note Theoretical Gravity.</li>
+                <li>Drag the slider to 90° and read Diff. from Equator in mGal.</li>
+                <li>Set the slider to 45° and check how much of that change has already happened.</li>
+            </ol></dd>
+            <dt>Explain</dt>
+            <dd>Which two features of the rotating Earth, both drawn in the diagram, make gravity depend on latitude, and how does each one change g toward the pole?</dd>
+        </dl>
+    </aside>
 
     <div class="module-header" id="geoid">
         <h2>Part 1: Theoretical Foundations</h2>
@@ -273,7 +289,7 @@
 
     <section id="latitude-lab" style="margin-top: 40px;">
         <div class="card lab-card" style="border-color: #bae6fd;">
-            <h3>Interactive Lab: Latitude Effects</h3>
+            <h3>Interactive Explorer: Latitude Effects</h3>
             <p>Gravity is not constant! Use the slider to travel from the Equator to the North Pole. Observe how <strong>Earth's Shape</strong> and <strong>Centrifugal Force</strong> change gravity.</p>
 
             <div class="demo-container">
@@ -465,6 +481,16 @@
             </div>
         </div>
     </section>
+
+    <details class="model-assumptions">
+        <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+        <ul>
+            <li>Theoretical gravity uses the closed GRS67 formula on the reference ellipsoid at sea level; it ignores elevation and local geology.</li>
+            <li>The latitude diagram is schematic: arrow lengths are not to scale, and the gravity arrow points at the Earth's centre instead of along the ellipsoid normal.</li>
+            <li>The Bouguer Anomaly Calculator uses a constant free-air gradient (0.3086 mGal/m) and treats the rock below the station as an infinite flat slab of one density (0.0419 ρ h); it applies no terrain, tide, or drift correction.</li>
+            <li>The Depth Estimator applies fixed half-width rules for ideal sources: z ≈ 1.305 x½ for a sphere and z ≈ x½ for a horizontal cylinder.</li>
+        </ul>
+    </details>
 
 </div>
 

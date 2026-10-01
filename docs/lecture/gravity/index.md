@@ -45,6 +45,8 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
 </div>
 
+**How the depth apps connect.** The half-width depth rule appears three times in this module, each with a different job. The Depth Estimator at the end of app 1 introduces the rule, the Anomaly Modeler (app 4) shows the half-width growing as a body moves deeper, and Activity 3 asks you to apply it to an unknown target. [Magnetic Interpretation Methods](../magnetic/apps/depth-estimation.html) in the next module uses the same idea for dipole sources, where the depth factors differ.
+
 **After the path:** [practice questions](../../apps/practice-lab.html#gravity) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
 ## Classroom Lab

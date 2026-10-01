@@ -738,3 +738,119 @@ body.course-soft-dark .science-caveat strong { color: #fbbf24; }
 
   table { font-size: .84rem; }
 }
+
+/* "Try this" guide: one predict / do / explain prompt per app, placed right under the page header.
+   Put it as the first child of the page's content container so it shares that container's width;
+   on pages without one, wrap it in .try-this-wrap, which matches .lab-hero-inner. */
+.try-this-wrap {
+  max-width: 72rem;
+  margin: 1rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.try-this {
+  box-sizing: border-box;
+  margin: 0 0 1rem;
+  padding: .75rem 1rem .8rem;
+  background: var(--lab-surface);
+  border: 1px solid var(--lab-border);
+  border-left: 4px solid var(--lab-accent);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgb(15 23 42 / .05);
+  color: var(--lab-text);
+  font-family: var(--lab-font);
+  font-size: .92rem;
+  line-height: 1.5;
+  text-align: left;
+  /* Lets the label column collapse when the box sits in a narrow panel (see the @container rule below). */
+  container-type: inline-size;
+  width: 100%;
+}
+
+.try-this-title {
+  margin: 0 0 .35rem;
+  color: #b45309;
+  font-size: .78rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.try-this dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: .3rem .9rem;
+  margin: 0;
+}
+
+.try-this dt {
+  padding-top: .12rem;
+  color: var(--lab-muted);
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.try-this dd { margin: 0; }
+/* Tailwind preflight sets list-style: none on every list; these lists need their markers back. */
+.try-this ol { margin: 0; padding-left: 1.25rem; list-style: decimal; }
+.try-this ol li + li { margin-top: .1rem; }
+
+/* In a narrow panel (a dashboard's control column), stack each label above its text. */
+@container (max-width: 26rem) {
+  .try-this dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .try-this dd { margin-bottom: .45rem; }
+  .try-this dd:last-child { margin-bottom: 0; }
+}
+
+/* "Model assumptions": what the simulation simplifies, collapsed by default, last item of the content. */
+.model-assumptions {
+  box-sizing: border-box;
+  margin: 1.5rem 0 0;
+  border: 1px solid var(--lab-border);
+  border-radius: 12px;
+  background: var(--lab-surface-2);
+  color: var(--lab-text-2);
+  font-family: var(--lab-font);
+  font-size: .9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.model-assumptions > summary {
+  cursor: pointer;
+  padding: .65rem 1rem;
+  color: var(--lab-text);
+  font-weight: 700;
+  list-style: none;
+}
+
+.model-assumptions > summary::-webkit-details-marker { display: none; }
+
+.model-assumptions > summary::before {
+  content: "\25B8";
+  display: inline-block;
+  width: 1.1em;
+  color: var(--lab-muted);
+  transition: transform .15s ease;
+}
+
+.model-assumptions[open] > summary::before { transform: rotate(90deg); }
+
+.model-assumptions-hint {
+  margin-left: .5rem;
+  color: var(--lab-muted);
+  font-size: .82rem;
+  font-weight: 400;
+}
+
+.model-assumptions > ul { margin: 0; padding: 0 1rem .85rem 2.3rem; list-style: disc; }
+.model-assumptions li + li { margin-top: .25rem; }
+
+@media (max-width: 560px) {
+  .try-this dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .try-this dd { margin-bottom: .45rem; }
+  .try-this dd:last-child { margin-bottom: 0; }
+  .model-assumptions-hint { display: block; margin: .1rem 0 0 1.1em; }
+}

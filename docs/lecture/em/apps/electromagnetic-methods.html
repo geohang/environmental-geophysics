@@ -237,9 +237,14 @@
         .step-3 .dynamic-eddy-arrow { opacity: 1; transition-delay: 0s; }
         .step-3 .reveal-rect { width: 1200px; }
         .step-3 .label-s { opacity: 1; transition-delay: 1.5s; }
+
+        /* Try this and Model assumptions take the widened 1400px container and its 20px spacing */
+        .lab-page .try-this-wrap { max-width: calc(1400px + 3rem); margin-top: 20px; }
+        .lab-page .try-this-wrap .try-this { margin-bottom: 0; }
         @media (max-width: 760px) {
             .lab-hero .lab-hero-inner { align-items: flex-start; padding: 0 16px; }
             .lab-hero .lab-title { font-size: 1.4rem; }
+            .lab-page .try-this-wrap { margin-top: 16px; padding: 0 16px; }
             .main-container { flex-direction: column; height: auto; min-height: 0; margin-top: 16px; padding: 0 16px; }
             .animation-panel, .sidebar { width: 100%; flex: none; }
             .stepper { overflow-x: auto; }
@@ -261,12 +266,29 @@
     <header class="lab-hero">
         <div class="lab-hero-inner">
             <i class="fa-solid fa-clipboard-list lab-icon" aria-hidden="true"></i>
-            <h1 class="lab-title">Whiteboard Exercise: EM Induction Principle</h1>
+            <h1 class="lab-title">EM Induction Principle (Whiteboard)</h1>
         </div>
     </header>
 
+    <div class="try-this-wrap">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>If the buried target becomes more conductive, will the secondary field reaching the RX coil get stronger, weaker, or stay the same?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Press Next Step to draw each stage (1. Primary, 2. Eddy Currents, 3. Secondary) and read its instructions.</li>
+                    <li>At 3. Secondary, drag Target Conductivity (σ) from Low to High and watch the eddy currents and the secondary field lines.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why does a more conductive target carry stronger eddy currents when the same primary field passes through it?</dd>
+            </dl>
+        </aside>
+    </div>
+
     <div class="main-container">
-        
+
         <!-- Left Column: Animation Focus -->
         <div class="animation-panel">
             
@@ -374,6 +396,18 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="try-this-wrap">
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>This is a schematic drawing: the field lines, eddy-current loops, and secondary-field paths are fixed shapes, and no field or current is computed.</li>
+                <li>Target Conductivity (σ) has no units: the slider (1 to 100) scales the eddy-current and secondary-field line width (1 to 6 px) and opacity linearly, and its Low, Medium, and High examples are labels only.</li>
+                <li>Only the target carries eddy currents; the host ground carries none and does not weaken the primary field.</li>
+                <li>Frequency, coil spacing, and target depth are fixed, and the secondary field is drawn only along its path to the RX coil.</li>
+            </ul>
+        </details>
     </div>
 
     <script>

@@ -21,6 +21,21 @@
   <div class="subtitle">A two-layer earth. Change the velocities and layer thickness and watch the travel-time graph, crossover distance, and depth respond.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>If the lower layer becomes faster (V₂ from 2500 to 5000 m/s), will the crossover distance shrink, grow, or stay about the same?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>At the defaults, note the crossover distance x꜀ and the intercept time tᵢ.</li>
+        <li>Raise Layer 2 velocity V₂ to 5000 m/s and read both values again.</li>
+        <li>Set V₂ to 1000 m/s and Layer 1 velocity V₁ to 1500 m/s, and look at the graph.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>Why can the head wave overtake the direct wave closer to the shot when V₂ is faster, even though its path is longer?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <canvas id="cv" width="1040" height="460"></canvas>
   </div>
@@ -39,6 +54,16 @@
       Direct wave $t=x/V_1$; when $V_2>V_1$, the head wave is $t=\dfrac{x}{V_2}+t_i$ with intercept $t_i=\dfrac{2h\sqrt{V_2^2-V_1^2}}{V_1 V_2}$. Depth from intercept: $h=\dfrac{t_i}{2}\dfrac{V_1 V_2}{\sqrt{V_2^2-V_1^2}}$; crossover $x_c=2h\sqrt{\dfrac{V_2+V_1}{V_2-V_1}}$.
     </div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>One flat, horizontal layer of thickness h and uniform velocity V₁ lies over a half-space of velocity V₂; there is no dip, topography, or lateral velocity change.</li>
+      <li>Only first-arrival travel times are computed, from straight-ray formulas; amplitudes, waveforms, reflections, and picking errors are not modeled.</li>
+      <li>The head-wave line is drawn back to x = 0 to show the intercept time. A real head wave first appears at the critical distance 2h·tan θ<sub>c</sub>, where sin θ<sub>c</sub> = V₁/V₂ (about 5.4 m at the defaults).</li>
+      <li>The depth readout inverts the same exact intercept time, so it always returns the true h; with real first-break picks, timing errors carry into the depth.</li>
+      <li>The graph spans 0–100 m of offset; a crossover beyond 100 m appears only in the readout.</li>
+    </ul>
+  </details>
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');

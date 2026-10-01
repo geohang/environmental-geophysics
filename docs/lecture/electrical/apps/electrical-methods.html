@@ -58,6 +58,21 @@
     </header>
 
     <div class="max-w-6xl mx-auto px-6 py-8 md:py-10">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>In which of the three materials will charge keep flowing for as long as the field is on, and in which will it shift and then stop?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>In 1. Electrolytic, switch on Apply Electric Field and follow one positive and one negative ion.</li>
+                    <li>Switch on the field in 2. Electronic and compare the direction and speed of the electrons with the ions.</li>
+                    <li>In 3. Dielectric, switch on the field, wait a few seconds, then switch it off.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>What property of the charges in each material decides whether they travel through it or only shift in place?</dd>
+            </dl>
+        </aside>
 
         <!-- Mechanisms Grid -->
         <div class="space-y-8">
@@ -136,7 +151,17 @@
             </section>
 
         </div>
-        
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>The applied field is uniform, points from left to right, and is simply switched on or off; its strength and frequency cannot be changed.</li>
+                <li>Speeds are illustrative and not to scale: positive and negative ions share one speed range, and electrons are drawn only 3 to 10 times faster than the ions.</li>
+                <li>Ions drift along a straight band that the grains drawn around it do not steer, so pore shape (tortuosity) and conduction along grain surfaces are not shown.</li>
+                <li>In the dielectric panel, each molecule is an electron cloud offset from a positive centre; the offset grows smoothly to a fixed maximum within about half a second and does not depend on frequency. Interfacial polarization at grain surfaces (the IP mechanism) is not animated.</li>
+            </ul>
+        </details>
+
         <footer class="mt-16 text-center text-slate-500 text-sm">
             <p>Interactive educational demonstration.</p>
         </footer>

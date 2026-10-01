@@ -19,6 +19,21 @@
   <div class="subtitle">Bury a target, pick an electrode array, and see the pseudosection it produces, a blurred and distorted image of the true ground.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>Will the Wenner pseudosection show the 10 Ω·m target as dark blue as the true model does, and will its anomaly grow or fade as the target goes deeper?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>At the defaults (Wenner, Target depth 8 m), compare the bluest readings with the target in the true model.</li>
+        <li>Drag Target depth to 16 m and watch the strength and width of the anomaly.</li>
+        <li>Return Target depth to 8 m and switch the electrode array to Dipole-dipole.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>What does each apparent-resistivity reading average over, and how does that explain what burying the target did to the anomaly?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <b>Electrode array:</b>
     <div class="seg" id="array">
@@ -35,10 +50,17 @@
       <div class="ctrl"><label>Target resistivity <span id="rv">10 Ω·m</span></label><input id="r" type="range" min="0.7" max="3.3" value="1" step="0.05"></div>
     </div>
     <div style="margin-top:8px;font-size:.85rem;color:var(--text-muted);">Background resistivity is fixed at 100 Ω·m; electrodes are every 4 m. Blue = conductive (low ρₐ), red = resistive (high ρₐ).</div>
-    <div class="note">
-      This is a first-order (linearized) teaching model. Each apparent resistivity is a sensitivity-weighted average of the true log resistivity. The weights are the sensitivity of that array over a uniform half-space, and for dipole-dipole they are negative in places. Each reading is plotted below the array midpoint at its median depth of investigation. The data are noise-free; in the field, large-n dipole-dipole readings are weak and noisy. The real inverse problem is to recover the true model from these data.
-    </div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>This is a first-order (linearized) teaching model. Each apparent resistivity is a sensitivity-weighted average of the true log resistivity. The weights are the sensitivity of that array over a uniform 100 Ω·m half-space, and for dipole-dipole they are negative in places.</li>
+      <li>The linear average is accurate only for weak contrasts; near the ends of the Target resistivity range (5.0 Ω·m and 1995 Ω·m against the 100 Ω·m background), a full nonlinear forward model would give a different pseudosection.</li>
+      <li>The target is 2-D (constant along the direction perpendicular to the line) with an elliptical cross-section 18 m wide and 12 m tall; the electrodes sit every 4 m on a flat 100 m line.</li>
+      <li>Each reading is plotted below the array midpoint at its median depth of investigation, one depth per level. The real inverse problem is to recover the true model from these data.</li>
+      <li>The data are noise-free; in the field, large-n dipole-dipole readings are weak and noisy.</li>
+    </ul>
+  </details>
 </div>
 <script>
 const RHO0=100;

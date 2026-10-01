@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Continuation Simulator</title>
+    <title>Magnetic Continuation Simulator</title>
     <style>
         :root {
             --primary: #0f172a;
@@ -162,6 +162,21 @@
     </header>
 
     <main class="app-main">
+    <aside class="try-this" aria-label="Try this">
+        <p class="try-this-title">Try this</p>
+        <dl>
+            <dt>Predict</dt>
+            <dd>With noise on, how far below ground can you continue the field before noise swamps the local target at 30 m depth: about 25 m, 10 m, or only a few meters?</dd>
+            <dt>Do</dt>
+            <dd><ol>
+                <li>Tick Add Random Noise and leave Observation Height (h) at 0 m.</li>
+                <li>Lower h one step at a time (the arrow keys move it by 1 m) until the red note about unstable continuation appears.</li>
+                <li>Untick Add Random Noise and lower h to −15 m.</li>
+            </ol></dd>
+            <dt>Explain</dt>
+            <dd>Why does random noise grow so much faster than the target's anomaly when the field is continued downward?</dd>
+        </dl>
+    </aside>
     <div class="container lab-card">
 
         <div class="canvas-wrapper lab-stage">
@@ -249,10 +264,19 @@
                 <li><strong>Ground Level (h=0):</strong> You see a small "bump" or spike riding on top of a broad hill.</li>
                 <li><strong>Upward Continuation (h > 0):</strong> As you move the sensor up (drag right), the local spike vanishes rapidly. The curve becomes smooth, representing only the Regional Trend. This is how geophysicists separate deep basement structures from surface noise.</li>
                 <li><strong>Downward Continuation (h < 0):</strong> As you move closer to the source (drag left), the local spike grows taller and sharper, separating from the background. This enhances resolution but is mathematically unstable (see what happens with noise!).</li>
-                <li><strong>How it is computed:</strong> The ground profile (with its noise, if switched on) is continued in the wavenumber domain: each wavelength component is multiplied by exp(-|k|h), where k is the wavenumber. Upward (h &gt; 0) this damps short wavelengths; downward (h &lt; 0) it amplifies them exponentially, and it only works above the shallowest source.</li>
             </ul>
         </div>
     </div>
+    <details class="model-assumptions">
+        <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+        <ul>
+            <li>Each body is a 2D source, an infinitely long horizontal cylinder perpendicular to the profile and magnetized vertically; its vertical-field anomaly, K(z² − x²)/(x² + z²)², falls off as 1/r².</li>
+            <li>The ground profile (with its noise, if switched on) is continued in the wavenumber domain: each wavelength component is multiplied by exp(-|k|h), where k is the wavenumber. Upward (h &gt; 0) this damps short wavelengths; downward (h &lt; 0) it amplifies them exponentially, and it only works above the shallowest source.</li>
+            <li>The profile is sampled every 3.5 m on a 7168 m line with tapered ends, so the FFT's wrap-around stays far outside the 900 m window on screen.</li>
+            <li>The noise is one fixed pattern of uniform random values (±12.5 relative units) added to the ground profile. The dashed components are the exact field of each body at the observation height, so they show what error-free continuation should return.</li>
+            <li>Amplitudes are in relative units, the ground is flat, and the source strengths are fixed (the regional source is 25 times stronger than the local one); only the two depths can change.</li>
+        </ul>
+    </details>
     </main>
 
 <script>

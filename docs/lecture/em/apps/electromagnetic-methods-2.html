@@ -274,9 +274,14 @@
             font-style: italic;
             line-height: 1.4;
         }
+
+        /* Try this and Model assumptions take the widened 1400px container and its 20px spacing */
+        .lab-page .try-this-wrap { max-width: calc(1400px + 3rem); margin-top: 20px; }
+        .lab-page .try-this-wrap .try-this { margin-bottom: 0; }
         @media (max-width: 760px) {
             .lab-hero .lab-hero-inner { align-items: flex-start; padding: 0 16px; }
             .lab-hero .lab-title { font-size: 1.4rem; }
+            .lab-page .try-this-wrap { margin-top: 16px; padding: 0 16px; }
             .main-container { flex-direction: column; height: auto; min-height: 0; margin-top: 16px; padding: 0 16px; }
             .animation-panel, .sidebar { width: 100%; flex: none; }
             .stepper { overflow-x: auto; }
@@ -298,9 +303,27 @@
     <header class="lab-hero">
         <div class="lab-hero-inner">
             <i class="fa-solid fa-wave-square lab-icon" aria-hidden="true"></i>
-            <h1 class="lab-title">CW vs TEM Waveforms</h1>
+            <h1 class="lab-title">CW vs. TEM Waveforms</h1>
         </div>
     </header>
+
+    <div class="try-this-wrap">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>After the transmitter switches off, will the TEM receiver voltage from a more conductive target die away faster or slower?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Press Next Step until 2. RX Signal, where the TEM Physics Control becomes active.</li>
+                    <li>Drag Conductivity (σ) from Low to High and watch the RX decay curve.</li>
+                    <li>Press Next Step to reach 3. Labels and compare the curve at Early Time and Late Time.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why do eddy currents in a more conductive target take longer to die out after the transmitter current stops?</dd>
+            </dl>
+        </aside>
+    </div>
 
     <div class="main-container">
         
@@ -325,6 +348,9 @@
                         </marker>
                         <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
                             <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626" />
+                        </marker>
+                        <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#0891b2" />
                         </marker>
                     </defs>
 
@@ -459,7 +485,7 @@
             <!-- Physics Parameter Panel (TEM Only) -->
             <div class="panel lab-card" id="physics-panel" style="opacity: 0.5; pointer-events: none; transition: opacity 0.5s;">
                 <h3><i class="fa-solid fa-sliders"></i> TEM Physics Control</h3>
-                <p style="font-size:14px; color:#475569; margin-bottom:15px;">Adjust the target's conductivity to see how the TEM decay curve changes. The exponential decay shown here is for a single isolated conductor (time constant &tau; = L/R); over a layered earth the late-time voltage instead falls off as a power law, roughly <span style="white-space:nowrap">t<sup>-5/2</sup></span>.</p>
+                <p style="font-size:14px; color:#475569; margin-bottom:15px;">Adjust the target's conductivity to see how the TEM decay curve changes.</p>
                 
                 <div class="slider-container">
                     <div class="slider-label">
@@ -473,6 +499,18 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="try-this-wrap">
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>The TEM RX curve is a single exponential, the decay for a single isolated conductor (time constant &tau; = L/R); over a layered earth the late-time voltage instead falls off as a power law, roughly <span style="white-space:nowrap">t<sup>-5/2</sup></span>.</li>
+                <li>Conductivity (σ) has no units: the slider (1 to 100) lowers the decay rate of that exponential linearly, so the decay at 100 is 12 times slower than at 1.</li>
+                <li>The TEM transmitter current is an ideal rectangular pulse with an instant turn-off, and the decay has no noise floor.</li>
+                <li>The CW receiver wave has a fixed phase lag (1.2 rad, about 69°) and 60% of the transmitter amplitude, independent of the ground; the time axes carry no scale, and f = 10 kHz is an example label.</li>
+            </ul>
+        </details>
     </div>
 
     <script>

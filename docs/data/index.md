@@ -29,7 +29,7 @@ The files below are clean synthetic examples that match the activities and noteb
 | Magnetics | Base-station time series | [`base_station.csv`](magnetic/base_station.csv) | [Classroom Labs · Magnetics](../apps/classroom-labs.html#magnetic) |
 | Magnetics | Raw concealed-dyke profile | [`raw_dyke_profile.csv`](magnetic/raw_dyke_profile.csv) | [Classroom Labs · Magnetics](../apps/classroom-labs.html#magnetic) |
 | Magnetics | Buried-vessel two-sensor difference profile (nT) | [`gradiometer_profile.csv`](magnetic/gradiometer_profile.csv) | [Classroom Labs · Magnetics](../apps/classroom-labs.html#magnetic) |
-| Seismic | First-break travel times | [`first_breaks.csv`](seismic/first_breaks.csv) | [Seismic Refraction Lab](../lecture/seismic/apps/seismic-refraction.html) |
+| Seismic | First-break travel times | [`first_breaks.csv`](seismic/first_breaks.csv) | [Seismic Refraction Simulator](../lecture/seismic/apps/seismic-refraction.html) |
 | Seismic | Three-layer first arrivals | [`three_layer_first_arrivals.csv`](seismic/three_layer_first_arrivals.csv) | [Classroom Labs · Seismic](../apps/classroom-labs.html#seismic) |
 | Electrical | VES Schlumberger sounding | [`ves_sounding.csv`](electrical/ves_sounding.csv) | [3-Layer VES Forward Modeling](../lecture/electrical/apps/ert-2.html) |
 

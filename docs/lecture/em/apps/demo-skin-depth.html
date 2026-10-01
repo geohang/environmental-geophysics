@@ -26,6 +26,21 @@
   <div class="subtitle">How deep does an EM field reach? Skin depth sets the answer, and it depends on frequency and ground conductivity.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>If you lower the frequency 100 times, does the field reach 100 times deeper, 10 times deeper, or 2 times deeper?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>Start at the default f = 1 kHz and ρ = 100 Ω·m, and note the skin depth.</li>
+        <li>Drag f down to 10 Hz and note the skin depth again.</li>
+        <li>Return f to 1 kHz and raise ρ to 10000 Ω·m.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>Why do a 100-fold drop in f and a 100-fold rise in ρ change δ by the same factor?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <div class="controls cols-2">
       <div class="ctrl"><label>Frequency $f$ <span id="fv">1 kHz</span></label><input id="f" type="range" min="0" max="6" value="3" step="0.05"></div>
@@ -40,6 +55,15 @@
       Small-coil instruments such as the EM31 and EM38, the most common EM tools in environmental work, operate at a low induction number: their skin depth is much larger than the coil spacing, so their depth of investigation is set by the coil spacing and orientation, not by the skin depth.
     </div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>A plane wave enters a uniform half-space with a single resistivity; there are no layers.</li>
+      <li>Displacement currents are ignored. This holds while σ ≫ ωε, and it fails at the top of the frequency range over resistive ground (for example 1 MHz over 10000 Ω·m), where the field propagates as a radar wave instead of diffusing.</li>
+      <li>The ground is non-magnetic (μ = μ₀).</li>
+      <li>Only the amplitude decay is drawn; the phase, which lags by one radian per skin depth, is not shown.</li>
+    </ul>
+  </details>
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');

@@ -44,12 +44,28 @@
 
 <header class="lab-hero">
     <div class="lab-hero-inner is-5xl">
-        <h1 class="lab-title"><span class="lab-title-accent">Geophysics</span> Simulator: Spacing & Noise</h1>
+        <h1 class="lab-title"><span class="lab-title-accent">Survey Spacing</span> & Noise Simulator</h1>
         <p class="lab-subtitle">Scenario: 5m Wide Tank at 0m | Power Line at +20m</p>
     </div>
 </header>
 
 <div class="container">
+    <aside class="try-this" aria-label="Try this">
+        <p class="try-this-title">Try this</p>
+        <dl>
+            <dt>Predict</dt>
+            <dd>When you switch on Power Line Interference, which of the four profiles will change, and which will look exactly as before?</dd>
+            <dt>Do</dt>
+            <dd><ol>
+                <li>Set Random Noise to None so that any change is easy to see.</li>
+                <li>Drag Power Line Interference to its maximum (the chip reads Active) and compare all four profiles.</li>
+                <li>For each profile that changed, note whether the change is largest over the tank at 0 m or near the line at +20 m.</li>
+            </ol></dd>
+            <dt>Explain</dt>
+            <dd>What fields does a live power line produce, and which of these four instruments senses those fields directly?</dd>
+        </dl>
+    </aside>
+
     <div class="lesson lab-note">
         <strong class="lab-note-title">The Spacing Lesson:</strong> The target is <strong>5m wide</strong>. If your spacing is > 2.5m, you risk "Aliasing" (misrepresenting the shape). If spacing is <strong>10m</strong>, you might miss it entirely! Slide the Grid Offset to see how the position of the samples decides whether one lands on the tank.
     </div>
@@ -101,6 +117,16 @@
             <canvas id="chartSeis"></canvas>
         </div>
     </div>
+
+    <details class="model-assumptions">
+        <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+        <ul>
+            <li>Each profile is a fixed analytic curve centred on the tank at 0 m: a Gaussian low for gravity and for seismic velocity, a Gaussian high for conductivity, and an antisymmetric low-high pair for magnetics. Amplitudes are in relative units, so the vertical axes are hidden.</li>
+            <li>The tank's depth, size, and physical properties are fixed; only the sampling grid, the noise, and the interference change.</li>
+            <li>Random noise is uniform, independent at each sample, and redrawn every time a control moves.</li>
+            <li>Power-line interference is a proxy: depending on the profile, a term that grows toward the line at +20 m, a spatial ripple, or extra noise. It is not computed from a line current or frequency.</li>
+        </ul>
+    </details>
 </div>
 
 <script>

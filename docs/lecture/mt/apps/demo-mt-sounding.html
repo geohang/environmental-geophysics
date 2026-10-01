@@ -21,6 +21,21 @@
   <div class="subtitle">A three-layer earth. See how the apparent-resistivity and phase curves respond as you change each layer, and how longer periods sense deeper.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>Over a uniform 100 Ω·m earth, will the phase sit above, below, or at 45°, and will ρₐ change with period?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>Set ρ₁, ρ₂ (middle), and ρ₃ (basement) all to 100 Ω·m and read both curves.</li>
+        <li>Lower ρ₂ (middle) to 10 Ω·m and note the period of the ρₐ minimum and where the phase rises above 45°.</li>
+        <li>Raise thickness h₁ to 1.00 km and watch where the ρₐ minimum moves.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>Why does burying the conductive layer deeper move its signature to longer periods?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <canvas id="cv" width="1040" height="440"></canvas>
   </div>
@@ -42,6 +57,14 @@
       The static-shift factor represents galvanic distortion at one site: it multiplies the plotted $\rho_a$ data but leaves phase unchanged. It is a data artifact, not a property of the layered model.
     </div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>The earth is 1D: two flat, uniform, isotropic layers over a basement half-space, under a vertically incident plane-wave source.</li>
+      <li>The ground is non-magnetic (μ = μ₀) and displacement currents are ignored; this quasi-static approximation holds for every period (10⁻³ to 10³ s) and resistivity the sliders reach.</li>
+      <li>The curves are noise-free and continuous, with no error bars, and one impedance serves every field polarization, so 2D and 3D effects and anisotropy cannot appear.</li>
+    </ul>
+  </details>
 </div>
 <script>
 // minimal complex arithmetic

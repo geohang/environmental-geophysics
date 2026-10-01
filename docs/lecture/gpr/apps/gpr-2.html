@@ -44,6 +44,21 @@
     </header>
 
     <main class="max-w-6xl mx-auto px-6 py-6">
+    <aside class="try-this" aria-label="Try this">
+        <p class="try-this-title">Try this</p>
+        <dl>
+            <dt>Predict</dt>
+            <dd>When you switch from Dry Sand to Wet Soil, will the same three pipes appear earlier or later on the radargram, and by about what factor?</dd>
+            <dt>Do</dt>
+            <dd><ol>
+                <li>Press Scan in Dry Sand and read each hyperbola's apex time against the ns grid lines.</li>
+                <li>Work through Class Activity steps 2 and 3, rescanning in Wet Soil and then in Wet Clay.</li>
+                <li>Compare Velocity (v) and Attenuation (α) under Real-Time Data for the three soils.</li>
+            </ol></dd>
+            <dt>Explain</dt>
+            <dd>Why does Wet Soil delay the reflections, while Wet Clay, with the same εᵣ = 25, makes them vanish?</dd>
+        </dl>
+    </aside>
     <div class="w-full flex flex-col md:flex-row gap-6 items-start">
 
         <!-- Left Panel: Controls & Instructions -->
@@ -128,7 +143,7 @@
                 <p class="mb-2">1. Note the shape of the hyperbola.</p>
                 <p class="mb-2">2. Change the soil to <strong>Wet Soil</strong>. Run the scan again. Why is the hyperbola steeper and deeper?</p>
                 <p><em>(Hint: Look at the velocity and TWT!)</em></p>
-                <p class="mt-2">3. Now try <strong>Wet Clay</strong>. Why do the deeper targets disappear?</p>
+                <p class="mt-2">3. Now try <strong>Wet Clay</strong>. Why do the reflections fade or disappear, even though the velocity is the same as in Wet Soil?</p>
             </div>
         </div>
 
@@ -156,6 +171,15 @@
 
         </div>
     </div>
+    <details class="model-assumptions">
+        <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+        <ul>
+            <li>Each pipe is a point diffractor in a uniform half-space, and the antenna is one zero-offset point on the surface: two-way time is t = 2d/v over the straight-ray distance d, with v = 0.3/√εᵣ.</li>
+            <li>Amplitude combines two-way absorption at the low-loss attenuation α ≈ 1636σ/√εᵣ, a 1/d spreading term, and an antenna footprint that falls linearly to zero 3 m to either side.</li>
+            <li>Each soil has fixed, frequency-independent εᵣ and σ (representative values after Davis and Annan, 1989), and the model has no antenna frequency, so resolution and the wavelet do not change.</li>
+            <li>There is no direct air or ground wave, noise, time-zero offset, layering, or refraction; targets do not shadow one another, and each reflection is drawn as a dot with one ringing dot below it.</li>
+        </ul>
+    </details>
     </main>
 
     <script>

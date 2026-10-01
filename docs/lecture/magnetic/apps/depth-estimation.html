@@ -39,6 +39,21 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto p-6 space-y-12">
 
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>If the source depth doubles from 5 m to 10 m, will the width of the anomaly at half its peak value double, quadruple, or stay the same?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>At the default Current Depth of 5.0 m, read where the red dashed Half-Max Width line starts and ends on the Distance x (m) axis.</li>
+                    <li>Drag Adjust Source Depth (z) to 10.0 m, then to 20.0 m, and read the line's ends each time.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why does moving the same source deeper change the width of its anomaly in the way you measured?</dd>
+            </dl>
+        </aside>
+
         <!-- Method 1: Simple Depth Rules -->
         <section id="method1" class="lab-card card p-5 md:p-8">
             <div class="flex flex-wrap justify-between items-start gap-3 mb-6">
@@ -156,6 +171,16 @@
             </div>
         </section>
 
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>Sections 1 and 2 draw the same bell-shaped curve, proportional to 1/(x² + z²): the anomaly of a thin vertical dike, magnetized vertically, whose top is at depth z. For this curve the half-width at half maximum equals z, and the Peters half-slope distance d is about 1.2z.</li>
+                <li>All curves are in relative units with no noise or regional field. Section 1 rescales every curve to a peak of 100, so it shows the widening with depth but not the drop in amplitude.</li>
+                <li>Section 2 draws one fixed curve without a distance scale, so it shows the construction only.</li>
+                <li>Section 3 uses one induced point dipole (a sphere) on a south–north profile. The reduced-to-pole curve is that body's anomaly computed directly at I = 90°, an ideal RTP result without the instability or remanence errors a real filter can have.</li>
+            </ul>
+        </details>
+
     </main>
 
     <footer class="bg-white border-t border-slate-200 text-slate-600 text-sm text-center p-6 mt-12">
@@ -221,7 +246,7 @@
                 maintainAspectRatio: false,
                 scales: {
                     y: { beginAtZero: true, max: 110, display: false },
-                    x: { display: true, title: {display: true, text: 'Distance (x)', color: '#334155'}, ticks: { color: '#64748b' }, grid: { borderColor: '#cbd5e1' } }
+                    x: { display: true, title: {display: true, text: 'Distance x (m)', color: '#334155'}, ticks: { color: '#64748b' }, grid: { borderColor: '#cbd5e1' } }
                 },
                 plugins: {
                     annotation: { annotations: {} }

@@ -43,6 +43,21 @@
 
     <main class="flex-grow max-w-6xl mx-auto px-6 py-8 w-full flex flex-col justify-center">
 
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>If you double Young's modulus from 50 GPa to 100 GPa and keep &nu; fixed, will V<sub>p</sub> double, rise by about 40%, or stay the same?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Set Applied Force to 50 MPa and note the Normal Strain and V<sub>p</sub>.</li>
+                    <li>Raise Young's modulus E to 100 GPa and read both values again.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why does a stiffer rock of the same density carry faster seismic waves?</dd>
+            </dl>
+        </aside>
+
         <!-- Interactive Lab Section -->
         <section class="lab-card overflow-hidden">
             <div class="bg-slate-50 border-b border-slate-200 px-6 py-3 flex flex-wrap justify-between items-center gap-3">
@@ -50,7 +65,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lab-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                     </svg>
-                    Virtual Rock Lab
+                    Virtual Rock Sample
                 </h3>
                 
                 <!-- Mode Switcher -->
@@ -167,7 +182,6 @@
                                 <input type="range" min="0.05" max="0.45" value="0.25" step="0.01" id="nu-slider" class="lab-range w-full">
                                 <div class="text-xs text-slate-500 mt-1">&nu; sets how much the block narrows as it lengthens: width strain = &minus;&nu; &times; height strain.</div>
                             </div>
-                            <div class="text-xs text-slate-600">Defaults (E = 50 GPa, &nu; = 0.25) are granite-like illustrative values. Density is fixed at &rho; = 2650 kg/m³.</div>
                         </div>
                     </div>
                 </div>
@@ -219,6 +233,16 @@
                 </div>
             </div>
         </section>
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>The block is linear elastic, isotropic, and uniform: normal strain is &sigma;/E and shear strain is &tau;/G at every setting, with no yielding or fracture. Real rock is much weaker in tension than in compression, so intact granite would usually fracture before the +50 MPa end of the slider.</li>
+                <li>Defaults (E = 50 GPa, &nu; = 0.25) are granite-like illustrative values. Density is fixed at &rho; = 2650 kg/m³.</li>
+                <li>Wave speeds come from the isotropic relations shown, using the same E and &nu; that set the strain; in real rock, moduli measured from wave speeds are usually larger than those from a slow load test.</li>
+                <li>The rock has no pores, fluid, or cracks, so saturation effects on V<sub>p</sub> and V<sub>s</sub> are not represented.</li>
+            </ul>
+        </details>
 
     </main>
 

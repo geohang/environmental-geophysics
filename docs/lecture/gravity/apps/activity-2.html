@@ -74,12 +74,27 @@
 
 <header class="lab-hero">
     <div class="lab-hero-inner">
-        <h1 class="lab-title"><span class="lab-title-accent">Gravity</span> Lab: The Cross-Section Challenge</h1>
+        <h1 class="lab-title"><span class="lab-title-accent">Activity 2</span> · Cross-Section Challenge</h1>
         <p class="lab-subtitle"><strong>Mission:</strong> Process the gravity data for 4 stations to reveal the hidden geological structure.</p>
     </div>
 </header>
 
 <div class="container">
+<aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+        <dt>Predict</dt>
+        <dd>Station 4 has the lowest raw reading of the four; after the latitude and elevation corrections, will it have the lowest or the highest Bouguer anomaly?</dd>
+        <dt>Do</dt>
+        <dd><ol>
+            <li>Work through Phases 1 and 2 of the mission below, clicking each Verify button before you move on.</li>
+            <li>In Phase 3, compare Station 4's raw reading and Final BA with the other stations before you choose its geology, then click Reveal Geology.</li>
+        </ol></dd>
+        <dt>Explain</dt>
+        <dd>Why do a station's elevation and latitude change its raw reading even where the rock beneath it is the same?</dd>
+    </dl>
+</aside>
+
 <div class="card lab-card">
     <h2>Phase 1: Latitude Correction ($g_\phi$)</h2>
     <div class="formula-box lab-formula">
@@ -181,6 +196,16 @@
     <button class="btn lab-btn lab-btn-primary" onclick="checkPhase3()">Reveal Geology</button>
     <div id="final-result" class="hidden-feedback"></div>
 </div>
+
+<details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+        <li>Theoretical gravity comes from the GRS67 formula at each station's latitude, multiplied by 100,000 to give mGal.</li>
+        <li>The free-air correction uses a constant gradient of 0.3086 mGal/m, and the Bouguer correction treats the rock below each station as an infinite flat slab of density 2.67 g/cm³.</li>
+        <li>No terrain, tide, or drift correction is applied, and no regional trend is removed before interpretation.</li>
+        <li>Four isolated stations stand in for a profile, and each geology choice rests only on the sign of that station's Bouguer anomaly; no body shape or depth is modelled.</li>
+    </ul>
+</details>
 </div>
 
 <script>

@@ -125,6 +125,21 @@
     </header>
 
     <main class="app-main">
+    <aside class="try-this" aria-label="Try this">
+        <p class="try-this-title">Try this</p>
+        <dl>
+            <dt>Predict</dt>
+            <dd>If a body keeps remanent magnetization pointing opposite to today's field, will its anomaly look the same as an induced body's, shift sideways, or turn upside down?</dd>
+            <dt>Do</dt>
+            <dd><ol>
+                <li>Keep α = 60° (along the Earth field, as for induced magnetization) and drag the red body up to about half its starting depth so the curve stands out.</li>
+                <li>Set Magnetization Angle (α) to 240°, opposite to the field, and compare the curve.</li>
+                <li>Try α = 150°, a direction neither along nor against the field.</li>
+            </ol></dd>
+            <dt>Explain</dt>
+            <dd>Why does the anomaly change when only the body's magnetization direction changes and the Earth field stays the same?</dd>
+        </dl>
+    </aside>
     <div class="container lab-card">
 
         <!-- Viewport for Physical Model & Graph -->
@@ -162,6 +177,16 @@
             <strong>How to use:</strong> Click and drag the red rectangle (the magnetic body) inside the view area to move it underground. Observe how the magnetic field lines distort and how the anomaly curve graph (top/middle) changes shape and amplitude.
         </div>
     </div>
+    <details class="model-assumptions">
+        <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+        <ul>
+            <li>The body is drawn as a rectangle, but its field is that of one point dipole at the rectangle's center, B = (3(m·r)r − m r²)/r⁵, computed along the profile directly above it.</li>
+            <li>ΔT is that field projected onto the Earth-field direction set by I, the usual total-field approximation when the anomaly is much smaller than the Earth field.</li>
+            <li>The magnetization direction α and moment M are set by hand; there is no susceptibility, so the model does not split the magnetization into induced and remanent parts (α = I behaves like induced magnetization).</li>
+            <li>Distances are screen pixels and ΔT is in relative units. The vertical scale stays at ±200 until the peak passes about 167, then grows with the peak, so read the axis label as well as the curve height.</li>
+            <li>The blue field lines trace the body's dipole field alone, without the Earth field.</li>
+        </ul>
+    </details>
     </main>
 
 <script>

@@ -39,12 +39,28 @@
     <!-- Header Section -->
     <header class="lab-hero">
         <div class="lab-hero-inner">
-            <h1 class="lab-title"><span class="lab-title-accent">Cole-Cole</span> Model: 4 Numbers Tell the Whole Story</h1>
+            <h1 class="lab-title"><span class="lab-title-accent">IP</span> · Cole-Cole Model</h1>
             <p class="lab-subtitle">Instead of reporting 100 frequencies, we summarize the spectrum with 4 fitted parameters:</p>
         </div>
     </header>
 
     <div class="max-w-6xl w-full mx-auto p-6 pb-12">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>If you make τ ten times longer, will the phase peak move to a higher or a lower frequency, and by about 2, 10, or 100 times?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Read the Phase peak label at the default τ = 0.10 s.</li>
+                    <li>Drag τ (time constant) to 1.0 s and read the label again.</li>
+                    <li>Drag c (shape factor) from 0.50 down to 0.20 and watch the height and width of the peak.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>What physical process does τ describe, and why does changing it move the peak along the frequency axis the way you saw?</dd>
+            </dl>
+        </aside>
+
         <!-- Main Content Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
@@ -146,6 +162,15 @@
 
             </div>
         </div>
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>The spectrum is the Pelton Cole-Cole model with one relaxation (a single τ and c), evaluated from 10⁻³ Hz to 10⁴ Hz; rocks with several populations of polarizable grains can show more than one relaxation peak.</li>
+                <li>The curve is the intrinsic complex resistivity of one uniform sample: there is no survey geometry, no noise, and no electromagnetic coupling (which in field data distorts the phase toward the high-frequency end of this range).</li>
+                <li>The Simulated Rock Fabric is illustrative: the mean grain radius is set linearly from log τ and the spread of sizes from 1 − c; it is not computed from a grain-size model.</li>
+            </ul>
+        </details>
     </div>
 
     <script>

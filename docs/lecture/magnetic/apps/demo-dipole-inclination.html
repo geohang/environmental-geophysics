@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dipole Anomaly vs. Inclination</title>
+<title>Dipole Anomaly vs. Magnetic Inclination</title>
 <link rel="stylesheet" href="../../../assets/stylesheets/demo.css">
 <script src="../../../assets/javascripts/demo-theme.js"></script>
 <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]}};</script>
@@ -21,6 +21,21 @@
   <div class="subtitle">The same buried body makes a different anomaly depending on where you are on Earth. Move it from the equator to the pole.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>If the same buried body moves from the magnetic pole to the equator, will the anomaly high drift north or south, and what will sit over the body there?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>Click Magnetic pole (I = 90°) and note where the high sits relative to the red body.</li>
+        <li>Click Iowa (I ≈ 70°), then Mid-latitude (I = 45°), and watch both the high and the low.</li>
+        <li>Finish with Magnetic equator (I = 0°).</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>Why does the anomaly pattern move when only the direction of the Earth field changes and the body stays in place?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <canvas id="cv" width="1040" height="440"></canvas>
   </div>
@@ -39,6 +54,15 @@
       Total-field anomaly of a buried dipole magnetized by the ambient field. Near the magnetic equator (I ≈ 0°) the anomaly is a symmetric low with weak positive side lobes. At mid-latitudes it becomes a positive–negative pair with the low on the poleward (N) side. Toward the pole it becomes a single symmetric high centered on the body.
     </div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>The body is a point dipole (a small sphere) whose magnetization is induced by, and parallel to, the Earth field; remanent magnetization is not included.</li>
+      <li>The profile is one line along magnetic north (S to N) passing over the body, for northern-hemisphere inclinations from 0° to 90°; declination is not modeled.</li>
+      <li>ΔT is the dipole field projected onto the Earth-field direction, the usual total-field approximation when the anomaly is much smaller than the Earth field.</li>
+      <li>Each curve is scaled to its own largest value (relative units), so a deeper dipole widens the anomaly on screen without showing its amplitude falling as 1/z³.</li>
+    </ul>
+  </details>
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');

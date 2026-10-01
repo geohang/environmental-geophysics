@@ -59,7 +59,9 @@
             flex-direction: column;
             border-right: 1px solid var(--lab-border);
             z-index: 10;
+            overflow-y: auto; /* room for the opened Model assumptions box */
         }
+        .sidebar > * { flex-shrink: 0; } /* an opened Model assumptions box scrolls the sidebar instead of squeezing the tool buttons */
 
         /* Tool buttons use .lab-tab; switchScene() toggles .is-active together with .active. */
         .sidebar .nav-btn {
@@ -331,6 +333,7 @@
                 border-bottom: 1px solid var(--lab-border);
             }
             .sidebar .nav-btn { flex: 1 1 145px; margin: 0; padding: 9px 10px; border-color: var(--lab-border); }
+            .sidebar .model-assumptions { flex: 1 1 100%; margin-top: .5rem; }
             .main-content {
                 grid-column: 1;
                 grid-row: 4;
@@ -361,7 +364,7 @@
 
     <header class="lab-hero bh-hero">
         <div class="lab-hero-inner is-full">
-            <h1 class="lab-title"><span class="lab-title-accent">Borehole</span> Geophysics</h1>
+            <h1 class="lab-title"><span class="lab-title-accent">Borehole</span> Logging Dashboard</h1>
             <p class="lab-subtitle">Principle & Data Viewer</p>
         </div>
     </header>
@@ -375,12 +378,35 @@
         <button class="nav-btn lab-tab" onclick="switchScene('nmr')"><i class="fa-solid fa-circle-nodes"></i> 5. NMR Logging</button>
         <button class="nav-btn lab-tab" onclick="switchScene('lif')"><i class="fa-solid fa-lightbulb"></i> 6. LIF (Fluorescence)</button>
         <button class="nav-btn lab-tab" onclick="switchScene('hpfm')"><i class="fa-solid fa-temperature-arrow-up"></i> 7. Heat Pulse Flowmeter</button>
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>Borehole diameter, fluid or mud properties, casing, invasion, tool centralization, and vertical resolution can alter every response shown here; none of them is modelled. Logs require calibration and should be interpreted jointly rather than as direct formation-property measurements.</li>
+                <li>Each example log is a fixed schematic curve with sharp steps at the layer contacts: gamma switches between one sand value and one clay value plus uniform random scatter, and the conductivity and neutron logs show a fixed peak or drop in the target zone.</li>
+                <li>The NMR panels use 12 spins whose phase spread makes the net signal decay as exp(−t/T₂), with schematic T₂ values in animation seconds (2.5 s for large pores, 0.5 s for small pores).</li>
+                <li>The televiewer image is one sinusoid for a single planar fracture, and the heat pulse rises at a fixed speed; neither the fracture dip nor the flow rate can be changed.</li>
+            </ul>
+        </details>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="science-caveat"><strong>Interpretation note:</strong> Borehole diameter, fluid or mud properties, casing, invasion, tool centralization, and vertical resolution can alter every response shown here. Logs require calibration and should be interpreted jointly rather than as direct formation-property measurements.</div>
-        
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>When the tool passes from clean sand into the clay / shale, will the gamma reading rise by about 10, 50, or 100 API?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>On the Natural Gamma tab, click Start Logging and watch the GR Log build as the tool descends.</li>
+                    <li>Read the sand and clay values on the Gamma API (0 - 150) axis, where each grid cell spans 30 API.</li>
+                    <li>Click Reset, log again, and check whether the jagged detail repeats.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why is the gamma reading jagged even inside one uniform layer, and what would logging more slowly do to that scatter?</dd>
+            </dl>
+        </aside>
+
         <!-- SCENE 1: Natural Gamma -->
         <div id="scene-gamma" class="scene-container active">
             <div class="scene-header">
@@ -455,7 +481,7 @@
             </div>
             <div class="controls-area">
                 <button class="control-btn lab-btn lab-btn-primary" onclick="pulseEM()"><i class="fa-solid fa-wifi"></i> Trigger EM Pulse</button>
-                <button class="control-btn secondary lab-btn" onclick="drawEMGraph()"><i class="fa-solid fa-chart-line"></i> Show Full Log</button>
+                <button class="control-btn secondary lab-btn" onclick="drawEMGraph(true)"><i class="fa-solid fa-chart-line"></i> Show Full Log</button>
             </div>
         </div>
 
@@ -494,7 +520,7 @@
             </div>
             <div class="controls-area">
                 <button class="control-btn accent lab-btn lab-btn-primary" onclick="emitNeutrons()"><i class="fa-solid fa-burst"></i> Emit Neutrons</button>
-                <button class="control-btn secondary lab-btn" onclick="drawNeutronGraph()"><i class="fa-solid fa-chart-line"></i> Show Log Comparison</button>
+                <button class="control-btn secondary lab-btn" onclick="drawNeutronGraph(true)"><i class="fa-solid fa-chart-line"></i> Show Log Comparison</button>
             </div>
         </div>
 

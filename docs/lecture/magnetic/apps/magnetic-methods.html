@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoMag Lab: Rock Magnetism</title>
+    <title>GeoMag · Rock Magnetism</title>
     <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <link rel="stylesheet" href="../../../assets/vendor/fontawesome/css/all.min.css">
     <style>
@@ -57,7 +57,7 @@
     <!-- Header (Compacted) -->
     <header class="lab-appbar bg-white border-b border-slate-200 px-3 md:px-4 flex justify-between items-center z-30 shrink-0 h-14">
         <div class="flex items-center min-w-0">
-            <h1 class="lab-title whitespace-nowrap mr-3"><i class="fa-solid fa-magnet lab-icon mr-2"></i><span class="lab-title-accent">GeoMag</span> Lab</h1>
+            <h1 class="lab-title truncate mr-3"><i class="fa-solid fa-magnet lab-icon mr-2"></i><span class="lab-title-accent">GeoMag</span> · Rock Magnetism</h1>
             <div class="hidden md:block text-[11px] leading-tight text-slate-500 border-l border-slate-200 pl-3">
                 Interactive Vector Analysis<br>Classroom Edition
             </div>
@@ -71,6 +71,25 @@
             </button>
         </div>
     </header>
+
+    <!-- Full width, like the app bar above and the dashboard below -->
+    <div class="try-this-wrap" style="max-width: none; width: 100%;">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>With remanence and induced magnetization equal in size (Q = 1), will turning the Remanence Angle to 180° make Total (J<sub>tot</sub>) double, drop to zero, or stay near 924 nT?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Note Total (J<sub>tot</sub>) at the default Remanence Angle of 45°.</li>
+                    <li>Drag Remanence Angle to 0°, then to 180°, and read Total each time.</li>
+                    <li>Then click Start Activity in the Activity Log (Notebook on small screens) and complete the five tasks.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why can a rock rich in magnetic minerals have almost no net magnetization, and so almost no anomaly?</dd>
+            </dl>
+        </aside>
+    </div>
 
     <!-- Main Content -->
     <main class="flex-grow flex flex-col md:flex-row h-full overflow-hidden relative">
@@ -132,6 +151,17 @@
                     </div>
                     <input type="range" id="angle-slider" min="0" max="360" step="1" value="45" class="lab-range">
                 </div>
+
+                <details class="model-assumptions">
+                    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+                    <ul>
+                        <li>The diagram is one plane in which the Earth field points up the screen (north). Induced magnetization J<sub>i</sub> = k × F lies along it, and the Remanence Angle is measured clockwise from it.</li>
+                        <li>Magnetizations are given in nT (the field each is equivalent to). J<sub>tot</sub> is the vector sum J<sub>i</sub> + J<sub>r</sub>, and Q = J<sub>r</sub>/J<sub>i</sub> compares magnitudes only, whatever the angle.</li>
+                        <li>Susceptibility is one isotropic constant with no self-demagnetization, which starts to matter near the top of the k range (about 0.1 SI and above).</li>
+                        <li>The app stops at the rock's magnetization: there is no body shape, depth, or anomaly profile.</li>
+                        <li>Rock presets are single illustrative values of k, J<sub>r</sub>, and angle, with F reset to 50,000 nT; real rock types span wide ranges.</li>
+                    </ul>
+                </details>
             </div>
         </aside>
 
@@ -176,7 +206,7 @@
             </div>
         </div>
 
-        <!-- Right Panel: Lab Notebook (Floating/Sidebar) -->
+        <!-- Right Panel: Activity Log (Floating/Sidebar) -->
         <aside id="lab-notebook" class="w-full md:w-80 bg-white border-l border-slate-200 flex flex-col z-40 shadow-xl transition-transform duration-300 absolute top-0 bottom-0 right-0 transform translate-x-full md:relative md:translate-x-0 h-full">
             <div class="p-3 bg-slate-50 text-slate-700 border-b border-slate-200 flex justify-between items-center shrink-0 h-14">
                 <h2 class="font-bold uppercase text-xs tracking-wider flex items-center"><i class="fa-solid fa-clipboard-list lab-icon mr-2"></i>Activity Log</h2>
@@ -201,7 +231,7 @@
                     </div>
                     <h3 class="text-base font-bold text-slate-800 mb-1">Student Activity</h3>
                     <p class="text-slate-500 text-xs mb-4">Complete 5 tasks to master the concepts.</p>
-                    <button onclick="startQuiz()" class="lab-btn lab-btn-primary w-full uppercase tracking-wide">Start Lab</button>
+                    <button onclick="startQuiz()" class="lab-btn lab-btn-primary w-full uppercase tracking-wide">Start Activity</button>
                 </div>
 
                 <!-- Questions List (Hidden Initially) -->
@@ -328,7 +358,8 @@
 
             let qText = "", qColor = "";
             if(state.Q < 0.2) { qText = "Induction Dominant"; qColor = "text-blue-600"; }
-            else if(state.Q < 1.0) { qText = "Mixed"; qColor = "text-slate-600"; }
+            else if(state.Q < 0.95) { qText = "Mixed"; qColor = "text-slate-600"; }
+            else if(state.Q <= 1.05) { qText = "Balanced (Q ≈ 1)"; qColor = "text-slate-600"; }
             else if(state.Q < 10) { qText = "Remanence Dominant"; qColor = "text-amber-700"; }
             else { qText = "Extreme Remanence"; qColor = "text-red-600"; }
             els.qInterp.className = `text-[10px] font-bold truncate ${qColor}`;
@@ -451,7 +482,7 @@
             {
                 id: 4,
                 title: "Simulating Reversals",
-                text: "During a reversal, rocks keep their old direction.<br><br><b>Task:</b> Make the <b>Total Field (Red)</b> point DOWN (South).",
+                text: "During a reversal, rocks keep their old direction.<br><br><b>Task:</b> Make the <b>Total Magnetization (Red)</b> point DOWN (South).",
                 type: 'state',
                 check: () => Math.abs(state.JtotAngle) > 100,
                 success: "Excellent! Remanence overwhelmed Induction.",
@@ -463,7 +494,7 @@
                 text: "Simulate a <b>Magnetite Ore Body</b>.<br>Req: <span class='math-var'>k</span> > 0.1 and <span class='math-var'>J<sub>r</sub></span> > 3000.",
                 type: 'state',
                 check: () => state.k > 0.1 && state.Jr > 3000,
-                success: "Perfect. Look at that massive Total Field!",
+                success: "Perfect. Look at that massive Total Magnetization!",
                 fail: "Push k and Jr higher!"
             }
         ];

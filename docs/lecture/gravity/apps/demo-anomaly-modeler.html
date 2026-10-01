@@ -21,6 +21,21 @@
   <div class="subtitle">Set a target's depth, size, and density contrast, then read its gravity signature at the surface.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>If you bury the sphere twice as deep, will its peak anomaly halve, fall to a quarter, or fall to an eighth, and what will its half-width do?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>With the default Sphere at z = 30 m, note Peak anomaly and Half-width in the readouts.</li>
+        <li>Drag Depth to center z to 60 m and read both numbers again; the plot rescales, so trust the readouts.</li>
+        <li>Switch Source shape to Horizontal cylinder and repeat both steps.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>Using the formula below the readouts, why do the peak and the half-width scale with depth the way they do for each shape?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <canvas id="cv" width="1040" height="480"></canvas>
   </div>
@@ -45,6 +60,15 @@
     </div>
     <div class="formula" id="fbox"></div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>The sphere acts as a point mass at its centre and the horizontal cylinder as an infinitely long line mass crossed at right angles by the profile; both sit in a uniform background, so only the density contrast Δρ matters.</li>
+      <li>The surface is flat and the profile (−150 to 150 m) is noise-free, with no regional field or terrain.</li>
+      <li>The formulas hold only while the body lies wholly below the surface (R &lt; z). The sliders also allow R ≥ z (for example R = 40 m at z = 5 m), where the drawn body breaks the surface and the curve is no longer valid.</li>
+      <li>The half-width is read from the computed curve at 0.75 m spacing and is left blank when the curve does not fall to half its peak inside the profile; the depth estimate then uses z ≈ x½/0.766 (sphere) or z ≈ x½ (cylinder).</li>
+    </ul>
+  </details>
 </div>
 <script>
 const G=6.674e-11, cv=document.getElementById('cv'), ctx=cv.getContext('2d');

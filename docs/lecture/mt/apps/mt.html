@@ -37,6 +37,10 @@
             padding: 24px 1.5rem 40px;
         }
 
+        /* Try this and Model assumptions span both dashboard columns; the grid gap spaces them. */
+        .dashboard > .try-this,
+        .dashboard > .model-assumptions { grid-column: 1 / -1; margin: 0; }
+
         /* --- SIDEBAR --- */
         .sidebar {
             display: flex;
@@ -242,6 +246,21 @@
     </header>
 
     <div class="dashboard">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>With a 5 Ω·m layer at 5 to 15 km depth in the MT model, will ρa come closest to 5 Ω·m at the shortest period, a middle one, or the longest?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Click MT (Deep Crust) and read the T, ρa, and phase line at the bottom of the inset as T steps from 0.1 s to 1000 s.</li>
+                    <li>Press the pause button beside Playing at each period to note ρa, phase, and the skin depth δ.</li>
+                    <li>Compare each δ with the 5 to 15 km depth of the conductive layer.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why does ρa rise again at 1000 s, even though the conductive layer is still there?</dd>
+            </dl>
+        </aside>
         <!-- Sidebar -->
         <div class="sidebar">
 
@@ -300,6 +319,16 @@
                 </div>
             </div>
         </div>
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>Only the MT view computes a response: the 1D impedance recursion for a fixed earth (100 Ω·m, a 5 Ω·m layer from 5 to 15 km, and a 1000 Ω·m basement) at five periods from 0.1 s to 1000 s; the model cannot be edited.</li>
+                <li>The MT skin depth is δ ≈ 503√(ρa·T), using ρa at that period, and the wave lines fade as exp(−z/δ); the E and H traces have normalized amplitudes, with H lagging E by the model phase.</li>
+                <li>The GMS, CSEM, and TEM views are schematic animations: their inset graphs (the Bz trace, the magnitude-versus-offset curve, and the TEM decay) are drawn shapes, and no response is computed for these views.</li>
+                <li>The GMS field lines bend around the plume as around a perfectly conducting cylinder in a uniform field, a 2D picture of field exclusion.</li>
+                <li>Each view's depth scale is nominal; only the MT section is drawn to its 0 to 50 km scale.</li>
+            </ul>
+        </details>
     </div>
 
     <script>

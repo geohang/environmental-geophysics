@@ -23,12 +23,13 @@
         .fdem-bar .lab-subtitle { margin-top: 0.15rem; font-size: 0.85rem; }
         .legend-swatch { width: 0.75rem; height: 0.75rem; border-radius: 999px; display: inline-block; border: 1px solid rgb(15 23 42 / 0.25); }
 
-        /* The body no longer pads the page, so the caveat box takes the page gutter itself */
-        body > .science-caveat { margin: 0 1rem; }
+        /* The dashboard fills the viewport, so Try this opens the controls panel and Model assumptions
+           closes it; both use the control cards' 1.5rem spacing */
+        .panel > .try-this { margin-bottom: 1.5rem; }
+        .panel > .model-assumptions { margin-top: 0; }
 
         @media (min-width: 768px) {
             .lab-hero.fdem-bar { padding: 0.7rem 1.5rem; }
-            body > .science-caveat { margin: 0 1.5rem; }
         }
     </style>
 <link rel="stylesheet" href="../../../assets/stylesheets/course-app.css">
@@ -44,7 +45,7 @@
     <!-- Header -->
     <header class="lab-hero fdem-bar flex flex-wrap justify-between items-center gap-x-6 gap-y-2">
         <div>
-            <h1 class="lab-title">1D Electromagnetic (EM) Response Explorer</h1>
+            <h1 class="lab-title">1D EM Response Explorer</h1>
             <p class="lab-subtitle">Qualitative Time Domain (TEM) and Frequency Domain (FDEM) trends over a two-layer Earth</p>
         </div>
         <!-- Swatches are the two ends of the earth-tone layer colormap (getColor) -->
@@ -58,13 +59,27 @@
         </div>
     </header>
 
-    <div class="science-caveat"><strong>Teaching proxy:</strong> The curves use skin-depth weighting and half-space decay approximations, not a full Maxwell-equation layered-earth solver. Use them to study trends, not to predict instrument voltages or inversion-ready apparent resistivity.</div>
-
     <!-- Main Content -->
     <div class="flex-grow grid grid-cols-1 lg:grid-cols-4 gap-4 lg:overflow-hidden mx-4 md:mx-6 mb-4 md:mb-6">
 
         <!-- Controls Panel -->
         <div class="panel lab-card col-span-1 flex flex-col overflow-y-auto relative">
+            <aside class="try-this" aria-label="Try this">
+                <p class="try-this-title">Try this</p>
+                <dl>
+                    <dt>Predict</dt>
+                    <dd>Layer 2 (100 Ω·m) is ten times more resistive than layer 1: as the FDEM frequency drops, will the apparent resistivity rise, fall, or stay at 10 Ω·m?</dd>
+                    <dt>Do</dt>
+                    <dd><ol>
+                        <li>Drag Survey Frequency (f) from 100.0 kHz down to 10 Hz and watch the skin-depth line and the dot on the FDEM chart.</li>
+                        <li>Press Play "Smoke Ring" and watch the dot on the TEM curve as the ring passes the boundary at 50 m.</li>
+                        <li>Set Layer 2 Resistivity (ρ₂) to 1.0 Ω·m and repeat both steps.</li>
+                    </ol></dd>
+                    <dt>Explain</dt>
+                    <dd>Why do a lower frequency and a later time both make the response depend more on layer 2?</dd>
+                </dl>
+            </aside>
+
             <h2 class="text-xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-3">Earth Model Controls</h2>
 
             <div class="control-card">
@@ -114,6 +129,16 @@
                 </button>
                 <p class="text-sm text-slate-600">Watch the diffusion of the EM field over time.</p>
             </div>
+
+            <details class="model-assumptions">
+                <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+                <ul>
+                    <li>Teaching proxy: the curves use skin-depth weighting and half-space decay approximations, not a full Maxwell-equation layered-earth solver. Use them to study trends, not to predict instrument voltages or inversion-ready apparent resistivity.</li>
+                    <li>FDEM: the apparent conductivity is a two-layer average, σₐ = Wσ₁ + (1 − W)σ₂ with W = 1 − exp(−2h₁/δ₁), where δ₁ = 503√(ρ₁/f) uses layer 1 only; coil spacing, coil orientation, and the in-phase and quadrature parts do not enter.</li>
+                    <li>TEM: each layer contributes the late-time half-space decay, dB/dt ∝ ρ<sup>−3/2</sup>t<sup>−5/2</sup>, blended by exp(−(d₁/h₁)⁴) with the diffusion depth d₁ = √(2tρ₁/μ₀); the same late-time law is used at early times, loop size and turn-off ramp are ignored, and dB/dt is in relative units.</li>
+                    <li>The smoke-ring depth is the diffusion depth in layer 1, continuing at the layer 2 rate once it passes h₁; the ring's width and fading are drawn for display.</li>
+                </ul>
+            </details>
         </div>
 
         <!-- Right Side: Vis and Charts -->

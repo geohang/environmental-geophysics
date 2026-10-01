@@ -31,7 +31,7 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
     Survey a synthetic subsurface and interpret the resulting radargram.
 
-3.  **[Hyperbola Velocity Estimator](apps/demo-hyperbola.html)** <span class="lp-type">Demo</span>
+3.  **[GPR Hyperbola Velocity Estimator](apps/demo-hyperbola.html)** <span class="lp-type">Demo</span>
 
     Fit a diffraction hyperbola on a radargram to recover wave velocity and target depth, the everyday calibration trick of GPR practice.
 

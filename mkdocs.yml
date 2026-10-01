@@ -82,7 +82,7 @@ nav:
       - Borehole Geophysics: lecture/borehole/index.md
   - Practice:
       - Classroom Labs: apps/classroom-labs.html
-      - Practice Lab: apps/practice-lab.html
+      - Practice Questions: apps/practice-lab.html
   - Field Data:
       - Real & Synthetic Overview: apps/field-data.html
       - Real Data Catalog: data/index.md

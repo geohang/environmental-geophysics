@@ -24,6 +24,21 @@ select { background: var(--surface); color: var(--text); border: 1px solid var(-
   <div class="subtitle">Stack lithologies in a synthetic borehole and read how the standard logs respond across the column.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>If gas replaces the brine in the second interval, will the gamma-ray reading change, and will the resistivity rise or fall?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>Note where the GR and Resistivity curves sit in the second interval (Sandstone (brine), 6 to 11 m).</li>
+        <li>Change the second row's dropdown to Sandstone (gas).</li>
+        <li>Compare the GR track, the Resistivity track, and the shared NPHI and RHOB track across that interval.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>Which property of the formation does each log respond to, and why does that decide which tracks react to a change of pore fluid?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <div class="legend">
       <span><span class="sw" style="background:#22c55e"></span>Gamma ray (API)</span>
@@ -37,6 +52,15 @@ select { background: var(--surface); color: var(--text); border: 1px solid var(-
     <div class="hint">Assign a lithology and thickness to each of five intervals. Curves update instantly. On the shared neutron-density track, shale shows separation (neutron left of density), water-filled limestone overlays, and gas sand shows crossover (neutron right of density).</div>
     <div class="builder" id="builder"></div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>Each lithology carries one fixed set of typical, noise-free values (GR, resistivity, NPHI, RHOB), so every curve is a blocky step; thickness moves the steps but never changes the values, with no vertical-resolution or shoulder-bed averaging.</li>
+      <li>Porosity and pore fluid are fixed inside each lithology (for example limestone at 5% porosity and clay till at 25%) and cannot be varied on their own.</li>
+      <li>Borehole size, mud, invasion, and tool standoff are ignored, and resistivity is a single value per layer with no shallow and deep readings.</li>
+      <li>NPHI is in limestone units on the shared track (45 to −15 %, with RHOB 1.95 to 2.95 g/cc); values beyond the scale, such as the 1.35 g/cc density of coal, sit on the track edge with an arrow.</li>
+    </ul>
+  </details>
 </div>
 <script>
 // lithology library: typical log values

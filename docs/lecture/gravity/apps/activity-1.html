@@ -123,12 +123,27 @@
 
 <header class="lab-hero">
     <div class="lab-hero-inner is-5xl">
-        <h1 class="lab-title"><span class="lab-title-accent">Gravity</span> Survey Lab: Multi-Station Loop</h1>
-        <p class="lab-subtitle">Correcting for linear instrument drift over a full morning survey.</p>
+        <h1 class="lab-title"><span class="lab-title-accent">Activity 1</span> · Drift Correction Loop</h1>
+        <p class="lab-subtitle">A multi-station gravity loop: correct for linear instrument drift over a full morning survey.</p>
     </div>
 </header>
 
 <div class="container">
+    <aside class="try-this" aria-label="Try this">
+        <p class="try-this-title">Try this</p>
+        <dl>
+            <dt>Predict</dt>
+            <dd>Which station will need the largest drift correction: Station 4, which has the highest raw reading, or Station 5, which was read last?</dd>
+            <dt>Do</dt>
+            <dd><ol>
+                <li>Complete Step 1 and the Data Reduction Table below, then click Verify Calculations.</li>
+                <li>Compare the Drift values you entered for Station 4 and Station 5.</li>
+            </ol></dd>
+            <dt>Explain</dt>
+            <dd>Why does returning to the same base station at the end of the loop let you measure the instrument drift?</dd>
+        </dl>
+    </aside>
+
     <div class="card lab-card">
         <h2>1. Survey Parameters</h2>
         <p>You performed a gravity survey lasting 5 hours. The gravimeter reading at the Base Station <strong>decreased</strong> by the end of the survey due to spring relaxation.</p>
@@ -233,6 +248,15 @@
         <button class="btn lab-btn lab-btn-primary" onclick="checkAll()">Verify Calculations</button>
         <p id="finalMsg" style="margin-top: 15px; font-weight: bold;"></p>
     </div>
+
+    <details class="model-assumptions">
+        <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+        <ul>
+            <li>Drift is linear in time: one rate from the start and end base readings applies to every station, so a non-linear drift between those two visits would go unnoticed.</li>
+            <li>No separate tidal correction is applied; the whole change in the base-station reading is treated as instrument drift.</li>
+            <li>Readings are relative gravimeter values in mGal, and no latitude, elevation, or terrain correction is applied; this activity isolates drift.</li>
+        </ul>
+    </details>
 </div>
 
 <script>

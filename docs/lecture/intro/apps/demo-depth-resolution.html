@@ -29,6 +29,20 @@
   <div class="subtitle">No single method does everything. Set a target depth and see which methods can reach it, and what they trade for depth.</div>
 </header>
 <div class="container">
+  <aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+      <dt>Predict</dt>
+      <dd>When the target moves from 10 m down to 200 m, will the methods still in range be the ones with the finest resolution or the coarsest?</dd>
+      <dt>Do</dt>
+      <dd><ol>
+        <li>At the default Target depth of 10 m, note which methods are in range and read their resolution notes.</li>
+        <li>Drag Target depth to about 200 m and compare the in-range list and its notes.</li>
+      </ol></dd>
+      <dt>Explain</dt>
+      <dd>What property of each method's signal (wavelength, frequency, or how its field spreads with distance) ties its depth range to its resolution?</dd>
+    </dl>
+  </aside>
   <div class="panel">
     <div class="ctrl"><label>Target depth <span id="tdv">10 m</span></label><input id="td" type="range" min="0.3" max="1000" value="10" step="0.1"></div>
     <div class="hint">Depth axis is logarithmic. Bars show the typical near-surface investigation range for each method; the dashed line is your target.</div>
@@ -38,6 +52,15 @@
     <b>Can this method reach <span id="tdv2" style="color:var(--c-accent);">10 m</span>?</b>
     <div id="list"></div>
   </div>
+  <details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+      <li>Each method has one fixed depth range typical of near-surface surveys (for example 0.3 to 15 m for ground-penetrating radar); ground conductivity, survey size, and instrument settings do not change it.</li>
+      <li>"In range" only tests whether the target depth lies between a method's minimum and maximum depth; it does not check whether the target has a physical-property contrast or is large enough to resolve.</li>
+      <li>Resolution is a text note for each method; no resolution value is computed.</li>
+      <li>The depth axis is logarithmic from 0.3 m to 100 km, but the Target depth slider stops at 1000 m.</li>
+    </ul>
+  </details>
 </div>
 <script>
 // [name, dmin (m), dmax (m), color, resolution note]

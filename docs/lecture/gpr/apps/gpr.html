@@ -57,12 +57,27 @@
 
     <header class="lab-hero">
         <div class="lab-hero-inner is-7xl">
-            <h1 class="lab-title"><span class="lab-title-accent">Ground</span> Physics</h1>
-            <p class="lab-subtitle">Comparing Conduction & Polarization</p>
+            <h1 class="lab-title"><span class="lab-title-accent">Conduction</span> vs. Displacement Currents</h1>
+            <p class="lab-subtitle">The ground physics behind GPR: conduction and polarization compared</p>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-6">
+    <aside class="try-this" aria-label="Try this">
+        <p class="try-this-title">Try this</p>
+        <dl>
+            <dt>Predict</dt>
+            <dd>If the ground becomes 10 times more conductive, will the attenuation grow about 3, 10, or 100 times, and will the radar velocity change?</dd>
+            <dt>Do</dt>
+            <dd><ol>
+                <li>Set Conductivity (σ) to 1.0 mS/m and read the attenuation and velocity in the GPR readout.</li>
+                <li>Raise σ to 10 mS/m and read them again.</li>
+                <li>Push σ to 100 mS/m, then lower Permittivity (ε) until the readout says conduction dominates.</li>
+            </ol></dd>
+            <dt>Explain</dt>
+            <dd>Why does a larger conduction current J = σE drain energy from the radar wave?</dd>
+        </dl>
+    </aside>
     <div class="w-full flex flex-col lg:flex-row gap-6 items-start">
 
         <!-- Left Panel: Controls & Explanations -->
@@ -196,6 +211,15 @@
 
         </div>
     </div>
+    <details class="model-assumptions">
+        <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+        <ul>
+            <li>The two animations are schematic: σ and εᵣ are rescaled to 0 to 1 weights, and the Frequency slider only sets the animation speed, so J and D are relative, unitless values.</li>
+            <li>The lower panel animates the polarization D = εE, which moves in phase with E; the displacement current ∂D/∂t that the readout compares with J leads E by 90° and is not animated.</li>
+            <li>The GPR readout uses a fixed f = 100 MHz, a non-magnetic medium, and σ and εᵣ that do not vary with frequency.</li>
+            <li>Attenuation and velocity use the low-loss approximations α ≈ 1636σ/√εᵣ and v = 0.3/√εᵣ, valid for tanδ ≪ 1; near and above tanδ = 1 (for example 100 mS/m with εᵣ below about 18) they are only rough guides.</li>
+        </ul>
+    </details>
     </main>
 
     <script>

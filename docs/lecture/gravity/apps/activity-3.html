@@ -99,12 +99,28 @@
 
 <header class="lab-hero">
     <div class="lab-hero-inner">
-        <h1 class="lab-title"><span class="lab-title-accent">Gravity</span> Geometry & Depth Detective</h1>
-        <p class="lab-subtitle">Visualizing subsurface structures, their equations, and their gravity responses.</p>
+        <h1 class="lab-title"><span class="lab-title-accent">Activity 3</span> · Depth Detective</h1>
+        <p class="lab-subtitle">Gravity geometry: subsurface structures, their equations, and their gravity responses.</p>
     </div>
 </header>
 
 <div class="container">
+<aside class="try-this" aria-label="Try this">
+    <p class="try-this-title">Try this</p>
+    <dl>
+        <dt>Predict</dt>
+        <dd>For the Gold Cache mission, will the half-width you read off the graph be smaller than, equal to, or larger than the depth to the sphere's centre?</dd>
+        <dt>Do</dt>
+        <dd><ol>
+            <li>Complete the Locate the Gold Cache (Sphere) mission below and click VERIFY DRILL TARGET.</li>
+            <li>Compare your half-width with the revealed depth z.</li>
+            <li>Switch Select Mission to Find the Buried Pipeline and compare its half-width with its depth in the same way.</li>
+        </ol></dd>
+        <dt>Explain</dt>
+        <dd>Why does the shape of the buried body change how quickly its anomaly falls off with distance, and so the depth rule you must use?</dd>
+    </dl>
+</aside>
+
 <section>
     <h2>1. Reference: Geometries & Equations</h2>
     <div class="grid-3">
@@ -153,11 +169,7 @@
                 <rect x="90" y="40" width="20" height="40" fill="#64748b" />
                 <text x="115" y="60" fill="#475569" font-size="10">Plug</text>
             </svg>
-            <div class="formula-box lab-formula">
-                <strong>Model requirement:</strong><br>
-                A finite vertical cylinder response depends on radius and the depths to both its top and base. Use a complete forward model when amplitude matters.
-            </div>
-            <p style="text-align:center; font-weight:bold; margin-top:10px;">Teaching approximation:<br> $z_{top} \approx 0.577\,x_{1/2}$ for an idealized thin, semi-infinite vertical cylinder, since $x_{1/2} = \sqrt{3}\,z_{top}$.</p>
+            <p style="text-align:center; font-weight:bold; margin-top:10px;">Depth Rule (depth to top):<br> $z_{top} \approx 0.577 \cdot x_{1/2}$</p>
         </div>
 
     </div>
@@ -214,6 +226,15 @@
     <div id="feedback" style="margin-top:15px; padding:15px; text-align:center; font-weight:bold; border-radius:10px; display:none;"></div>
 
 </section>
+
+<details class="model-assumptions">
+    <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+    <ul>
+        <li>Each mission draws a random depth (20 to 49 m) and a random peak (0.10 to 0.50 mGal) independently, so only the shape of the curve carries depth information.</li>
+        <li>The sphere and the horizontal cylinder are ideal point and line sources, $g \propto 1/(1+(x/z)^2)^{3/2}$ and $g \propto 1/(1+(x/z)^2)$, on a flat, noise-free profile from −200 to 200 m.</li>
+        <li>The vertical cylinder is idealized as a thin, semi-infinite vertical cylinder with its top at depth $z_{top}$, so $x_{1/2} = \sqrt{3}\,z_{top}$ and $z_{top} \approx 0.577\,x_{1/2}$. A finite vertical cylinder response depends on radius and the depths to both its top and base; use a complete forward model when amplitude matters.</li>
+    </ul>
+</details>
 </div>
 
 <script>

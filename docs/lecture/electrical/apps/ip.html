@@ -46,12 +46,28 @@
     <!-- Header -->
     <header class="lab-hero">
         <div class="lab-hero-inner">
-            <h1 class="lab-title">Two Physical Mechanisms of <span class="lab-title-accent">IP</span></h1>
-            <p class="lab-subtitle">Interactive microscopic models of Induced Polarization.</p>
+            <h1 class="lab-title"><span class="lab-title-accent">IP</span> · Signal Mechanisms</h1>
+            <p class="lab-subtitle">Two physical mechanisms produce induced polarization (IP). Explore each with an interactive microscopic model.</p>
         </div>
     </header>
 
     <div class="max-w-6xl w-full mx-auto p-6 pb-12">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>When you switch the Transmitter Current OFF, will the measured voltage fall to 0 V at once, or fall part of the way and then fade?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Switch Transmitter Current ON and wait until the Measured Voltage vs Time trace levels off at V(ON).</li>
+                    <li>Switch it OFF and watch the trace and the ions at the clay-lined pore throat.</li>
+                    <li>Repeat on 2. Electrode Polarization and watch the charges at the metallic mineral surface.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>What are the charges doing right after switch-off, and why does that give the trace its shape?</dd>
+            </dl>
+        </aside>
+
         <!-- Main Content -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
@@ -118,6 +134,16 @@
                 <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
             </div>
         </div>
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>The trace is in relative units: it is 0.4 times the polarization level, plus 0.6 (the direct response) while the current is on, so the voltage just after switch-off is 40% of V(ON), far larger than typical field chargeabilities.</li>
+                <li>Polarization builds and decays linearly in time (full charge in about 0.5 s, full decay in about 3.3 s); measured IP decay curves fall steeply at first and then flatten.</li>
+                <li>Both mechanisms drive the identical voltage trace; the app does not compare their strength or time constant.</li>
+                <li>The microscopic views are cartoons of one pore throat or one metallic grain: ion and electron positions follow drawing rules, and neither diffusion nor the electric field is solved.</li>
+            </ul>
+        </details>
     </div>
 
     <script>

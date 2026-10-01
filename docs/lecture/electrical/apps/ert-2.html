@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERT · 3-Layer VES Forward Model</title>
+    <title>VES · 3-Layer Forward Model</title>
     <link rel="stylesheet" href="../../../assets/stylesheets/tailwind-course.css">
     <script src="../../../assets/vendor/chartjs/chart.min.js"></script>
     <script src="../../../assets/javascripts/dc1d-forward.js"></script>
@@ -59,12 +59,26 @@
     <!-- Header -->
     <header class="lab-hero">
         <div class="lab-hero-inner">
-            <h1 class="lab-title">3-Layer <span class="lab-title-accent">VES</span> Forward Modeling</h1>
+            <h1 class="lab-title"><span class="lab-title-accent">VES</span> · 3-Layer Forward Model</h1>
             <p class="lab-subtitle">Adjust a horizontally layered Earth model and calculate its physical apparent-resistivity response.</p>
         </div>
     </header>
 
     <div class="max-w-6xl w-full mx-auto px-6 pt-8 pb-10">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>In the default H-type model, ρ₂ = 10 Ω·m. Will the lowest apparent resistivity on the curve reach 10 Ω·m, stay above it, or fall below it?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Hover over or tap the lowest point of the default curve and read ρa.</li>
+                    <li>Drag h₂ (Thickness) from 15 m to 100 m and read the lowest ρa again.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>Why does the thickness of the middle layer change the level of the curve's minimum, even though ρ₂ itself did not change?</dd>
+            </dl>
+        </aside>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
@@ -190,18 +204,27 @@
             </div>
         </div>
 
-        <!-- Physical assumptions and interpretation boundary -->
+        <!-- Interpretation boundary (the model's simplifications are listed under Model assumptions) -->
         <div class="mt-8 lab-note p-6">
-            <h3 class="lab-note-title text-xl font-bold mb-3">Physical Model and Interpretation Boundary</h3>
+            <h3 class="lab-note-title text-xl font-bold mb-3">Interpretation Boundary</h3>
             <p class="text-slate-700 mb-4 leading-relaxed">
-                This app evaluates the layered-Earth DC potential integral with a digital linear filter for point electrodes over horizontal, isotropic layers. The Wenner response uses its exact four-electrode geometry. The Schlumberger response uses <strong>MN/AB = 0.1</strong> at every plotted AB/2 spacing.
-                <br><br>
-                The sounding curve is <strong>apparent resistivity</strong>, not true resistivity at a particular depth. A VES curve and an ERT pseudosection are related kinds of array-dependent data, but they are not the same display. Mathematical <strong>inversion</strong> is needed to estimate layer resistivities and thicknesses, and equivalent models may fit nearly the same sounding. Lateral structure, anisotropy, topography, finite electrodes, and contact effects are outside this 1-D model.
+                The sounding curve is <strong>apparent resistivity</strong>, not true resistivity at a particular depth. A VES curve and an ERT pseudosection are related kinds of array-dependent data, but they are not the same display. Mathematical <strong>inversion</strong> is needed to estimate layer resistivities and thicknesses, and equivalent models may fit nearly the same sounding.
             </p>
             <div class="bg-white rounded-lg p-3 text-center border border-slate-200">
                 <span class="text-sky-800 font-medium">VES sounding (apparent data) &rarr; <span class="text-slate-600 italic">inversion with assumptions</span> &rarr; non-unique layered models</span>
             </div>
         </div>
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>This app evaluates the layered-Earth DC potential integral with a digital linear filter for point electrodes on the surface of horizontal, isotropic layers; layer 3 extends to infinite depth.</li>
+                <li>The Wenner response uses its exact four-electrode geometry. The Schlumberger response uses MN/AB = 0.1 at every plotted AB/2 spacing.</li>
+                <li>Lateral structure, anisotropy, topography, finite electrodes, and contact effects are outside this 1-D model.</li>
+                <li>The curve is noise-free: 101 computed spacings, evenly spaced on the log axis from 1 m to 1000 m and joined by straight segments.</li>
+                <li>The curve-type badge (H, K, A, Q) is set by the order of ρ₁, ρ₂, and ρ₃ alone; layer thicknesses do not affect it, even when a thin layer leaves little trace on the curve.</li>
+            </ul>
+        </details>
 
     </div>
 

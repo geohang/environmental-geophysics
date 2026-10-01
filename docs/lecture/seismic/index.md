@@ -31,7 +31,7 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
     Adjust layer velocities and thickness in a two-layer earth and see the direct wave, head wave, crossover distance, and intercept time update live.
 
-3.  **[Seismic Refraction Lab](apps/seismic-refraction.html)** <span class="lp-type">Interactive lecture</span>
+3.  **[Seismic Refraction Simulator](apps/seismic-refraction.html)** <span class="lp-type">Interactive lecture</span>
 
     Acquire and interpret a refraction survey over a two- or three-layer subsurface, including a hidden low-velocity layer.
 

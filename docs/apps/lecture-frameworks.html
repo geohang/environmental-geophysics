@@ -216,7 +216,7 @@ const lessons={
     prediction:'If the lower layer is faster, at what offset will its head wave overtake the direct arrival—and what happens if it is slower?',
     apps:[
       {label:'Launch refraction T–X demo',url:'../lecture/seismic/apps/demo-refraction-traveltime.html'},
-      {label:'Open seismic refraction lab',url:'../lecture/seismic/apps/seismic-refraction.html',secondary:true}
+      {label:'Open seismic refraction simulator',url:'../lecture/seismic/apps/seismic-refraction.html',secondary:true}
     ],
     tasks:[
       ['A','Increase V₂ while holding thickness fixed','Slope and crossover distance','T–X demo'],
@@ -392,7 +392,7 @@ function slideMarkup(lesson,index){
   }else if(index===4){
     html=`${slideTop('Guided exploration',4)}<h2>Answer with evidence from the app</h2><div class="question-grid">${lesson.questions.map((question,i)=>`<div class="question-card"><b>Q${i+1}</b><p>${escapeHTML(question)}</p></div>`).join('')}</div><div class="prompt"><strong>Limit the claim:</strong> What conclusion would this demo not justify at a real site?</div>${sourceFooter()}`;
   }else if(index===5){
-    html=`${slideTop('Formative practice',5)}<h2>Apply the observation before the debrief</h2><div class="practice-grid"><div class="practice-card"><h3>Individual → pair</h3><ol><li>Open the linked practice set.</li><li>Complete the chapter questions using your demo notes.</li><li>Compare one changed answer with a partner.</li></ol><div class="launch-row"><a class="launch" href="${lesson.practice}" target="_blank" rel="noopener">Open Practice Lab ↗</a></div></div><div class="practice-card"><h3>Apply it to a field workflow</h3><p>Use the observation to make a method, processing, or safety decision.</p><a class="launch secondary" href="${lesson.activity}" target="_blank" rel="noopener">${escapeHTML(lesson.activityLabel)} ↗</a></div></div>${sourceFooter()}`;
+    html=`${slideTop('Formative practice',5)}<h2>Apply the observation before the debrief</h2><div class="practice-grid"><div class="practice-card"><h3>Individual → pair</h3><ol><li>Open the linked practice set.</li><li>Complete the chapter questions using your demo notes.</li><li>Compare one changed answer with a partner.</li></ol><div class="launch-row"><a class="launch" href="${lesson.practice}" target="_blank" rel="noopener">Open Practice Questions ↗</a></div></div><div class="practice-card"><h3>Apply it to a field workflow</h3><p>Use the observation to make a method, processing, or safety decision.</p><a class="launch secondary" href="${lesson.activity}" target="_blank" rel="noopener">${escapeHTML(lesson.activityLabel)} ↗</a></div></div>${sourceFooter()}`;
   }else{
     html=`${slideTop('Discussion & exit ticket',6)}<h2>What can we defend after the exploration?</h2><div class="discussion-grid"><div class="card"><h3>Discuss</h3><ol>${lesson.discuss.map(item=>`<li>${escapeHTML(item)}</li>`).join('')}</ol></div><div class="exit"><h3>Exit ticket</h3><p>${escapeHTML(lesson.exit)}</p><a class="launch secondary" href="${lesson.next}">${escapeHTML(lesson.nextLabel)} →</a></div></div>${sourceFooter()}`;
   }

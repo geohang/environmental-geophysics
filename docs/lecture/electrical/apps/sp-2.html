@@ -39,12 +39,28 @@
     <!-- Header -->
     <header class="lab-hero">
         <div class="lab-hero-inner">
-            <h1 class="lab-title">Field Applications of <span class="lab-title-accent">SP</span></h1>
+            <h1 class="lab-title"><span class="lab-title-accent">SP</span> · Field Applications</h1>
             <p class="lab-subtitle">Interactive surveys: How geophysicists use Spontaneous Potential in the real world.</p>
         </div>
     </header>
 
     <div class="max-w-6xl w-full mx-auto p-6 pb-12">
+        <aside class="try-this" aria-label="Try this">
+            <p class="try-this-title">Try this</p>
+            <dl>
+                <dt>Predict</dt>
+                <dd>Seepage enters the dam at the reservoir face and leaves at the toe. Where along the dam will the SP profile show anomalies, and with which sign at each?</dd>
+                <dt>Do</dt>
+                <dd><ol>
+                    <li>Follow the Survey Briefing task for 1. Mineral Exploration and note the sign of the anomaly.</li>
+                    <li>Open 2. Dam Seepage Detection and sweep the sensor from the reservoir to the leak exit while reading the Live Sensor Reading.</li>
+                    <li>Move Internal Leak Severity from Safe to Danger and sweep again.</li>
+                </ol></dd>
+                <dt>Explain</dt>
+                <dd>How does water flowing through the pores of the dam separate charge, and what does that imply for each end of the flow path?</dd>
+            </dl>
+        </aside>
+
         <!-- Main Content -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -117,6 +133,16 @@
                 <canvas id="sim-canvas" class="w-full h-full absolute inset-0"></canvas>
             </div>
         </div>
+
+        <details class="model-assumptions">
+            <summary>Model assumptions<span class="model-assumptions-hint">What this simulation simplifies</span></summary>
+            <ul>
+                <li>Each profile is a prescribed bell-shaped curve, and no potential field is solved: a minimum of about −350 mV centred on the ore body; a peak of up to +200 mV at the dam toe with a smaller negative dip at the reservoir face, both proportional to Internal Leak Severity; and a peak of up to about +150 mV over the fault, proportional to Geothermal Heat Intensity.</li>
+                <li>Curve widths are fixed numbers of screen pixels. They are not computed from the depth or size of the drawn sources, so the same anomaly looks wider on a narrow screen.</li>
+                <li>The ore-body curve is symmetric and centred on the midpoint of the drawn body; its tilt does not enter the calculation, although a dipping source gives an asymmetric profile in the field.</li>
+                <li>Noise is a fixed ripple of up to 5 mV on the ore and geothermal profiles and none on the dam. Readings are relative to a fixed 0 mV level, with no reference-electrode drift, telluric, or cultural noise.</li>
+            </ul>
+        </details>
     </div>
 
     <script>
@@ -164,7 +190,7 @@
             { 
                 title: "Massive Sulfide Exploration", 
                 sub: "Drag your mouse to survey the ground surface", 
-                concept: "<strong>The Goal:</strong> Find a hidden, valuable metal sulfide deposit.<br><br><strong>How it works:</strong> The ore body acts like a battery spanning the water table. Electrons travel up the conductive ore, causing a strongly negative electrical anomaly at the surface directly above it.<br><br><strong>Your Task:</strong> Move your mouse (the sensor) across the surface. Look at the live graph. The distinct 'V' shaped dip marks the exact location to drill!",
+                concept: "<strong>The Goal:</strong> Find a hidden, valuable metal sulfide deposit.<br><br><strong>How it works:</strong> The ore body acts like a battery spanning the water table. Electrons travel up the conductive ore, causing a strongly negative electrical anomaly at the surface directly above it.<br><br><strong>Your Task:</strong> Move your mouse (the sensor) across the surface. Look at the live graph. The 'V' shaped dip lies over the ore body. In the field a dipping body shifts the minimum, so confirm the target with other data before drilling.",
                 hasSlider: false
             },
             { 

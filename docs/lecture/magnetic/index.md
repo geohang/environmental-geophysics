@@ -23,11 +23,11 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
 <div class="learning-path" markdown>
 
-1.  **[GeoMag Lab: Rock Magnetism](apps/magnetic-methods.html)** <span class="lp-type">Activity</span>
+1.  **[GeoMag · Rock Magnetism](apps/magnetic-methods.html)** <span class="lp-type">Activity</span>
 
     Induced and remanent magnetization as vectors, the Königsberger ratio, and five guided tasks.
 
-2.  **[Dipole Anomaly vs. Inclination](apps/demo-dipole-inclination.html)** <span class="lp-type">Demo</span>
+2.  **[Dipole Anomaly vs. Magnetic Inclination](apps/demo-dipole-inclination.html)** <span class="lp-type">Demo</span>
 
     Move the same buried dipole from the magnetic equator to the pole and watch the anomaly change from asymmetric to symmetric.
 
@@ -35,7 +35,7 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
 
     How buried magnetic bodies express themselves in total-field data.
 
-4.  **[Continuation Simulator](apps/continuation.html)** <span class="lp-type">Interactive lecture</span>
+4.  **[Magnetic Continuation Simulator](apps/continuation.html)** <span class="lp-type">Interactive lecture</span>
 
     Upward and downward continuation as wavelength filtering of a magnetic profile.
 
@@ -44,6 +44,8 @@ Work through the apps in order. Each one opens full screen; the bar at its top s
     Half-width depth rules, Peters' half-slope method, and reduction to the pole.
 
 </div>
+
+**How the apps connect.** Apps 1 and 2 build the dipole picture that the later apps rely on: magnetization direction, then the anomaly shape it produces at each inclination. Magnetic Interpretation Methods (app 5) revisits the half-width depth rules from [Activity 3 · Depth Detective](../gravity/apps/activity-3.html) in the Gravity module; the factors change because a magnetic source is a dipole.
 
 **After the path:** [practice questions](../../apps/practice-lab.html#magnetic) · [classroom lab](#classroom-lab) · [data and notebooks](#data-and-notebooks).
 
